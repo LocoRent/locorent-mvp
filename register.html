@@ -3,55 +3,76 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Registrieren – LocoRent</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Registrieren – Locorent</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #1e3c72;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 2rem;
+      border-radius: 10px;
+      width: 300px;
+    }
+    input, button {
+      display: block;
+      width: 100%;
+      margin: 1rem 0;
+      padding: 0.5rem;
+      border-radius: 5px;
+      border: none;
+    }
+    .message {
+      text-align: center;
+      margin-top: 1rem;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
     <h2>Registrieren</h2>
     <form id="register-form">
-      <label for="email">E-Mail</label>
-      <input type="email" id="email" required />
-
-      <label for="password">Passwort</label>
-      <input type="password" id="password" required />
-
-      <label for="confirm">Passwort bestätigen</label>
-      <input type="password" id="confirm" required />
-
+      <input type="email" id="email" placeholder="E-Mail" required />
+      <input type="password" id="password" placeholder="Passwort" required />
+      <input type="password" id="passwordConfirm" placeholder="Passwort bestätigen" required />
       <button type="submit">Registrieren</button>
-      <div class="message" id="register-message"></div>
+      <div id="message" class="message"></div>
     </form>
-    <p>Bereits registriert? <a href="index.html">Einloggen</a></p>
   </div>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="supabase.js"></script>
-  <script>
-    const registerForm = document.getElementById('register-form');
-    const registerMsg = document.getElementById('register-message');
 
-    registerForm.addEventListener('submit', async (e) => {
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const supabase = supabase.createClient(
+      'https://flnjalgqtkqycsaymmbd.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+    );
+
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
       e.preventDefault();
-      registerMsg.textContent = '';
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
-      const confirm = document.getElementById('confirm').value;
+      const passwordConfirm = document.getElementById('passwordConfirm').value;
+      const message = document.getElementById('message');
+      message.textContent = '';
 
-      if (password !== confirm) {
-        registerMsg.textContent = '❌ Passwörter stimmen nicht überein.';
-        registerMsg.className = 'message error';
+      if (password !== passwordConfirm) {
+        message.textContent = '❌ Passwörter stimmen nicht überein.';
         return;
       }
 
       const { data, error } = await supabase.auth.signUp({ email, password });
 
       if (error) {
-        registerMsg.textContent = '❌ ' + error.message;
-        registerMsg.className = 'message error';
+        message.textContent = '❌ ' + error.message;
       } else {
-        registerMsg.textContent = '✅ Registrierung erfolgreich! Bitte E-Mail bestätigen.';
-        registerMsg.className = 'message success';
-        setTimeout(() => window.location.href = 'index.html', 3000);
+        message.textContent = '✅ Registrierung erfolgreich! Bitte bestätige deine E-Mail.';
       }
     });
   </script>
