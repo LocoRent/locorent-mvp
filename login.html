@@ -74,16 +74,16 @@
   </form>
 </div>
 
-<!-- Supabase SDK laden -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@1.35.6/dist/umd/supabase.min.js"></script>
+<!-- Supabase SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.42.3/dist/supabase.min.js"></script>
 
-<!-- Dein Login-Code -->
 <script>
-  const supabaseUrl = 'https://flnjalgqtkqycsaymmbd.supabase.co';
-  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q';
-  const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-
   document.addEventListener('DOMContentLoaded', () => {
+    const supabase = window.supabase.createClient(
+      'https://flnjalgqtkqycsaymmbd.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+    );
+
     const form = document.getElementById('login-form');
     const messageDiv = document.getElementById('message');
 
@@ -95,25 +95,17 @@
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
 
-      try {
-        const { user, session, error } = await supabase.auth.signIn({
-          email: email,
-          password: password
-        });
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
-        if (error) {
-          messageDiv.textContent = '❌ ' + error.message;
-          messageDiv.classList.add('error');
-        } else {
-          messageDiv.textContent = '✅ Login erfolgreich! Weiterleitung...';
-          messageDiv.classList.add('success');
-          setTimeout(() => {
-            window.location.href = 'dashboard.html';
-          }, 2000);
-        }
-      } catch (err) {
-        messageDiv.textContent = '❌ Fehler beim Login.';
+      if (error) {
+        messageDiv.textContent = '❌ ' + error.message;
         messageDiv.classList.add('error');
+      } else {
+        messageDiv.textContent = '✅ Login erfolgreich! Weiterleitung...';
+        messageDiv.classList.add('success');
+        setTimeout(() => {
+          window.location.href = 'dashboard.html';
+        }, 2000);
       }
     });
   });
