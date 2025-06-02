@@ -8,69 +8,83 @@
   <style>
     body {
       font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #1e3c72, #2a5298);
-      color: #fff;
+      background: #f4f4f4;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
       margin: 0;
-      text-align: center;
     }
-    .container {
-      background: rgba(255, 255, 255, 0.1);
+
+    .dashboard {
+      background: white;
       padding: 2rem;
-      border-radius: 15px;
-      max-width: 400px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
       width: 100%;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      max-width: 400px;
     }
+
+    h2 {
+      margin-bottom: 1rem;
+    }
+
+    #user-email {
+      font-weight: bold;
+      color: #333;
+    }
+
     button {
       margin-top: 2rem;
       padding: 0.75rem 1.5rem;
+      font-size: 1rem;
       border: none;
       border-radius: 8px;
       background-color: #ff6b6b;
-      color: #fff;
-      font-size: 1rem;
-      font-weight: bold;
+      color: white;
       cursor: pointer;
+      transition: background 0.3s;
     }
+
     button:hover {
-      background-color: #e35050;
+      background-color: #e65555;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Willkommen bei Locorent 👋</h1>
-    <p id="user-email">Benutzer wird geladen...</p>
-    <button id="logout-btn">Logout</button>
+  <div class="dashboard">
+    <h2>Willkommen, <span id="user-email">...</span></h2>
+    <button id="logout-btn">Abmelden</button>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    const supabase = supabase.createClient(
-      'https://flnjalgqtkqycsaymmbd.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-    );
+    const supabaseUrl = 'https://flnjalgqtkqycsaymmbd.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q';
+    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-    async function checkUser() {
-      const { data: { user } } = await supabase.auth.getUser();
+    // Prüfen, ob eingeloggt
+    async function checkSession() {
+      const { data: { session } } = await supabase.auth.getSession();
 
-      if (!user) {
+      if (!session) {
+        // Weiterleitung zu login.html, wenn nicht eingeloggt
         window.location.href = 'login.html';
-      } else {
-        document.getElementById('user-email').textContent = `Eingeloggt als: ${user.email}`;
+        return;
       }
+
+      // Email anzeigen
+      document.getElementById('user-email').textContent = session.user.email;
     }
 
+    // Logout
     document.getElementById('logout-btn').addEventListener('click', async () => {
       await supabase.auth.signOut();
       window.location.href = 'login.html';
     });
 
-    checkUser();
+    checkSession();
   </script>
 </body>
 </html>
