@@ -111,4 +111,34 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     const supabaseUrl = 'https://flnjalgqtkqycsaymmbd.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q';
+    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+    const form = document.getElementById('register-form');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = form.email.value;
+      const password = form.password.value;
+      const passwordConfirm = form['password-confirm'].value;
+
+      if (password !== passwordConfirm) {
+        alert('Passwörter stimmen nicht überein.');
+        return;
+      }
+
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+      });
+
+      if (error) {
+        alert('Registrierung fehlgeschlagen: ' + error.message);
+      } else {
+        alert('Registrierung erfolgreich! Bitte überprüfe deine E-Mails und bestätige deinen Account.');
+        window.location.href = 'login.html';
+      }
+    });
+  </script>
+</body>
+</html>
