@@ -16,37 +16,76 @@
       height: 100vh;
       margin: 0;
     }
+
     .container {
       background: rgba(255, 255, 255, 0.1);
       padding: 2rem;
       border-radius: 15px;
-      max-width: 400px;
       width: 100%;
+      max-width: 400px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     }
+
     h2 {
       text-align: center;
+      margin-bottom: 1.5rem;
     }
-    label, input, button {
+
+    label {
       display: block;
-      width: 100%;
       margin-top: 1rem;
+      margin-bottom: 0.5rem;
     }
+
     input {
+      width: 100%;
       padding: 0.75rem;
       border-radius: 8px;
       border: none;
+      font-size: 1rem;
     }
+
     button {
+      margin-top: 2rem;
+      width: 100%;
       padding: 0.75rem;
+      font-size: 1rem;
+      border: none;
       border-radius: 8px;
       background-color: #00d084;
       color: #000;
       font-weight: bold;
       cursor: pointer;
+      transition: background 0.3s;
     }
-    .error { color: #ff6b6b; text-align: center; margin-top: 1rem; }
-    .success { color: #00ffae; text-align: center; margin-top: 1rem; }
+
+    button:hover {
+      background-color: #02c26b;
+    }
+
+    .error {
+      color: #ff6b6b;
+      margin-top: 1rem;
+      text-align: center;
+    }
+
+    .success {
+      color: #00ffae;
+      margin-top: 1rem;
+      text-align: center;
+    }
+
+    .link {
+      margin-top: 1rem;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    .link a {
+      color: #00d084;
+      font-weight: bold;
+      text-decoration: none;
+    }
   </style>
 </head>
 <body>
@@ -63,38 +102,41 @@
       <div class="error" id="error-msg"></div>
       <div class="success" id="success-msg"></div>
     </form>
+    <div class="link">
+      Noch kein Konto? <a href="register.html">Registrieren</a>
+    </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const supabase = supabase.createClient(
-        'https://flnjalgqtkqycsaymmbd.supabase.co',
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-      );
+    const supabase = supabase.createClient(
+      'https://flnjalgqtkqycsaymmbd.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+    );
 
-      const form = document.getElementById('login-form');
-      const errorMsg = document.getElementById('error-msg');
-      const successMsg = document.getElementById('success-msg');
+    const form = document.getElementById('login-form');
+    const errorMsg = document.getElementById('error-msg');
+    const successMsg = document.getElementById('success-msg');
 
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
 
-        errorMsg.textContent = '';
-        successMsg.textContent = '';
+      const email = form.email.value.trim();
+      const password = form.password.value;
 
-        const email = form.email.value.trim();
-        const password = form.password.value;
+      errorMsg.textContent = '';
+      successMsg.textContent = '';
 
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
-        if (error) {
-          errorMsg.textContent = '❌ ' + error.message;
-        } else {
-          successMsg.textContent = '✅ Login erfolgreich!';
-          setTimeout(() => window.location.href = 'dashboard.html', 2000);
-        }
-      });
+      if (error) {
+        errorMsg.textContent = '❌ Login fehlgeschlagen: ' + error.message;
+      } else {
+        successMsg.textContent = '✅ Login erfolgreich! Weiterleitung...';
+        setTimeout(() => {
+          window.location.href = 'dashboard.html'; // Zielseite nach Login
+        }, 2000);
+      }
     });
   </script>
 </body>
