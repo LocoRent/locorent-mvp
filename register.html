@@ -16,6 +16,7 @@
       height: 100vh;
       margin: 0;
     }
+
     .container {
       background: rgba(255,255,255,0.1);
       padding: 2rem;
@@ -24,60 +25,74 @@
       width: 100%;
       box-shadow: 0 0 15px rgba(0,0,0,0.4);
     }
+
     h2 {
       text-align: center;
     }
+
     label {
       margin-top: 1rem;
       display: block;
     }
-    input, button {
+
+    input {
       width: 100%;
       padding: 0.75rem;
-      margin-top: 0.5rem;
+      margin-top: 0.25rem;
       border-radius: 8px;
       border: none;
       font-size: 1rem;
     }
+
     button {
+      width: 100%;
+      padding: 0.75rem;
+      margin-top: 1.5rem;
+      border-radius: 8px;
+      border: none;
+      font-size: 1rem;
       background-color: #00d084;
-      color: #000;
+      color: black;
       font-weight: bold;
       cursor: pointer;
-      margin-top: 1.5rem;
-      transition: background 0.3s;
+      transition: background 0.3s ease;
     }
+
     button:hover {
       background-color: #02c26b;
     }
+
     .message {
       margin-top: 1rem;
       text-align: center;
     }
+
     .error {
       color: #ff6b6b;
     }
+
     .success {
       color: #00ffae;
     }
   </style>
 </head>
 <body>
+
   <div class="container">
     <h2>Registrieren</h2>
     <form id="register-form">
       <label for="email">E-Mail</label>
-      <input type="email" id="email" required autocomplete="email" />
+      <input type="email" id="email" required />
 
       <label for="password">Passwort</label>
-      <input type="password" id="password" required autocomplete="new-password" />
+      <input type="password" id="password" required />
 
-      <label for="password-confirm">Passwort bestätigen</label>
-      <input type="password" id="password-confirm" required autocomplete="new-password" />
+      <label for="confirm-password">Passwort bestätigen</label>
+      <input type="password" id="confirm-password" required />
 
       <button type="submit">Registrieren</button>
 
-      <div class="message" id="message"></div>
+      <div id="message" class="message"></div>
     </form>
   </div>
 
@@ -89,31 +104,32 @@
     );
 
     const form = document.getElementById('register-form');
-    const message = document.getElementById('message');
+    const messageDiv = document.getElementById('message');
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      message.textContent = '';
-      message.className = 'message';
-
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
-      const passwordConfirm = document.getElementById('password-confirm').value;
+      const confirmPassword = document.getElementById('confirm-password').value;
 
-      if (password !== passwordConfirm) {
-        message.textContent = '❌ Passwörter stimmen nicht überein.';
-        message.classList.add('error');
+      messageDiv.textContent = '';
+      messageDiv.className = 'message';
+
+      if (password !== confirmPassword) {
+        messageDiv.textContent = '❌ Passwörter stimmen nicht überein.';
+        messageDiv.classList.add('error');
         return;
       }
 
       const { data, error } = await supabase.auth.signUp({ email, password });
 
       if (error) {
-        message.textContent = '❌ ' + error.message;
-        message.classList.add('error');
+        messageDiv.textContent = '❌ ' + error.message;
+        messageDiv.classList.add('error');
       } else {
-        message.textContent = '✅ Registrierung erfolgreich. Bitte E-Mail bestätigen.';
-        message.classList.add('success');
+        messageDiv.textContent = '✅ Registrierung erfolgreich! Bestätige deine E-Mail.';
+        messageDiv.classList.add('success');
+
         setTimeout(() => {
           window.location.href = 'login.html';
         }, 5000);
