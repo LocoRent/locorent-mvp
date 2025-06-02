@@ -81,7 +81,7 @@
 <script>
   const supabaseUrl = 'https://flnjalgqtkqycsaymmbd.supabase.co';
   const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q';
-  const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+  const supabase = createClient(supabaseUrl, supabaseKey);
 
   const form = document.getElementById('register-form');
   const messageDiv = document.getElementById('message');
@@ -111,7 +111,6 @@
         messageDiv.textContent = '✅ Registrierung erfolgreich! Bitte bestätige deine E-Mail.';
         messageDiv.classList.add('success');
 
-        // Optional: Automatisch weiterleiten nach z.B. 5 Sekunden
         setTimeout(() => {
           window.location.href = 'login.html';
         }, 5000);
@@ -125,4 +124,3 @@
 
 </body>
 </html>
-
