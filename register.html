@@ -56,23 +56,19 @@
       color: #000;
       font-weight: bold;
       cursor: pointer;
-      transition: background 0.3s;
     }
 
-    button:hover {
-      background-color: #02c26b;
-    }
-
-    .error {
-      color: #ff6b6b;
-      margin-top: 1rem;
+    .msg {
       text-align: center;
+      margin-top: 1rem;
     }
 
-    .success {
+    a {
       color: #00ffae;
-      margin-top: 1rem;
+      text-decoration: underline;
+      display: block;
       text-align: center;
+      margin-top: 1.5rem;
     }
   </style>
 </head>
@@ -90,51 +86,45 @@
       <input type="password" name="password-confirm" required minlength="6" />
 
       <button type="submit">Registrieren</button>
-      <div class="error" id="error-msg"></div>
-      <div class="success" id="success-msg"></div>
+      <div class="msg" id="msg"></div>
     </form>
+    <a href="login.html">Bereits registriert? Jetzt einloggen</a>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     const supabaseUrl = 'https://flnjalgqtkqycsaymmbd.supabase.co';
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q';
-
-    const { createClient } = supabase;
-    const supabaseClient = createClient(supabaseUrl, supabaseKey);
+    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
     const form = document.getElementById('register-form');
-    const errorMsg = document.getElementById('error-msg');
-    const successMsg = document.getElementById('success-msg');
+    const msg = document.getElementById('msg');
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      const email = form.email.value.trim();
+      const email = form.email.value;
       const password = form.password.value;
       const confirm = form['password-confirm'].value;
 
-      errorMsg.textContent = '';
-      successMsg.textContent = '';
+      msg.textContent = '';
 
       if (password !== confirm) {
-        errorMsg.textContent = '❌ Passwörter stimmen nicht überein.';
+        msg.textContent = '❌ Passwörter stimmen nicht überein.';
         return;
       }
 
-      const { data, error } = await supabaseClient.auth.signUp({ email, password });
+      const { error } = await supabase.auth.signUp({ email, password });
 
       if (error) {
-        errorMsg.textContent = '❌ ' + error.message;
+        msg.textContent = '❌ ' + error.message;
       } else {
-        successMsg.textContent = '✅ Registrierung erfolgreich! Bitte E-Mail bestätigen.';
+        msg.textContent = '✅ Erfolgreich registriert. Bitte E-Mail bestätigen.';
         setTimeout(() => {
           window.location.href = 'login.html';
-        }, 3000);
+        }, 2500);
       }
     });
   </script>
 </body>
 </html>
-
-
