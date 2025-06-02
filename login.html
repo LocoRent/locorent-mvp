@@ -74,10 +74,12 @@
   </form>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- Supabase v1 laden -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@1.35.6/dist/umd/supabase.min.js"></script>
 <script>
+  // Supabase v1: Client erstellen
   const supabaseUrl = 'https://flnjalgqtkqycsaymmbd.supabase.co';
-  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'; // Trunkiert – ersetze bei dir vollständig!
+  const supabaseKey = 'YOUR_SUPABASE_ANON_KEY_HERE'; // ✅ Hier deinen echten anon-key einfügen
   const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
   const form = document.getElementById('login-form');
@@ -92,7 +94,7 @@
     const password = document.getElementById('password').value;
 
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      const { user, session, error } = await supabase.auth.signIn({ email, password });
 
       if (error) {
         messageDiv.textContent = '❌ ' + error.message;
