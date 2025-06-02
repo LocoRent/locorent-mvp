@@ -2,90 +2,37 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login – Locorent</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     body {
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #1e3c72, #2a5298);
-      color: #fff;
+      font-family: sans-serif;
+      background: #f5f7fa;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      margin: 0;
     }
-
     .container {
-      background: rgba(255, 255, 255, 0.1);
+      background: white;
       padding: 2rem;
-      border-radius: 15px;
+      border-radius: 8px;
       width: 100%;
       max-width: 400px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-
-    h2 {
-      text-align: center;
-      margin-bottom: 1.5rem;
-    }
-
-    label {
-      display: block;
-      margin-top: 1rem;
-      margin-bottom: 0.5rem;
-    }
-
-    input {
+    input, button {
       width: 100%;
-      padding: 0.75rem;
-      border-radius: 8px;
-      border: none;
-      font-size: 1rem;
+      padding: 0.8rem;
+      margin-top: 0.5rem;
     }
-
-    button {
-      margin-top: 2rem;
-      width: 100%;
-      padding: 0.75rem;
-      font-size: 1rem;
-      border: none;
-      border-radius: 8px;
-      background-color: #00d084;
-      color: #000;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-
-    button:hover {
-      background-color: #02c26b;
-    }
-
-    .error {
-      color: #ff6b6b;
+    .error, .success {
       margin-top: 1rem;
       text-align: center;
     }
-
-    .success {
-      color: #00ffae;
-      margin-top: 1rem;
-      text-align: center;
-    }
-
-    .link {
-      margin-top: 1rem;
-      text-align: center;
-      font-size: 0.9rem;
-    }
-
-    .link a {
-      color: #00d084;
-      font-weight: bold;
-      text-decoration: none;
-    }
+    .error { color: red; }
+    .success { color: green; }
   </style>
 </head>
 <body>
@@ -93,21 +40,18 @@
     <h2>Login</h2>
     <form id="login-form">
       <label for="email">E-Mail</label>
-      <input type="email" name="email" required />
+      <input type="email" id="email" name="email" required />
 
       <label for="password">Passwort</label>
-      <input type="password" name="password" required />
+      <input type="password" id="password" name="password" required />
 
       <button type="submit">Einloggen</button>
+
       <div class="error" id="error-msg"></div>
       <div class="success" id="success-msg"></div>
     </form>
-    <div class="link">
-      Noch kein Konto? <a href="register.html">Registrieren</a>
-    </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     const supabase = supabase.createClient(
       'https://flnjalgqtkqycsaymmbd.supabase.co',
@@ -115,27 +59,22 @@
     );
 
     const form = document.getElementById('login-form');
-    const errorMsg = document.getElementById('error-msg');
-    const successMsg = document.getElementById('success-msg');
-
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-
-      const email = form.email.value.trim();
-      const password = form.password.value;
-
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const errorMsg = document.getElementById('error-msg');
+      const successMsg = document.getElementById('success-msg');
       errorMsg.textContent = '';
       successMsg.textContent = '';
 
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
 
       if (error) {
-        errorMsg.textContent = '❌ Login fehlgeschlagen: ' + error.message;
+        errorMsg.textContent = 'Fehler: ' + error.message;
       } else {
-        successMsg.textContent = '✅ Login erfolgreich! Weiterleitung...';
-        setTimeout(() => {
-          window.location.href = 'dashboard.html'; // Zielseite nach Login
-        }, 2000);
+        successMsg.textContent = 'Login erfolgreich!';
+        setTimeout(() => window.location.href = 'dashboard.html', 2000);
       }
     });
   </script>
