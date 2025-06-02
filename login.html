@@ -74,5 +74,44 @@
   </form>
 </div>
 
-<!-- Supabase CDN (v2, klassisch) -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase
+<!-- Supabase CDN -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
+
+<script>
+  // Supabase-Client initialisieren
+  const supabase = window.supabase.createClient(
+    'https://flnjalgqtkqycsaymmbd.supabase.co', // Deine Supabase-URL
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q' // Dein API-Key
+  );
+
+  const form = document.getElementById('login-form');
+  const messageDiv = document.getElementById('message');
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    messageDiv.textContent = '';
+    messageDiv.className = 'message';
+
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password
+    });
+
+    if (error) {
+      messageDiv.textContent = '❌ ' + error.message;
+      messageDiv.classList.add('error');
+    } else {
+      messageDiv.textContent = '✅ Login erfolgreich! Weiterleitung...';
+      messageDiv.classList.add('success');
+      setTimeout(() => {
+        window.location.href = 'dashboard.html'; // Weiterleitungsseite
+      }, 2000);
+    }
+  });
+</script>
+
+</body>
+</html>
