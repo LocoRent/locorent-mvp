@@ -1,334 +1,253 @@
 <!DOCTYPE html>
-<html lang="de" >
+<html lang="de">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Locorent – Mieten statt Kaufen</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <style>
     /* Reset */
-    * {
-      margin: 0; padding: 0; box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
+    *, *::before, *::after {
+      box-sizing: border-box;
     }
     body {
-      background: radial-gradient(circle at center, #0f0f17, #05050a);
-      color: #0ff;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow-x: hidden;
-      scroll-behavior: smooth;
-      user-select: none;
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #f7f9fc;
+      color: #222;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      line-height: 1.5;
+    }
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+    img {
+      max-width: 100%;
+      display: block;
     }
 
-    /* Background particles effect - pure CSS */
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0; left: 0; width: 100vw; height: 100vh;
-      background:
-        radial-gradient(#0ff 1px, transparent 1px),
-        radial-gradient(#0ff 1px, transparent 1px);
-      background-position: 0 0, 25px 25px;
-      background-size: 50px 50px;
-      animation: particlesMove 30s linear infinite;
-      opacity: 0.15;
-      z-index: 0;
-    }
-    @keyframes particlesMove {
-      0% {background-position: 0 0, 25px 25px;}
-      100% {background-position: 50px 50px, 75px 75px;}
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: 1rem;
+      padding-right: 1rem;
     }
 
-    /* Glitch header */
+    /* Header */
     header {
-      position: relative;
-      padding: 5rem 2rem 7rem;
-      text-align: center;
-      z-index: 10;
-      overflow: visible;
-    }
-    header h1 {
-      font-family: 'Orbitron', sans-serif;
-      font-weight: 700;
-      font-size: 5rem;
-      color: #0ff;
-      letter-spacing: 0.3em;
-      position: relative;
-      animation: glitchAnim 2s infinite;
-      text-transform: uppercase;
-      user-select: none;
-    }
-    header h1::before,
-    header h1::after {
-      content: attr(data-text);
-      position: absolute;
-      left: 0; top: 0;
-      width: 100%; height: 100%;
-      color: #0ff;
-      background: transparent;
-      overflow: hidden;
-      clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
-    }
-    header h1::after {
-      left: 2px;
-      text-shadow: -2px 0 #f0f, 2px 2px #0ff;
-      clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
-      animation: glitchAnimAfter 2s infinite;
-    }
-    @keyframes glitchAnim {
-      0% {transform: translate(0);}
-      20% {transform: translate(-3px, 3px);}
-      40% {transform: translate(3px, -3px);}
-      60% {transform: translate(-3px, 3px);}
-      80% {transform: translate(3px, -3px);}
-      100% {transform: translate(0);}
-    }
-    @keyframes glitchAnimAfter {
-      0% {clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);}
-      20% {clip-path: polygon(0 60%, 100% 60%, 100% 100%, 0 100%);}
-      40% {clip-path: polygon(0 50%, 100% 50%, 100% 100%, 0 100%);}
-      60% {clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);}
-      80% {clip-path: polygon(0 60%, 100% 60%, 100% 100%, 0 100%);}
-      100% {clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);}
-    }
-    header p {
-      font-size: 1.8rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      color: #0ff;
-      text-shadow: 0 0 10px #0ffaaaff;
-      margin: 1rem 0 4rem;
-      user-select: none;
-    }
-
-    /* Buttons */
-    .cta {
+      background-color: #fff;
+      padding: 2rem 0;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
       display: flex;
-      justify-content: center;
-      gap: 3rem;
-      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
       z-index: 10;
     }
-    .cta a {
-      background: linear-gradient(45deg, #00fff7, #00b3e6);
-      padding: 1.2rem 3rem;
-      border-radius: 50px;
+    .logo {
       font-weight: 700;
-      font-size: 1.3rem;
-      color: #001f29;
-      box-shadow: 0 0 15px #00fff7, 0 0 30px #00b3e6;
-      position: relative;
-      overflow: hidden;
-      transition: transform 0.3s ease, box-shadow 0.4s ease;
-      user-select: none;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      cursor: pointer;
+      font-size: 1.8rem;
+      color: #0071eb;
+      letter-spacing: 0.05em;
     }
-    .cta a:hover {
-      animation: bounce 0.4s;
-      box-shadow: 0 0 25px #00fff7, 0 0 45px #00b3e6;
-      transform: scale(1.1);
+
+    nav {
+      display: flex;
+      gap: 1.5rem;
     }
-    .cta a::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: linear-gradient(120deg, transparent, rgba(255,255,255,0.6), transparent);
-      transform: rotate(25deg);
-      transition: all 0.6s ease;
-      pointer-events: none;
+    nav a {
+      font-weight: 600;
+      color: #555;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      transition: background-color 0.3s ease;
     }
-    .cta a:hover::before {
-      left: 120%;
-      transition: all 0.6s ease;
+    nav a:hover {
+      background-color: #e6f0ff;
+      color: #0071eb;
     }
-    .cta a.login-btn {
-      background: linear-gradient(45deg, #ff00d4, #d400a6);
+    .btn-primary {
+      background-color: #0071eb;
       color: #fff;
-      box-shadow: 0 0 15px #ff00d4, 0 0 30px #d400a6;
+      padding: 0.6rem 1.5rem;
+      border-radius: 6px;
+      font-weight: 600;
+      transition: background-color 0.3s ease;
     }
-    .cta a.login-btn:hover {
-      box-shadow: 0 0 35px #ff00d4, 0 0 60px #d400a6;
-    }
-
-    /* Bounce Animation */
-    @keyframes bounce {
-      0%, 100% {transform: scale(1);}
-      50% {transform: scale(1.2);}
+    .btn-primary:hover {
+      background-color: #005bb5;
     }
 
-    /* Search box */
+    /* Hero Section */
+    .hero {
+      background-color: #fff;
+      padding: 4rem 0 6rem;
+      text-align: center;
+      box-shadow: 0 1px 8px rgba(0,0,0,0.05);
+      border-radius: 8px;
+      margin: 2rem 1rem;
+    }
+    .hero h1 {
+      font-weight: 700;
+      font-size: 3rem;
+      color: #222;
+      margin-bottom: 1rem;
+      line-height: 1.1;
+    }
+    .hero p {
+      font-weight: 400;
+      font-size: 1.25rem;
+      color: #555;
+      margin-bottom: 2.5rem;
+    }
     .search-box {
       max-width: 600px;
-      margin: 0 auto 5rem;
-      position: relative;
-      z-index: 10;
+      margin: 0 auto;
+      display: flex;
+      gap: 0.5rem;
     }
-    .search-box input {
-      width: 100%;
-      padding: 1.3rem 1.5rem 1.3rem 4rem;
-      border-radius: 50px;
+    .search-box input[type="text"] {
+      flex: 1;
+      padding: 1rem 1.25rem;
+      font-size: 1rem;
+      border: 1.8px solid #ddd;
+      border-radius: 6px 0 0 6px;
+      outline-offset: 2px;
+      transition: border-color 0.3s ease;
+    }
+    .search-box input[type="text"]:focus {
+      border-color: #0071eb;
+      box-shadow: 0 0 8px rgba(0, 113, 235, 0.3);
+    }
+    .search-box button {
+      background-color: #0071eb;
       border: none;
-      font-size: 1.2rem;
+      color: #fff;
+      padding: 1rem 1.5rem;
       font-weight: 600;
-      color: #001f29;
-      background: #00fff7;
-      box-shadow: 0 0 20px #00fff7aa;
-      transition: box-shadow 0.4s ease, transform 0.3s ease;
-      outline-offset: 0;
+      font-size: 1rem;
+      border-radius: 0 6px 6px 0;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
     }
-    .search-box input::placeholder {
-      color: #007a8a;
-      font-style: italic;
-    }
-    .search-box input:focus {
-      box-shadow: 0 0 30px #00fff7ff;
-      transform: scale(1.03);
-      outline: none;
-    }
-    .search-box::before {
-      content: '🔍';
-      position: absolute;
-      left: 1.3rem;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 1.7rem;
-      color: #007a8a;
-      pointer-events: none;
-      user-select: none;
+    .search-box button:hover {
+      background-color: #005bb5;
     }
 
-    /* Kategorien Grid */
+    /* Categories */
     .categories {
-      max-width: 1100px;
+      max-width: 1200px;
       margin: 0 auto 6rem;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 3rem;
-      z-index: 10;
+      grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+      gap: 2rem;
       padding: 0 1rem;
     }
-    .cat {
-      background: linear-gradient(135deg, #00fff7dd, #00b3e6cc);
-      border-radius: 30px;
-      box-shadow:
-        0 0 15px #00fff7aa,
-        0 10px 30px rgba(0, 255, 247, 0.3);
-      padding: 2.5rem 1.5rem;
+    .category-card {
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.1);
       text-align: center;
-      color: #001f29;
-      font-weight: 700;
+      padding: 2rem 1.5rem;
       cursor: pointer;
-      transition: transform 0.35s cubic-bezier(0.5, 1.5, 0.5, 1), box-shadow 0.35s ease;
-      perspective: 600px;
+      transition: box-shadow 0.3s ease, transform 0.25s ease;
       user-select: none;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      filter: drop-shadow(0 0 3px #00fff7);
-      transform-style: preserve-3d;
     }
-    .cat:hover {
-      transform: rotateY(15deg) rotateX(10deg) translateY(-15px) scale(1.08);
-      box-shadow:
-        0 0 35px #00fff7ff,
-        0 20px 60px rgba(0, 255, 247, 0.8);
+    .category-card:hover {
+      box-shadow: 0 8px 20px rgba(0,113,235,0.2);
+      transform: translateY(-5px);
     }
-    .cat img {
-      width: 80px;
-      height: 80px;
-      filter: drop-shadow(0 0 5px #00fff7);
-      margin-bottom: 1.2rem;
-      transition: transform 0.3s ease;
-      transform-style: preserve-3d;
+    .category-card img {
+      width: 60px;
+      margin-bottom: 1rem;
+      filter: grayscale(0.4);
+      transition: filter 0.3s ease;
     }
-    .cat:hover img {
-      transform: translateZ(30px) scale(1.15);
-      filter: drop-shadow(0 0 15px #00fff7);
+    .category-card:hover img {
+      filter: none;
     }
-    .cat h3 {
-      font-size: 1.4rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: #001f29;
-      text-shadow: 0 0 10px #00fff7;
+    .category-card h3 {
+      font-weight: 600;
+      font-size: 1.2rem;
+      color: #222;
     }
 
     /* Footer */
     footer {
-      background: linear-gradient(90deg, #00fff7aa, #00b3e6aa);
-      color: #001f29;
+      background-color: #f2f4f8;
       padding: 2rem 1rem;
       text-align: center;
-      font-weight: 600;
-      font-size: 1rem;
-      letter-spacing: 0.1em;
+      color: #777;
+      font-size: 0.9rem;
       user-select: none;
-      box-shadow: inset 0 0 30px #00fff7aa;
-      z-index: 10;
+      border-top: 1px solid #ddd;
     }
 
     /* Responsive */
-    @media (max-width: 600px) {
-      header h1 {
-        font-size: 3rem;
-        letter-spacing: 0.1em;
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        gap: 1rem;
       }
-      .cat img {
-        width: 60px;
-        height: 60px;
+      .search-box {
+        flex-direction: column;
       }
-      .cat h3 {
-        font-size: 1.1rem;
+      .search-box input[type="text"], .search-box button {
+        border-radius: 6px !important;
       }
-      .cta a {
-        padding: 1rem 2.5rem;
-        font-size: 1.1rem;
+      .search-box button {
+        margin-top: 0.75rem;
+        border-radius: 6px;
       }
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1 data-text="LOCORRENT">LOCORRENT</h1>
-    <p>Mieten. Vermieten. Verdienen – lokal & smart.</p>
-    <div class="cta">
-      <a href="#" class="offer-btn">Jetzt Angebot einstellen</a>
-      <a href="login.html" class="login-btn">Login</a>
-    </div>
+  <header class="container" role="banner">
+    <a href="#" class="logo" aria-label="Locorent Logo">Locorent</a>
+    <nav role="navigation" aria-label="Hauptnavigation">
+      <a href="#" class="btn-primary">Jetzt Angebot einstellen</a>
+      <a href="login.html">Login</a>
+    </nav>
   </header>
 
-  <div class="search-box">
-    <input type="text" placeholder="Was möchtest du mieten? z.B. Bohrmaschine, Kamera..." />
-  </div>
+  <main role="main" class="container" style="margin-top: 2rem;">
+    <section class="hero" aria-label="Hero Bereich">
+      <h1>Mieten. Vermieten. Verdienen – lokal &amp; smart.</h1>
+      <p>Finde alles, was du brauchst – von Werkzeugen bis zur Kamera.</p>
+      <form class="search-box" role="search" aria-label="Suchformular">
+        <input type="text" placeholder="Was möchtest du mieten? z.B. Bohrmaschine, Kamera..." aria-label="Suchbegriff eingeben" />
+        <button type="submit" aria-label="Suche starten">Suchen</button>
+      </form>
+    </section>
 
-  <section class="categories">
-    <div class="cat">
-      <img src="https://img.icons8.com/ios-filled/100/001f29/drill.png" alt="Haushalt" />
-      <h3>Haushalt</h3>
-    </div>
-    <div class="cat">
-      <img src="https://img.icons8.com/ios-filled/100/001f29/camera.png" alt="Technik" />
-      <h3>Technik</h3>
-    </div>
-    <div class="cat">
-      <img src="https://img.icons8.com/ios-filled/100/001f29/electric-scooter.png" alt="Outdoor" />
-      <h3>Outdoor</h3>
-    </div>
-    <div class="cat">
-      <img src="https://img.icons8.com/ios-filled/100/001f29/suitcase.png" alt="Reisen" />
-      <h3>Reisen</h3>
-    </div>
-  </section>
+    <section class="categories" aria-label="Kategorien">
+      <article class="category-card" tabindex="0" role="button" aria-pressed="false">
+        <img src="https://img.icons8.com/ios-filled/100/0071eb/drill.png" alt="Haushalt Icon" />
+        <h3>Haushalt</h3>
+      </article>
+      <article class="category-card" tabindex="0" role="button" aria-pressed="false">
+        <img src="https://img.icons8.com/ios-filled/100/0071eb/camera.png" alt="Technik Icon" />
+        <h3>Technik</h3>
+      </article>
+      <article class="category-card" tabindex="0" role="button" aria-pressed="false">
+        <img src="https://img.icons8.com/ios-filled/100/0071eb/electric-scooter.png" alt="Outdoor Icon" />
+        <h3>Outdoor</h3>
+      </article>
+      <article class="category-card" tabindex="0" role="button" aria-pressed="false">
+        <img src="https://img.icons8.com/ios-filled/100/0071eb/suitcase.png" alt="Reisen Icon" />
+        <h3>Reisen</h3>
+      </article>
+    </section>
+  </main>
 
-  <footer>
-    &copy; 2025 Locorent – Entwickelt mit ♥ und Neon Power
+  <footer role="contentinfo">
+    &copy; 2025 Locorent – Entwickelt mit ❤️
   </footer>
 </body>
 </html>
