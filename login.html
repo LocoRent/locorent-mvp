@@ -2,79 +2,136 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Login – Locorent</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <style>
     body {
-      font-family: sans-serif;
-      background: #f5f7fa;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      color: #fff;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
+      margin: 0;
     }
     .container {
-      background: white;
+      background: rgba(255,255,255,0.1);
       padding: 2rem;
-      border-radius: 8px;
+      border-radius: 15px;
       width: 100%;
       max-width: 400px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
     }
-    input, button {
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      margin-bottom: 0.5rem;
+    }
+    input {
       width: 100%;
-      padding: 0.8rem;
-      margin-top: 0.5rem;
+      padding: 0.75rem;
+      border-radius: 8px;
+      border: none;
+      font-size: 1rem;
     }
-    .error, .success {
+    button {
+      margin-top: 2rem;
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      background-color: #00d084;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background-color: #02c26b;
+    }
+    .error {
+      color: #ff6b6b;
       margin-top: 1rem;
       text-align: center;
     }
-    .error { color: red; }
-    .success { color: green; }
+    .success {
+      color: #00ffae;
+      margin-top: 1rem;
+      text-align: center;
+    }
+    .link {
+      margin-top: 1rem;
+      text-align: center;
+    }
+    .link a {
+      color: #00ffae;
+      text-decoration: none;
+    }
+    .link a:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <h2>Login</h2>
-    <form id="login-form">
+    <form id="login-form" novalidate>
       <label for="email">E-Mail</label>
-      <input type="email" id="email" name="email" required />
+      <input type="email" id="email" name="email" required autocomplete="email" />
 
       <label for="password">Passwort</label>
-      <input type="password" id="password" name="password" required />
+      <input type="password" id="password" name="password" required autocomplete="current-password" />
 
       <button type="submit">Einloggen</button>
 
       <div class="error" id="error-msg"></div>
       <div class="success" id="success-msg"></div>
     </form>
+    <div class="link">
+      <p>Noch kein Konto? <a href="register.html">Hier registrieren</a></p>
+    </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    const supabase = supabase.createClient(
-      'https://flnjalgqtkqycsaymmbd.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-    );
+    const supabaseUrl = 'https://flnjalgqtkqycsaymmbd.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q';
+    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
     const form = document.getElementById('login-form');
+    const errorMsg = document.getElementById('error-msg');
+    const successMsg = document.getElementById('success-msg');
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-      const errorMsg = document.getElementById('error-msg');
-      const successMsg = document.getElementById('success-msg');
+
       errorMsg.textContent = '';
       successMsg.textContent = '';
 
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      const email = form.email.value.trim();
+      const password = form.password.value;
 
-      if (error) {
-        errorMsg.textContent = 'Fehler: ' + error.message;
-      } else {
-        successMsg.textContent = 'Login erfolgreich!';
-        setTimeout(() => window.location.href = 'dashboard.html', 2000);
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) {
+          errorMsg.textContent = '❌ ' + error.message;
+          return;
+        }
+        successMsg.textContent = '✅ Login erfolgreich! Du wirst weitergeleitet...';
+
+        // Weiterleitung zum Dashboard nach kurzer Verzögerung
+        setTimeout(() => {
+          window.location.href = 'dashboard.html';
+        }, 1500);
+      } catch (err) {
+        errorMsg.textContent = '❌ Fehler beim Login.';
       }
     });
   </script>
