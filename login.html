@@ -9,7 +9,7 @@
     body {
       font-family: 'Poppins', sans-serif;
       background: linear-gradient(135deg, #1e3c72, #2a5298);
-      color: #fff;
+      color: white;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -20,120 +20,101 @@
       background: rgba(255,255,255,0.1);
       padding: 2rem;
       border-radius: 15px;
-      width: 100%;
       max-width: 400px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      width: 100%;
+      box-shadow: 0 0 15px rgba(0,0,0,0.4);
     }
     h2 {
       text-align: center;
       margin-bottom: 1.5rem;
     }
-    label {
+    label, input, button {
       display: block;
-      margin-top: 1rem;
-      margin-bottom: 0.5rem;
-    }
-    input {
       width: 100%;
+      margin-top: 1rem;
+    }
+    input, button {
       padding: 0.75rem;
       border-radius: 8px;
       border: none;
       font-size: 1rem;
     }
     button {
-      margin-top: 2rem;
-      width: 100%;
-      padding: 0.75rem;
-      font-size: 1rem;
-      border: none;
-      border-radius: 8px;
       background-color: #00d084;
       color: #000;
-      font-weight: bold;
+      font-weight: 700;
       cursor: pointer;
-      transition: background 0.3s;
+      margin-top: 1.5rem;
+      transition: background-color 0.3s ease;
     }
     button:hover {
       background-color: #02c26b;
     }
-    .error {
-      color: #ff6b6b;
+    .message {
       margin-top: 1rem;
       text-align: center;
+    }
+    .error {
+      color: #ff6b6b;
     }
     .success {
       color: #00ffae;
-      margin-top: 1rem;
-      text-align: center;
-    }
-    .link {
-      margin-top: 1rem;
-      text-align: center;
-    }
-    .link a {
-      color: #00ffae;
-      text-decoration: none;
-    }
-    .link a:hover {
-      text-decoration: underline;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Login</h2>
-    <form id="login-form" novalidate>
-      <label for="email">E-Mail</label>
-      <input type="email" id="email" name="email" required autocomplete="email" />
 
-      <label for="password">Passwort</label>
-      <input type="password" id="password" name="password" required autocomplete="current-password" />
+<div class="container">
+  <h2>Login</h2>
+  <form id="login-form">
+    <label for="email">E-Mail</label>
+    <input type="email" id="email" required autocomplete="email" />
 
-      <button type="submit">Einloggen</button>
+    <label for="password">Passwort</label>
+    <input type="password" id="password" required autocomplete="current-password" />
 
-      <div class="error" id="error-msg"></div>
-      <div class="success" id="success-msg"></div>
-    </form>
-    <div class="link">
-      <p>Noch kein Konto? <a href="register.html">Hier registrieren</a></p>
-    </div>
-  </div>
+    <button type="submit">Einloggen</button>
+    <div id="message" class="message"></div>
+  </form>
+</div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    const supabaseUrl = 'https://flnjalgqtkqycsaymmbd.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q';
-    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const supabaseUrl = 'https://flnjalgqtkqycsaymmbd.supabase.co';
+  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q';
+  const supabase = createClient(supabaseUrl, supabaseKey);
 
-    const form = document.getElementById('login-form');
-    const errorMsg = document.getElementById('error-msg');
-    const successMsg = document.getElementById('success-msg');
+  const form = document.getElementById('login-form');
+  const messageDiv = document.getElementById('message');
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    messageDiv.textContent = '';
+    messageDiv.className = 'message';
 
-      errorMsg.textContent = '';
-      successMsg.textContent = '';
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
 
-      const email = form.email.value.trim();
-      const password = form.password.value;
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
-      try {
-        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) {
-          errorMsg.textContent = '❌ ' + error.message;
-          return;
-        }
-        successMsg.textContent = '✅ Login erfolgreich! Du wirst weitergeleitet...';
+      if(error) {
+        messageDiv.textContent = '❌ ' + error.message;
+        messageDiv.classList.add('error');
+      } else {
+        messageDiv.textContent = '✅ Login erfolgreich! Du wirst weitergeleitet...';
+        messageDiv.classList.add('success');
 
-        // Weiterleitung zum Dashboard nach kurzer Verzögerung
         setTimeout(() => {
           window.location.href = 'dashboard.html';
-        }, 1500);
-      } catch (err) {
-        errorMsg.textContent = '❌ Fehler beim Login.';
+        }, 2000);
       }
-    });
-  </script>
+    } catch (err) {
+      messageDiv.textContent = '❌ Unerwarteter Fehler: ' + err.message;
+      messageDiv.classList.add('error');
+    }
+  });
+</script>
+
 </body>
 </html>
