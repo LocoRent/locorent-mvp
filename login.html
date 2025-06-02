@@ -2,108 +2,95 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login – Locorent</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <style>
     body {
-      margin: 0;
-      font-family: 'Inter', sans-serif;
-      background-color: #f7f9fc;
-      color: #222;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      color: #fff;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
+      margin: 0;
     }
-    .login-container {
-      background-color: #fff;
-      padding: 3rem 2.5rem;
-      border-radius: 12px;
-      box-shadow: 0 4px 18px rgba(0,0,0,0.1);
+
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 2rem;
+      border-radius: 15px;
       width: 100%;
       max-width: 400px;
-      box-sizing: border-box;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     }
-    h1 {
+
+    h2 {
+      text-align: center;
       margin-bottom: 1.5rem;
-      font-weight: 700;
-      font-size: 2rem;
-      color: #0071eb;
-      text-align: center;
     }
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 1.2rem;
-    }
+
     label {
-      font-weight: 600;
-      font-size: 0.9rem;
-      margin-bottom: 0.3rem;
-      color: #444;
-    }
-    input[type="email"],
-    input[type="password"] {
-      padding: 0.75rem 1rem;
-      font-size: 1rem;
-      border: 1.8px solid #ddd;
-      border-radius: 6px;
-      transition: border-color 0.3s ease;
-      outline-offset: 2px;
-    }
-    input[type="email"]:focus,
-    input[type="password"]:focus {
-      border-color: #0071eb;
-      box-shadow: 0 0 8px rgba(0,113,235,0.3);
-    }
-    button {
+      display: block;
       margin-top: 1rem;
-      background-color: #0071eb;
-      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      border-radius: 8px;
       border: none;
-      padding: 0.9rem 0;
-      font-weight: 600;
-      font-size: 1.1rem;
-      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    button {
+      margin-top: 2rem;
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      background-color: #00d084;
+      color: #000;
+      font-weight: bold;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      transition: background 0.3s;
     }
+
     button:hover {
-      background-color: #005bb5;
+      background-color: #02c26b;
     }
-    .footer-text {
-      margin-top: 1.5rem;
+
+    .error {
+      color: #ff6b6b;
+      margin-top: 1rem;
       text-align: center;
-      font-size: 0.9rem;
-      color: #666;
     }
-    .footer-text a {
-      color: #0071eb;
-      font-weight: 600;
-      text-decoration: none;
-    }
-    .footer-text a:hover {
-      text-decoration: underline;
+
+    .success {
+      color: #00ffae;
+      margin-top: 1rem;
+      text-align: center;
     }
   </style>
 </head>
 <body>
-  <main class="login-container" role="main" aria-labelledby="login-title">
-    <h1 id="login-title">Login</h1>
-    <form id="login-form" novalidate>
-      <label for="email">E-Mail Adresse</label>
-      <input type="email" id="email" name="email" placeholder="deine.email@example.com" required autocomplete="email" />
-      
+  <div class="container">
+    <h2>Login</h2>
+    <form id="login-form">
+      <label for="email">E-Mail</label>
+      <input type="email" name="email" required />
+
       <label for="password">Passwort</label>
-      <input type="password" id="password" name="password" placeholder="Dein Passwort" required autocomplete="current-password" />
-      
-      <button type="submit">Anmelden</button>
+      <input type="password" name="password" required />
+
+      <button type="submit">Einloggen</button>
+      <div class="error" id="error-msg"></div>
+      <div class="success" id="success-msg"></div>
     </form>
-    <p class="footer-text">
-      Noch kein Konto? <a href="register.html">Registrieren</a>
-    </p>
-  </main>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
@@ -112,25 +99,34 @@
     const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
     const form = document.getElementById('login-form');
+    const errorMsg = document.getElementById('error-msg');
+    const successMsg = document.getElementById('success-msg');
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const email = form.email.value;
+
+      const email = form.email.value.trim();
       const password = form.password.value;
+
+      errorMsg.textContent = '';
+      successMsg.textContent = '';
 
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
-        password,
+        password
       });
 
       if (error) {
-        alert('Login fehlgeschlagen: ' + error.message);
+        errorMsg.textContent = '❌ Login fehlgeschlagen: ' + error.message;
       } else {
-        alert('Erfolgreich eingeloggt!');
-        window.location.href = 'index.html';
+        successMsg.textContent = '✅ Login erfolgreich! Weiterleitung...';
+        setTimeout(() => {
+          window.location.href = 'dashboard.html'; // Zielseite nach Login
+        }, 2000);
       }
     });
   </script>
 </body>
 </html>
+
 
