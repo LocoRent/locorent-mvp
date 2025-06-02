@@ -1,73 +1,143 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Locorent - Miete was du brauchst</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        body {
-            margin: 0;
-            font-family: 'Inter', sans-serif;
-            background-color: #f4f4f4;
-        }
-        header {
-            background: #0f172a;
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
-        .hero {
-            padding: 60px;
-            background: #38bdf8;
-            color: white;
-            text-align: center;
-        }
-        .container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            padding: 40px;
-        }
-        .card {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        footer {
-            text-align: center;
-            padding: 20px;
-            background: #0f172a;
-            color: white;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Locorent – Mieten statt Kaufen</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet"/>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      color: #fff;
+    }
+
+    header {
+      padding: 2rem;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    header h1 {
+      font-size: 3rem;
+      font-weight: 800;
+    }
+
+    header p {
+      font-size: 1.2rem;
+      margin-top: 0.5rem;
+      opacity: 0.9;
+    }
+
+    .cta {
+      margin-top: 2rem;
+    }
+
+    .cta a {
+      text-decoration: none;
+      background-color: #00d084;
+      color: #000;
+      padding: 1rem 2rem;
+      border-radius: 10px;
+      font-weight: 600;
+      transition: background 0.3s;
+    }
+
+    .cta a:hover {
+      background-color: #02c26b;
+    }
+
+    .categories {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      margin: 3rem auto;
+      max-width: 1000px;
+    }
+
+    .cat {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 2rem;
+      border-radius: 20px;
+      text-align: center;
+      flex: 1 1 200px;
+      transition: transform 0.2s;
+    }
+
+    .cat:hover {
+      transform: scale(1.05);
+    }
+
+    .cat h3 {
+      margin-top: 1rem;
+      font-weight: 600;
+    }
+
+    .search-box {
+      max-width: 500px;
+      margin: 3rem auto;
+      text-align: center;
+    }
+
+    .search-box input {
+      width: 80%;
+      padding: 1rem;
+      border-radius: 10px;
+      border: none;
+      font-size: 1rem;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      background-color: rgba(0, 0, 0, 0.2);
+      margin-top: 4rem;
+      font-size: 0.9rem;
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>Locorent</h1>
-    </header>
-    <div class="hero">
-        <h2>Miete Dinge von Leuten in deiner Nähe</h2>
-        <p>Statt kaufen – einfach mieten</p>
+  <header>
+    <h1>Locorent</h1>
+    <p>Mieten. Vermieten. Verdienen – lokal & smart.</p>
+    <div class="cta">
+      <a href="#">Jetzt Angebot einstellen</a>
     </div>
-    <div class="container">
-        <div class="card">
-            <h3>Bohrmaschine</h3>
-            <p>10€ / Tag · Berlin</p>
-        </div>
-        <div class="card">
-            <h3>Partybox</h3>
-            <p>15€ / Tag · Hamburg</p>
-        </div>
-        <div class="card">
-            <h3>Drohne</h3>
-            <p>30€ / Tag · München</p>
-        </div>
+  </header>
+
+  <div class="search-box">
+    <input type="text" placeholder="Was möchtest du mieten? z.B. Bohrmaschine, Kamera...">
+  </div>
+
+  <section class="categories">
+    <div class="cat">
+      <img src="https://img.icons8.com/ios-filled/100/ffffff/drill.png" alt="Haushalt"/>
+      <h3>Haushalt</h3>
     </div>
-    <footer>
-        &copy; 2025 Locorent
-    </footer>
+    <div class="cat">
+      <img src="https://img.icons8.com/ios-filled/100/ffffff/camera.png" alt="Technik"/>
+      <h3>Technik</h3>
+    </div>
+    <div class="cat">
+      <img src="https://img.icons8.com/ios-filled/100/ffffff/electric-scooter.png" alt="Outdoor"/>
+      <h3>Outdoor</h3>
+    </div>
+    <div class="cat">
+      <img src="https://img.icons8.com/ios-filled/100/ffffff/suitcase.png" alt="Reisen"/>
+      <h3>Reisen</h3>
+    </div>
+  </section>
+
+  <footer>
+    &copy; 2025 Locorent – Entwickelt mit Herz ♥
+  </footer>
 </body>
 </html>
+
