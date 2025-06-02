@@ -2,138 +2,228 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Locorent – Mieten statt Kaufen</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet" />
   <style>
+    /* Reset & Grundstyles */
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
       font-family: 'Poppins', sans-serif;
     }
-
     body {
-      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      background: linear-gradient(135deg, #1e3c72, #3a8dff);
       color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
-
-    header {
-      padding: 2rem;
-      text-align: center;
-      background: rgba(0, 0, 0, 0.2);
-    }
-
-    header h1 {
-      font-size: 3rem;
-      font-weight: 800;
-    }
-
-    header p {
-      font-size: 1.2rem;
-      margin-top: 0.5rem;
-      opacity: 0.9;
-    }
-
-    .cta {
-      margin-top: 2rem;
-    }
-
-    .cta a {
+    a {
       text-decoration: none;
-      background-color: #00d084;
-      color: #000;
-      padding: 1rem 2rem;
-      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    /* HEADER */
+    header {
+      background: linear-gradient(135deg, #3a8dff, #1e3c72);
+      padding: 3rem 2rem;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      border-bottom-left-radius: 40px;
+      border-bottom-right-radius: 40px;
+    }
+    header h1 {
+      font-size: 3.8rem;
+      font-weight: 900;
+      margin-bottom: 0.3rem;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+      letter-spacing: 2px;
+    }
+    header p {
+      font-size: 1.4rem;
+      opacity: 0.85;
+      margin-bottom: 2.5rem;
       font-weight: 600;
-      transition: background 0.3s;
     }
-
+    .cta {
+      display: inline-flex;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .cta a {
+      background-color: #00ff99;
+      color: #000;
+      padding: 1rem 2.8rem;
+      border-radius: 14px;
+      font-weight: 700;
+      box-shadow: 0 8px 20px rgba(0,255,153,0.6);
+      transition: all 0.35s ease;
+      font-size: 1.1rem;
+      user-select: none;
+      display: inline-block;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta a:last-child {
+      background-color: #fff;
+      color: #000;
+      box-shadow: 0 8px 20px rgba(255,255,255,0.7);
+    }
     .cta a:hover {
-      background-color: #02c26b;
+      filter: brightness(1.1);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 28px rgba(0,255,153,0.8);
+    }
+    .cta a:last-child:hover {
+      box-shadow: 0 12px 28px rgba(255,255,255,0.9);
     }
 
+    /* SUCHBOX */
+    .search-box {
+      max-width: 600px;
+      margin: 3rem auto 4rem;
+      position: relative;
+    }
+    .search-box input {
+      width: 100%;
+      padding: 1.2rem 1.5rem 1.2rem 3.5rem;
+      border-radius: 40px;
+      border: none;
+      font-size: 1.1rem;
+      font-weight: 500;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      transition: box-shadow 0.3s ease;
+      outline-offset: 4px;
+    }
+    .search-box input::placeholder {
+      color: #aaa;
+      font-style: italic;
+    }
+    .search-box input:focus {
+      box-shadow: 0 0 12px 3px #00ff99;
+    }
+    .search-box::before {
+      content: "🔍";
+      position: absolute;
+      left: 1.3rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.3rem;
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    /* KATEGORIEN */
     .categories {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 2rem;
-      margin: 3rem auto;
-      max-width: 1000px;
+      gap: 2.5rem;
+      max-width: 1100px;
+      margin: 0 auto 5rem;
+      padding: 0 1rem;
     }
-
     .cat {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 2rem;
-      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.15);
+      padding: 2.2rem 1.5rem;
+      border-radius: 28px;
       text-align: center;
-      flex: 1 1 200px;
-      transition: transform 0.2s;
+      flex: 1 1 220px;
+      max-width: 240px;
+      color: #fff;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      transition: transform 0.3s ease, background 0.3s ease;
+      user-select: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
-
     .cat:hover {
-      transform: scale(1.05);
+      background: #00ff99;
+      color: #000;
+      transform: translateY(-10px) scale(1.05);
+      box-shadow: 0 14px 30px rgba(0,255,153,0.7);
     }
-
+    .cat img {
+      width: 80px;
+      height: 80px;
+      filter: drop-shadow(0 0 2px rgba(0,0,0,0.4));
+      margin-bottom: 1rem;
+      transition: filter 0.3s ease;
+    }
+    .cat:hover img {
+      filter: none;
+    }
     .cat h3 {
-      margin-top: 1rem;
-      font-weight: 600;
+      font-weight: 700;
+      font-size: 1.25rem;
+      letter-spacing: 1px;
     }
 
-    .search-box {
-      max-width: 500px;
-      margin: 3rem auto;
-      text-align: center;
-    }
-
-    .search-box input {
-      width: 80%;
-      padding: 1rem;
-      border-radius: 10px;
-      border: none;
-      font-size: 1rem;
-    }
-
+    /* FOOTER */
     footer {
       text-align: center;
-      padding: 2rem;
-      background-color: rgba(0, 0, 0, 0.2);
-      margin-top: 4rem;
-      font-size: 0.9rem;
+      padding: 2.5rem 1rem;
+      background-color: rgba(0, 0, 0, 0.25);
+      font-size: 1rem;
+      font-weight: 500;
+      color: #ccc;
+      margin-top: auto;
+      user-select: none;
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      header h1 {
+        font-size: 2.8rem;
+      }
+      header p {
+        font-size: 1.1rem;
+      }
+      .cat {
+        flex: 1 1 45%;
+        max-width: none;
+      }
+      .search-box {
+        margin: 2rem 1rem 3rem;
+      }
     }
   </style>
 </head>
 <body>
+
   <header>
     <h1>Locorent</h1>
     <p>Mieten. Vermieten. Verdienen – lokal & smart.</p>
     <div class="cta">
       <a href="#">Jetzt Angebot einstellen</a>
-    </div>
-    <div class="cta" style="margin-top: 1rem;">
-      <a href="login.html" style="background: #ffffff; color: #000;">Login</a>
+      <a href="login.html">Login</a>
     </div>
   </header>
 
   <div class="search-box">
-    <input type="text" placeholder="Was möchtest du mieten? z.B. Bohrmaschine, Kamera...">
+    <input type="text" placeholder="Was möchtest du mieten? z.B. Bohrmaschine, Kamera..." />
   </div>
 
   <section class="categories">
     <div class="cat">
-      <img src="https://img.icons8.com/ios-filled/100/ffffff/drill.png" alt="Haushalt"/>
+      <img src="https://img.icons8.com/ios-filled/100/ffffff/drill.png" alt="Haushalt" />
       <h3>Haushalt</h3>
     </div>
     <div class="cat">
-      <img src="https://img.icons8.com/ios-filled/100/ffffff/camera.png" alt="Technik"/>
+      <img src="https://img.icons8.com/ios-filled/100/ffffff/camera.png" alt="Technik" />
       <h3>Technik</h3>
     </div>
     <div class="cat">
-      <img src="https://img.icons8.com/ios-filled/100/ffffff/electric-scooter.png" alt="Outdoor"/>
+      <img src="https://img.icons8.com/ios-filled/100/ffffff/electric-scooter.png" alt="Outdoor" />
       <h3>Outdoor</h3>
     </div>
     <div class="cat">
-      <img src="https://img.icons8.com/ios-filled/100/ffffff/suitcase.png" alt="Reisen"/>
+      <img src="https://img.icons8.com/ios-filled/100/ffffff/suitcase.png" alt="Reisen" />
       <h3>Reisen</h3>
     </div>
   </section>
@@ -141,7 +231,9 @@
   <footer>
     &copy; 2025 Locorent – Entwickelt mit Herz ♥
   </footer>
+
 </body>
 </html>
+
 
 
