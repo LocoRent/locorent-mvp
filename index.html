@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login – LocoRent</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h2>Login</h2>
+    <form id="login-form">
+      <label for="email">E-Mail</label>
+      <input type="email" id="email" required />
+
+      <label for="password">Passwort</label>
+      <input type="password" id="password" required />
+
+      <button type="submit">Einloggen</button>
+      <div class="message" id="login-message"></div>
+    </form>
+    <p>Noch keinen Account? <a href="register.html">Registrieren</a></p>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script>
+    const loginForm = document.getElementById('login-form');
+    const loginMsg = document.getElementById('login-message');
+
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      loginMsg.textContent = '';
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
+      if (error) {
+        loginMsg.textContent = '❌ ' + error.message;
+        loginMsg.className = 'message error';
+      } else {
+        loginMsg.textContent = '✅ Login erfolgreich! Weiterleitung...';
+        loginMsg.className = 'message success';
+        setTimeout(() => window.location.href = 'dashboard.html', 2000);
+      }
+    });
+  </script>
+</body>
+</html>

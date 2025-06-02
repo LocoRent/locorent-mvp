@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Registrieren – LocoRent</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h2>Registrieren</h2>
+    <form id="register-form">
+      <label for="email">E-Mail</label>
+      <input type="email" id="email" required />
+
+      <label for="password">Passwort</label>
+      <input type="password" id="password" required />
+
+      <label for="confirm">Passwort bestätigen</label>
+      <input type="password" id="confirm" required />
+
+      <button type="submit">Registrieren</button>
+      <div class="message" id="register-message"></div>
+    </form>
+    <p>Bereits registriert? <a href="index.html">Einloggen</a></p>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script>
+    const registerForm = document.getElementById('register-form');
+    const registerMsg = document.getElementById('register-message');
+
+    registerForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      registerMsg.textContent = '';
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const confirm = document.getElementById('confirm').value;
+
+      if (password !== confirm) {
+        registerMsg.textContent = '❌ Passwörter stimmen nicht überein.';
+        registerMsg.className = 'message error';
+        return;
+      }
+
+      const { data, error } = await supabase.auth.signUp({ email, password });
+
+      if (error) {
+        registerMsg.textContent = '❌ ' + error.message;
+        registerMsg.className = 'message error';
+      } else {
+        registerMsg.textContent = '✅ Registrierung erfolgreich! Bitte E-Mail bestätigen.';
+        registerMsg.className = 'message success';
+        setTimeout(() => window.location.href = 'index.html', 3000);
+      }
+    });
+  </script>
+</body>
+</html>
