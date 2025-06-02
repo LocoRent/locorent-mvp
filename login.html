@@ -16,60 +16,37 @@
       height: 100vh;
       margin: 0;
     }
-
     .container {
       background: rgba(255, 255, 255, 0.1);
       padding: 2rem;
       border-radius: 15px;
-      width: 100%;
       max-width: 400px;
+      width: 100%;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     }
-
     h2 {
       text-align: center;
-      margin-bottom: 1.5rem;
     }
-
-    label {
+    label, input, button {
       display: block;
-      margin-top: 1rem;
-      margin-bottom: 0.5rem;
-    }
-
-    input {
       width: 100%;
+      margin-top: 1rem;
+    }
+    input {
       padding: 0.75rem;
       border-radius: 8px;
       border: none;
-      font-size: 1rem;
     }
-
     button {
-      margin-top: 2rem;
-      width: 100%;
       padding: 0.75rem;
-      font-size: 1rem;
-      border: none;
       border-radius: 8px;
       background-color: #00d084;
       color: #000;
       font-weight: bold;
       cursor: pointer;
     }
-
-    .msg {
-      text-align: center;
-      margin-top: 1rem;
-    }
-
-    a {
-      color: #00ffae;
-      text-decoration: underline;
-      display: block;
-      text-align: center;
-      margin-top: 1.5rem;
-    }
+    .error { color: #ff6b6b; text-align: center; margin-top: 1rem; }
+    .success { color: #00ffae; text-align: center; margin-top: 1rem; }
   </style>
 </head>
 <body>
@@ -83,38 +60,41 @@
       <input type="password" name="password" required />
 
       <button type="submit">Einloggen</button>
-      <div class="msg" id="msg"></div>
+      <div class="error" id="error-msg"></div>
+      <div class="success" id="success-msg"></div>
     </form>
-    <a href="register.html">Noch kein Konto? Jetzt registrieren</a>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    const supabaseUrl = 'https://flnjalgqtkqycsaymmbd.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q';
-    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+    document.addEventListener('DOMContentLoaded', () => {
+      const supabase = supabase.createClient(
+        'https://flnjalgqtkqycsaymmbd.supabase.co',
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+      );
 
-    const form = document.getElementById('login-form');
-    const msg = document.getElementById('msg');
+      const form = document.getElementById('login-form');
+      const errorMsg = document.getElementById('error-msg');
+      const successMsg = document.getElementById('success-msg');
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-      const email = form.email.value;
-      const password = form.password.value;
+        errorMsg.textContent = '';
+        successMsg.textContent = '';
 
-      msg.textContent = '';
+        const email = form.email.value.trim();
+        const password = form.password.value;
 
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
 
-      if (error) {
-        msg.textContent = '❌ Login fehlgeschlagen: ' + error.message;
-      } else {
-        msg.textContent = '✅ Login erfolgreich. Weiterleitung...';
-        setTimeout(() => {
-          window.location.href = 'dashboard.html'; // Nach dem Login
-        }, 2000);
-      }
+        if (error) {
+          errorMsg.textContent = '❌ ' + error.message;
+        } else {
+          successMsg.textContent = '✅ Login erfolgreich!';
+          setTimeout(() => window.location.href = 'dashboard.html', 2000);
+        }
+      });
     });
   </script>
 </body>
