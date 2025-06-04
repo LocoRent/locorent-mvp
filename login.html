@@ -16,6 +16,7 @@
       height: 100vh;
       margin: 0;
     }
+
     .container {
       background: rgba(255,255,255,0.1);
       padding: 2rem;
@@ -24,17 +25,24 @@
       width: 100%;
       box-shadow: 0 0 15px rgba(0,0,0,0.4);
     }
+
+    h2 {
+      text-align: center;
+    }
+
     label, input, button {
       display: block;
       width: 100%;
       margin-top: 1rem;
     }
+
     input, button {
       padding: 0.75rem;
       border-radius: 8px;
       border: none;
       font-size: 1rem;
     }
+
     button {
       background-color: #00d084;
       color: #000;
@@ -43,13 +51,16 @@
       margin-top: 1.5rem;
       transition: background-color 0.3s ease;
     }
+
     button:hover {
       background-color: #02c26b;
     }
+
     .message {
       margin-top: 1rem;
       text-align: center;
     }
+
     .error {
       color: #ff6b6b;
     }
@@ -71,11 +82,11 @@
   </form>
 </div>
 
-<!-- Supabase Script -->
+<!-- Supabase CDN laden -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-  const supabase = supabase.createClient(
+  const supabase = window.supabase.createClient(
     'https://flnjalgqtkqycsaymmbd.supabase.co',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
   );
@@ -86,17 +97,21 @@
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     messageDiv.textContent = '';
+    messageDiv.classList.remove('error');
 
     const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value;
 
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password
+    });
 
     if (error) {
       messageDiv.textContent = '❌ ' + error.message;
       messageDiv.classList.add('error');
     } else {
-      // ✅ Login erfolgreich
+      // Erfolgreich eingeloggt – weiterleiten
       window.location.href = 'dashboard.html';
     }
   });
