@@ -3,47 +3,127 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Login – LocoRent</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>LocoRent – Alles mieten. Einfach.</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: #f9fafb;
+      color: #333;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 2.8rem;
+      margin: 0;
+    }
+
+    header p {
+      font-size: 1.2rem;
+      margin-top: 0.5rem;
+    }
+
+    .cta-buttons {
+      margin-top: 1.5rem;
+    }
+
+    .cta-buttons a {
+      background-color: #00d084;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: bold;
+      margin: 0 0.5rem;
+      text-decoration: none;
+      transition: background 0.3s ease;
+    }
+
+    .cta-buttons a:hover {
+      background-color: #00b16a;
+    }
+
+    .hero-image {
+      width: 100%;
+      max-height: 400px;
+      object-fit: cover;
+    }
+
+    main {
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+
+    .feature {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 280px;
+    }
+
+    .feature h3 {
+      color: #2a5298;
+      margin-top: 0;
+    }
+
+    footer {
+      background: #1e3c72;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      margin-top: 3rem;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Login</h2>
-    <form id="login-form">
-      <label for="email">E-Mail</label>
-      <input type="email" id="email" required />
 
-      <label for="password">Passwort</label>
-      <input type="password" id="password" required />
-
-      <button type="submit">Einloggen</button>
-      <div class="message" id="login-message"></div>
-    </form>
-    <p>Noch keinen Account? <a href="register.html">Registrieren</a></p>
+<header>
+  <h1>LocoRent</h1>
+  <p>Alles mieten. Einfach. Sicher. Flexibel.</p>
+  <div class="cta-buttons">
+    <a href="login.html">Einloggen</a>
+    <a href="register.html">Registrieren</a>
   </div>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="supabase.js"></script>
-  <script>
-    const loginForm = document.getElementById('login-form');
-    const loginMsg = document.getElementById('login-message');
+</header>
 
-    loginForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      loginMsg.textContent = '';
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value;
+<img src="https://images.unsplash.com/photo-1593086622679-3fe70fd3c671?auto=format&fit=crop&w=1400&q=80" alt="Verschiedene Mietgegenstände" class="hero-image" />
 
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+<main>
+  <h2>Was kannst du bei uns mieten?</h2>
+  <div class="features">
+    <div class="feature">
+      <h3>Fahrzeuge</h3>
+      <p>Autos, Transporter, Camper & mehr – flexibel buchbar.</p>
+    </div>
+    <div class="feature">
+      <h3>Technik & Tools</h3>
+      <p>Beamer, Kameras, Werkzeug, Drohnen oder Tonanlagen.</p>
+    </div>
+    <div class="feature">
+      <h3>Freizeit & Events</h3>
+      <p>Boote, Partyzelte, Musikanlagen, Deko & vieles mehr.</p>
+    </div>
+  </div>
+</main>
 
-      if (error) {
-        loginMsg.textContent = '❌ ' + error.message;
-        loginMsg.className = 'message error';
-      } else {
-        loginMsg.textContent = '✅ Login erfolgreich! Weiterleitung...';
-        loginMsg.className = 'message success';
-        setTimeout(() => window.location.href = 'dashboard.html', 2000);
-      }
-    });
-  </script>
+<footer>
+  © 2025 LocoRent – Deine Plattform zum Mieten & Vermieten.
+</footer>
+
 </body>
 </html>
