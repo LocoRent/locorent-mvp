@@ -9,50 +9,59 @@
     body {
       font-family: 'Poppins', sans-serif;
       background: linear-gradient(135deg, #1e3c72, #2a5298);
+      color: white;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
       margin: 0;
-      color: white;
     }
 
     .container {
       background: rgba(255, 255, 255, 0.1);
       padding: 2rem;
       border-radius: 15px;
+      width: 90%;
       max-width: 400px;
-      width: 100%;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 0 15px rgba(0,0,0,0.4);
     }
 
-    h2 {
-      text-align: center;
-    }
-
-    label {
-      margin-top: 1rem;
+    label, input {
       display: block;
+      width: 100%;
+      margin-top: 1rem;
     }
 
     input {
-      width: 100%;
       padding: 0.75rem;
-      margin-top: 0.5rem;
       border-radius: 8px;
       border: none;
       font-size: 1rem;
     }
 
+    .password-wrapper {
+      position: relative;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      font-size: 0.9rem;
+      color: #ccc;
+    }
+
     button {
       width: 100%;
-      margin-top: 1.5rem;
       padding: 0.75rem;
+      margin-top: 1.5rem;
       border: none;
       border-radius: 8px;
-      background-color: #00d084;
-      color: black;
       font-weight: bold;
+      background-color: #00d084;
+      color: #000;
       font-size: 1rem;
       cursor: pointer;
       transition: background-color 0.3s ease;
@@ -62,10 +71,21 @@
       background-color: #02c26b;
     }
 
+    .forgot {
+      margin-top: 1rem;
+      text-align: right;
+      font-size: 0.9rem;
+    }
+
+    .forgot a {
+      color: #fff;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
     .message {
       margin-top: 1rem;
       text-align: center;
-      font-weight: bold;
     }
 
     .error {
@@ -86,7 +106,14 @@
     <input type="email" id="email" required autocomplete="email" />
 
     <label for="password">Passwort</label>
-    <input type="password" id="password" required autocomplete="current-password" />
+    <div class="password-wrapper">
+      <input type="password" id="password" required autocomplete="current-password" />
+      <span class="toggle-password" onclick="togglePassword()">👁</span>
+    </div>
+
+    <div class="forgot">
+      <a href="reset-password.html">Passwort vergessen?</a>
+    </div>
 
     <button type="submit">Einloggen</button>
     <div id="message" class="message"></div>
@@ -112,7 +139,7 @@
     const password = document.getElementById('password').value;
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
       if (error) {
         messageDiv.textContent = '❌ ' + error.message;
@@ -121,14 +148,19 @@
         messageDiv.textContent = '✅ Login erfolgreich!';
         messageDiv.classList.add('success');
         setTimeout(() => {
-          window.location.href = 'index.html'; // ← Hier nach Login weiterleiten
-        }, 1500);
+          window.location.href = 'index.html'; // Weiterleitung zur Startseite
+        }, 1000);
       }
     } catch (err) {
-      messageDiv.textContent = '❌ Fehler: ' + err.message;
+      messageDiv.textContent = '❌ Unerwarteter Fehler: ' + err.message;
       messageDiv.classList.add('error');
     }
   });
+
+  function togglePassword() {
+    const pwField = document.getElementById('password');
+    pwField.type = pwField.type === 'password' ? 'text' : 'password';
+  }
 </script>
 
 </body>
