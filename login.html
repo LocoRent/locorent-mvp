@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Login – Locorent</title>
+  <title>Login – LocoRent</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <style>
     body {
@@ -23,6 +23,10 @@
       max-width: 400px;
       width: 100%;
       box-shadow: 0 0 15px rgba(0,0,0,0.4);
+    }
+    h2 {
+      margin-bottom: 1rem;
+      text-align: center;
     }
     label, input, button {
       display: block;
@@ -49,6 +53,7 @@
     .message {
       margin-top: 1rem;
       text-align: center;
+      font-size: 0.95rem;
     }
     .error {
       color: #ff6b6b;
@@ -64,38 +69,35 @@
   <h2>Login</h2>
   <form id="login-form">
     <label for="email">E-Mail</label>
-    <input type="email" id="email" required autocomplete="email" />
+    <input type="email" id="email" name="email" required autocomplete="email" />
 
     <label for="password">Passwort</label>
-    <input type="password" id="password" required autocomplete="current-password" />
+    <input type="password" id="password" name="password" required autocomplete="current-password" />
 
     <button type="submit">Einloggen</button>
     <div id="message" class="message"></div>
   </form>
 </div>
 
-<!-- Supabase wird hier geladen -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
-
-<!-- Erst wenn Supabase geladen ist, läuft dieses Script -->
+<!-- Supabase JS -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const supabase = window.supabase.createClient(
-      'https://flnjalgqtkqycsaymmbd.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-    );
+  const SUPABASE_URL = 'https://flnjalgqtkqycsaymmbd.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q';
+  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    const form = document.getElementById('login-form');
-    const messageDiv = document.getElementById('message');
+  const form = document.getElementById('login-form');
+  const messageDiv = document.getElementById('message');
 
-    form.addEventListener('submit', async (event) => {
-      event.preventDefault();
-      messageDiv.textContent = '';
-      messageDiv.className = 'message';
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    messageDiv.textContent = '';
+    messageDiv.className = 'message';
 
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value;
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
 
+    try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password
@@ -111,7 +113,10 @@
           window.location.href = 'dashboard.html';
         }, 2000);
       }
-    });
+    } catch (err) {
+      messageDiv.textContent = '❌ Ein Fehler ist aufgetreten.';
+      messageDiv.classList.add('error');
+    }
   });
 </script>
 
