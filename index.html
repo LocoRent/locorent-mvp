@@ -5,101 +5,90 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Locorent – Startseite</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     * {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
     }
+
     body {
       font-family: 'Poppins', sans-serif;
-      background: #f2f2f2;
-      color: #333;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-    header {
-      background: #1e3c72;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
       color: white;
-      padding: 1rem 2rem;
+    }
+
+    header {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      padding: 1.5rem 2rem;
+      background-color: rgba(0,0,0,0.2);
     }
+
     header h1 {
-      font-size: 1.5rem;
+      margin: 0;
+      font-size: 1.8rem;
     }
-    nav a {
+
+    nav a, nav span {
       color: white;
-      margin-left: 1rem;
       text-decoration: none;
+      margin-left: 1rem;
       font-weight: 600;
     }
-    nav a:hover {
-      text-decoration: underline;
-    }
+
     .hero {
-      background: linear-gradient(135deg, #1e3c72, #2a5298);
-      color: white;
       text-align: center;
-      padding: 5rem 2rem;
+      padding: 4rem 2rem;
     }
+
     .hero h2 {
       font-size: 2.5rem;
       margin-bottom: 1rem;
     }
+
     .hero p {
       font-size: 1.2rem;
       margin-bottom: 2rem;
     }
-    .hero .btn {
-      padding: 1rem 2rem;
-      background: #00d084;
+
+    .btn {
+      background-color: #00d084;
       color: black;
-      font-weight: bold;
-      border: none;
+      padding: 0.75rem 1.5rem;
       border-radius: 8px;
-      cursor: pointer;
+      font-weight: bold;
       text-decoration: none;
-    }
-    .hero .btn:hover {
-      background: #02c26b;
-    }
-    main {
-      padding: 2rem;
-    }
-    .features {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 2rem;
-      justify-content: center;
-    }
-    .card {
-      background: white;
-      padding: 1.5rem;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      width: 300px;
-      text-align: center;
-    }
-    .card h3 {
-      margin-bottom: 1rem;
-      color: #1e3c72;
-    }
-    footer {
-      margin-top: auto;
-      padding: 2rem;
-      background: #333;
-      color: white;
-      text-align: center;
+      transition: background-color 0.3s ease;
     }
 
-    @media (max-width: 768px) {
-      .features {
-        flex-direction: column;
-        align-items: center;
-      }
+    .btn:hover {
+      background-color: #02c26b;
+    }
+
+    main {
+      padding: 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 2rem;
+    }
+
+    .card {
+      background-color: rgba(255,255,255,0.1);
+      padding: 1.5rem;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #ccc;
+      margin-top: 2rem;
     }
   </style>
 </head>
@@ -107,10 +96,10 @@
 
 <header>
   <h1>Locorent</h1>
-  <nav>
+  <nav id="nav-links">
+    <!-- Wird dynamisch ersetzt -->
     <a href="login.html">Login</a>
     <a href="register.html">Registrieren</a>
-    <a href="#">Angebote</a>
   </nav>
 </header>
 
@@ -121,19 +110,17 @@
 </section>
 
 <main>
-  <div class="features">
-    <div class="card">
-      <h3>Große Auswahl</h3>
-      <p>Wähle aus einer Vielzahl an Fahrzeugen für jeden Anlass.</p>
-    </div>
-    <div class="card">
-      <h3>Faire Preise</h3>
-      <p>Transparente Preise ohne versteckte Kosten.</p>
-    </div>
-    <div class="card">
-      <h3>Schnelle Buchung</h3>
-      <p>In wenigen Klicks zum passenden Fahrzeug.</p>
-    </div>
+  <div class="card">
+    <h3>Große Auswahl</h3>
+    <p>Wähle aus einer Vielzahl an Fahrzeugen für jeden Anlass.</p>
+  </div>
+  <div class="card">
+    <h3>Faire Preise</h3>
+    <p>Transparente Preise ohne versteckte Kosten.</p>
+  </div>
+  <div class="card">
+    <h3>Schnelle Buchung</h3>
+    <p>In wenigen Klicks zum passenden Fahrzeug.</p>
   </div>
 </main>
 
@@ -141,6 +128,39 @@
   &copy; 2025 Locorent – Alle Rechte vorbehalten
 </footer>
 
+<script>
+  const supabase = supabase.createClient(
+    'https://flnjalgqtkqycsaymmbd.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+  );
+
+  async function checkUser() {
+    const { data: { user } } = await supabase.auth.getUser();
+
+    const nav = document.getElementById('nav-links');
+    nav.innerHTML = '';
+
+    if (user) {
+      nav.innerHTML = `
+        <span>Hallo, ${user.email}</span>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="#" onclick="logout()">Logout</a>
+      `;
+    } else {
+      nav.innerHTML = `
+        <a href="login.html">Login</a>
+        <a href="register.html">Registrieren</a>
+      `;
+    }
+  }
+
+  async function logout() {
+    await supabase.auth.signOut();
+    window.location.reload();
+  }
+
+  checkUser();
+</script>
+
 </body>
 </html>
-
