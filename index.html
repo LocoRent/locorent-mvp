@@ -2,242 +2,170 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Locorent – Mieten statt kaufen</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Locorent – Nachhaltig Mieten & Vermieten</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
-      --green: #4CAF50;
-      --green-dark: #2e7d32;
-      --bg-light: #f9fbe7;
-      --white: #ffffff;
-      --gray: #555;
-      --text-dark: #222;
+      --primary: #3a7d44;
+      --accent: #a4de02;
+      --bg: #f4fdf0;
+      --text: #333;
     }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
     body {
       font-family: 'Poppins', sans-serif;
-      background-color: var(--bg-light);
-      color: var(--text-dark);
+      margin: 0;
+      background-color: var(--bg);
+      color: var(--text);
     }
-
     header {
-      background: var(--white);
-      padding: 1rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      position: sticky;
-      top: 0;
-      z-index: 10;
+      background: var(--primary);
+      color: white;
+      padding: 1rem 2rem;
     }
-
-    header h1 {
-      color: var(--green-dark);
-      font-size: 1.8rem;
+    header img {
+      height: 50px;
     }
-
-    nav a, nav span {
-      margin-left: 1rem;
+    nav a {
+      color: white;
+      margin-left: 1.5rem;
       text-decoration: none;
       font-weight: 600;
-      color: var(--green-dark);
     }
-
-    nav a:hover {
-      color: var(--green);
-    }
-
     .hero {
       display: flex;
-      flex-wrap: wrap;
+      flex-direction: row;
       align-items: center;
-      justify-content: center;
-      padding: 3rem 2rem;
-      background: linear-gradient(to right, #dcedc8, #c8e6c9);
+      justify-content: space-between;
+      padding: 4rem 2rem;
+      background: linear-gradient(to right, var(--primary), var(--accent));
+      color: white;
     }
-
     .hero-text {
-      flex: 1 1 400px;
-      padding: 2rem;
+      max-width: 600px;
     }
-
-    .hero-text h2 {
+    .hero h1 {
       font-size: 2.5rem;
-      color: var(--green-dark);
       margin-bottom: 1rem;
     }
-
-    .hero-text p {
+    .hero p {
       font-size: 1.2rem;
-      color: var(--gray);
     }
-
-    .hero-img {
-      flex: 1 1 400px;
-      text-align: center;
+    .hero img {
+      max-width: 400px;
+      border-radius: 15px;
     }
-
-    .hero-img img {
-      max-width: 100%;
-      border-radius: 12px;
-    }
-
-    section.features {
+    .angebote {
       padding: 3rem 2rem;
+      background-color: #fff;
+    }
+    .angebote h2 {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: var(--primary);
+    }
+    .card-container {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 2rem;
     }
-
     .card {
-      background: var(--white);
+      border: 1px solid #ddd;
       border-radius: 12px;
-      padding: 1.5rem;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
-      text-align: center;
+      overflow: hidden;
+      background-color: #fafafa;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
-
     .card img {
       width: 100%;
-      max-height: 160px;
+      height: 180px;
       object-fit: cover;
-      border-radius: 10px;
-      margin-bottom: 1rem;
     }
-
     .card h3 {
-      color: var(--green-dark);
-      margin-bottom: 0.5rem;
+      padding: 1rem;
+      margin: 0;
+      font-size: 1.1rem;
+      color: var(--primary);
     }
-
-    .cta {
-      background: var(--green);
-      color: var(--white);
-      text-align: center;
-      padding: 3rem 2rem;
+    .card p {
+      padding: 0 1rem 1rem;
+      margin: 0;
+      font-size: 0.95rem;
     }
-
-    .cta h2 {
-      font-size: 2rem;
-      margin-bottom: 1rem;
-    }
-
-    .cta a {
-      background: var(--white);
-      color: var(--green-dark);
-      padding: 0.75rem 1.5rem;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    .cta a:hover {
-      background: #e8f5e9;
-    }
-
     footer {
       text-align: center;
-      font-size: 0.9rem;
-      color: #888;
       padding: 2rem;
-      background: var(--white);
-      margin-top: 2rem;
-    }
-
-    @media (max-width: 768px) {
-      .hero {
-        flex-direction: column;
-      }
+      background-color: var(--primary);
+      color: white;
     }
   </style>
 </head>
 <body>
 
 <header>
-  <h1>Locorent</h1>
-  <nav id="nav-links">
-    <a href="login.html">Login</a>
+  <div>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Leaf_icon_design.svg/2048px-Leaf_icon_design.svg.png" alt="Locorent Logo">
+  </div>
+  <nav>
+    <a href="#">Startseite</a>
+    <a href="login.html">Einloggen</a>
     <a href="register.html">Registrieren</a>
   </nav>
 </header>
 
 <section class="hero">
   <div class="hero-text">
-    <h2>Teilen ist das neue Kaufen.</h2>
-    <p>Ob E-Bike, Bohrmaschine oder Campingausrüstung – miete nachhaltige Gegenstände ganz einfach in deiner Nähe.</p>
+    <h1>Mieten statt Kaufen – Nachhaltig mit Locorent</h1>
+    <p>Finde Gegenstände zur Miete in deiner Nähe. Schone deinen Geldbeutel und die Umwelt!</p>
   </div>
-  <div class="hero-img">
-    <img src="https://images.unsplash.com/photo-1600788907411-c81c4b8b2b2d?auto=format&fit=crop&w=900&q=80" alt="Sharing" />
-  </div>
+  <img src="https://images.unsplash.com/photo-1550583724-b2691abbbe85?auto=format&fit=crop&w=800&q=60" alt="Mieten Symbolbild">
 </section>
 
-<section class="features">
-  <div class="card">
-    <img src="https://images.unsplash.com/photo-1599392218033-f1df8cc2c014?auto=format&fit=crop&w=800&q=80" alt="Werkzeuge" />
-    <h3>Werkzeug & Geräte</h3>
-    <p>Miete Bohrmaschinen, Sägen, Akkuschrauber u.v.m.</p>
+<section class="angebote">
+  <h2>Aktuelle Mietangebote</h2>
+  <div class="card-container" id="angebot-container">
+    <!-- Dynamische Inhalte -->
   </div>
-  <div class="card">
-    <img src="https://images.unsplash.com/photo-1605296867304-46d5465a13f1?auto=format&fit=crop&w=800&q=80" alt="E-Bike" />
-    <h3>Fahrräder & E-Bikes</h3>
-    <p>Spare CO₂ und bleib mobil – mit nachhaltigen Zweirädern.</p>
-  </div>
-  <div class="card">
-    <img src="https://images.unsplash.com/photo-1549921296-3a25f624e28d?auto=format&fit=crop&w=800&q=80" alt="Camping" />
-    <h3>Freizeit & Camping</h3>
-    <p>Zelte, Grills, Kühlboxen – teile deine Ausrüstung mit anderen.</p>
-  </div>
-</section>
-
-<section class="cta">
-  <h2>Bereit zum Vermieten oder Mieten?</h2>
-  <a href="register.html">Jetzt starten</a>
 </section>
 
 <footer>
-  &copy; 2025 Locorent – Teilen statt kaufen. Alle Rechte vorbehalten.
+  &copy; 2025 Locorent – Gemeinsam nachhaltig handeln.
 </footer>
 
 <script>
-  const supabase = supabase.createClient(
-    'https://flnjalgqtkqycsaymmbd.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-  );
-
-  async function checkUser() {
-    const { data: { user } } = await supabase.auth.getUser();
-    const nav = document.getElementById('nav-links');
-    nav.innerHTML = '';
-
-    if (user) {
-      nav.innerHTML = `
-        <span>Hallo, ${user.email}</span>
-        <a href="dashboard.html">Dashboard</a>
-        <a href="#" onclick="logout()">Logout</a>
-      `;
-    } else {
-      nav.innerHTML = `
-        <a href="login.html">Login</a>
-        <a href="register.html">Registrieren</a>
-      `;
+  // Beispielhafte dynamische Inhalte
+  const angebote = [
+    {
+      titel: 'Bohrmaschine Bosch',
+      beschreibung: 'Leistungsstark und ideal für Heimwerker – ab 5€/Tag.',
+      bild: 'https://images.unsplash.com/photo-1603386329225-868a2b2f0d5a?auto=format&fit=crop&w=800&q=60'
+    },
+    {
+      titel: 'Faltbares E-Bike',
+      beschreibung: 'Ideal für die Stadt – flexibel & nachhaltig.',
+      bild: 'https://images.unsplash.com/photo-1562860149-691401a306b9?auto=format&fit=crop&w=800&q=60'
+    },
+    {
+      titel: 'DJI Drohne Mini 3',
+      beschreibung: 'Perfekt für Luftaufnahmen, nur 15€/Tag.',
+      bild: 'https://images.unsplash.com/photo-1589149098258-f9d9dcf22506?auto=format&fit=crop&w=800&q=60'
     }
-  }
+  ];
 
-  async function logout() {
-    await supabase.auth.signOut();
-    window.location.reload();
-  }
-
-  checkUser();
+  const container = document.getElementById('angebot-container');
+  angebote.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <img src="${item.bild}" alt="${item.titel}" />
+      <h3>${item.titel}</h3>
+      <p>${item.beschreibung}</p>
+    `;
+    container.appendChild(card);
+  });
 </script>
 
 </body>
