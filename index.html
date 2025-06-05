@@ -3,46 +3,46 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Locorent – Nachhaltig mobil</title>
+  <title>Locorent – Mieten statt kaufen</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --green: #4CAF50;
-      --green-dark: #388E3C;
-      --cream: #F1F8E9;
+      --green-dark: #2e7d32;
+      --bg-light: #f9fbe7;
       --white: #ffffff;
-      --text-dark: #2e2e2e;
+      --gray: #555;
+      --text-dark: #222;
     }
 
     * {
-      box-sizing: border-box;
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
     }
 
     body {
       font-family: 'Poppins', sans-serif;
-      background-color: var(--cream);
+      background-color: var(--bg-light);
       color: var(--text-dark);
-      line-height: 1.6;
     }
 
     header {
-      background-color: var(--white);
-      border-bottom: 1px solid #ddd;
+      background: var(--white);
       padding: 1rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
       position: sticky;
       top: 0;
       z-index: 10;
     }
 
     header h1 {
-      font-size: 1.8rem;
       color: var(--green-dark);
+      font-size: 1.8rem;
     }
 
     nav a, nav span {
@@ -57,40 +57,61 @@
     }
 
     .hero {
-      background: linear-gradient(to right, #dcedc8, #c5e1a5);
-      padding: 4rem 2rem;
-      text-align: center;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 2rem;
+      background: linear-gradient(to right, #dcedc8, #c8e6c9);
     }
 
-    .hero h2 {
+    .hero-text {
+      flex: 1 1 400px;
+      padding: 2rem;
+    }
+
+    .hero-text h2 {
       font-size: 2.5rem;
       color: var(--green-dark);
       margin-bottom: 1rem;
     }
 
-    .hero p {
+    .hero-text p {
       font-size: 1.2rem;
-      color: #4a4a4a;
+      color: var(--gray);
     }
 
-    main {
+    .hero-img {
+      flex: 1 1 400px;
+      text-align: center;
+    }
+
+    .hero-img img {
+      max-width: 100%;
+      border-radius: 12px;
+    }
+
+    section.features {
+      padding: 3rem 2rem;
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 2rem;
-      padding: 2rem;
     }
 
     .card {
-      background-color: var(--white);
+      background: var(--white);
+      border-radius: 12px;
       padding: 1.5rem;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
       text-align: center;
-      transition: transform 0.2s ease;
     }
 
-    .card:hover {
-      transform: translateY(-5px);
+    .card img {
+      width: 100%;
+      max-height: 160px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 1rem;
     }
 
     .card h3 {
@@ -98,23 +119,43 @@
       margin-bottom: 0.5rem;
     }
 
-    .card p {
-      color: #555;
+    .cta {
+      background: var(--green);
+      color: var(--white);
+      text-align: center;
+      padding: 3rem 2rem;
+    }
+
+    .cta h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .cta a {
+      background: var(--white);
+      color: var(--green-dark);
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .cta a:hover {
+      background: #e8f5e9;
     }
 
     footer {
-      background-color: var(--white);
       text-align: center;
-      padding: 1.5rem;
-      color: #888;
       font-size: 0.9rem;
-      border-top: 1px solid #ddd;
+      color: #888;
+      padding: 2rem;
+      background: var(--white);
       margin-top: 2rem;
     }
 
-    @media (max-width: 600px) {
-      .hero h2 {
-        font-size: 2rem;
+    @media (max-width: 768px) {
+      .hero {
+        flex-direction: column;
       }
     }
   </style>
@@ -130,31 +171,40 @@
 </header>
 
 <section class="hero">
-  <h2>Nachhaltig mobil. Einfach mieten.</h2>
-  <p>Bei Locorent findest du umweltfreundliche Fahrzeuge – flexibel & fair.</p>
+  <div class="hero-text">
+    <h2>Teilen ist das neue Kaufen.</h2>
+    <p>Ob E-Bike, Bohrmaschine oder Campingausrüstung – miete nachhaltige Gegenstände ganz einfach in deiner Nähe.</p>
+  </div>
+  <div class="hero-img">
+    <img src="https://images.unsplash.com/photo-1600788907411-c81c4b8b2b2d?auto=format&fit=crop&w=900&q=80" alt="Sharing" />
+  </div>
 </section>
 
-<main>
+<section class="features">
   <div class="card">
-    <h3>Grüne Flotte</h3>
-    <p>Elektroautos, E-Bikes & Hybridfahrzeuge – fahre umweltbewusst.</p>
+    <img src="https://images.unsplash.com/photo-1599392218033-f1df8cc2c014?auto=format&fit=crop&w=800&q=80" alt="Werkzeuge" />
+    <h3>Werkzeug & Geräte</h3>
+    <p>Miete Bohrmaschinen, Sägen, Akkuschrauber u.v.m.</p>
   </div>
   <div class="card">
-    <h3>Flexible Tarife</h3>
-    <p>Stundenweise, täglich oder monatlich – du entscheidest.</p>
+    <img src="https://images.unsplash.com/photo-1605296867304-46d5465a13f1?auto=format&fit=crop&w=800&q=80" alt="E-Bike" />
+    <h3>Fahrräder & E-Bikes</h3>
+    <p>Spare CO₂ und bleib mobil – mit nachhaltigen Zweirädern.</p>
   </div>
   <div class="card">
-    <h3>Lokale Anbieter</h3>
-    <p>Unterstütze Sharing-Angebote direkt aus deiner Region.</p>
+    <img src="https://images.unsplash.com/photo-1549921296-3a25f624e28d?auto=format&fit=crop&w=800&q=80" alt="Camping" />
+    <h3>Freizeit & Camping</h3>
+    <p>Zelte, Grills, Kühlboxen – teile deine Ausrüstung mit anderen.</p>
   </div>
-  <div class="card">
-    <h3>Einfache Buchung</h3>
-    <p>Fahrzeug wählen, buchen, losfahren – alles digital.</p>
-  </div>
-</main>
+</section>
+
+<section class="cta">
+  <h2>Bereit zum Vermieten oder Mieten?</h2>
+  <a href="register.html">Jetzt starten</a>
+</section>
 
 <footer>
-  &copy; 2025 Locorent – Gemeinsam nachhaltig unterwegs.
+  &copy; 2025 Locorent – Teilen statt kaufen. Alle Rechte vorbehalten.
 </footer>
 
 <script>
@@ -165,7 +215,6 @@
 
   async function checkUser() {
     const { data: { user } } = await supabase.auth.getUser();
-
     const nav = document.getElementById('nav-links');
     nav.innerHTML = '';
 
