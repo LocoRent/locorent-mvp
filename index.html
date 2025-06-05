@@ -247,4 +247,12 @@
 </script>
 
 </body>
+  <script>
+  const urlParams = new URLSearchParams(window.location.search);
+  const type = urlParams.get('type');
+
+  if (type === 'recovery') {
+    window.location.href = '/update-password.html' + window.location.search;
+  }
+</script>
 </html>
