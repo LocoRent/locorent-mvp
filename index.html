@@ -3,92 +3,119 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Locorent – Startseite</title>
+  <title>Locorent – Nachhaltig mobil</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
+    :root {
+      --green: #4CAF50;
+      --green-dark: #388E3C;
+      --cream: #F1F8E9;
+      --white: #ffffff;
+      --text-dark: #2e2e2e;
+    }
+
     * {
       box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
     body {
       font-family: 'Poppins', sans-serif;
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(135deg, #1e3c72, #2a5298);
-      color: white;
+      background-color: var(--cream);
+      color: var(--text-dark);
+      line-height: 1.6;
     }
 
     header {
+      background-color: var(--white);
+      border-bottom: 1px solid #ddd;
+      padding: 1rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 1.5rem 2rem;
-      background-color: rgba(0,0,0,0.2);
+      position: sticky;
+      top: 0;
+      z-index: 10;
     }
 
     header h1 {
-      margin: 0;
       font-size: 1.8rem;
+      color: var(--green-dark);
     }
 
     nav a, nav span {
-      color: white;
-      text-decoration: none;
       margin-left: 1rem;
+      text-decoration: none;
       font-weight: 600;
+      color: var(--green-dark);
+    }
+
+    nav a:hover {
+      color: var(--green);
     }
 
     .hero {
-      text-align: center;
+      background: linear-gradient(to right, #dcedc8, #c5e1a5);
       padding: 4rem 2rem;
+      text-align: center;
     }
 
     .hero h2 {
       font-size: 2.5rem;
+      color: var(--green-dark);
       margin-bottom: 1rem;
     }
 
     .hero p {
       font-size: 1.2rem;
-      margin-bottom: 2rem;
-    }
-
-    .btn {
-      background-color: #00d084;
-      color: black;
-      padding: 0.75rem 1.5rem;
-      border-radius: 8px;
-      font-weight: bold;
-      text-decoration: none;
-      transition: background-color 0.3s ease;
-    }
-
-    .btn:hover {
-      background-color: #02c26b;
+      color: #4a4a4a;
     }
 
     main {
-      padding: 2rem;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 2rem;
+      padding: 2rem;
     }
 
     .card {
-      background-color: rgba(255,255,255,0.1);
+      background-color: var(--white);
       padding: 1.5rem;
       border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       text-align: center;
-      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      transition: transform 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card h3 {
+      color: var(--green-dark);
+      margin-bottom: 0.5rem;
+    }
+
+    .card p {
+      color: #555;
     }
 
     footer {
+      background-color: var(--white);
       text-align: center;
-      padding: 1rem;
+      padding: 1.5rem;
+      color: #888;
       font-size: 0.9rem;
-      color: #ccc;
+      border-top: 1px solid #ddd;
       margin-top: 2rem;
+    }
+
+    @media (max-width: 600px) {
+      .hero h2 {
+        font-size: 2rem;
+      }
     }
   </style>
 </head>
@@ -97,35 +124,37 @@
 <header>
   <h1>Locorent</h1>
   <nav id="nav-links">
-    <!-- Wird dynamisch ersetzt -->
     <a href="login.html">Login</a>
     <a href="register.html">Registrieren</a>
   </nav>
 </header>
 
 <section class="hero">
-  <h2>Willkommen bei Locorent</h2>
-  <p>Finde dein perfektes Mietfahrzeug – schnell, einfach und günstig.</p>
-  <a href="login.html" class="btn">Jetzt einloggen</a>
+  <h2>Nachhaltig mobil. Einfach mieten.</h2>
+  <p>Bei Locorent findest du umweltfreundliche Fahrzeuge – flexibel & fair.</p>
 </section>
 
 <main>
   <div class="card">
-    <h3>Große Auswahl</h3>
-    <p>Wähle aus einer Vielzahl an Fahrzeugen für jeden Anlass.</p>
+    <h3>Grüne Flotte</h3>
+    <p>Elektroautos, E-Bikes & Hybridfahrzeuge – fahre umweltbewusst.</p>
   </div>
   <div class="card">
-    <h3>Faire Preise</h3>
-    <p>Transparente Preise ohne versteckte Kosten.</p>
+    <h3>Flexible Tarife</h3>
+    <p>Stundenweise, täglich oder monatlich – du entscheidest.</p>
   </div>
   <div class="card">
-    <h3>Schnelle Buchung</h3>
-    <p>In wenigen Klicks zum passenden Fahrzeug.</p>
+    <h3>Lokale Anbieter</h3>
+    <p>Unterstütze Sharing-Angebote direkt aus deiner Region.</p>
+  </div>
+  <div class="card">
+    <h3>Einfache Buchung</h3>
+    <p>Fahrzeug wählen, buchen, losfahren – alles digital.</p>
   </div>
 </main>
 
 <footer>
-  &copy; 2025 Locorent – Alle Rechte vorbehalten
+  &copy; 2025 Locorent – Gemeinsam nachhaltig unterwegs.
 </footer>
 
 <script>
