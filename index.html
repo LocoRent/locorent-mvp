@@ -3,101 +3,111 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Locorent – Nachhaltig Mieten & Vermieten</title>
+  <title>Locorent – Nachhaltig mieten</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --primary: #3a7d44;
-      --accent: #a4de02;
-      --bg: #f4fdf0;
-      --text: #333;
+      --primary: #2e7d32;
+      --secondary: #a5d6a7;
+      --light: #f1f8e9;
+      --dark: #1b5e20;
+      --accent: #66bb6a;
     }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
       font-family: 'Poppins', sans-serif;
-      margin: 0;
-      background-color: var(--bg);
-      color: var(--text);
+      background-color: var(--light);
+      color: var(--dark);
     }
+
     header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: var(--primary);
+      background-color: var(--primary);
       color: white;
       padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
-    header img {
-      height: 50px;
+
+    header h1 {
+      font-size: 1.8rem;
     }
+
     nav a {
-      color: white;
       margin-left: 1.5rem;
       text-decoration: none;
+      color: white;
       font-weight: 600;
     }
+
     .hero {
+      padding: 2rem;
+      background-color: white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
       display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
-      padding: 4rem 2rem;
-      background: linear-gradient(to right, var(--primary), var(--accent));
+      flex-direction: column;
+      gap: 1rem;
+      max-width: 1000px;
+      margin: 2rem auto;
+      border-radius: 12px;
+    }
+
+    .search-row {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .search-row input,
+    .search-row select {
+      padding: 0.8rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .search-row button {
+      padding: 0.8rem 1.5rem;
+      background-color: var(--accent);
       color: white;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
     }
-    .hero-text {
-      max-width: 600px;
+
+    .search-row button:hover {
+      background-color: var(--primary);
     }
-    .hero h1 {
-      font-size: 2.5rem;
+
+    .results {
+      margin-top: 2rem;
+    }
+
+    .result-card {
+      background-color: var(--secondary);
+      border-radius: 10px;
+      padding: 1rem;
       margin-bottom: 1rem;
     }
-    .hero p {
-      font-size: 1.2rem;
+
+    .result-card h3 {
+      margin-bottom: 0.5rem;
     }
-    .hero img {
-      max-width: 400px;
-      border-radius: 15px;
-    }
-    .angebote {
-      padding: 3rem 2rem;
-      background-color: #fff;
-    }
-    .angebote h2 {
-      text-align: center;
-      margin-bottom: 2rem;
-      color: var(--primary);
-    }
-    .card-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 2rem;
-    }
-    .card {
-      border: 1px solid #ddd;
-      border-radius: 12px;
-      overflow: hidden;
-      background-color: #fafafa;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-    .card img {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-    }
-    .card h3 {
-      padding: 1rem;
-      margin: 0;
-      font-size: 1.1rem;
-      color: var(--primary);
-    }
-    .card p {
-      padding: 0 1rem 1rem;
-      margin: 0;
-      font-size: 0.95rem;
-    }
+
     footer {
-      text-align: center;
+      margin-top: 3rem;
       padding: 2rem;
+      text-align: center;
       background-color: var(--primary);
       color: white;
     }
@@ -106,66 +116,83 @@
 <body>
 
 <header>
-  <div>
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Leaf_icon_design.svg/2048px-Leaf_icon_design.svg.png" alt="Locorent Logo">
-  </div>
+  <h1>Locorent</h1>
   <nav>
-    <a href="#">Startseite</a>
+    <a href="index.html">Start</a>
     <a href="login.html">Einloggen</a>
     <a href="register.html">Registrieren</a>
   </nav>
 </header>
 
 <section class="hero">
-  <div class="hero-text">
-    <h1>Mieten statt Kaufen – Nachhaltig mit Locorent</h1>
-    <p>Finde Gegenstände zur Miete in deiner Nähe. Schone deinen Geldbeutel und die Umwelt!</p>
+  <div class="search-row">
+    <input type="text" placeholder="Was suchst du?" id="search-input" />
+    <select id="category-select">
+      <option value="">Alle Kategorien</option>
+      <option value="fahrzeuge">Fahrzeuge</option>
+      <option value="werkzeuge">Werkzeuge</option>
+      <option value="elektronik">Elektronik</option>
+      <option value="freizeit">Freizeit & Hobby</option>
+    </select>
+    <input type="text" placeholder="PLZ oder Ort" id="location-input" />
+    <button onclick="search()">Suchen</button>
   </div>
-  <img src="https://images.unsplash.com/photo-1550583724-b2691abbbe85?auto=format&fit=crop&w=800&q=60" alt="Mieten Symbolbild">
-</section>
 
-<section class="angebote">
-  <h2>Aktuelle Mietangebote</h2>
-  <div class="card-container" id="angebot-container">
-    <!-- Dynamische Inhalte -->
+  <div class="results" id="results">
+    <!-- Dynamische Ergebnisse -->
   </div>
 </section>
 
 <footer>
-  &copy; 2025 Locorent – Gemeinsam nachhaltig handeln.
+  © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
 </footer>
 
 <script>
-  // Beispielhafte dynamische Inhalte
-  const angebote = [
-    {
-      titel: 'Bohrmaschine Bosch',
-      beschreibung: 'Leistungsstark und ideal für Heimwerker – ab 5€/Tag.',
-      bild: 'https://images.unsplash.com/photo-1603386329225-868a2b2f0d5a?auto=format&fit=crop&w=800&q=60'
-    },
-    {
-      titel: 'Faltbares E-Bike',
-      beschreibung: 'Ideal für die Stadt – flexibel & nachhaltig.',
-      bild: 'https://images.unsplash.com/photo-1562860149-691401a306b9?auto=format&fit=crop&w=800&q=60'
-    },
-    {
-      titel: 'DJI Drohne Mini 3',
-      beschreibung: 'Perfekt für Luftaufnahmen, nur 15€/Tag.',
-      bild: 'https://images.unsplash.com/photo-1589149098258-f9d9dcf22506?auto=format&fit=crop&w=800&q=60'
-    }
-  ];
+  function search() {
+    const keyword = document.getElementById('search-input').value.trim();
+    const category = document.getElementById('category-select').value;
+    const location = document.getElementById('location-input').value.trim();
 
-  const container = document.getElementById('angebot-container');
-  angebote.forEach(item => {
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.innerHTML = `
-      <img src="${item.bild}" alt="${item.titel}" />
-      <h3>${item.titel}</h3>
-      <p>${item.beschreibung}</p>
-    `;
-    container.appendChild(card);
-  });
+    const results = document.getElementById('results');
+    results.innerHTML = '';
+
+    // Demo-Daten
+    const dummyData = [
+      {
+        title: 'E-Bike zu vermieten',
+        category: 'fahrzeuge',
+        location: 'Berlin',
+        description: 'Leistungsstarkes E-Bike für Ausflüge oder tägliches Pendeln.'
+      },
+      {
+        title: 'Akkubohrer Bosch 18V',
+        category: 'werkzeuge',
+        location: 'Hamburg',
+        description: 'Zuverlässiger Akkubohrer mit Ladegerät und Koffer.'
+      }
+    ];
+
+    const filtered = dummyData.filter(item =>
+      (!keyword || item.title.toLowerCase().includes(keyword.toLowerCase())) &&
+      (!category || item.category === category) &&
+      (!location || item.location.toLowerCase().includes(location.toLowerCase()))
+    );
+
+    if (filtered.length === 0) {
+      results.innerHTML = '<p>Keine passenden Angebote gefunden.</p>';
+    } else {
+      filtered.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'result-card';
+        card.innerHTML = `
+          <h3>${item.title}</h3>
+          <p><strong>Ort:</strong> ${item.location}</p>
+          <p>${item.description}</p>
+        `;
+        results.appendChild(card);
+      });
+    }
+  }
 </script>
 
 </body>
