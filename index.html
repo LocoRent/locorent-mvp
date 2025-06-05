@@ -2,128 +2,145 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>LocoRent – Alles mieten. Einfach.</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Locorent – Startseite</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <style>
-    body {
+    * {
+      box-sizing: border-box;
       margin: 0;
-      font-family: 'Poppins', sans-serif;
-      background: #f9fafb;
-      color: #333;
+      padding: 0;
     }
-
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f2f2f2;
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
     header {
+      background: #1e3c72;
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 {
+      font-size: 1.5rem;
+    }
+    nav a {
+      color: white;
+      margin-left: 1rem;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    .hero {
       background: linear-gradient(135deg, #1e3c72, #2a5298);
       color: white;
-      padding: 2rem;
       text-align: center;
+      padding: 5rem 2rem;
     }
-
-    header h1 {
-      font-size: 2.8rem;
-      margin: 0;
+    .hero h2 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
     }
-
-    header p {
+    .hero p {
       font-size: 1.2rem;
-      margin-top: 0.5rem;
+      margin-bottom: 2rem;
     }
-
-    .cta-buttons {
-      margin-top: 1.5rem;
-    }
-
-    .cta-buttons a {
-      background-color: #00d084;
-      color: white;
-      padding: 0.75rem 1.5rem;
-      border-radius: 8px;
+    .hero .btn {
+      padding: 1rem 2rem;
+      background: #00d084;
+      color: black;
       font-weight: bold;
-      margin: 0 0.5rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
       text-decoration: none;
-      transition: background 0.3s ease;
     }
-
-    .cta-buttons a:hover {
-      background-color: #00b16a;
+    .hero .btn:hover {
+      background: #02c26b;
     }
-
-    .hero-image {
-      width: 100%;
-      max-height: 400px;
-      object-fit: cover;
-    }
-
     main {
       padding: 2rem;
-      text-align: center;
     }
-
     .features {
       display: flex;
       flex-wrap: wrap;
       gap: 2rem;
       justify-content: center;
-      margin-top: 2rem;
     }
-
-    .feature {
+    .card {
       background: white;
       padding: 1.5rem;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      width: 280px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 300px;
+      text-align: center;
     }
-
-    .feature h3 {
-      color: #2a5298;
-      margin-top: 0;
+    .card h3 {
+      margin-bottom: 1rem;
+      color: #1e3c72;
     }
-
     footer {
-      background: #1e3c72;
+      margin-top: auto;
+      padding: 2rem;
+      background: #333;
       color: white;
       text-align: center;
-      padding: 1rem;
-      margin-top: 3rem;
+    }
+
+    @media (max-width: 768px) {
+      .features {
+        flex-direction: column;
+        align-items: center;
+      }
     }
   </style>
 </head>
 <body>
 
 <header>
-  <h1>LocoRent</h1>
-  <p>Alles mieten. Einfach. Sicher. Flexibel.</p>
-  <div class="cta-buttons">
-    <a href="login.html">Einloggen</a>
+  <h1>Locorent</h1>
+  <nav>
+    <a href="login.html">Login</a>
     <a href="register.html">Registrieren</a>
-  </div>
+    <a href="#">Angebote</a>
+  </nav>
 </header>
 
-<img src="https://images.unsplash.com/photo-1593086622679-3fe70fd3c671?auto=format&fit=crop&w=1400&q=80" alt="Verschiedene Mietgegenstände" class="hero-image" />
+<section class="hero">
+  <h2>Willkommen bei Locorent</h2>
+  <p>Finde dein perfektes Mietfahrzeug – schnell, einfach und günstig.</p>
+  <a href="login.html" class="btn">Jetzt einloggen</a>
+</section>
 
 <main>
-  <h2>Was kannst du bei uns mieten?</h2>
   <div class="features">
-    <div class="feature">
-      <h3>Fahrzeuge</h3>
-      <p>Autos, Transporter, Camper & mehr – flexibel buchbar.</p>
+    <div class="card">
+      <h3>Große Auswahl</h3>
+      <p>Wähle aus einer Vielzahl an Fahrzeugen für jeden Anlass.</p>
     </div>
-    <div class="feature">
-      <h3>Technik & Tools</h3>
-      <p>Beamer, Kameras, Werkzeug, Drohnen oder Tonanlagen.</p>
+    <div class="card">
+      <h3>Faire Preise</h3>
+      <p>Transparente Preise ohne versteckte Kosten.</p>
     </div>
-    <div class="feature">
-      <h3>Freizeit & Events</h3>
-      <p>Boote, Partyzelte, Musikanlagen, Deko & vieles mehr.</p>
+    <div class="card">
+      <h3>Schnelle Buchung</h3>
+      <p>In wenigen Klicks zum passenden Fahrzeug.</p>
     </div>
   </div>
 </main>
 
 <footer>
-  © 2025 LocoRent – Deine Plattform zum Mieten & Vermieten.
+  &copy; 2025 Locorent – Alle Rechte vorbehalten
 </footer>
 
 </body>
 </html>
+
