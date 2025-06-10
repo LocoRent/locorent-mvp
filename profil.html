@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mein Profil – Locorent</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root {
+      --primary: #2e7d32;
+      --light: #f1f8e9;
+      --dark: #1b5e20;
+      --white: #fff;
+      --gray: #e0e0e0;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--light);
+      color: var(--dark);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background-color: var(--primary);
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 { font-size: 1.5rem; }
+
+    .profile-container {
+      max-width: 600px;
+      margin: 3rem auto;
+      background-color: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .profile-container h2 {
+      margin-bottom: 1rem;
+    }
+
+    .profile-info p {
+      margin-bottom: 0.8rem;
+      font-size: 1.1rem;
+    }
+
+    button {
+      padding: 0.7rem 1.5rem;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #1b5e20;
+    }
+
+    footer {
+      margin-top: auto;
+      padding: 1.5rem;
+      background-color: var(--primary);
+      color: white;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Locorent</h1>
+  <nav>
+    <a href="index.html" style="color: white; text-decoration: none;">Zurück zur Startseite</a>
+  </nav>
+</header>
+
+<section class="profile-container" id="profile-section">
+  <h2>Mein Profil</h2>
+  <div class="profile-info" id="profile-info">
+    <!-- Benutzerinfos werden hier eingefügt -->
+  </div>
+  <button onclick="logout()">Abmelden</button>
+</section>
+
+<footer>
+  © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
+</footer>
+
+<script>
+  const supabase = window.supabase.createClient(
+    'https://flnjalgqtkqycsaymmbd.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+  );
+
+  async function loadProfile() {
+    const { data: { session } } = await supabase.auth.getSession();
+    const section = document.getElementById('profile-info');
+
+    if (!session?.user) {
+      window.location.href = "login.html";
+      return;
+    }
+
+    const user = session.user;
+    section.innerHTML = `
+      <p><strong>Email:</strong> ${user.email}</p>
+      <p><strong>User ID:</strong> ${user.id}</p>
+    `;
+  }
+
+  async function logout() {
+    await supabase.auth.signOut();
+    window.location.href = "login.html";
+  }
+
+  loadProfile();
+</script>
+
+</body>
+</html>
