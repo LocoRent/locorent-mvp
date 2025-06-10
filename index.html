@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Locorent – Alles Mieten</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --primary: #2e7d32;
@@ -102,7 +103,7 @@
 </head>
 <body>
 
-<!-- ✅ WICHTIG: Hier leiten wir weiter zu update-password.html, wenn nötig -->
+<!-- ✅ Passwort-Wiederherstellung Weiterleitung -->
 <script>
   const hash = window.location.hash;
   if (hash.includes("type=recovery")) {
@@ -113,9 +114,7 @@
 <header>
   <h1>Locorent</h1>
   <nav>
-    <a href="index.html">Start</a>
-    <a href="login.html">Einloggen</a>
-    <a href="register.html">Registrieren</a>
+    <!-- Dynamisch gefüllt per JavaScript -->
   </nav>
 </header>
 
@@ -206,6 +205,45 @@
     document.getElementById('category-select').value = cat;
     search();
   }
+
+  // ✅ Supabase Auth: Session prüfen und Navigation anpassen
+  const supabase = window.supabase.createClient(
+    'https://flnjalgqtkqycsaymmbd.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+  );
+
+  async function updateNav() {
+    const { data: { session } } = await supabase.auth.getSession();
+    const nav = document.querySelector("header nav");
+    nav.innerHTML = '';
+
+    if (session?.user) {
+      const emailSpan = document.createElement('span');
+      emailSpan.textContent = `Angemeldet als: ${session.user.email}`;
+      emailSpan.style.marginRight = '1rem';
+      emailSpan.style.fontWeight = 'bold';
+      emailSpan.style.color = 'white';
+
+      const logoutBtn = document.createElement('a');
+      logoutBtn.href = "#";
+      logoutBtn.textContent = "Logout";
+      logoutBtn.onclick = async () => {
+        await supabase.auth.signOut();
+        window.location.href = "login.html";
+      };
+
+      nav.appendChild(emailSpan);
+      nav.appendChild(logoutBtn);
+    } else {
+      nav.innerHTML = `
+        <a href="index.html">Start</a>
+        <a href="login.html">Einloggen</a>
+        <a href="register.html">Registrieren</a>
+      `;
+    }
+  }
+
+  updateNav();
 </script>
 
 </body>
