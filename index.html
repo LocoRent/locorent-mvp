@@ -102,6 +102,14 @@
 </head>
 <body>
 
+<!-- ✅ WICHTIG: Hier leiten wir weiter zu update-password.html, wenn nötig -->
+<script>
+  const hash = window.location.hash;
+  if (hash.includes("type=recovery")) {
+    window.location.href = "/update-password.html" + hash;
+  }
+</script>
+
 <header>
   <h1>Locorent</h1>
   <nav>
