@@ -49,12 +49,23 @@
       margin-bottom: 1rem;
     }
 
-    .profile-info p {
-      margin-bottom: 0.8rem;
-      font-size: 1.1rem;
+    .profile-info label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 600;
     }
 
-    button {
+    .profile-info input,
+    .profile-info textarea {
+      width: 100%;
+      padding: 0.7rem;
+      margin-top: 0.3rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    .profile-info button {
+      margin-top: 1.5rem;
       padding: 0.7rem 1.5rem;
       background-color: var(--primary);
       color: white;
@@ -64,8 +75,24 @@
       cursor: pointer;
     }
 
-    button:hover {
+    .profile-info button:hover {
       background-color: #1b5e20;
+    }
+
+    .history {
+      margin-top: 2rem;
+      background-color: #f9f9f9;
+      padding: 1rem;
+      border-radius: 8px;
+    }
+
+    .history h3 {
+      margin-bottom: 1rem;
+    }
+
+    .history-item {
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #ccc;
     }
 
     footer {
@@ -86,12 +113,39 @@
   </nav>
 </header>
 
-<section class="profile-container" id="profile-section">
+<section class="profile-container">
   <h2>Mein Profil</h2>
-  <div class="profile-info" id="profile-info">
-    <!-- Benutzerinfos werden hier eingefügt -->
+  <div class="profile-info">
+    <label for="name">Name</label>
+    <input type="text" id="name" placeholder="Dein Name" />
+
+    <label for="email">E-Mail</label>
+    <input type="email" id="email" />
+
+    <label for="phone">Telefonnummer</label>
+    <input type="text" id="phone" placeholder="+49 123 456789" />
+
+    <label for="city">Wohnort</label>
+    <input type="text" id="city" placeholder="z. B. Berlin" />
+
+    <label for="bio">Über mich</label>
+    <textarea id="bio" rows="3" placeholder="Schreibe etwas über dich..."></textarea>
+
+    <button onclick="saveProfile()">Änderungen speichern</button>
+
+    <label for="password">Neues Passwort</label>
+    <input type="password" id="password" placeholder="Neues Passwort" />
+    <button onclick="changePassword()">Passwort ändern</button>
+
+    <button onclick="logout()">Abmelden</button>
   </div>
-  <button onclick="logout()">Abmelden</button>
+
+  <div class="history">
+    <h3>Mein Mietverlauf</h3>
+    <div id="rental-history">
+      <!-- Dummy-Einträge -->
+    </div>
+  </div>
 </section>
 
 <footer>
@@ -106,26 +160,89 @@
 
   async function loadProfile() {
     const { data: { session } } = await supabase.auth.getSession();
-    const section = document.getElementById('profile-info');
-
     if (!session?.user) {
       window.location.href = "login.html";
       return;
     }
 
     const user = session.user;
-    const fullName = user.user_metadata?.full_name || 'Nicht angegeben';
+    document.getElementById('email').value = user.email;
 
-    section.innerHTML = `
-      <p><strong>Name:</strong> ${fullName}</p>
-      <p><strong>Email:</strong> ${user.email}</p>
-      <p><strong>User ID:</strong> ${user.id}</p>
-    `;
+    // Lade Profildaten (wenn du eine Tabelle wie "profiles" nutzt)
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', user.id)
+      .single();
+
+    if (data) {
+      document.getElementById('name').value = data.name || '';
+      document.getElementById('phone').value = data.phone || '';
+      document.getElementById('city').value = data.city || '';
+      document.getElementById('bio').value = data.bio || '';
+    }
+
+    loadHistory(user.id);
+  }
+
+  async function saveProfile() {
+    const name = document.getElementById('name').value;
+    const phone = document.getElementById('phone').value;
+    const city = document.getElementById('city').value;
+    const bio = document.getElementById('bio').value;
+    const email = document.getElementById('email').value;
+
+    const { data: { user } } = await supabase.auth.getUser();
+
+    await supabase.auth.updateUser({ email });
+
+    await supabase.from('profiles').upsert({
+      id: user.id,
+      name,
+      phone,
+      city,
+      bio
+    });
+
+    alert("Profil erfolgreich aktualisiert!");
+  }
+
+  async function changePassword() {
+    const password = document.getElementById('password').value;
+    if (!password) {
+      alert("Bitte gib ein neues Passwort ein.");
+      return;
+    }
+
+    const { error } = await supabase.auth.updateUser({ password });
+    if (error) {
+      alert("Fehler beim Ändern des Passworts.");
+    } else {
+      alert("Passwort geändert.");
+      document.getElementById('password').value = '';
+    }
   }
 
   async function logout() {
     await supabase.auth.signOut();
     window.location.href = "login.html";
+  }
+
+  function loadHistory(userId) {
+    const container = document.getElementById("rental-history");
+
+    // Beispiel-Daten
+    const historyItems = [
+      { title: "E-Bike Trekking", date: "2024-06-01", status: "zurückgegeben" },
+      { title: "Transporter Sprinter", date: "2024-05-15", status: "laufend" }
+    ];
+
+    historyItems.forEach(item => {
+      const div = document.createElement("div");
+      div.className = "history-item";
+      div.innerHTML = `<strong>${item.title}</strong><br><small>${item.date} – ${item.status}</small>`;
+      container.appendChild(div);
+    });
   }
 
   loadProfile();
