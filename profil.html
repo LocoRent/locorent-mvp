@@ -36,7 +36,8 @@
 
     header h1 { font-size: 1.5rem; }
 
-    .profile-container {
+    .profile-container,
+    .listing-container {
       max-width: 600px;
       margin: 3rem auto;
       background-color: white;
@@ -45,18 +46,18 @@
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 
-    .profile-container h2 {
+    .profile-container h2,
+    .listing-container h2 {
       margin-bottom: 1rem;
     }
 
-    .profile-info label {
+    label {
       display: block;
       margin-top: 1rem;
       font-weight: 600;
     }
 
-    .profile-info input,
-    .profile-info textarea {
+    input, textarea, select {
       width: 100%;
       padding: 0.7rem;
       margin-top: 0.3rem;
@@ -64,7 +65,7 @@
       border-radius: 8px;
     }
 
-    .profile-info button {
+    button {
       margin-top: 1.5rem;
       padding: 0.7rem 1.5rem;
       background-color: var(--primary);
@@ -75,7 +76,7 @@
       cursor: pointer;
     }
 
-    .profile-info button:hover {
+    button:hover {
       background-color: #1b5e20;
     }
 
@@ -148,6 +149,32 @@
   </div>
 </section>
 
+<section class="listing-container">
+  <h2>Neues Inserat erstellen</h2>
+  <div class="listing-form">
+    <label for="listing-title">Titel</label>
+    <input type="text" id="listing-title" placeholder="Titel deines Inserats" />
+
+    <label for="listing-description">Beschreibung</label>
+    <textarea id="listing-description" rows="3" placeholder="Beschreibe dein Objekt"></textarea>
+
+    <label for="listing-price">Preis pro Tag (€)</label>
+    <input type="number" id="listing-price" placeholder="z.B. 15" min="0" />
+
+    <label for="listing-category">Kategorie</label>
+    <select id="listing-category">
+      <option value="">Bitte wählen</option>
+      <option value="Fahrrad">Fahrrad</option>
+      <option value="Auto">Auto</option>
+      <option value="Werkzeug">Werkzeug</option>
+      <option value="Elektronik">Elektronik</option>
+      <option value="Sonstiges">Sonstiges</option>
+    </select>
+
+    <button onclick="insertListing()">Inserat speichern</button>
+  </div>
+</section>
+
 <footer>
   © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
 </footer>
@@ -168,7 +195,6 @@
     const user = session.user;
     document.getElementById('email').value = user.email;
 
-    // Lade Profildaten (wenn du eine Tabelle wie "profiles" nutzt)
     const { data, error } = await supabase
       .from('profiles')
       .select('*')
@@ -243,6 +269,46 @@
       div.innerHTML = `<strong>${item.title}</strong><br><small>${item.date} – ${item.status}</small>`;
       container.appendChild(div);
     });
+  }
+
+  async function insertListing() {
+    const title = document.getElementById('listing-title').value.trim();
+    const description = document.getElementById('listing-description').value.trim();
+    const price = parseFloat(document.getElementById('listing-price').value);
+    const category = document.getElementById('listing-category').value;
+
+    if (!title || !description || isNaN(price) || price < 0 || !category) {
+      alert("Bitte alle Felder korrekt ausfüllen.");
+      return;
+    }
+
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      alert("Bitte zuerst einloggen.");
+      return;
+    }
+
+    const { error } = await supabase
+      .from('listings')
+      .insert({
+        user_id: user.id,
+        title,
+        description,
+        price_per_day: price,
+        category,
+        created_at: new Date()
+      });
+
+    if (error) {
+      alert("Fehler beim Speichern des Inserats: " + error.message);
+    } else {
+      alert("Inserat erfolgreich gespeichert!");
+      // Felder zurücksetzen
+      document.getElementById('listing-title').value = '';
+      document.getElementById('listing-description').value = '';
+      document.getElementById('listing-price').value = '';
+      document.getElementById('listing-category').value = '';
+    }
   }
 
   loadProfile();
