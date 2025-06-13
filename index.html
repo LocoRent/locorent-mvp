@@ -222,11 +222,11 @@
     items.forEach(item => {
       const card = document.createElement('div');
       card.className = 'result-card';
-      card.innerHTML = 
+      card.innerHTML = `
         <h3>${item.title}</h3>
         <p><strong>Ort:</strong> ${item.location}</p>
         <p>${item.description}</p>
-      ;
+      `;
       results.appendChild(card);
     });
   }
@@ -248,7 +248,7 @@
     search();
   }
 
-  // ✅ Supabase Setup
+  // Supabase Setup
   const supabase = window.supabase.createClient(
     'https://flnjalgqtkqycsaymmbd.supabase.co',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
@@ -269,10 +269,10 @@
 
       const dropdown = document.createElement('div');
       dropdown.className = 'dropdown-content';
-      dropdown.innerHTML = 
+      dropdown.innerHTML = `
         <a href="profil.html">Mein Profil</a>
         <a href="#" id="logout-link">Logout</a>
-      ;
+      `;
 
       menu.appendChild(btn);
       menu.appendChild(dropdown);
@@ -283,11 +283,11 @@
         window.location.href = "login.html";
       };
     } else {
-      nav.innerHTML = 
+      nav.innerHTML = `
         <a href="index.html">Start</a>
         <a href="login.html">Einloggen</a>
         <a href="register.html">Registrieren</a>
-      ;
+      `;
     }
   }
 
