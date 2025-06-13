@@ -15,7 +15,6 @@
       --accent: #66bb6a;
       --white: #fff;
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Poppins', sans-serif; background-color: var(--light); color: var(--dark); }
 
@@ -28,16 +27,12 @@
       align-items: center;
     }
     header h1 { font-size: 1.8rem; }
-    nav {
-      position: relative;
-    }
     nav a {
       margin-left: 1.5rem;
       text-decoration: none;
       color: white;
       font-weight: 600;
     }
-
     .profile-menu {
       position: relative;
       display: inline-block;
@@ -155,9 +150,7 @@
 
 <header>
   <h1>Locorent</h1>
-  <nav id="nav-links">
-    <!-- wird dynamisch befüllt -->
-  </nav>
+  <nav id="nav-links"></nav>
 </header>
 
 <section class="hero">
@@ -178,7 +171,7 @@
       <option value="freizeit">Freizeit & Sport</option>
       <option value="baby">Baby & Kind</option>
     </select>
-    <input type="text" placeholder="PLZ oder Ort" id="location-input" />
+    <input type="text" placeholder="PLZ oder Ort" id="location-input" disabled />
     <button onclick="search()">Suchen</button>
   </div>
 
@@ -205,50 +198,6 @@
 </footer>
 
 <script>
-  const dummyData = [
-    { title: 'Wohnmobil VW T6', category: 'fahrzeuge', location: 'München', description: 'Ideal für den Sommerurlaub.' },
-    { title: 'Transporter Sprinter', category: 'transporter', location: 'Berlin', description: 'Perfekt für Umzüge.' },
-    { title: 'Motorboot 5PS', category: 'boote', location: 'Hamburg', description: 'Führerscheinfrei fahrbar.' },
-    { title: 'E-Bike Trekking', category: 'fahrrad', location: 'Köln', description: 'Für entspannte Touren.' }
-  ];
-
-  function renderResults(items) {
-    const results = document.getElementById('results');
-    results.innerHTML = '';
-    if (items.length === 0) {
-      results.innerHTML = '<p>Keine passenden Angebote gefunden.</p>';
-      return;
-    }
-    items.forEach(item => {
-      const card = document.createElement('div');
-      card.className = 'result-card';
-      card.innerHTML = `
-        <h3>${item.title}</h3>
-        <p><strong>Ort:</strong> ${item.location}</p>
-        <p>${item.description}</p>
-      `;
-      results.appendChild(card);
-    });
-  }
-
-  function search() {
-    const keyword = document.getElementById('search-input').value.toLowerCase();
-    const category = document.getElementById('category-select').value;
-    const location = document.getElementById('location-input').value.toLowerCase();
-    const filtered = dummyData.filter(item =>
-      (!keyword || item.title.toLowerCase().includes(keyword)) &&
-      (!category || item.category === category) &&
-      (!location || item.location.toLowerCase().includes(location))
-    );
-    renderResults(filtered);
-  }
-
-  function filterByCategory(cat) {
-    document.getElementById('category-select').value = cat;
-    search();
-  }
-
-  // Supabase Setup
   const supabase = window.supabase.createClient(
     'https://flnjalgqtkqycsaymmbd.supabase.co',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
@@ -291,7 +240,66 @@
     }
   }
 
+  function renderResults(items) {
+    const results = document.getElementById('results');
+    results.innerHTML = '';
+
+    if (!items || items.length === 0) {
+      results.innerHTML = '<p>Keine passenden Angebote gefunden.</p>';
+      return;
+    }
+
+    items.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'result-card';
+      card.innerHTML = `
+        <h3>${item.title}</h3>
+        <p><strong>Kategorie:</strong> ${item.category || 'Unbekannt'}</p>
+        <p><strong>Preis pro Tag:</strong> ${item.price_per_day ? item.price_per_day + ' €' : 'k. A.'}</p>
+        <p>${item.description || ''}</p>
+      `;
+      results.appendChild(card);
+    });
+  }
+
+  async function loadListings(filters = {}) {
+    let query = supabase.from('listings').select('*').order('created_at', { ascending: false });
+
+    if (filters.keyword) {
+      query = query.ilike('title', `%${filters.keyword}%`);
+    }
+
+    if (filters.category) {
+      query = query.eq('category', filters.category);
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+      console.error('Fehler beim Laden:', error.message);
+      return;
+    }
+
+    renderResults(data);
+  }
+
+  function search() {
+    const keyword = document.getElementById('search-input').value.trim().toLowerCase();
+    const category = document.getElementById('category-select').value;
+
+    loadListings({
+      keyword,
+      category
+    });
+  }
+
+  function filterByCategory(cat) {
+    document.getElementById('category-select').value = cat;
+    search();
+  }
+
   updateNav();
+  loadListings();
 </script>
 
 </body>
