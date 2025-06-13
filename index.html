@@ -198,25 +198,6 @@
   </div>
 
   <div class="results" id="results"></div>
-
-  <section class="listing-create" style="background:#fff; padding:1rem; border-radius:12px; margin-top:2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-    <h2>Inserat erstellen</h2>
-    <label for="listing-title">Titel</label><br />
-    <input type="text" id="listing-title" placeholder="Titel des Inserats" style="width:100%; padding:0.5rem; margin-bottom:0.5rem; border-radius:6px; border:1px solid #ccc;" />
-
-    <label for="listing-description">Beschreibung</label><br />
-    <textarea id="listing-description" rows="3" placeholder="Beschreibung" style="width:100%; padding:0.5rem; margin-bottom:0.5rem; border-radius:6px; border:1px solid #ccc;"></textarea>
-
-    <label for="listing-price">Preis (€)</label><br />
-    <input type="number" id="listing-price" step="0.01" placeholder="z.B. 15.00" style="width:100%; padding:0.5rem; margin-bottom:0.5rem; border-radius:6px; border:1px solid #ccc;" />
-
-    <label for="listing-category">Kategorie</label><br />
-    <input type="text" id="listing-category" placeholder="z.B. Fahrrad, Werkzeug..." style="width:100%; padding:0.5rem; margin-bottom:1rem; border-radius:6px; border:1px solid #ccc;" />
-
-    <button onclick="createListing()" style="background-color: var(--primary); color: white; padding: 0.8rem 1.5rem; border:none; border-radius:8px; font-weight:600; cursor:pointer;">
-      Inserat speichern
-    </button>
-  </section>
 </section>
 
 <footer>
@@ -241,11 +222,11 @@
     items.forEach(item => {
       const card = document.createElement('div');
       card.className = 'result-card';
-      card.innerHTML = `
+      card.innerHTML = 
         <h3>${item.title}</h3>
-        <p><strong>Ort:</strong> ${item.location || 'Keine Angabe'}</p>
+        <p><strong>Ort:</strong> ${item.location}</p>
         <p>${item.description}</p>
-      `;
+      ;
       results.appendChild(card);
     });
   }
@@ -257,7 +238,7 @@
     const filtered = dummyData.filter(item =>
       (!keyword || item.title.toLowerCase().includes(keyword)) &&
       (!category || item.category === category) &&
-      (!location || (item.location && item.location.toLowerCase().includes(location)))
+      (!location || item.location.toLowerCase().includes(location))
     );
     renderResults(filtered);
   }
@@ -288,10 +269,10 @@
 
       const dropdown = document.createElement('div');
       dropdown.className = 'dropdown-content';
-      dropdown.innerHTML = `
+      dropdown.innerHTML = 
         <a href="profil.html">Mein Profil</a>
         <a href="#" id="logout-link">Logout</a>
-      `;
+      ;
 
       menu.appendChild(btn);
       menu.appendChild(dropdown);
@@ -302,53 +283,15 @@
         window.location.href = "login.html";
       };
     } else {
-      nav.innerHTML = `
+      nav.innerHTML = 
         <a href="index.html">Start</a>
         <a href="login.html">Einloggen</a>
         <a href="register.html">Registrieren</a>
-      `;
+      ;
     }
   }
 
   updateNav();
-
-  async function createListing() {
-    const title = document.getElementById('listing-title').value.trim();
-    const description = document.getElementById('listing-description').value.trim();
-    const priceStr = document.getElementById('listing-price').value;
-    const price = priceStr ? parseFloat(priceStr) : null;
-    const category = document.getElementById('listing-category').value.trim();
-
-    if (!title) {
-      alert("Bitte gib einen Titel ein.");
-      return;
-    }
-
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session?.user) {
-      alert("Bitte melde dich zuerst an, um Inserate zu erstellen.");
-      return;
-    }
-
-    const { error } = await supabase.from('listings').insert({
-      user_id: session.user.id,
-      title,
-      description,
-      price,
-      category,
-      available: true
-    });
-
-    if (error) {
-      alert("Fehler beim Erstellen des Inserats: " + error.message);
-    } else {
-      alert("Inserat erfolgreich erstellt!");
-      document.getElementById('listing-title').value = '';
-      document.getElementById('listing-description').value = '';
-      document.getElementById('listing-price').value = '';
-      document.getElementById('listing-category').value = '';
-    }
-  }
 </script>
 
 </body>
