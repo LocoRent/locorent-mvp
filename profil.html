@@ -114,7 +114,10 @@
     }
 
     const user = session.user;
+    const fullName = user.user_metadata?.full_name || 'Nicht angegeben';
+
     section.innerHTML = `
+      <p><strong>Name:</strong> ${fullName}</p>
       <p><strong>Email:</strong> ${user.email}</p>
       <p><strong>User ID:</strong> ${user.id}</p>
     `;
