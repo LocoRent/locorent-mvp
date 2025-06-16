@@ -5,13 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Nachrichten – Locorent</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"/>
   <style>
     body {
       font-family: 'Poppins', sans-serif;
       background: #f1f8e9;
+      color: #1b5e20;
       margin: 0;
       padding: 0;
-      color: #1b5e20;
     }
     header {
       background-color: #2e7d32;
@@ -23,7 +24,6 @@
     }
     nav a {
       color: white;
-      margin-left: 1rem;
       text-decoration: none;
       font-weight: 600;
     }
@@ -31,72 +31,86 @@
       max-width: 800px;
       margin: 2rem auto;
       background: white;
-      padding: 1rem;
+      padding: 1.5rem;
       border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.1);
       display: flex;
       flex-direction: column;
       height: 80vh;
     }
-    h2 {
+    .chat-header {
       margin-bottom: 1rem;
+    }
+    .chat-header h2 {
+      font-size: 1.4rem;
+      margin-bottom: 0.2rem;
+    }
+    .chat-header small {
+      color: #4b8b4b;
     }
     #chat {
       flex: 1;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      padding: 0.5rem;
+      padding: 1rem;
       border: 1px solid #ccc;
       border-radius: 8px;
       background: #f9fff4;
+      margin-bottom: 1rem;
     }
     .message {
-      padding: 0.5rem;
+      padding: 0.6rem 1rem;
       margin: 0.3rem 0;
-      border-radius: 8px;
-      max-width: 75%;
+      border-radius: 16px;
+      max-width: 70%;
       word-wrap: break-word;
     }
     .sent {
       background: #c8e6c9;
       align-self: flex-end;
-      margin-left: auto;
     }
     .received {
       background: #e0e0e0;
       align-self: flex-start;
-      margin-right: auto;
     }
     .input-row {
       display: flex;
       gap: 0.5rem;
-      margin-top: 1rem;
     }
     .input-row input {
       flex: 1;
-      padding: 0.7rem;
-      border-radius: 8px;
+      padding: 0.8rem;
+      border-radius: 10px;
       border: 1px solid #ccc;
+      font-size: 1rem;
     }
     .input-row button {
-      padding: 0.7rem 1rem;
+      padding: 0.8rem 1.2rem;
       background-color: #2e7d32;
       color: white;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
+      font-weight: 600;
       cursor: pointer;
+    }
+    .input-row button:hover {
+      background-color: #1b5e20;
     }
   </style>
 </head>
 <body>
+
 <header>
   <h1>Locorent</h1>
   <nav><a href="index.html">Zurück</a></nav>
 </header>
 
 <main>
-  <h2>Nachrichtenaustausch</h2>
+  <div class="chat-header">
+    <h2 id="chat-partner">Chat</h2>
+    <small id="listing-title"></small>
+  </div>
   <div id="chat">Lade Nachrichten...</div>
   <div class="input-row">
     <input type="text" id="message-input" placeholder="Nachricht schreiben..." />
@@ -135,12 +149,21 @@
       return;
     }
     currentUser = user;
-
-    // Profile anlegen, wenn noch nicht vorhanden
     await ensureProfileExists(user.id, user.email);
 
+    await loadHeader();
     await loadMessages();
     setupRealtime();
+  }
+
+  async function loadHeader() {
+    const [{ data: partner }, { data: listing }] = await Promise.all([
+      supabase.from('profiles').select('name').eq('id', chatWith).single(),
+      supabase.from('listings').select('title').eq('id', listingId).single()
+    ]);
+
+    document.getElementById('chat-partner').textContent = partner?.name || 'Unbekannt';
+    document.getElementById('listing-title').textContent = listing?.title || '';
   }
 
   async function loadMessages() {
@@ -215,5 +238,6 @@
 
   init();
 </script>
+
 </body>
 </html>
