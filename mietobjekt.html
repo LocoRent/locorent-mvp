@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mietobjekt – Locorent</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f1f8e9;
+      margin: 0;
+      padding: 0;
+      color: #1b5e20;
+    }
+    header {
+      background-color: #2e7d32;
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    nav a {
+      color: white;
+      margin-left: 1rem;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    main {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    img {
+      width: 100%;
+      border-radius: 8px;
+      object-fit: cover;
+      margin-bottom: 1rem;
+    }
+    .calendar {
+      margin-top: 2rem;
+      padding: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background: #f9fff4;
+    }
+    .contact-button {
+      margin-top: 1rem;
+      padding: 0.7rem 1.5rem;
+      background-color: #2e7d32;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Locorent</h1>
+    <nav>
+      <a href="index.html">Start</a>
+      <a href="profil.html">Profil</a>
+    </nav>
+  </header>
+  <main>
+    <div id="listing-details">Lade Daten...</div>
+  </main>
+
+  <script>
+    const supabase = window.supabase.createClient(
+      'https://flnjalgqtkqycsaymmbd.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+    );
+
+    const params = new URLSearchParams(window.location.search);
+    const listingId = params.get('id');
+
+    async function loadListing() {
+      if (!listingId) return;
+      const { data, error } = await supabase.from('listings').select('*').eq('id', listingId).single();
+      const container = document.getElementById('listing-details');
+      if (error || !data) {
+        container.innerHTML = '<p>Fehler beim Laden des Inserats.</p>';
+        return;
+      }
+
+      container.innerHTML = `
+        <h2>${data.title}</h2>
+        ${data.image_url ? `<img src="${data.image_url}" alt="${data.title}" />` : ''}
+        <p><strong>Kategorie:</strong> ${data.category}</p>
+        <p><strong>Preis pro Tag:</strong> ${data.price_per_day} €</p>
+        <p><strong>Beschreibung:</strong><br>${data.description}</p>
+
+        <div class="calendar">
+          <strong>Verfügbarkeit:</strong><br>
+          <em>(Kalender-Platzhalter – Integration folgt)</em>
+        </div>
+
+        <button class="contact-button" onclick="alert('Kontaktanfrage gesendet')">
+          Vermieter kontaktieren
+        </button>
+      `;
+    }
+
+    loadListing();
+  </script>
+</body>
+</html>
