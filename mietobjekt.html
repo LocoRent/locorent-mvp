@@ -43,14 +43,14 @@
       object-fit: cover;
       margin-bottom: 1rem;
     }
-    .calendar, .booking-form {
+    .calendar, .booking-form, .chat {
       margin-top: 2rem;
       padding: 1rem;
       border: 1px solid #ccc;
       border-radius: 8px;
       background: #f9fff4;
     }
-    input[type="text"] {
+    input[type="text"], textarea {
       width: 100%;
       padding: 0.5rem;
       border-radius: 6px;
@@ -58,7 +58,7 @@
       margin: 0.5rem 0;
     }
     button {
-      margin-top: 1rem;
+      margin-top: 0.5rem;
       padding: 0.7rem 1.5rem;
       background-color: #2e7d32;
       color: white;
@@ -70,6 +70,16 @@
     button:hover {
       background-color: #1b5e20;
     }
+    .message {
+      background: #e8f5e9;
+      padding: 0.5rem;
+      margin: 0.3rem 0;
+      border-radius: 6px;
+    }
+    .message.sender {
+      background: #c8e6c9;
+      text-align: right;
+    }
   </style>
 </head>
 <body>
@@ -80,8 +90,15 @@
       <a href="profil.html">Profil</a>
     </nav>
   </header>
+
   <main>
     <div id="listing-details">Lade Daten...</div>
+    <div class="chat">
+      <h3>Nachrichten</h3>
+      <div id="chat-box" style="max-height: 300px; overflow-y: auto;"></div>
+      <textarea id="chat-message" rows="2" placeholder="Nachricht schreiben..."></textarea>
+      <button onclick="sendMessage()">Senden</button>
+    </div>
   </main>
 
   <script>
@@ -92,10 +109,13 @@
 
     const params = new URLSearchParams(window.location.search);
     const listingId = params.get('id');
-    let unavailableRanges = [];
+    let currentUser = null;
+    let listingOwnerId = null;
 
     async function loadListing() {
-      if (!listingId) return;
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return alert("Bitte einloggen.");
+      currentUser = user;
 
       const { data: listing, error } = await supabase
         .from('listings')
@@ -109,16 +129,7 @@
         return;
       }
 
-      let ownerName = 'Unbekannt';
-      if (listing.user_id) {
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('name')
-          .eq('id', listing.user_id)
-          .single();
-        if (profile?.name) ownerName = profile.name;
-      }
-
+      listingOwnerId = listing.user_id;
       await loadUnavailableDates();
 
       container.innerHTML = `
@@ -127,21 +138,22 @@
         <p><strong>Kategorie:</strong> ${listing.category}</p>
         <p><strong>Preis pro Tag:</strong> ${listing.price_per_day} €</p>
         <p><strong>Beschreibung:</strong><br>${listing.description}</p>
-        <p><strong>Vermieter:</strong> ${ownerName}</p>
 
         <div class="calendar">
-          <strong>Verfügbarkeit auswählen:</strong><br>
-          <label>Zeitraum auswählen</label>
+          <label><strong>Verfügbarkeit:</strong></label><br>
           <input type="text" id="date-range" readonly />
         </div>
 
         <div class="booking-form">
-          <button onclick="requestBooking()">Anfrage senden</button>
+          <button onclick="requestBooking()">Mietanfrage senden</button>
         </div>
       `;
 
       setupFlatpickr();
+      loadMessages();
     }
+
+    let unavailableRanges = [];
 
     async function loadUnavailableDates() {
       const { data, error } = await supabase
@@ -149,15 +161,12 @@
         .select('start_date, end_date')
         .eq('listing_id', listingId);
 
-      if (error) {
-        console.error("Fehler beim Laden belegter Daten:", error.message);
-        return;
+      if (!error && data) {
+        unavailableRanges = data.map(r => ({
+          from: r.start_date,
+          to: r.end_date
+        }));
       }
-
-      unavailableRanges = data.map(r => ({
-        from: r.start_date,
-        to: r.end_date
-      }));
     }
 
     function setupFlatpickr() {
@@ -172,21 +181,12 @@
     async function requestBooking() {
       const input = document.getElementById('date-range').value;
       const dates = input.split(" to ");
-      if (dates.length !== 2) {
-        alert("Bitte einen Zeitraum auswählen.");
-        return;
-      }
+      if (dates.length !== 2) return alert("Bitte Zeitraum auswählen.");
 
       const [start, end] = dates;
 
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        alert("Du musst eingeloggt sein.");
-        return;
-      }
-
       const { error } = await supabase.from('rentals').insert({
-        user_id: user.id,
+        user_id: currentUser.id,
         listing_id: listingId,
         start_date: start,
         end_date: end,
@@ -195,12 +195,54 @@
       });
 
       if (error) {
-        alert("Fehler bei der Anfrage: " + error.message);
+        alert("Fehler: " + error.message);
       } else {
-        alert("Anfrage erfolgreich gesendet!");
+        alert("Anfrage gesendet!");
         document.getElementById("date-range").value = "";
         await loadUnavailableDates();
         setupFlatpickr();
+      }
+    }
+
+    async function loadMessages() {
+      const { data, error } = await supabase
+        .from('messages')
+        .select('*')
+        .eq('listing_id', listingId)
+        .order('created_at', { ascending: true });
+
+      const chatBox = document.getElementById('chat-box');
+      chatBox.innerHTML = '';
+
+      if (!error && data.length) {
+        data.forEach(msg => {
+          const div = document.createElement('div');
+          div.className = 'message' + (msg.sender_id === currentUser.id ? ' sender' : '');
+          div.textContent = msg.content;
+          chatBox.appendChild(div);
+        });
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }
+    }
+
+    async function sendMessage() {
+      const text = document.getElementById('chat-message').value.trim();
+      if (!text || !listingOwnerId) return;
+
+      const receiver = currentUser.id === listingOwnerId ? null : listingOwnerId;
+
+      const { error } = await supabase.from('messages').insert({
+        sender_id: currentUser.id,
+        receiver_id: receiver,
+        listing_id: listingId,
+        content: text
+      });
+
+      if (!error) {
+        document.getElementById('chat-message').value = '';
+        loadMessages();
+      } else {
+        alert("Fehler beim Senden: " + error.message);
       }
     }
 
