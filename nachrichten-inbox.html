@@ -2,8 +2,8 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Nachrichten – Locorent</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nachrichten Inbox – Locorent</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     body {
@@ -35,113 +35,90 @@
       border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
-    .chat-preview {
-      border-bottom: 1px solid #ccc;
+    h2 {
+      margin-bottom: 1rem;
+    }
+    .chat-link {
       padding: 1rem;
-      cursor: pointer;
-    }
-    .chat-preview:hover {
+      margin: 0.5rem 0;
       background: #e8f5e9;
+      border-radius: 8px;
+      text-decoration: none;
+      color: #1b5e20;
+      display: block;
+      font-weight: 600;
     }
-    .chat-preview h3 {
-      margin: 0 0 0.3rem 0;
-      font-size: 1.1rem;
-    }
-    .chat-preview p {
-      margin: 0;
-      color: #555;
-      font-size: 0.95rem;
+    .chat-link:hover {
+      background: #c5e1a5;
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Locorent</h1>
-    <nav><a href="index.html">Zurück</a></nav>
-  </header>
+<header>
+  <h1>Locorent</h1>
+  <nav><a href="index.html">Start</a></nav>
+</header>
+<main>
+  <h2>Nachrichten-Eingang</h2>
+  <div id="inbox">Lade Konversationen...</div>
+</main>
 
-  <main>
-    <h2>Meine Konversationen</h2>
-    <div id="conversations">Lade Konversationen...</div>
-  </main>
+<script>
+  const supabase = window.supabase.createClient(
+    'https://flnjalgqtkqycsaymmbd.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+  );
 
-  <script>
-    const supabase = window.supabase.createClient(
-      'https://flnjalgqtkqycsaymmbd.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-    );
+  let currentUser;
 
-    let currentUser = null;
+  async function loadInbox() {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      alert("Bitte einloggen.");
+      window.location.href = "login.html";
+      return;
+    }
+    currentUser = user;
 
-    async function init() {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        alert("Bitte einloggen.");
-        window.location.href = "login.html";
-        return;
-      }
-      currentUser = user;
-      loadConversations();
+    const { data, error } = await supabase
+      .from('messages')
+      .select('id, sender_id, receiver_id, listing_id, created_at')
+      .or(`sender_id.eq.${user.id},receiver_id.eq.${user.id}`)
+      .order('created_at', { ascending: false });
+
+    if (error || !data) {
+      document.getElementById('inbox').innerHTML = '<p>Fehler beim Laden.</p>';
+      return;
     }
 
-    async function loadConversations() {
-      const { data, error } = await supabase
-        .from('messages')
-        .select('id, sender_id, receiver_id, content, listing_id, created_at')
-        .or(`sender_id.eq.${currentUser.id},receiver_id.eq.${currentUser.id}`)
-        .order('created_at', { ascending: false });
+    const seen = new Set();
+    const unique = [];
 
-      if (error) {
-        document.getElementById('conversations').innerHTML = 'Fehler beim Laden.';
-        return;
-      }
-
-      const convMap = new Map();
-
-      data.forEach(msg => {
-        const otherId = msg.sender_id === currentUser.id ? msg.receiver_id : msg.sender_id;
-        const key = `${otherId}-${msg.listing_id}`;
-        if (!convMap.has(key)) {
-          convMap.set(key, { ...msg, otherId });
-        }
-      });
-
-      const container = document.getElementById('conversations');
-      container.innerHTML = '';
-
-      if (convMap.size === 0) {
-        container.innerHTML = '<p>Keine Nachrichten vorhanden.</p>';
-        return;
-      }
-
-      for (let [key, convo] of convMap) {
-        const userInfo = await supabase
-          .from('profiles')
-          .select('name')
-          .eq('id', convo.otherId)
-          .single();
-
-        const listingInfo = await supabase
-          .from('listings')
-          .select('title')
-          .eq('id', convo.listing_id)
-          .single();
-
-        const div = document.createElement('div');
-        div.className = 'chat-preview';
-        div.onclick = () => {
-          window.location.href = `nachrichten.html?with=${convo.otherId}&listing_id=${convo.listing_id}`;
-        };
-
-        div.innerHTML = `
-          <h3>${listingInfo.data?.title || 'Unbekanntes Inserat'}</h3>
-          <p><strong>${userInfo.data?.name || 'Unbekannter Nutzer'}:</strong> ${convo.content}</p>
-        `;
-        container.appendChild(div);
+    for (const msg of data) {
+      const other = msg.sender_id === user.id ? msg.receiver_id : msg.sender_id;
+      const key = `${other}-${msg.listing_id}`;
+      if (!seen.has(key)) {
+        seen.add(key);
+        unique.push(msg);
       }
     }
 
-    init();
-  </script>
+    const inbox = document.getElementById('inbox');
+    inbox.innerHTML = '';
+
+    for (const convo of unique) {
+      const otherId = convo.sender_id === user.id ? convo.receiver_id : convo.sender_id;
+      const { data: listing } = await supabase.from('listings').select('title').eq('id', convo.listing_id).single();
+
+      const a = document.createElement('a');
+      a.href = `nachrichten.html?listing_id=${convo.listing_id}&with=${otherId}`;
+      a.className = 'chat-link';
+      a.textContent = `Nachricht mit Nutzer ${otherId.slice(0, 8)}… über "${listing?.title || 'Inserat'}"`;
+      inbox.appendChild(a);
+    }
+  }
+
+  loadInbox();
+</script>
 </body>
 </html>
