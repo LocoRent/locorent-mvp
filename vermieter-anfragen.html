@@ -2,17 +2,17 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mietanfragen verwalten – Locorent</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     body {
       font-family: 'Poppins', sans-serif;
-      background-color: #f1f8e9;
-      color: #1b5e20;
+      background: #f1f8e9;
       margin: 0;
       padding: 0;
+      color: #1b5e20;
     }
     header {
       background-color: #2e7d32;
@@ -31,49 +31,43 @@
     main {
       max-width: 800px;
       margin: 2rem auto;
+      padding: 1rem;
       background: white;
-      padding: 2rem;
       border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    h2 {
-      margin-bottom: 1rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
     .request {
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      padding: 1rem;
-      margin-bottom: 1rem;
-      background: #f9fff4;
+      border-bottom: 1px solid #ccc;
+      padding: 1rem 0;
     }
-    .request strong {
-      display: block;
-      margin-bottom: 0.5rem;
+    .request:last-child {
+      border-bottom: none;
     }
-    .request button {
+    .actions {
+      margin-top: 0.5rem;
+    }
+    button {
       margin-right: 1rem;
       padding: 0.5rem 1rem;
       border: none;
       border-radius: 6px;
-      cursor: pointer;
       font-weight: 600;
+      cursor: pointer;
     }
-    .accept { background-color: #4caf50; color: white; }
-    .decline { background-color: #f44336; color: white; }
+    .accept { background: #2e7d32; color: white; }
+    .decline { background: #c62828; color: white; }
   </style>
 </head>
 <body>
   <header>
     <h1>Locorent</h1>
     <nav>
-      <a href="index.html">Start</a>
-      <a href="profil.html">Profil</a>
-      <a href="#" id="logoutBtn">Logout</a>
+      <a href="index.html">Zurück</a>
     </nav>
   </header>
   <main>
-    <h2>Mietanfragen zu deinen Inseraten</h2>
-    <div id="request-list">Lade Anfragen...</div>
+    <h2>Erhaltene Mietanfragen</h2>
+    <div id="requests">Lade Anfragen...</div>
   </main>
 
   <script>
@@ -83,49 +77,50 @@
     );
 
     async function loadRequests() {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user) return;
 
-      const { data: requests, error } = await supabase
+      const { data: listings } = await supabase
+        .from('listings')
+        .select('id')
+        .eq('user_id', session.user.id);
+
+      const ids = listings.map(l => l.id);
+
+      const { data: rentals } = await supabase
         .from('rentals')
-        .select('id, start_date, end_date, status, user_id, listing_id, profiles(name), listings(title)')
-        .eq('listings.user_id', user.id)
-        .order('start_date', { ascending: false });
+        .select('id, user_id, start_date, end_date, listing_id, status')
+        .in('listing_id', ids);
 
-      const container = document.getElementById("request-list");
-      if (error || !requests.length) {
-        container.innerHTML = '<p>Keine Mietanfragen gefunden.</p>';
-        return;
-      }
-
+      const container = document.getElementById('requests');
       container.innerHTML = '';
-      requests.forEach(req => {
+
+      for (const rental of rentals) {
+        const { data: user } = await supabase.from('profiles').select('name').eq('id', rental.user_id).single();
+        const { data: listing } = await supabase.from('listings').select('title').eq('id', rental.listing_id).single();
+
         const div = document.createElement('div');
         div.className = 'request';
         div.innerHTML = `
-          <strong>${req.listings?.title || 'Inserat'}</strong>
-          <p>Anfrage von <strong>${req.profiles?.name || 'unbekannt'}</strong></p>
-          <p>Zeitraum: ${req.start_date} bis ${req.end_date}</p>
-          <p>Status: ${req.status}</p>
-          ${req.status === 'offen' ? `
-            <button class="accept" onclick="updateStatus('${req.id}', 'angenommen')">Annehmen</button>
-            <button class="decline" onclick="updateStatus('${req.id}', 'abgelehnt')">Ablehnen</button>
-          ` : ''}
+          <p><strong>${user?.name || 'Unbekannt'}</strong> möchte <strong>${listing?.title}</strong> mieten:</p>
+          <p>Von <strong>${rental.start_date}</strong> bis <strong>${rental.end_date}</strong></p>
+          <p>Status: <strong>${rental.status || 'offen'}</strong></p>
+          <div class="actions">
+            <button class="accept" onclick="updateStatus('${rental.id}', 'angenommen')">Annehmen</button>
+            <button class="decline" onclick="updateStatus('${rental.id}', 'abgelehnt')">Ablehnen</button>
+          </div>
         `;
         container.appendChild(div);
-      });
+      }
     }
 
     async function updateStatus(id, status) {
-      const { error } = await supabase.from('rentals').update({ status }).eq('id', id);
-      if (error) alert("Fehler beim Aktualisieren.");
-      else loadRequests();
+      const { error } = await supabase
+        .from('rentals')
+        .update({ status })
+        .eq('id', id);
+      if (!error) loadRequests();
     }
-
-    document.getElementById("logoutBtn").addEventListener("click", async () => {
-      await supabase.auth.signOut();
-      window.location.href = "login.html";
-    });
 
     loadRequests();
   </script>
