@@ -14,7 +14,6 @@
       padding: 0;
       color: #1b5e20;
     }
-
     header {
       background-color: #2e7d32;
       color: white;
@@ -22,7 +21,6 @@
       display: flex;
       justify-content: space-between;
     }
-
     main {
       max-width: 800px;
       margin: 2rem auto;
@@ -31,13 +29,11 @@
       border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
-
     label {
       display: block;
       margin-top: 1rem;
       font-weight: 600;
     }
-
     input, textarea {
       width: 100%;
       padding: 0.6rem;
@@ -45,7 +41,6 @@
       border-radius: 8px;
       margin-top: 0.4rem;
     }
-
     .dropzone {
       margin-top: 1rem;
       padding: 1rem;
@@ -54,25 +49,21 @@
       border-radius: 10px;
       cursor: pointer;
     }
-
     .preview-gallery {
       display: flex;
-      gap: 0.5rem;
       flex-wrap: wrap;
+      gap: 1rem;
       margin-top: 1rem;
     }
-
     .preview-box {
       position: relative;
     }
-
-    .preview-gallery img {
+    .preview-box img {
       width: 120px;
       height: 100px;
       object-fit: cover;
       border-radius: 6px;
     }
-
     .remove-btn {
       position: absolute;
       top: 4px;
@@ -86,7 +77,6 @@
       font-weight: bold;
       cursor: pointer;
     }
-
     button {
       margin-top: 1.5rem;
       padding: 0.7rem 1.5rem;
@@ -97,7 +87,6 @@
       font-weight: 600;
       cursor: pointer;
     }
-
     button:hover {
       background-color: #1b5e20;
     }
@@ -111,20 +100,20 @@
 
   <main>
     <label for="title">Titel</label>
-    <input type="text" id="title">
+    <input type="text" id="title" />
 
     <label for="category">Kategorie</label>
-    <input type="text" id="category">
+    <input type="text" id="category" />
 
     <label for="price">Preis pro Tag (€)</label>
-    <input type="number" id="price">
+    <input type="number" id="price" />
 
     <label for="desc">Beschreibung</label>
     <textarea id="desc" rows="4"></textarea>
 
     <label>Bilder</label>
     <div id="dropzone" class="dropzone">Bilder hier ablegen oder klicken</div>
-    <div class="preview-gallery" id="preview-gallery"></div>
+    <div id="preview-gallery" class="preview-gallery"></div>
 
     <button onclick="saveChanges()">Speichern</button>
   </main>
@@ -135,30 +124,34 @@
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
     );
 
-    const id = new URLSearchParams(location.search).get("id");
+    const listingId = new URLSearchParams(location.search).get("id");
     let imageUrls = [];
 
     async function loadData() {
-      const { data, error } = await supabase.from('listings').select('*').eq('id', id).single();
+      const { data, error } = await supabase
+        .from('listings')
+        .select('*')
+        .eq('id', listingId)
+        .single();
+
       if (error) return alert("Fehler beim Laden.");
 
-      document.getElementById('title').value = data.title || "";
-      document.getElementById('category').value = data.category || "";
-      document.getElementById('price').value = data.price_per_day || "";
-      document.getElementById('desc').value = data.description || "";
+      document.getElementById('title').value = data.title || '';
+      document.getElementById('category').value = data.category || '';
+      document.getElementById('price').value = data.price_per_day || '';
+      document.getElementById('desc').value = data.description || '';
       imageUrls = data.image_urls || [];
-
       renderGallery();
     }
 
     function renderGallery() {
-      const gallery = document.getElementById("preview-gallery");
-      gallery.innerHTML = "";
+      const gallery = document.getElementById('preview-gallery');
+      gallery.innerHTML = '';
       imageUrls.forEach((url, index) => {
         const box = document.createElement('div');
-        box.className = "preview-box";
+        box.className = 'preview-box';
         box.innerHTML = `
-          <img src="${url}" alt="Bild ${index}">
+          <img src="${url}" alt="Bild ${index}" />
           <button class="remove-btn" onclick="removeImage(${index})">×</button>
         `;
         gallery.appendChild(box);
@@ -178,20 +171,23 @@
         description: document.getElementById('desc').value.trim(),
         image_urls: imageUrls
       };
-      const { error } = await supabase.from('listings').update(updates).eq('id', id);
-      if (error) {
-        alert("Speichern fehlgeschlagen.");
-      } else {
-        alert("Gespeichert!");
+
+      const { error } = await supabase
+        .from('listings')
+        .update(updates)
+        .eq('id', listingId);
+
+      if (error) alert("Fehler beim Speichern: " + error.message);
+      else {
+        alert("Änderungen gespeichert!");
         location.href = "inserate.html";
       }
     }
 
-    // Upload über Klick / Drop
-    document.getElementById("dropzone").addEventListener("click", () => {
-      const input = document.createElement("input");
-      input.type = "file";
-      input.accept = "image/*";
+    document.getElementById('dropzone').addEventListener('click', () => {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'image/*';
       input.multiple = true;
       input.onchange = () => handleFiles(input.files);
       input.click();
@@ -199,13 +195,14 @@
 
     async function handleFiles(files) {
       for (let file of files) {
-        const filePath = `${Date.now()}-${file.name}`;
+        const filePath = `${listingId}_${Date.now()}_${file.name}`;
         const { data, error } = await supabase.storage.from('listing-images').upload(filePath, file);
-        if (!error) {
+
+        if (error) {
+          alert("Upload fehlgeschlagen: " + error.message);
+        } else {
           const { data: urlData } = supabase.storage.from('listing-images').getPublicUrl(filePath);
           imageUrls.push(urlData.publicUrl);
-        } else {
-          alert("Upload fehlgeschlagen: " + error.message);
         }
       }
       renderGallery();
