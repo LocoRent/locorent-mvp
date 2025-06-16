@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Inserat bearbeiten – Locorent</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f1f8e9;
+      margin: 0;
+      padding: 0;
+      color: #1b5e20;
+    }
+    header {
+      background-color: #2e7d32;
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    nav a {
+      color: white;
+      margin-left: 1rem;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    main {
+      max-width: 700px;
+      margin: 2rem auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h2 {
+      margin-bottom: 1.5rem;
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 600;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 0.7rem;
+      margin-top: 0.3rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+    button {
+      margin-top: 1.5rem;
+      padding: 0.8rem 1.5rem;
+      background-color: #2e7d32;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #1b5e20;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Locorent</h1>
+  <nav>
+    <a href="inserate.html">Zurück</a>
+  </nav>
+</header>
+
+<main>
+  <h2>Inserat bearbeiten</h2>
+  <form id="edit-form" onsubmit="event.preventDefault(); updateListing();">
+    <label for="title">Titel</label>
+    <input type="text" id="title" required />
+
+    <label for="category">Kategorie</label>
+    <select id="category" required>
+      <option value="">Bitte wählen</option>
+      <option value="fahrzeuge">Fahrzeuge</option>
+      <option value="transporter">Transporter</option>
+      <option value="boote">Boote</option>
+      <option value="fahrrad">Fahrräder</option>
+      <option value="werkzeuge">Werkzeuge</option>
+      <option value="maschinen">Maschinen</option>
+      <option value="party">Party & Event</option>
+      <option value="technik">Technik</option>
+      <option value="haushalt">Haushalt</option>
+      <option value="garten">Garten</option>
+      <option value="freizeit">Freizeit</option>
+      <option value="baby">Baby & Kind</option>
+    </select>
+
+    <label for="price">Preis pro Tag (€)</label>
+    <input type="number" id="price" step="0.01" required />
+
+    <label for="image">Bild-URL</label>
+    <input type="url" id="image" />
+
+    <label for="description">Beschreibung</label>
+    <textarea id="description" rows="4"></textarea>
+
+    <button type="submit">Speichern</button>
+  </form>
+</main>
+
+<script>
+  const supabase = window.supabase.createClient(
+    'https://flnjalgqtkqycsaymmbd.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+  );
+
+  const params = new URLSearchParams(window.location.search);
+  const listingId = params.get('id');
+
+  async function loadListing() {
+    const { data, error } = await supabase
+      .from('listings')
+      .select('*')
+      .eq('id', listingId)
+      .single();
+
+    if (error || !data) {
+      alert("Fehler beim Laden des Inserats.");
+      return;
+    }
+
+    document.getElementById('title').value = data.title || '';
+    document.getElementById('category').value = data.category || '';
+    document.getElementById('price').value = data.price_per_day || '';
+    document.getElementById('image').value = data.image_url || '';
+    document.getElementById('description').value = data.description || '';
+  }
+
+  async function updateListing() {
+    const updates = {
+      title: document.getElementById('title').value,
+      category: document.getElementById('category').value,
+      price_per_day: parseFloat(document.getElementById('price').value),
+      image_url: document.getElementById('image').value,
+      description: document.getElementById('description').value
+    };
+
+    const { error } = await supabase
+      .from('listings')
+      .update(updates)
+      .eq('id', listingId);
+
+    if (error) {
+      alert("Fehler beim Speichern: " + error.message);
+    } else {
+      alert("Inserat aktualisiert!");
+      window.location.href = "inserate.html";
+    }
+  }
+
+  loadListing();
+</script>
+
+</body>
+</html>
