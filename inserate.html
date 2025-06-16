@@ -33,7 +33,6 @@
       margin: 2rem auto;
       padding: 1rem;
     }
-
     .gallery {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -78,7 +77,6 @@
     .card .actions button.delete {
       background: #c62828;
     }
-
     .form-container {
       background: white;
       padding: 1.2rem;
@@ -177,29 +175,22 @@
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return alert("Nicht eingeloggt.");
 
-    const { data: listings, error: listError } = await supabase
+    const { data: listings, error } = await supabase
       .from('listings')
       .select('*')
       .eq('user_id', user.id)
       .order('created_at', { ascending: false });
 
-    if (listError) {
-      document.getElementById('gallery').innerHTML = 'Fehler beim Laden.';
-      return;
-    }
-
-    const listingIds = listings.map(l => l.id);
-    const { data: images } = await supabase
-      .from('listing_images')
-      .select('*')
-      .in('listing_id', listingIds);
-
     const gallery = document.getElementById('gallery');
     gallery.innerHTML = '';
 
+    if (error || !listings) {
+      gallery.textContent = 'Fehler beim Laden.';
+      return;
+    }
+
     listings.forEach(i => {
-      const firstImage = images.find(img => img.listing_id === i.id);
-      const imageUrl = firstImage?.image_url || 'https://via.placeholder.com/300x150?text=Kein+Bild';
+      const imageUrl = i.image_urls?.[0] || 'https://via.placeholder.com/300x150?text=Kein+Bild';
 
       const div = document.createElement('div');
       div.className = 'card';
@@ -235,21 +226,14 @@
     if (!title || !price) return alert('Titel und Preis sind Pflichtfelder.');
 
     const { data: { user } } = await supabase.auth.getUser();
-    const { data, error } = await supabase
-      .from('listings')
-      .insert({ title, category, price_per_day: price, description, user_id: user.id })
-      .select()
-      .single();
+    const payload = {
+      title, category, price_per_day: price,
+      description, user_id: user.id,
+      image_urls: image_url ? [image_url] : []
+    };
 
+    const { error } = await supabase.from('listings').insert(payload);
     if (error) return alert('Fehler: ' + error.message);
-
-    // Bild speichern, falls angegeben
-    if (image_url) {
-      await supabase.from('listing_images').insert({
-        listing_id: data.id,
-        image_url
-      });
-    }
 
     alert('Inserat gespeichert!');
     document.querySelectorAll('#image-input, #title-input, #category-input, #price-input, #desc-input').forEach(i => i.value = '');
