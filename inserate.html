@@ -34,7 +34,6 @@
       padding: 1rem;
     }
 
-    /* Galerie */
     .gallery {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -46,11 +45,10 @@
       border-radius: 10px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
       overflow: hidden;
-      position: relative;
     }
     .card img {
       width: 100%;
-      max-height: 150px;
+      height: 150px;
       object-fit: cover;
     }
     .card-content {
@@ -70,19 +68,17 @@
       padding: 0.5rem 0.8rem;
     }
     .card .actions button {
-      background: var(--primary, #2e7d32);
+      background: #2e7d32;
       color: white;
       padding: 0.4rem 0.8rem;
       border: none;
       border-radius: 6px;
       cursor: pointer;
-      font-size: 0.9rem;
     }
     .card .actions button.delete {
       background: #c62828;
     }
 
-    /* Formular */
     .form-container {
       background: white;
       padding: 1.2rem;
@@ -107,16 +103,12 @@
       font-weight: 600;
       margin-bottom: 0.4rem;
     }
-    .form-group .field input[type="text"],
-    .form-group .field input[type="number"],
+    .form-group .field input,
     .form-group .field textarea {
       padding: 0.6rem;
       border: 1px solid #ccc;
       border-radius: 6px;
       width: 100%;
-    }
-    .form-group .field input[type="file"] {
-      border: none;
     }
     .img-preview {
       max-width: 100%;
@@ -130,7 +122,7 @@
       margin-top: 1rem;
     }
     .form-actions button {
-      background: var(--primary, #2e7d32);
+      background: #2e7d32;
       color: white;
       padding: 0.7rem 1.5rem;
       border: none;
@@ -142,139 +134,138 @@
 </head>
 <body>
 
-  <header>
-    <h1>Locorent – Meine Inserate</h1>
-    <nav>
-      <a href="index.html">Zurück zur Übersicht</a>
-    </nav>
-  </header>
+<header>
+  <h1>Locorent – Meine Inserate</h1>
+  <nav>
+    <a href="index.html">Zurück zur Übersicht</a>
+  </nav>
+</header>
 
-  <main>
-    <section class="gallery" id="gallery">Galerie lädt…</section>
+<main>
+  <section class="gallery" id="gallery">Galerie lädt…</section>
 
-     <section class="form-container">
-      <h2 id="form-title">Neues Inserat erstellen</h2>
-      <div class="form-group">
-        <div class="field"><label>Bild (optional)</label><input type="file" accept="image/*" id="image-input"><img id="img-preview" class="img-preview" src="" alt="" hidden></div>
-        <div class="field"><label>Titel</label><input type="text" id="title-input"></div>
-        <div class="field"><label>Kategorie</label><input type="text" id="category-input"></div>
-        <div class="field"><label>Preis €/Tag</label><input type="number" id="price-input"></div>
-        <div class="field" style="flex: 1 1 100%;"><label>Beschreibung</label><textarea id="desc-input" rows="3"></textarea></div>
+  <section class="form-container">
+    <h2 id="form-title">Neues Inserat erstellen</h2>
+    <div class="form-group">
+      <div class="field">
+        <label>Bild (URL)</label>
+        <input type="text" id="image-input" placeholder="https://..." />
       </div>
-      <div class="form-actions">
-        <button id="save-btn">Inserat speichern</button>
+      <div class="field">
+        <label>Titel</label>
+        <input type="text" id="title-input">
       </div>
-    </section>
-  </main>
+      <div class="field">
+        <label>Kategorie</label>
+        <input type="text" id="category-input">
+      </div>
+      <div class="field">
+        <label>Preis €/Tag</label>
+        <input type="number" id="price-input">
+      </div>
+      <div class="field" style="flex: 1 1 100%;">
+        <label>Beschreibung</label>
+        <textarea id="desc-input" rows="3"></textarea>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button id="save-btn">Inserat speichern</button>
+    </div>
+  </section>
+</main>
 
-  <script>
-    const supabase = window.supabase.createClient(
-      'https://flnjalgqtkqycsaymmbd.supabase.co',
-      'DEIN_PUBLIC_ANON_KEY'
-    );
+<script>
+  const supabase = window.supabase.createClient(
+    'https://flnjalgqtkqycsaymmbd.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+  );
 
-    let editId = null;
+  let editId = null;
 
-    // Galerie laden
-    async function loadGallery() {
-      const { data, error } = await supabase
-        .from('listings')
-        .select('*')
-        .order('created_at', { ascending: false });
-      const gallery = document.getElementById('gallery');
-      gallery.innerHTML = '';
+  async function loadGallery() {
+    const { data, error } = await supabase
+      .from('listings')
+      .select('*')
+      .order('created_at', { ascending: false });
 
-      if (error) { gallery.textContent = 'Fehler beim Laden.'; return; }
-      if (!data.length) { gallery.textContent = 'Keine Inserate vorhanden.'; return; }
+    const gallery = document.getElementById('gallery');
+    gallery.innerHTML = '';
 
-      data.forEach(i => {
-        const div = document.createElement('div');
-        div.className = 'card';
-        div.innerHTML = `
-          ${i.image_url ? `<img src="${i.image_url}" alt="${i.title}">` : ''}
-          <div class="card-content">
-            <h3>${i.title}</h3>
-            <p class="price">${i.price_per_day} € / Tag</p>
-          </div>
-          <div class="actions">
-            <button onclick="editListing('${i.id}')">Bearbeiten</button>
-            <button class="delete" onclick="deleteListing('${i.id}')">Löschen</button>
-          </div>
-        `;
-        gallery.appendChild(div);
-      });
+    if (error) {
+      gallery.textContent = 'Fehler beim Laden.';
+      return;
+    }
+    if (!data.length) {
+      gallery.textContent = 'Keine Inserate vorhanden.';
+      return;
     }
 
-    // Image Preview
-    document.getElementById('image-input').addEventListener('change', e => {
-      const file = e.target.files[0];
-      const img = document.getElementById('img-preview');
-      if (file) {
-        img.src = URL.createObjectURL(file);
-        img.hidden = false;
-      } else {
-        img.hidden = true;
-      }
+    data.forEach(i => {
+      const div = document.createElement('div');
+      div.className = 'card';
+      div.innerHTML = `
+        ${i.image_url ? `<img src="${i.image_url}" alt="${i.title}">` : ''}
+        <div class="card-content">
+          <h3>${i.title}</h3>
+          <p class="price">${i.price_per_day} € / Tag</p>
+        </div>
+        <div class="actions">
+          <button onclick="editListing('${i.id}')">Bearbeiten</button>
+          <button class="delete" onclick="deleteListing('${i.id}')">Löschen</button>
+        </div>
+      `;
+      gallery.appendChild(div);
     });
+  }
 
-    // Bearbeiten starten
-    async function editListing(id) {
-      const { data: i, error } = await supabase.from('listings').select('*').eq('id', id).single();
-      if (error) return alert('Fehler beim Laden.');
-      editId = id;
-      document.getElementById('form-title').textContent = 'Inserat bearbeiten';
-      document.getElementById('title-input').value = i.title;
-      document.getElementById('category-input').value = i.category;
-      document.getElementById('price-input').value = i.price_per_day;
-      document.getElementById('desc-input').value = i.description;
-      if (i.image_url) {
-        const img = document.getElementById('img-preview');
-        img.src = i.image_url;
-        img.hidden = false;
-      }
-      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-    }
+  async function editListing(id) {
+    const { data: i, error } = await supabase.from('listings').select('*').eq('id', id).single();
+    if (error) return alert('Fehler beim Laden.');
 
-    // Löschen mit Bestätigung
-    async function deleteListing(id) {
-      if (!confirm('Wirklich löschen?')) return;
-      const { error } = await supabase.from('listings').delete().eq('id', id);
-      if (error) return alert('Löschen fehlgeschlagen.');
-      loadGallery();
-    }
+    editId = id;
+    document.getElementById('form-title').textContent = 'Inserat bearbeiten';
+    document.getElementById('title-input').value = i.title;
+    document.getElementById('category-input').value = i.category;
+    document.getElementById('price-input').value = i.price_per_day;
+    document.getElementById('desc-input').value = i.description;
+    document.getElementById('image-input').value = i.image_url || '';
+  }
 
-    // Speichern (Neu oder edit)
-    document.getElementById('save-btn').addEventListener('click', async () => {
-      const title = document.getElementById('title-input').value.trim();
-      const category = document.getElementById('category-input').value.trim();
-      const price = parseFloat(document.getElementById('price-input').value);
-      const description = document.getElementById('desc-input').value.trim();
+  async function deleteListing(id) {
+    if (!confirm('Wirklich löschen?')) return;
+    const { error } = await supabase.from('listings').delete().eq('id', id);
+    if (error) return alert('Löschen fehlgeschlagen.');
+    loadGallery();
+  }
 
-      if (!title || !price) return alert('Titel und Preis sind Pflichtfelder.');
+  document.getElementById('save-btn').addEventListener('click', async () => {
+    const title = document.getElementById('title-input').value.trim();
+    const category = document.getElementById('category-input').value.trim();
+    const price = parseFloat(document.getElementById('price-input').value);
+    const description = document.getElementById('desc-input').value.trim();
+    const image_url = document.getElementById('image-input').value.trim();
 
-      const payload = { title, category, price_per_day: price, description };
+    if (!title || !price) return alert('Titel und Preis sind Pflichtfelder.');
 
-      let opts;
-      if (editId) {
-        opts = supabase.from('listings').update(payload).eq('id', editId);
-      } else {
-        opts = supabase.from('listings').insert(payload);
-      }
+    const payload = { title, category, price_per_day: price, description, image_url };
 
-      const { data, error } = await opts;
-      if (error) return alert('Fehler: ' + error.message);
+    let opts = editId
+      ? supabase.from('listings').update(payload).eq('id', editId)
+      : supabase.from('listings').insert(payload);
 
-      alert('Inserat gespeichert!');
-      editId = null;
-      document.getElementById('form-title').textContent = 'Neues Inserat erstellen';
-      document.querySelectorAll('#image-input, #title-input, #category-input, #price-input, #desc-input').forEach(i => i.value = '');
-      document.getElementById('img-preview').hidden = true;
+    const { error } = await opts;
+    if (error) return alert('Fehler: ' + error.message);
 
-      loadGallery();
-    });
+    alert('Inserat gespeichert!');
+    editId = null;
+    document.getElementById('form-title').textContent = 'Neues Inserat erstellen';
+    document.querySelectorAll('#image-input, #title-input, #category-input, #price-input, #desc-input').forEach(i => i.value = '');
 
-    window.addEventListener('load', loadGallery);
-  </script>
+    loadGallery();
+  });
+
+  loadGallery();
+</script>
 
 </body>
 </html>
