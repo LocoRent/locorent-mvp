@@ -35,26 +35,23 @@
       position: relative;
     }
 
-    header h1 { font-size: 1.5rem; }
-
     nav a {
       color: white;
       text-decoration: none;
-      margin-right: 1rem;
+      margin-left: 1rem;
       font-weight: 600;
     }
 
     .profile-menu {
       position: relative;
       cursor: pointer;
-      user-select: none;
     }
 
     .profile-menu span {
-      font-weight: 600;
-      padding: 0.3rem 0.6rem;
+      padding: 0.4rem 0.6rem;
       background: rgba(255 255 255 / 0.2);
       border-radius: 6px;
+      font-weight: 600;
     }
 
     .dropdown-content {
@@ -75,13 +72,13 @@
       padding: 0.7rem 1rem;
       text-decoration: none;
       color: var(--dark);
-      border: none;
       background: none;
+      border: none;
       width: 100%;
       text-align: left;
       cursor: pointer;
-      font-size: 1rem;
       font-family: inherit;
+      font-size: 1rem;
     }
 
     .dropdown-content a:hover,
@@ -91,18 +88,16 @@
 
     .profile-menu.open .dropdown-content { display: block; }
 
-    .profile-container,
-    .listing-container {
+    .container {
       max-width: 600px;
       margin: 3rem auto;
-      background-color: white;
+      background: white;
       padding: 2rem;
       border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 
-    .profile-container h2,
-    .listing-container h2 {
+    h2 {
       margin-bottom: 1rem;
     }
 
@@ -112,7 +107,7 @@
       font-weight: 600;
     }
 
-    input, textarea, select {
+    input, textarea {
       width: 100%;
       padding: 0.7rem;
       margin-top: 0.3rem;
@@ -135,12 +130,8 @@
 
     .history {
       margin-top: 2rem;
-      background-color: #f9f9f9;
-      padding: 1rem;
-      border-radius: 8px;
     }
 
-    .history h3 { margin-bottom: 1rem; }
     .history-item {
       padding: 0.5rem 0;
       border-bottom: 1px solid #ccc;
@@ -171,67 +162,32 @@
   </nav>
 </header>
 
-<section class="profile-container">
+<section class="container">
   <h2>Mein Profil</h2>
-  <div class="profile-info">
-    <label for="name">Name</label>
-    <input type="text" id="name" placeholder="Dein Name" />
+  <label for="name">Name</label>
+  <input type="text" id="name" placeholder="Dein Name" />
 
-    <label for="email">E-Mail</label>
-    <input type="email" id="email" />
+  <label for="email">E-Mail</label>
+  <input type="email" id="email" />
 
-    <label for="phone">Telefonnummer</label>
-    <input type="text" id="phone" placeholder="+49 123 456789" />
+  <label for="phone">Telefon</label>
+  <input type="text" id="phone" />
 
-    <label for="city">Wohnort</label>
-    <input type="text" id="city" placeholder="z. B. Berlin" />
+  <label for="city">Wohnort</label>
+  <input type="text" id="city" />
 
-    <label for="bio">Über mich</label>
-    <textarea id="bio" rows="3" placeholder="Schreibe etwas über dich..."></textarea>
+  <label for="bio">Über mich</label>
+  <textarea id="bio" rows="3"></textarea>
 
-    <button onclick="saveProfile()">Änderungen speichern</button>
+  <button onclick="saveProfile()">Profil speichern</button>
 
-    <label for="password">Neues Passwort</label>
-    <input type="password" id="password" placeholder="Neues Passwort" />
-    <button onclick="changePassword()">Passwort ändern</button>
-  </div>
+  <label for="password">Neues Passwort</label>
+  <input type="password" id="password" />
+  <button onclick="changePassword()">Passwort ändern</button>
 
   <div class="history">
-    <h3>Mein Mietverlauf</h3>
+    <h2>Meine Mietvorgänge</h2>
     <div id="rental-history"></div>
-  </div>
-</section>
-
-<section class="listing-container">
-  <h2>Neues Inserat erstellen</h2>
-  <div class="listing-form">
-    <label for="listing-title">Titel</label>
-    <input type="text" id="listing-title" placeholder="Titel deines Inserats" />
-
-    <label for="listing-description">Beschreibung</label>
-    <textarea id="listing-description" rows="3" placeholder="Beschreibe dein Objekt"></textarea>
-
-    <label for="listing-price">Preis pro Tag (€)</label>
-    <input type="number" id="listing-price" placeholder="z.B. 15" min="0" />
-
-    <label for="listing-category">Kategorie</label>
-    <select id="listing-category">
-      <option value="">Bitte wählen</option>
-      <option value="Fahrzeuge">Fahrzeuge</option>
-      <option value="Transporter">Transporter</option>
-      <option value="Boote">Boote</option>
-      <option value="Fahrräder">Fahrräder</option>
-      <option value="Werkzeuge">Werkzeuge</option>
-      <option value="Maschinen">Maschinen</option>
-      <option value="Party">Party</option>
-      <option value="Technik">Technik</option>
-      <option value="Haushalt">Haushalt</option>
-      <option value="Garten">Garten</option>
-      <option value="Freizeit">Freizeit</option>
-      <option value="Baby">Baby</option>
-    </select>
-
-    <button onclick="insertListing()">Inserat speichern</button>
   </div>
 </section>
 
@@ -256,12 +212,7 @@
     document.getElementById('email').value = user.email;
     document.getElementById('profileName').textContent = user.email.split('@')[0];
 
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', user.id)
-      .single();
-
+    const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single();
     if (data) {
       document.getElementById('name').value = data.name || '';
       document.getElementById('phone').value = data.phone || '';
@@ -269,38 +220,62 @@
       document.getElementById('bio').value = data.bio || '';
     }
 
-    loadHistory(user.id);
+    loadRentalHistory(user.id);
   }
 
   async function saveProfile() {
-    const name = document.getElementById('name').value;
-    const phone = document.getElementById('phone').value;
-    const city = document.getElementById('city').value;
-    const bio = document.getElementById('bio').value;
-    const email = document.getElementById('email').value;
-
     const { data: { user } } = await supabase.auth.getUser();
+    const updates = {
+      id: user.id,
+      name: document.getElementById('name').value,
+      phone: document.getElementById('phone').value,
+      city: document.getElementById('city').value,
+      bio: document.getElementById('bio').value
+    };
 
-    if(email !== user.email){
-      await supabase.auth.updateUser({ email });
-    }
-
-    await supabase.from('profiles').upsert({ id: user.id, name, phone, city, bio });
-    alert("Profil erfolgreich aktualisiert!");
+    await supabase.from('profiles').upsert(updates);
+    alert("Profil gespeichert!");
   }
 
   async function changePassword() {
     const password = document.getElementById('password').value;
-    if (!password) {
-      alert("Bitte gib ein neues Passwort ein.");
-      return;
-    }
+    if (!password) return alert("Bitte Passwort eingeben.");
     const { error } = await supabase.auth.updateUser({ password });
-    if (error) alert("Fehler beim Ändern des Passworts.");
+    if (error) alert("Fehler: " + error.message);
     else {
       alert("Passwort geändert.");
       document.getElementById('password').value = '';
     }
+  }
+
+  async function loadRentalHistory(userId) {
+    const container = document.getElementById("rental-history");
+    container.innerHTML = "";
+    const { data, error } = await supabase
+      .from('rentals')
+      .select('title, start_date, end_date, status')
+      .eq('user_id', userId)
+      .order('start_date', { ascending: false });
+
+    if (error) {
+      container.innerHTML = "<p>Fehler beim Laden der Daten.</p>";
+      return;
+    }
+
+    if (!data.length) {
+      container.innerHTML = "<p>Keine Mietvorgänge vorhanden.</p>";
+      return;
+    }
+
+    data.forEach(rental => {
+      const div = document.createElement("div");
+      div.className = "history-item";
+      div.innerHTML = `
+        <strong>${rental.title}</strong><br>
+        <small>${rental.start_date} bis ${rental.end_date} – ${rental.status}</small>
+      `;
+      container.appendChild(div);
+    });
   }
 
   async function logout() {
@@ -308,80 +283,20 @@
     window.location.href = "login.html";
   }
 
-  async function loadHistory(userId) {
-    const container = document.getElementById("rental-history");
-    container.innerHTML = "";
+  document.getElementById("profileMenu").addEventListener("click", () => {
+    document.getElementById("profileMenu").classList.toggle("open");
+  });
 
-    const { data, error } = await supabase
-      .from('rentals')
-      .select('title, rental_date, status')
-      .eq('user_id', userId)
-      .order('rental_date', { ascending: false });
+  document.getElementById("logoutBtn").addEventListener("click", logout);
 
-    if (error) {
-      container.innerHTML = "<p>Fehler beim Laden des Mietverlaufs.</p>";
-      return;
+  window.addEventListener("click", (e) => {
+    if (!document.getElementById("profileMenu").contains(e.target)) {
+      document.getElementById("profileMenu").classList.remove("open");
     }
-
-    if (!data || data.length === 0) {
-      container.innerHTML = "<p>Du hast noch keine Mietvorgänge.</p>";
-      return;
-    }
-
-    data.forEach(item => {
-      const div = document.createElement("div");
-      div.className = "history-item";
-      div.innerHTML = `<strong>${item.title}</strong><br><small>${new Date(item.rental_date).toLocaleDateString()} – ${item.status}</small>`;
-      container.appendChild(div);
-    });
-  }
-
-  async function insertListing() {
-    const title = document.getElementById('listing-title').value.trim();
-    const description = document.getElementById('listing-description').value.trim();
-    const price = parseFloat(document.getElementById('listing-price').value);
-    const category = document.getElementById('listing-category').value;
-
-    if (!title || !description || isNaN(price) || price < 0 || !category) {
-      alert("Bitte alle Felder korrekt ausfüllen.");
-      return;
-    }
-
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      alert("Bitte zuerst einloggen.");
-      return;
-    }
-
-    const { error } = await supabase.from('listings').insert({
-      user_id: user.id,
-      title,
-      description,
-      price_per_day: price,
-      category,
-      created_at: new Date()
-    });
-
-    if (error) alert("Fehler beim Speichern des Inserats: " + error.message);
-    else {
-      alert("Inserat erfolgreich gespeichert!");
-      document.getElementById('listing-title').value = '';
-      document.getElementById('listing-description').value = '';
-      document.getElementById('listing-price').value = '';
-      document.getElementById('listing-category').value = '';
-    }
-  }
-
-  const profileMenu = document.getElementById('profileMenu');
-  profileMenu.addEventListener('click', () => profileMenu.classList.toggle('open'));
-
-  document.getElementById('logoutBtn').addEventListener('click', logout);
-
-  window.addEventListener('click', (e) => {
-    if (!profileMenu.contains(e.target)) profileMenu.classList.remove('open');
   });
 
   loadProfile();
 </script>
+
 </body>
 </html>
