@@ -110,13 +110,6 @@
       border-radius: 6px;
       width: 100%;
     }
-    .img-preview {
-      max-width: 100%;
-      max-height: 150px;
-      object-fit: cover;
-      border-radius: 6px;
-      margin-top: 0.5rem;
-    }
     .form-actions {
       text-align: right;
       margin-top: 1rem;
@@ -180,31 +173,38 @@
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
   );
 
-  let editId = null;
-
   async function loadGallery() {
-    const { data, error } = await supabase
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return alert("Nicht eingeloggt.");
+
+    const { data: listings, error: listError } = await supabase
       .from('listings')
       .select('*')
+      .eq('user_id', user.id)
       .order('created_at', { ascending: false });
+
+    if (listError) {
+      document.getElementById('gallery').innerHTML = 'Fehler beim Laden.';
+      return;
+    }
+
+    const listingIds = listings.map(l => l.id);
+    const { data: images } = await supabase
+      .from('listing_images')
+      .select('*')
+      .in('listing_id', listingIds);
 
     const gallery = document.getElementById('gallery');
     gallery.innerHTML = '';
 
-    if (error) {
-      gallery.textContent = 'Fehler beim Laden.';
-      return;
-    }
-    if (!data.length) {
-      gallery.textContent = 'Keine Inserate vorhanden.';
-      return;
-    }
+    listings.forEach(i => {
+      const firstImage = images.find(img => img.listing_id === i.id);
+      const imageUrl = firstImage?.image_url || 'https://via.placeholder.com/300x150?text=Kein+Bild';
 
-    data.forEach(i => {
       const div = document.createElement('div');
       div.className = 'card';
       div.innerHTML = `
-        ${i.image_url ? `<img src="${i.image_url}" alt="${i.title}">` : ''}
+        <img src="${imageUrl}" alt="${i.title}">
         <div class="card-content">
           <h3>${i.title}</h3>
           <p class="price">${i.price_per_day} € / Tag</p>
@@ -235,13 +235,21 @@
     if (!title || !price) return alert('Titel und Preis sind Pflichtfelder.');
 
     const { data: { user } } = await supabase.auth.getUser();
-    const payload = {
-      title, category, price_per_day: price,
-      description, image_url, user_id: user.id
-    };
+    const { data, error } = await supabase
+      .from('listings')
+      .insert({ title, category, price_per_day: price, description, user_id: user.id })
+      .select()
+      .single();
 
-    const { error } = await supabase.from('listings').insert(payload);
     if (error) return alert('Fehler: ' + error.message);
+
+    // Bild speichern, falls angegeben
+    if (image_url) {
+      await supabase.from('listing_images').insert({
+        listing_id: data.id,
+        image_url
+      });
+    }
 
     alert('Inserat gespeichert!');
     document.querySelectorAll('#image-input, #title-input, #category-input, #price-input, #desc-input').forEach(i => i.value = '');
