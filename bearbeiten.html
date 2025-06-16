@@ -2,16 +2,17 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Inserat bearbeiten – Locorent</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     body {
       font-family: 'Poppins', sans-serif;
       background: #f1f8e9;
+      color: #1b5e20;
       margin: 0;
       padding: 0;
-      color: #1b5e20;
     }
 
     header {
@@ -36,195 +37,194 @@
       background: white;
       padding: 2rem;
       border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
 
-    h2 { margin-bottom: 1rem; }
-
-    label {
-      display: block;
-      margin-top: 1rem;
-      font-weight: 600;
+    h2 {
+      margin-bottom: 1rem;
     }
 
-    input, textarea, select {
+    input, textarea {
       width: 100%;
       padding: 0.7rem;
+      margin-bottom: 1rem;
+      border-radius: 6px;
       border: 1px solid #ccc;
-      border-radius: 8px;
-      margin-top: 0.3rem;
-    }
-
-    .dropzone {
-      border: 2px dashed #2e7d32;
-      padding: 1rem;
-      border-radius: 10px;
-      text-align: center;
-      cursor: pointer;
-      margin-top: 1rem;
-      background-color: #f9fff4;
-    }
-
-    .dropzone:hover {
-      background-color: #e6f4ea;
-    }
-
-    #preview {
-      margin-top: 1rem;
-      max-width: 100%;
-      max-height: 200px;
-      border-radius: 10px;
     }
 
     button {
-      margin-top: 2rem;
-      padding: 0.8rem 1.6rem;
+      padding: 0.7rem 1.5rem;
       background-color: #2e7d32;
       color: white;
       border: none;
       border-radius: 8px;
-      font-weight: bold;
+      font-weight: 600;
       cursor: pointer;
     }
 
-    button:hover {
-      background-color: #1b5e20;
+    .dropzone {
+      border: 2px dashed #ccc;
+      padding: 2rem;
+      text-align: center;
+      border-radius: 10px;
+      background: #f9fff4;
+      margin-bottom: 1rem;
+    }
+
+    .dropzone.dragover {
+      border-color: #2e7d32;
+      background: #e8f5e9;
+    }
+
+    .preview {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+
+    .preview img {
+      height: 100px;
+      border-radius: 6px;
+      object-fit: cover;
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Inserat bearbeiten</h1>
-    <nav>
-      <a href="inserate.html">Meine Inserate</a>
-    </nav>
-  </header>
 
-  <main>
-    <h2>Inserat bearbeiten</h2>
+<header>
+  <h1>Locorent</h1>
+  <nav>
+    <a href="index.html">Zurück</a>
+  </nav>
+</header>
 
-    <label for="title">Titel</label>
-    <input type="text" id="title" />
+<main>
+  <h2>Inserat bearbeiten</h2>
+  
+  <input type="text" id="title" placeholder="Titel" />
+  <input type="text" id="category" placeholder="Kategorie" />
+  <input type="number" id="price" placeholder="Preis pro Tag (€)" />
+  <textarea id="description" rows="4" placeholder="Beschreibung"></textarea>
 
-    <label for="category">Kategorie</label>
-    <input type="text" id="category" />
+  <div class="dropzone" id="dropzone">
+    <p>Bilder hierher ziehen oder klicken</p>
+    <input type="file" id="file-input" accept="image/*" multiple hidden />
+    <div class="preview" id="preview"></div>
+  </div>
 
-    <label for="price">Preis pro Tag (€)</label>
-    <input type="number" id="price" />
+  <button onclick="saveListing()">Inserat speichern</button>
+</main>
 
-    <label for="description">Beschreibung</label>
-    <textarea id="description" rows="3"></textarea>
+<script>
+  const supabase = window.supabase.createClient(
+    'https://flnjalgqtkqycsaymmbd.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+  );
 
-    <label>Bild hochladen</label>
-    <div id="dropzone" class="dropzone">
-      Klicke oder ziehe ein Bild hierher
-    </div>
-    <img id="preview" src="" alt="Bildvorschau" style="display: none;" />
+  const listingId = new URLSearchParams(window.location.search).get('id');
+  let uploadedFiles = [];
 
-    <button onclick="saveChanges()">Speichern</button>
-  </main>
+  document.getElementById('dropzone').addEventListener('click', () => {
+    document.getElementById('file-input').click();
+  });
 
-  <script>
-    const supabase = window.supabase.createClient(
-      'https://flnjalgqtkqycsaymmbd.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-    );
+  document.getElementById('file-input').addEventListener('change', handleFiles);
 
-    const params = new URLSearchParams(window.location.search);
-    const listingId = params.get("id");
-    let uploadedImageUrl = "";
+  document.getElementById('dropzone').addEventListener('dragover', e => {
+    e.preventDefault();
+    e.currentTarget.classList.add('dragover');
+  });
 
-    async function loadListing() {
-      const { data, error } = await supabase.from('listings').select('*').eq('id', listingId).single();
-      if (error || !data) return alert("Fehler beim Laden des Inserats");
+  document.getElementById('dropzone').addEventListener('dragleave', e => {
+    e.currentTarget.classList.remove('dragover');
+  });
 
-      document.getElementById("title").value = data.title;
-      document.getElementById("category").value = data.category;
-      document.getElementById("price").value = data.price_per_day;
-      document.getElementById("description").value = data.description;
-      if (data.image_url) {
-        document.getElementById("preview").src = data.image_url;
-        document.getElementById("preview").style.display = 'block';
-        uploadedImageUrl = data.image_url;
-      }
-    }
+  document.getElementById('dropzone').addEventListener('drop', e => {
+    e.preventDefault();
+    e.currentTarget.classList.remove('dragover');
+    handleFiles({ target: { files: e.dataTransfer.files } });
+  });
 
-    async function saveChanges() {
-      const title = document.getElementById("title").value;
-      const category = document.getElementById("category").value;
-      const price = parseFloat(document.getElementById("price").value);
-      const description = document.getElementById("description").value;
+  async function handleFiles(e) {
+    const files = e.target.files;
+    const preview = document.getElementById('preview');
 
-      const { error } = await supabase.from("listings").update({
-        title,
-        category,
-        price_per_day: price,
-        description,
-        image_url: uploadedImageUrl
-      }).eq("id", listingId);
+    for (const file of files) {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}-${Math.random()}.${fileExt}`;
+      const filePath = `${listingId}/${fileName}`;
 
-      if (error) {
-        alert("Fehler beim Speichern");
-      } else {
-        alert("Gespeichert!");
-        window.location.href = "inserate.html";
-      }
-    }
+      const { error } = await supabase.storage
+        .from('listing-images')
+        .upload(filePath, file, { upsert: false });
 
-    const dropzone = document.getElementById("dropzone");
-    dropzone.addEventListener("click", () => {
-      const input = document.createElement("input");
-      input.type = "file";
-      input.accept = "image/*";
-      input.onchange = () => handleFile(input.files[0]);
-      input.click();
-    });
+      if (!error) {
+        const { data } = supabase.storage.from('listing-images').getPublicUrl(filePath);
+        uploadedFiles.push(data.publicUrl);
 
-    dropzone.addEventListener("dragover", (e) => {
-      e.preventDefault();
-      dropzone.style.backgroundColor = "#e0f2f1";
-    });
+        const img = document.createElement('img');
+        img.src = data.publicUrl;
+        preview.appendChild(img);
 
-    dropzone.addEventListener("dragleave", () => {
-      dropzone.style.backgroundColor = "";
-    });
-
-    dropzone.addEventListener("drop", (e) => {
-      e.preventDefault();
-      dropzone.style.backgroundColor = "";
-      const file = e.dataTransfer.files[0];
-      handleFile(file);
-    });
-
-    async function handleFile(file) {
-      if (!file) return;
-
-      const filename = `${Date.now()}_${file.name}`;
-      const { data, error } = await supabase.storage
-        .from('inserate')
-        .upload(filename, file, {
-          cacheControl: '3600',
-          upsert: false
+        // Speichere Bild-URL in DB
+        await supabase.from('listing_images').insert({
+          listing_id: listingId,
+          image_url: data.publicUrl
         });
-
-      if (error) {
-        alert("Fehler beim Hochladen");
-        return;
       }
+    }
+  }
 
-      const { data: urlData } = await supabase
-        .storage
-        .from('inserate')
-        .getPublicUrl(data.path);
+  async function saveListing() {
+    const title = document.getElementById('title').value;
+    const category = document.getElementById('category').value;
+    const price = parseFloat(document.getElementById('price').value);
+    const description = document.getElementById('description').value;
 
-      uploadedImageUrl = urlData.publicUrl;
+    if (!title || !price) return alert("Titel und Preis sind Pflicht.");
 
-      const preview = document.getElementById("preview");
-      preview.src = uploadedImageUrl;
-      preview.style.display = "block";
+    const { error } = await supabase.from('listings').update({
+      title, category, price_per_day: price, description
+    }).eq('id', listingId);
+
+    if (error) {
+      alert("Fehler beim Speichern.");
+    } else {
+      alert("Inserat gespeichert!");
+      window.location.href = "inserate.html";
+    }
+  }
+
+  async function loadListing() {
+    const { data, error } = await supabase
+      .from('listings')
+      .select('*')
+      .eq('id', listingId)
+      .single();
+
+    if (!error && data) {
+      document.getElementById('title').value = data.title;
+      document.getElementById('category').value = data.category;
+      document.getElementById('price').value = data.price_per_day;
+      document.getElementById('description').value = data.description;
     }
 
-    loadListing();
-  </script>
+    // Lade vorhandene Bilder
+    const { data: images } = await supabase
+      .from('listing_images')
+      .select('image_url')
+      .eq('listing_id', listingId);
+
+    const preview = document.getElementById('preview');
+    images?.forEach(img => {
+      const image = document.createElement('img');
+      image.src = img.image_url;
+      preview.appendChild(image);
+    });
+  }
+
+  loadListing();
+</script>
 </body>
 </html>
