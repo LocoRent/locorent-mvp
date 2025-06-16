@@ -123,11 +123,16 @@
     .category-card:hover { background-color: var(--accent); color: white; }
 
     .result-card {
-      background-color: var(--secondary);
+      background-color: var(--white);
       border-radius: 10px;
       padding: 1rem;
       margin-bottom: 1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
       cursor: pointer;
+      transition: box-shadow 0.2s ease;
+    }
+    .result-card:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
     .result-card img {
       width: 100%;
@@ -148,12 +153,7 @@
   </style>
 </head>
 <body>
-<script>
-  const hash = window.location.hash;
-  if (hash.includes("type=recovery")) {
-    window.location.href = "/update-password.html" + hash;
-  }
-</script>
+
 <header>
   <h1>Locorent</h1>
   <nav id="nav-links"></nav>
@@ -206,7 +206,7 @@
 <script>
   const supabase = window.supabase.createClient(
     'https://flnjalgqtkqycsaymmbd.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
   );
 
   async function updateNav() {
@@ -217,7 +217,6 @@
     if (session?.user) {
       const menu = document.createElement('div');
       menu.className = 'profile-menu';
-
       const btn = document.createElement('button');
       btn.className = 'profile-button';
       btn.textContent = session.user.email;
@@ -274,13 +273,8 @@
   async function loadListings(filters = {}) {
     let query = supabase.from('listings').select('*').order('created_at', { ascending: false });
 
-    if (filters.keyword) {
-      query = query.ilike('title', `%${filters.keyword}%`);
-    }
-
-    if (filters.category) {
-      query = query.eq('category', filters.category);
-    }
+    if (filters.keyword) query = query.ilike('title', `%${filters.keyword}%`);
+    if (filters.category) query = query.eq('category', filters.category);
 
     const { data, error } = await query;
 
