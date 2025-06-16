@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Meine Inserate – Locorent</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root {
+      --primary: #2e7d32;
+      --light: #f1f8e9;
+      --dark: #1b5e20;
+      --white: #fff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--light);
+      color: var(--dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background-color: var(--primary);
+      padding: 1rem 2rem;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .profile-menu {
+      position: relative;
+      cursor: pointer;
+    }
+    .profile-menu span {
+      background: rgba(255,255,255,0.2);
+      padding: 0.3rem 0.6rem;
+      border-radius: 6px;
+    }
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      right: 0;
+      background-color: white;
+      color: var(--dark);
+      min-width: 160px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      z-index: 999;
+    }
+    .dropdown-content a, .dropdown-content button {
+      display: block;
+      padding: 0.7rem 1rem;
+      text-decoration: none;
+      color: var(--dark);
+      background: none;
+      border: none;
+      width: 100%;
+      text-align: left;
+      cursor: pointer;
+    }
+    .dropdown-content a:hover,
+    .dropdown-content button:hover {
+      background-color: var(--light);
+    }
+    .profile-menu.open .dropdown-content {
+      display: block;
+    }
+    main {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+    h2 {
+      margin-bottom: 1rem;
+    }
+    .listing {
+      background: white;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    footer {
+      margin-top: auto;
+      padding: 1.5rem;
+      background-color: var(--primary);
+      color: white;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <h1>Locorent</h1>
+  <div class="profile-menu" id="profileMenu">
+    <span id="profileName">Profil</span>
+    <div class="dropdown-content" id="dropdownContent">
+      <a href="profil.html">Mein Profil</a>
+      <a href="meine-inserate.html">Meine Inserate</a>
+      <button id="logoutBtn">Abmelden</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <h2>Meine Inserate</h2>
+  <div id="listings-container"></div>
+</main>
+
+<footer>
+  © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
+</footer>
+
+<script>
+  const supabase = window.supabase.createClient(
+    'https://flnjalgqtkqycsaymmbd.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+  );
+
+  const profileMenu = document.getElementById('profileMenu');
+  const profileName = document.getElementById('profileName');
+  profileMenu.addEventListener('click', () => profileMenu.classList.toggle('open'));
+  window.addEventListener('click', (e) => {
+    if (!profileMenu.contains(e.target)) profileMenu.classList.remove('open');
+  });
+  document.getElementById('logoutBtn').addEventListener('click', async () => {
+    await supabase.auth.signOut();
+    window.location.href = "login.html";
+  });
+
+  async function loadListings() {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) {
+      window.location.href = "login.html";
+      return;
+    }
+
+    profileName.textContent = session.user.email.split('@')[0];
+
+    const { data, error } = await supabase
+      .from('listings')
+      .select('*')
+      .eq('user_id', session.user.id)
+      .order('created_at', { ascending: false });
+
+    const container = document.getElementById('listings-container');
+    if (error || !data || data.length === 0) {
+      container.innerHTML = "<p>Du hast noch keine Inserate erstellt.</p>";
+      return;
+    }
+
+    data.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'listing';
+      div.innerHTML = `
+        <strong>${item.title}</strong><br>
+        <small>${item.category || ''} – ${parseFloat(item.price_per_day).toFixed(2)} € / Tag</small><br>
+        <p>${item.description}</p>
+      `;
+      container.appendChild(div);
+    });
+  }
+
+  loadListings();
+</script>
+</body>
+</html>
