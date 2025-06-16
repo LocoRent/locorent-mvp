@@ -97,24 +97,12 @@
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 
-    h2 {
-      margin-bottom: 1rem;
-    }
-
-    label {
-      display: block;
-      margin-top: 1rem;
-      font-weight: 600;
-    }
-
+    h2 { margin-bottom: 1rem; }
+    label { display: block; margin-top: 1rem; font-weight: 600; }
     input, textarea {
-      width: 100%;
-      padding: 0.7rem;
-      margin-top: 0.3rem;
-      border: 1px solid #ccc;
-      border-radius: 8px;
+      width: 100%; padding: 0.7rem; margin-top: 0.3rem;
+      border: 1px solid #ccc; border-radius: 8px;
     }
-
     button {
       margin-top: 1.5rem;
       padding: 0.7rem 1.5rem;
@@ -125,16 +113,18 @@
       font-weight: 600;
       cursor: pointer;
     }
-
     button:hover { background-color: #1b5e20; }
 
-    .history {
-      margin-top: 2rem;
-    }
-
+    .history { margin-top: 2rem; }
     .history-item {
       padding: 0.5rem 0;
       border-bottom: 1px solid #ccc;
+    }
+    .action-buttons {
+      margin-top: 0.5rem;
+    }
+    .action-buttons button {
+      margin-right: 0.5rem;
     }
 
     footer {
@@ -189,6 +179,11 @@
     <h2>Meine Mietvorgänge</h2>
     <div id="rental-history"></div>
   </div>
+
+  <div class="history">
+    <h2>Anfragen zu meinen Inseraten</h2>
+    <div id="incoming-requests"></div>
+  </div>
 </section>
 
 <footer>
@@ -198,7 +193,7 @@
 <script>
   const supabase = window.supabase.createClient(
     'https://flnjalgqtkqycsaymmbd.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
   );
 
   async function loadProfile() {
@@ -221,6 +216,7 @@
     }
 
     loadRentalHistory(user.id);
+    loadListingRequests(user.id);
   }
 
   async function saveProfile() {
@@ -232,7 +228,6 @@
       city: document.getElementById('city').value,
       bio: document.getElementById('bio').value
     };
-
     await supabase.from('profiles').upsert(updates);
     alert("Profil gespeichert!");
   }
@@ -257,12 +252,7 @@
       .eq('user_id', userId)
       .order('start_date', { ascending: false });
 
-    if (error) {
-      container.innerHTML = "<p>Fehler beim Laden der Daten.</p>";
-      return;
-    }
-
-    if (!data.length) {
+    if (error || !data.length) {
       container.innerHTML = "<p>Keine Mietvorgänge vorhanden.</p>";
       return;
     }
@@ -276,6 +266,48 @@
       `;
       container.appendChild(div);
     });
+  }
+
+  async function loadListingRequests(userId) {
+    const container = document.getElementById("incoming-requests");
+    container.innerHTML = "";
+
+    const { data: listings } = await supabase.from('listings').select('id').eq('user_id', userId);
+    if (!listings?.length) {
+      container.innerHTML = "<p>Keine Inserate gefunden.</p>";
+      return;
+    }
+
+    const listingIds = listings.map(l => l.id);
+    const { data: requests } = await supabase
+      .from('rentals')
+      .select('id, user_id, listing_id, start_date, end_date, status')
+      .in('listing_id', listingIds);
+
+    if (!requests?.length) {
+      container.innerHTML = "<p>Keine Anfragen gefunden.</p>";
+      return;
+    }
+
+    for (const r of requests) {
+      const div = document.createElement("div");
+      div.className = "history-item";
+      div.innerHTML = `
+        <strong>Inserat-ID: ${r.listing_id}</strong><br>
+        <small>${r.start_date} bis ${r.end_date} – Status: ${r.status}</small>
+        ${r.status === 'offen' ? `<div class="action-buttons">
+          <button onclick="updateRequestStatus(${r.id}, 'angenommen')">Annehmen</button>
+          <button onclick="updateRequestStatus(${r.id}, 'abgelehnt')">Ablehnen</button>
+        </div>` : ''}
+      `;
+      container.appendChild(div);
+    }
+  }
+
+  async function updateRequestStatus(id, status) {
+    const { error } = await supabase.from('rentals').update({ status }).eq('id', id);
+    if (error) return alert("Fehler: " + error.message);
+    loadProfile();
   }
 
   async function logout() {
