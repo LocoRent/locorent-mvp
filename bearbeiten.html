@@ -14,6 +14,7 @@
       padding: 0;
       color: #1b5e20;
     }
+
     header {
       background-color: #2e7d32;
       color: white;
@@ -21,6 +22,7 @@
       display: flex;
       justify-content: space-between;
     }
+
     main {
       max-width: 800px;
       margin: 2rem auto;
@@ -29,11 +31,13 @@
       border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
+
     label {
       display: block;
       margin-top: 1rem;
       font-weight: 600;
     }
+
     input, textarea {
       width: 100%;
       padding: 0.6rem;
@@ -41,6 +45,7 @@
       border-radius: 8px;
       margin-top: 0.4rem;
     }
+
     .dropzone {
       margin-top: 1rem;
       padding: 1rem;
@@ -49,22 +54,25 @@
       border-radius: 10px;
       cursor: pointer;
     }
+
     .preview-gallery {
       display: flex;
       gap: 0.5rem;
       flex-wrap: wrap;
       margin-top: 1rem;
     }
+
+    .preview-box {
+      position: relative;
+    }
+
     .preview-gallery img {
       width: 120px;
       height: 100px;
       object-fit: cover;
       border-radius: 6px;
-      position: relative;
     }
-    .preview-box {
-      position: relative;
-    }
+
     .remove-btn {
       position: absolute;
       top: 4px;
@@ -78,6 +86,7 @@
       font-weight: bold;
       cursor: pointer;
     }
+
     button {
       margin-top: 1.5rem;
       padding: 0.7rem 1.5rem;
@@ -88,6 +97,7 @@
       font-weight: 600;
       cursor: pointer;
     }
+
     button:hover {
       background-color: #1b5e20;
     }
@@ -177,6 +187,7 @@
       }
     }
 
+    // Upload über Klick / Drop
     document.getElementById("dropzone").addEventListener("click", () => {
       const input = document.createElement("input");
       input.type = "file";
@@ -188,10 +199,10 @@
 
     async function handleFiles(files) {
       for (let file of files) {
-        const filePath = `listing-images/${Date.now()}-${file.name}`;
-        const { data, error } = await supabase.storage.from('images').upload(filePath, file);
+        const filePath = `${Date.now()}-${file.name}`;
+        const { data, error } = await supabase.storage.from('listing-images').upload(filePath, file);
         if (!error) {
-          const { data: urlData } = supabase.storage.from('images').getPublicUrl(filePath);
+          const { data: urlData } = supabase.storage.from('listing-images').getPublicUrl(filePath);
           imageUrls.push(urlData.publicUrl);
         } else {
           alert("Upload fehlgeschlagen: " + error.message);
