@@ -80,17 +80,27 @@
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.user) return;
 
-      const { data: listings } = await supabase
+      const { data: listings, error: listingError } = await supabase
         .from('listings')
         .select('id')
         .eq('user_id', session.user.id);
 
+      if (listingError) {
+        document.getElementById('requests').innerHTML = "<p>Fehler beim Laden der Inserate.</p>";
+        return;
+      }
+
       const ids = listings.map(l => l.id);
 
-      const { data: rentals } = await supabase
+      const { data: rentals, error: rentalError } = await supabase
         .from('rentals')
         .select('id, user_id, start_date, end_date, listing_id, status')
         .in('listing_id', ids);
+
+      if (rentalError) {
+        document.getElementById('requests').innerHTML = "<p>Fehler beim Laden der Anfragen.</p>";
+        return;
+      }
 
       const container = document.getElementById('requests');
       container.innerHTML = '';
@@ -119,8 +129,15 @@
         .from('rentals')
         .update({ status })
         .eq('id', id);
-      if (!error) loadRequests();
+      if (error) {
+        alert("Fehler beim Aktualisieren: " + error.message);
+      } else {
+        loadRequests(); // Seite neu laden
+      }
     }
+
+    // Wichtig: Funktion für HTML-Buttons global verfügbar machen
+    window.updateStatus = updateStatus;
 
     loadRequests();
   </script>
