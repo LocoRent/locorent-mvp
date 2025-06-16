@@ -77,25 +77,25 @@
     .card .actions button.delete {
       background: #c62828;
     }
+
     .form-container {
       background: white;
-      padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 2rem;
     }
     .form-container h2 {
       margin-top: 0;
-      font-size: 1.5rem;
-      color: #1b5e20;
-      margin-bottom: 1.5rem;
-      text-align: center;
+      margin-bottom: 1rem;
     }
     .form-group {
       display: flex;
-      flex-direction: column;
+      flex-wrap: wrap;
       gap: 1rem;
     }
     .form-group .field {
+      flex: 1 1 200px;
       display: flex;
       flex-direction: column;
     }
@@ -105,27 +105,59 @@
     }
     .form-group .field input,
     .form-group .field textarea {
-      padding: 0.7rem;
+      padding: 0.6rem;
       border: 1px solid #ccc;
       border-radius: 6px;
-      font-size: 1rem;
+    }
+    .dropzone {
+      margin-top: 1rem;
+      padding: 1rem;
+      border: 2px dashed #2e7d32;
+      text-align: center;
+      border-radius: 10px;
+      background: #fafafa;
+      cursor: pointer;
+    }
+    .preview-gallery {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+    .preview-box {
+      position: relative;
+    }
+    .preview-box img {
+      width: 120px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+    .remove-btn {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      background: #c62828;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      font-weight: bold;
+      cursor: pointer;
     }
     .form-actions {
       text-align: right;
-      margin-top: 1.5rem;
+      margin-top: 1rem;
     }
     .form-actions button {
       background: #2e7d32;
       color: white;
-      padding: 0.8rem 1.6rem;
+      padding: 0.7rem 1.5rem;
       border: none;
       border-radius: 8px;
-      font-size: 1rem;
-      font-weight: 600;
       cursor: pointer;
-    }
-    .form-actions button:hover {
-      background: #1b5e20;
+      font-weight: 600;
     }
   </style>
 </head>
@@ -139,15 +171,9 @@
 </header>
 
 <main>
-  <section class="gallery" id="gallery">Galerie lädt…</section>
-
   <section class="form-container">
-    <h2>Neues Inserat erstellen</h2>
+    <h2 id="form-title">Neues Inserat erstellen</h2>
     <div class="form-group">
-      <div class="field">
-        <label>Bild (URL)</label>
-        <input type="text" id="image-input" placeholder="https://..." />
-      </div>
       <div class="field">
         <label>Titel</label>
         <input type="text" id="title-input">
@@ -160,27 +186,100 @@
         <label>Preis €/Tag</label>
         <input type="number" id="price-input">
       </div>
-      <div class="field">
+      <div class="field" style="flex: 1 1 100%;">
         <label>Beschreibung</label>
         <textarea id="desc-input" rows="3"></textarea>
       </div>
     </div>
+
+    <div class="dropzone" id="dropzone">Bilder hier ablegen oder klicken</div>
+    <div class="preview-gallery" id="preview-gallery"></div>
+
     <div class="form-actions">
       <button id="save-btn">Inserat speichern</button>
     </div>
   </section>
+
+  <section class="gallery" id="gallery">Galerie lädt…</section>
 </main>
 
 <script>
   const supabase = window.supabase.createClient(
     'https://flnjalgqtkqycsaymmbd.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
   );
+
+  let uploadedImageUrls = [];
+
+  document.getElementById("dropzone").addEventListener("click", () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.multiple = true;
+    input.onchange = () => handleFiles(input.files);
+    input.click();
+  });
+
+  async function handleFiles(files) {
+    for (let file of files) {
+      const filePath = `listing-images/${Date.now()}-${file.name}`;
+      const { error } = await supabase.storage.from('listing-images').upload(filePath, file);
+      if (!error) {
+        const { data } = supabase.storage.from('listing-images').getPublicUrl(filePath);
+        uploadedImageUrls.push(data.publicUrl);
+      } else {
+        alert("Fehler beim Hochladen: " + error.message);
+      }
+    }
+    renderPreviews();
+  }
+
+  function renderPreviews() {
+    const container = document.getElementById("preview-gallery");
+    container.innerHTML = '';
+    uploadedImageUrls.forEach((url, index) => {
+      const box = document.createElement("div");
+      box.className = "preview-box";
+      box.innerHTML = `
+        <img src="${url}" alt="Bild ${index}">
+        <button class="remove-btn" onclick="removeImage(${index})">×</button>
+      `;
+      container.appendChild(box);
+    });
+  }
+
+  function removeImage(index) {
+    uploadedImageUrls.splice(index, 1);
+    renderPreviews();
+  }
+
+  document.getElementById("save-btn").addEventListener("click", async () => {
+    const title = document.getElementById('title-input').value.trim();
+    const category = document.getElementById('category-input').value.trim();
+    const price = parseFloat(document.getElementById('price-input').value);
+    const description = document.getElementById('desc-input').value.trim();
+
+    if (!title || !price) return alert("Titel und Preis sind Pflichtfelder.");
+
+    const { data: { user } } = await supabase.auth.getUser();
+    const payload = {
+      title, category, price_per_day: price,
+      description, user_id: user.id,
+      image_urls: uploadedImageUrls
+    };
+
+    const { error } = await supabase.from('listings').insert(payload);
+    if (error) return alert("Fehler: " + error.message);
+
+    alert("Inserat gespeichert!");
+    uploadedImageUrls = [];
+    renderPreviews();
+    document.querySelectorAll('input, textarea').forEach(el => el.value = '');
+    loadGallery();
+  });
 
   async function loadGallery() {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return alert("Nicht eingeloggt.");
-
     const { data: listings, error } = await supabase
       .from('listings')
       .select('*')
@@ -197,7 +296,6 @@
 
     listings.forEach(i => {
       const imageUrl = i.image_urls?.[0] || 'https://via.placeholder.com/300x150?text=Kein+Bild';
-
       const div = document.createElement('div');
       div.className = 'card';
       div.innerHTML = `
@@ -216,35 +314,11 @@
   }
 
   async function deleteListing(id) {
-    if (!confirm('Wirklich löschen?')) return;
+    if (!confirm("Wirklich löschen?")) return;
     const { error } = await supabase.from('listings').delete().eq('id', id);
-    if (error) return alert('Löschen fehlgeschlagen.');
+    if (error) return alert("Löschen fehlgeschlagen.");
     loadGallery();
   }
-
-  document.getElementById('save-btn').addEventListener('click', async () => {
-    const title = document.getElementById('title-input').value.trim();
-    const category = document.getElementById('category-input').value.trim();
-    const price = parseFloat(document.getElementById('price-input').value);
-    const description = document.getElementById('desc-input').value.trim();
-    const image_url = document.getElementById('image-input').value.trim();
-
-    if (!title || !price) return alert('Titel und Preis sind Pflichtfelder.');
-
-    const { data: { user } } = await supabase.auth.getUser();
-    const payload = {
-      title, category, price_per_day: price,
-      description, user_id: user.id,
-      image_urls: image_url ? [image_url] : []
-    };
-
-    const { error } = await supabase.from('listings').insert(payload);
-    if (error) return alert('Fehler: ' + error.message);
-
-    alert('Inserat gespeichert!');
-    document.querySelectorAll('#image-input, #title-input, #category-input, #price-input, #desc-input').forEach(i => i.value = '');
-    loadGallery();
-  });
 
   loadGallery();
 </script>
