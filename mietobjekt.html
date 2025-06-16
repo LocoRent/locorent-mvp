@@ -29,125 +29,153 @@
       font-weight: 600;
     }
     main {
-      max-width: 900px;
+      max-width: 800px;
       margin: 2rem auto;
-      padding: 2rem;
+      padding: 1rem;
       background: white;
       border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
-    .image {
+    img {
       width: 100%;
-      max-height: 400px;
+      border-radius: 8px;
       object-fit: cover;
-      border-radius: 12px;
       margin-bottom: 1rem;
     }
-    .info-section {
-      margin-bottom: 2rem;
-    }
-    .calendar {
+    .calendar, .booking-form {
       margin-top: 2rem;
       padding: 1rem;
       border: 1px solid #ccc;
       border-radius: 8px;
       background: #f9fff4;
     }
-    .contact-buttons {
-      margin-top: 2rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
+    .calendar {
+      margin-bottom: 1.5rem;
     }
-    .contact-buttons button,
-    .contact-buttons a {
-      padding: 0.8rem 1.5rem;
+    input[type="date"] {
+      padding: 0.5rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      margin: 0.5rem 0;
+      width: 100%;
+    }
+    button {
+      margin-top: 1rem;
+      padding: 0.7rem 1.5rem;
       background-color: #2e7d32;
       color: white;
       border: none;
       border-radius: 8px;
       font-weight: 600;
       cursor: pointer;
-      text-align: center;
-      text-decoration: none;
     }
-    .contact-buttons button:hover,
-    .contact-buttons a:hover {
+    button:hover {
       background-color: #1b5e20;
     }
   </style>
 </head>
 <body>
+  <header>
+    <h1>Locorent</h1>
+    <nav>
+      <a href="index.html">Start</a>
+      <a href="profil.html">Profil</a>
+    </nav>
+  </header>
+  <main>
+    <div id="listing-details">Lade Daten...</div>
+  </main>
 
-<header>
-  <h1>Locorent</h1>
-  <nav>
-    <a href="index.html">Start</a>
-    <a href="profil.html">Profil</a>
-  </nav>
-</header>
+  <script>
+    const supabase = window.supabase.createClient(
+      'https://flnjalgqtkqycsaymmbd.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+    );
 
-<main>
-  <div id="listing-details">Lade Daten...</div>
-</main>
+    const params = new URLSearchParams(window.location.search);
+    const listingId = params.get('id');
 
-<script>
-  const supabase = window.supabase.createClient(
-    'https://flnjalgqtkqycsaymmbd.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-  );
+    async function loadListing() {
+      if (!listingId) return;
 
-  const params = new URLSearchParams(window.location.search);
-  const listingId = params.get('id');
+      const { data: listing, error } = await supabase
+        .from('listings')
+        .select('*')
+        .eq('id', listingId)
+        .single();
 
-  async function loadListing() {
-    if (!listingId) return;
+      const container = document.getElementById('listing-details');
+      if (error || !listing) {
+        container.innerHTML = '<p>Fehler beim Laden des Inserats.</p>';
+        return;
+      }
 
-    const { data: listing, error } = await supabase
-      .from('listings')
-      .select('*')
-      .eq('id', listingId)
-      .single();
+      // Vermieter-Name laden
+      let ownerName = 'Unbekannt';
+      if (listing.user_id) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('name')
+          .eq('id', listing.user_id)
+          .single();
+        if (profile?.name) ownerName = profile.name;
+      }
 
-    const container = document.getElementById('listing-details');
-
-    if (error || !listing) {
-      container.innerHTML = '<p>Fehler beim Laden des Inserats.</p>';
-      return;
-    }
-
-    // Vermieter laden
-    const { data: owner } = await supabase
-      .from('profiles')
-      .select('username, email')
-      .eq('id', listing.user_id)
-      .single();
-
-    container.innerHTML = `
-      <h2>${listing.title}</h2>
-      ${listing.image_url ? `<img class="image" src="${listing.image_url}" alt="${listing.title}" />` : ''}
-      
-      <div class="info-section">
+      container.innerHTML = `
+        <h2>${listing.title}</h2>
+        ${listing.image_url ? `<img src="${listing.image_url}" alt="${listing.title}" />` : ''}
         <p><strong>Kategorie:</strong> ${listing.category}</p>
         <p><strong>Preis pro Tag:</strong> ${listing.price_per_day} €</p>
-        <p><strong>Beschreibung:</strong><br>${listing.description || '-'}</p>
-      </div>
+        <p><strong>Beschreibung:</strong><br>${listing.description}</p>
+        <p><strong>Vermieter:</strong> ${ownerName}</p>
 
-      <div class="calendar">
-        <strong>Verfügbarkeit:</strong><br>
-        <em>Kalender kommt bald – aktuell keine Buchungen hinterlegt.</em>
-      </div>
+        <div class="calendar">
+          <strong>Verfügbarkeit:</strong><br>
+          <em>Belegte Daten werden hier angezeigt (in Entwicklung)</em>
+        </div>
 
-      <div class="contact-buttons">
-        ${owner ? `<a href="mailto:${owner.email}">📧 Kontakt: ${owner.username || owner.email}</a>` : ''}
-        <button onclick="alert('Mietanfrage gesendet! (Platzhalter)')">📝 Mietanfrage stellen</button>
-      </div>
-    `;
-  }
+        <div class="booking-form">
+          <strong>Jetzt anfragen:</strong><br>
+          <label>Startdatum:</label>
+          <input type="date" id="start-date" />
+          <label>Enddatum:</label>
+          <input type="date" id="end-date" />
+          <button onclick="requestBooking()">Anfrage senden</button>
+        </div>
+      `;
+    }
 
-  loadListing();
-</script>
+    async function requestBooking() {
+      const start = document.getElementById('start-date').value;
+      const end = document.getElementById('end-date').value;
 
+      if (!start || !end || new Date(end) < new Date(start)) {
+        alert('Bitte gültige Daten eingeben.');
+        return;
+      }
+
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        alert("Du musst eingeloggt sein.");
+        return;
+      }
+
+      const { error } = await supabase.from('rentals').insert({
+        user_id: user.id,
+        listing_id: listingId,
+        start_date: start,
+        end_date: end,
+        title: 'Anfrage für Mietobjekt'
+      });
+
+      if (error) {
+        alert("Fehler bei der Anfrage: " + error.message);
+      } else {
+        alert("Anfrage erfolgreich gesendet!");
+      }
+    }
+
+    loadListing();
+  </script>
 </body>
 </html>
-
