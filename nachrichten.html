@@ -113,8 +113,19 @@
   const urlParams = new URLSearchParams(window.location.search);
   const listingId = urlParams.get('listing_id');
   const chatWith = urlParams.get('with');
-
   let currentUser = null;
+
+  async function ensureProfileExists(userId, userEmail) {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('id', userId)
+      .maybeSingle();
+
+    if (!data && !error) {
+      await supabase.from('profiles').insert({ id: userId, name: userEmail });
+    }
+  }
 
   async function init() {
     const { data: { user } } = await supabase.auth.getUser();
@@ -124,6 +135,10 @@
       return;
     }
     currentUser = user;
+
+    // Profile anlegen, wenn noch nicht vorhanden
+    await ensureProfileExists(user.id, user.email);
+
     await loadMessages();
     setupRealtime();
   }
