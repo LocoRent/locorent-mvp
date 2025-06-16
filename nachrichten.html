@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nachrichten – Locorent</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body {
+      font-family: Poppins, sans-serif;
+      margin: 0;
+      background: #f1f8e9;
+      color: #1b5e20;
+    }
+    header {
+      background: #2e7d32;
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    main {
+      max-width: 800px;
+      margin: 2rem auto;
+      background: white;
+      padding: 1rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .message {
+      margin-bottom: 1rem;
+    }
+    .message .from { font-weight: bold; }
+    .message .text { margin-top: 0.3rem; }
+    form {
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    textarea {
+      width: 100%;
+      padding: 0.6rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    select, button {
+      padding: 0.6rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-weight: bold;
+    }
+    button {
+      background: #2e7d32;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Nachrichten</h1>
+    <a href="index.html" style="color:white; font-weight: bold;">Start</a>
+  </header>
+  <main>
+    <div id="chat-box">Lade Nachrichten...</div>
+
+    <form onsubmit="sendMessage(event)">
+      <label>Empfänger wählen:</label>
+      <select id="receiver-select" required></select>
+
+      <label>Nachricht:</label>
+      <textarea id="message-input" rows="3" required></textarea>
+
+      <button type="submit">Senden</button>
+    </form>
+  </main>
+
+  <script>
+    const supabase = window.supabase.createClient(
+      'https://flnjalgqtkqycsaymmbd.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+    );
+
+    let currentUser = null;
+
+    async function init() {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user) {
+        alert("Du musst eingeloggt sein.");
+        return window.location.href = "login.html";
+      }
+      currentUser = session.user;
+      await loadUsers();
+      await loadMessages();
+    }
+
+    async function loadUsers() {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('id, name');
+
+      const select = document.getElementById('receiver-select');
+      select.innerHTML = '';
+
+      data
+        .filter(user => user.id !== currentUser.id)
+        .forEach(user => {
+          const opt = document.createElement('option');
+          opt.value = user.id;
+          opt.textContent = user.name || user.id;
+          select.appendChild(opt);
+        });
+    }
+
+    async function loadMessages() {
+      const { data, error } = await supabase
+        .from('messages')
+        .select('*, sender:sender_id(name)')
+        .or(`sender_id.eq.${currentUser.id},receiver_id.eq.${currentUser.id}`)
+        .order('created_at', { ascending: true });
+
+      const box = document.getElementById('chat-box');
+      box.innerHTML = '';
+
+      if (error || !data.length) {
+        box.innerHTML = "<p>Keine Nachrichten vorhanden.</p>";
+        return;
+      }
+
+      data.forEach(msg => {
+        const div = document.createElement('div');
+        div.className = 'message';
+        div.innerHTML = `
+          <div class="from">${msg.sender_id === currentUser.id ? "Du" : msg.sender?.name || "Unbekannt"} schrieb:</div>
+          <div class="text">${msg.content}</div>
+        `;
+        box.appendChild(div);
+      });
+    }
+
+    async function sendMessage(e) {
+      e.preventDefault();
+      const content = document.getElementById('message-input').value.trim();
+      const receiver = document.getElementById('receiver-select').value;
+      if (!content || !receiver) return;
+
+      const { error } = await supabase.from('messages').insert({
+        sender_id: currentUser.id,
+        receiver_id: receiver,
+        content
+      });
+
+      if (!error) {
+        document.getElementById('message-input').value = '';
+        await loadMessages();
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>
