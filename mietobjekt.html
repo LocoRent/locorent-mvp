@@ -37,11 +37,29 @@
       border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
-    img {
+    .main-image {
       width: 100%;
-      border-radius: 8px;
+      height: 300px;
       object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+    }
+    .thumbnail-bar {
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
       margin-bottom: 1rem;
+    }
+    .thumbnail-bar img {
+      height: 70px;
+      width: 100px;
+      object-fit: cover;
+      border-radius: 6px;
+      cursor: pointer;
+      border: 2px solid transparent;
+    }
+    .thumbnail-bar img.active {
+      border-color: #2e7d32;
     }
     .calendar, .booking-form {
       margin-top: 2rem;
@@ -76,136 +94,154 @@
   </style>
 </head>
 <body>
-  <header>
-    <h1>Locorent</h1>
-    <nav>
-      <a href="index.html">Start</a>
-      <a href="profil.html">Profil</a>
-    </nav>
-  </header>
+<header>
+  <h1>Locorent</h1>
+  <nav>
+    <a href="index.html">Start</a>
+    <a href="profil.html">Profil</a>
+  </nav>
+</header>
 
-  <main>
-    <div id="listing-details">Lade Daten...</div>
-  </main>
+<main>
+  <div id="listing-details">Lade Daten...</div>
+</main>
 
-  <script>
-    const supabase = window.supabase.createClient(
-      'https://flnjalgqtkqycsaymmbd.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-    );
+<script>
+  const supabase = window.supabase.createClient(
+    'https://flnjalgqtkqycsaymmbd.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+  );
 
-    const params = new URLSearchParams(window.location.search);
-    const listingId = params.get('id');
-    let currentUser = null;
-    let listingOwnerId = null;
-    let unavailableRanges = [];
+  const params = new URLSearchParams(window.location.search);
+  const listingId = params.get('id');
+  let currentUser = null;
+  let listingOwnerId = null;
+  let unavailableRanges = [];
 
-    async function loadListing() {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        alert("Bitte einloggen.");
-        return;
-      }
-      currentUser = user;
+  async function loadListing() {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      alert("Bitte einloggen.");
+      return;
+    }
+    currentUser = user;
 
-      const { data: listing, error } = await supabase
-        .from('listings')
-        .select('*')
-        .eq('id', listingId)
-        .single();
+    const { data: listing, error } = await supabase
+      .from('listings')
+      .select('*')
+      .eq('id', listingId)
+      .single();
 
-      const container = document.getElementById('listing-details');
-      if (error || !listing) {
-        container.innerHTML = '<p>Fehler beim Laden des Inserats.</p>';
-        return;
-      }
+    const { data: images } = await supabase
+      .from('listing_images')
+      .select('*')
+      .eq('listing_id', listingId);
 
-      listingOwnerId = listing.user_id;
+    const container = document.getElementById('listing-details');
+    if (error || !listing) {
+      container.innerHTML = '<p>Fehler beim Laden des Inserats.</p>';
+      return;
+    }
+
+    listingOwnerId = listing.user_id;
+    await loadUnavailableDates();
+
+    const mainImage = images?.[0]?.image_url || listing.image_url || '';
+    const thumbnails = images?.map((img, idx) =>
+      `<img src="${img.image_url}" class="${idx === 0 ? 'active' : ''}" onclick="switchImage(this)">`
+    ).join('') || '';
+
+    container.innerHTML = `
+      <h2>${listing.title}</h2>
+      <img src="${mainImage}" alt="Hauptbild" class="main-image" id="mainImage">
+      ${thumbnails ? `<div class="thumbnail-bar">${thumbnails}</div>` : ''}
+      <p><strong>Kategorie:</strong> ${listing.category}</p>
+      <p><strong>Preis pro Tag:</strong> ${listing.price_per_day} €</p>
+      <p><strong>Beschreibung:</strong><br>${listing.description}</p>
+
+      <div class="chat-link">
+        <button onclick="goToChat()">Nachricht an Vermieter senden</button>
+      </div>
+
+      <div class="calendar">
+        <label><strong>Verfügbarkeit:</strong></label><br>
+        <input type="text" id="date-range" readonly />
+      </div>
+
+      <div class="booking-form">
+        <button onclick="requestBooking()">Mietanfrage senden</button>
+      </div>
+    `;
+
+    setupFlatpickr();
+  }
+
+  function switchImage(imgElement) {
+    const newSrc = imgElement.getAttribute("src");
+    document.getElementById("mainImage").setAttribute("src", newSrc);
+    document.querySelectorAll(".thumbnail-bar img").forEach(img => img.classList.remove("active"));
+    imgElement.classList.add("active");
+  }
+
+  async function loadUnavailableDates() {
+    const { data, error } = await supabase
+      .from('rentals')
+      .select('start_date, end_date')
+      .eq('listing_id', listingId);
+
+    if (!error && data) {
+      unavailableRanges = data.map(r => ({
+        from: r.start_date,
+        to: r.end_date
+      }));
+    }
+  }
+
+  function setupFlatpickr() {
+    flatpickr("#date-range", {
+      mode: "range",
+      minDate: "today",
+      dateFormat: "Y-m-d",
+      disable: unavailableRanges
+    });
+  }
+
+  async function requestBooking() {
+    const input = document.getElementById('date-range').value;
+    const dates = input.split(" to ");
+    if (dates.length !== 2) return alert("Bitte Zeitraum auswählen.");
+
+    const [start, end] = dates;
+
+    const { error } = await supabase.from('rentals').insert({
+      user_id: currentUser.id,
+      listing_id: listingId,
+      start_date: start,
+      end_date: end,
+      status: "offen",
+      title: "Mietanfrage"
+    });
+
+    if (error) {
+      alert("Fehler: " + error.message);
+    } else {
+      alert("Anfrage gesendet!");
+      document.getElementById("date-range").value = "";
       await loadUnavailableDates();
-
-      container.innerHTML = `
-        <h2>${listing.title}</h2>
-        ${listing.image_url ? `<img src="${listing.image_url}" alt="${listing.title}" />` : ''}
-        <p><strong>Kategorie:</strong> ${listing.category}</p>
-        <p><strong>Preis pro Tag:</strong> ${listing.price_per_day} €</p>
-        <p><strong>Beschreibung:</strong><br>${listing.description}</p>
-
-        <div class="chat-link">
-          <button onclick="goToChat()">Nachricht an Vermieter senden</button>
-        </div>
-
-        <div class="calendar">
-          <label><strong>Verfügbarkeit:</strong></label><br>
-          <input type="text" id="date-range" readonly />
-        </div>
-
-        <div class="booking-form">
-          <button onclick="requestBooking()">Mietanfrage senden</button>
-        </div>
-      `;
-
       setupFlatpickr();
     }
+  }
 
-    async function loadUnavailableDates() {
-      const { data, error } = await supabase
-        .from('rentals')
-        .select('start_date, end_date')
-        .eq('listing_id', listingId);
-
-      if (!error && data) {
-        unavailableRanges = data.map(r => ({
-          from: r.start_date,
-          to: r.end_date
-        }));
-      }
+  function goToChat() {
+    if (!currentUser || !listingOwnerId) return;
+    if (currentUser.id === listingOwnerId) {
+      alert("Du kannst dir selbst keine Nachricht schicken.");
+      return;
     }
+    window.location.href = `nachrichten.html?listing_id=${listingId}&with=${listingOwnerId}`;
+  }
 
-    function setupFlatpickr() {
-      flatpickr("#date-range", {
-        mode: "range",
-        minDate: "today",
-        dateFormat: "Y-m-d",
-        disable: unavailableRanges
-      });
-    }
-
-    async function requestBooking() {
-      const input = document.getElementById('date-range').value;
-      const dates = input.split(" to ");
-      if (dates.length !== 2) return alert("Bitte Zeitraum auswählen.");
-
-      const [start, end] = dates;
-
-      const { error } = await supabase.from('rentals').insert({
-        user_id: currentUser.id,
-        listing_id: listingId,
-        start_date: start,
-        end_date: end,
-        status: "offen",
-        title: "Mietanfrage"
-      });
-
-      if (error) {
-        alert("Fehler: " + error.message);
-      } else {
-        alert("Anfrage gesendet!");
-        document.getElementById("date-range").value = "";
-        await loadUnavailableDates();
-        setupFlatpickr();
-      }
-    }
-
-    function goToChat() {
-      if (!currentUser || !listingOwnerId) return;
-      if (currentUser.id === listingOwnerId) {
-        alert("Du kannst dir selbst keine Nachricht schicken.");
-        return;
-      }
-      window.location.href = `nachrichten.html?listing_id=${listingId}&with=${listingOwnerId}`;
-    }
-
-    loadListing();
-  </script>
+  loadListing();
+</script>
 </body>
 </html>
