@@ -35,9 +35,7 @@
       position: relative;
     }
 
-    header h1 {
-      font-size: 1.5rem;
-    }
+    header h1 { font-size: 1.5rem; }
 
     nav a {
       color: white;
@@ -46,7 +44,6 @@
       font-weight: 600;
     }
 
-    /* Profil Dropdown */
     .profile-menu {
       position: relative;
       cursor: pointer;
@@ -92,9 +89,7 @@
       background-color: var(--light);
     }
 
-    .profile-menu.open .dropdown-content {
-      display: block;
-    }
+    .profile-menu.open .dropdown-content { display: block; }
 
     .profile-container,
     .listing-container {
@@ -136,9 +131,7 @@
       cursor: pointer;
     }
 
-    button:hover {
-      background-color: #1b5e20;
-    }
+    button:hover { background-color: #1b5e20; }
 
     .history {
       margin-top: 2rem;
@@ -147,10 +140,7 @@
       border-radius: 8px;
     }
 
-    .history h3 {
-      margin-bottom: 1rem;
-    }
-
+    .history h3 { margin-bottom: 1rem; }
     .history-item {
       padding: 0.5rem 0;
       border-bottom: 1px solid #ccc;
@@ -208,9 +198,7 @@
 
   <div class="history">
     <h3>Mein Mietverlauf</h3>
-    <div id="rental-history">
-      <!-- Dummy-Einträge -->
-    </div>
+    <div id="rental-history"></div>
   </div>
 </section>
 
@@ -297,14 +285,7 @@
       await supabase.auth.updateUser({ email });
     }
 
-    await supabase.from('profiles').upsert({
-      id: user.id,
-      name,
-      phone,
-      city,
-      bio
-    });
-
+    await supabase.from('profiles').upsert({ id: user.id, name, phone, city, bio });
     alert("Profil erfolgreich aktualisiert!");
   }
 
@@ -314,11 +295,9 @@
       alert("Bitte gib ein neues Passwort ein.");
       return;
     }
-
     const { error } = await supabase.auth.updateUser({ password });
-    if (error) {
-      alert("Fehler beim Ändern des Passworts.");
-    } else {
+    if (error) alert("Fehler beim Ändern des Passworts.");
+    else {
       alert("Passwort geändert.");
       document.getElementById('password').value = '';
     }
@@ -329,19 +308,30 @@
     window.location.href = "login.html";
   }
 
-  function loadHistory(userId) {
+  async function loadHistory(userId) {
     const container = document.getElementById("rental-history");
+    container.innerHTML = "";
 
-    // Beispiel-Daten
-    const historyItems = [
-      { title: "E-Bike Trekking", date: "2024-06-01", status: "zurückgegeben" },
-      { title: "Transporter Sprinter", date: "2024-05-15", status: "laufend" }
-    ];
+    const { data, error } = await supabase
+      .from('rentals')
+      .select('title, rental_date, status')
+      .eq('user_id', userId)
+      .order('rental_date', { ascending: false });
 
-    historyItems.forEach(item => {
+    if (error) {
+      container.innerHTML = "<p>Fehler beim Laden des Mietverlaufs.</p>";
+      return;
+    }
+
+    if (!data || data.length === 0) {
+      container.innerHTML = "<p>Du hast noch keine Mietvorgänge.</p>";
+      return;
+    }
+
+    data.forEach(item => {
       const div = document.createElement("div");
       div.className = "history-item";
-      div.innerHTML = `<strong>${item.title}</strong><br><small>${item.date} – ${item.status}</small>`;
+      div.innerHTML = `<strong>${item.title}</strong><br><small>${new Date(item.rental_date).toLocaleDateString()} – ${item.status}</small>`;
       container.appendChild(div);
     });
   }
@@ -363,22 +353,18 @@
       return;
     }
 
-    const { error } = await supabase
-      .from('listings')
-      .insert({
-        user_id: user.id,
-        title,
-        description,
-        price_per_day: price,
-        category,
-        created_at: new Date()
-      });
+    const { error } = await supabase.from('listings').insert({
+      user_id: user.id,
+      title,
+      description,
+      price_per_day: price,
+      category,
+      created_at: new Date()
+    });
 
-    if (error) {
-      alert("Fehler beim Speichern des Inserats: " + error.message);
-    } else {
+    if (error) alert("Fehler beim Speichern des Inserats: " + error.message);
+    else {
       alert("Inserat erfolgreich gespeichert!");
-      // Felder zurücksetzen
       document.getElementById('listing-title').value = '';
       document.getElementById('listing-description').value = '';
       document.getElementById('listing-price').value = '';
@@ -386,25 +372,16 @@
     }
   }
 
-  // Profil Dropdown toggle
   const profileMenu = document.getElementById('profileMenu');
-  profileMenu.addEventListener('click', () => {
-    profileMenu.classList.toggle('open');
-  });
+  profileMenu.addEventListener('click', () => profileMenu.classList.toggle('open'));
 
-  document.getElementById('logoutBtn').addEventListener('click', () => {
-    logout();
-  });
+  document.getElementById('logoutBtn').addEventListener('click', logout);
 
-  // Klick außerhalb schließt Dropdown
   window.addEventListener('click', (e) => {
-    if (!profileMenu.contains(e.target)) {
-      profileMenu.classList.remove('open');
-    }
+    if (!profileMenu.contains(e.target)) profileMenu.classList.remove('open');
   });
 
   loadProfile();
 </script>
-
 </body>
 </html>
