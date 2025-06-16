@@ -7,112 +7,113 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    :root {
-      --primary: #2e7d32;
-      --light: #f1f8e9;
-      --dark: #1b5e20;
-      --white: #fff;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Poppins', sans-serif;
-      background-color: var(--light);
-      color: var(--dark);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+      background: #f1f8e9;
+      margin: 0;
+      padding: 0;
+      color: #1b5e20;
     }
     header {
-      background-color: var(--primary);
-      padding: 1rem 2rem;
+      background-color: #2e7d32;
       color: white;
+      padding: 1rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-    .profile-menu {
-      position: relative;
-      cursor: pointer;
-    }
-    .profile-menu span {
-      background: rgba(255,255,255,0.2);
-      padding: 0.3rem 0.6rem;
-      border-radius: 6px;
-    }
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      right: 0;
-      background-color: white;
-      color: var(--dark);
-      min-width: 160px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-      z-index: 999;
-    }
-    .dropdown-content a, .dropdown-content button {
-      display: block;
-      padding: 0.7rem 1rem;
+    nav a {
+      color: white;
+      margin-left: 1rem;
       text-decoration: none;
-      color: var(--dark);
-      background: none;
-      border: none;
-      width: 100%;
-      text-align: left;
-      cursor: pointer;
-    }
-    .dropdown-content a:hover,
-    .dropdown-content button:hover {
-      background-color: var(--light);
-    }
-    .profile-menu.open .dropdown-content {
-      display: block;
+      font-weight: 600;
     }
     main {
       max-width: 800px;
       margin: 2rem auto;
       padding: 1rem;
-    }
-    h2 {
-      margin-bottom: 1rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
     .listing {
-      background: white;
-      padding: 1rem;
-      border-radius: 8px;
-      margin-bottom: 1rem;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      border-bottom: 1px solid #ccc;
+      padding: 1rem 0;
     }
-    footer {
-      margin-top: auto;
-      padding: 1.5rem;
-      background-color: var(--primary);
+    .listing img {
+      max-width: 100%;
+      height: auto;
+      margin-top: 0.5rem;
+      border-radius: 8px;
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 600;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 0.7rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-top: 0.3rem;
+    }
+    button {
+      margin-top: 1.5rem;
+      padding: 0.7rem 1.5rem;
+      background-color: #2e7d32;
       color: white;
-      text-align: center;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #1b5e20;
     }
   </style>
 </head>
 <body>
+
 <header>
   <h1>Locorent</h1>
-  <div class="profile-menu" id="profileMenu">
-    <span id="profileName">Profil</span>
-    <div class="dropdown-content" id="dropdownContent">
-      <a href="profil.html">Mein Profil</a>
-      <a href="meine-inserate.html">Meine Inserate</a>
-      <button id="logoutBtn">Abmelden</button>
-    </div>
-  </div>
+  <nav>
+    <a href="index.html">Start</a>
+    <a href="profil.html">Profil</a>
+    <a href="#" id="logoutBtn">Logout</a>
+  </nav>
 </header>
 
 <main>
   <h2>Meine Inserate</h2>
-  <div id="listings-container"></div>
-</main>
+  <div id="myListings">Lade deine Inserate...</div>
 
-<footer>
-  © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
-</footer>
+  <h3>Neues Inserat hinzufügen</h3>
+  <label for="title">Titel</label>
+  <input type="text" id="title" />
+
+  <label for="description">Beschreibung</label>
+  <textarea id="description" rows="3"></textarea>
+
+  <label for="price">Preis pro Tag (€)</label>
+  <input type="number" id="price" />
+
+  <label for="category">Kategorie</label>
+  <select id="category">
+    <option value="">Bitte wählen</option>
+    <option value="Fahrzeuge">Fahrzeuge</option>
+    <option value="Werkzeuge">Werkzeuge</option>
+    <option value="Technik">Technik</option>
+    <option value="Haushalt">Haushalt</option>
+    <option value="Garten">Garten</option>
+    <!-- ... -->
+  </select>
+
+  <label for="image">Bild hochladen</label>
+  <input type="file" id="image" accept="image/*" />
+
+  <button onclick="saveListing()">Inserat speichern</button>
+</main>
 
 <script>
   const supabase = window.supabase.createClient(
@@ -120,35 +121,69 @@
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
   );
 
-  const profileMenu = document.getElementById('profileMenu');
-  const profileName = document.getElementById('profileName');
-  profileMenu.addEventListener('click', () => profileMenu.classList.toggle('open'));
-  window.addEventListener('click', (e) => {
-    if (!profileMenu.contains(e.target)) profileMenu.classList.remove('open');
-  });
-  document.getElementById('logoutBtn').addEventListener('click', async () => {
+  document.getElementById('logoutBtn').onclick = async () => {
     await supabase.auth.signOut();
-    window.location.href = "login.html";
-  });
+    window.location.href = 'login.html';
+  };
 
-  async function loadListings() {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session?.user) {
-      window.location.href = "login.html";
+  async function saveListing() {
+    const title = document.getElementById('title').value.trim();
+    const description = document.getElementById('description').value.trim();
+    const price = parseFloat(document.getElementById('price').value);
+    const category = document.getElementById('category').value;
+    const imageFile = document.getElementById('image').files[0];
+
+    if (!title || !price || !category || !imageFile) {
+      alert("Bitte alle Felder inkl. Bild ausfüllen.");
       return;
     }
 
-    profileName.textContent = session.user.email.split('@')[0];
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return alert("Nicht eingeloggt.");
 
+    const fileName = `${user.id}_${Date.now()}_${imageFile.name}`;
+    const { error: uploadError } = await supabase.storage
+      .from('listing-images')
+      .upload(fileName, imageFile);
+
+    if (uploadError) {
+      alert("Bild-Upload fehlgeschlagen: " + uploadError.message);
+      return;
+    }
+
+    const { data: { publicUrl } } = supabase.storage
+      .from('listing-images')
+      .getPublicUrl(fileName);
+
+    const { error } = await supabase.from('listings').insert({
+      user_id: user.id,
+      title,
+      description,
+      price_per_day: price,
+      category,
+      image_url: publicUrl
+    });
+
+    if (error) alert("Fehler beim Speichern: " + error.message);
+    else {
+      alert("Inserat gespeichert!");
+      loadMyListings();
+    }
+  }
+
+  async function loadMyListings() {
+    const { data: { user } } = await supabase.auth.getUser();
     const { data, error } = await supabase
       .from('listings')
       .select('*')
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
       .order('created_at', { ascending: false });
 
-    const container = document.getElementById('listings-container');
+    const container = document.getElementById('myListings');
+    container.innerHTML = '';
+
     if (error || !data || data.length === 0) {
-      container.innerHTML = "<p>Du hast noch keine Inserate erstellt.</p>";
+      container.innerHTML = "<p>Keine Inserate gefunden.</p>";
       return;
     }
 
@@ -156,15 +191,18 @@
       const div = document.createElement('div');
       div.className = 'listing';
       div.innerHTML = `
-        <strong>${item.title}</strong><br>
-        <small>${item.category || ''} – ${parseFloat(item.price_per_day).toFixed(2)} € / Tag</small><br>
-        <p>${item.description}</p>
+        <h3>${item.title}</h3>
+        <p><strong>Kategorie:</strong> ${item.category}</p>
+        <p><strong>Preis:</strong> ${item.price_per_day} €</p>
+        <p>${item.description || ''}</p>
+        ${item.image_url ? `<img src="${item.image_url}" alt="${item.title}" />` : ''}
       `;
       container.appendChild(div);
     });
   }
 
-  loadListings();
+  loadMyListings();
 </script>
+
 </body>
 </html>
