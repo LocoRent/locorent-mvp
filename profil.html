@@ -14,7 +14,6 @@
       --white: #fff;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Poppins', sans-serif;
       background-color: var(--light);
@@ -22,6 +21,7 @@
       display: flex;
       flex-direction: column;
       min-height: 100vh;
+      margin: 0;
     }
 
     header {
@@ -78,6 +78,19 @@
 
     button:hover { background-color: #1b5e20; }
 
+    .avatar-container {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .avatar-container img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 0.5rem;
+    }
+
     footer {
       margin-top: auto;
       padding: 1.5rem;
@@ -100,6 +113,12 @@
 
 <section class="container">
   <h2>Mein Profil</h2>
+
+  <div class="avatar-container">
+    <img id="avatar-preview" src="" alt="Profilbild" />
+    <br/>
+    <input type="file" id="avatar-upload" accept="image/*" />
+  </div>
 
   <label for="name">Name</label>
   <input type="text" id="name" placeholder="Dein Name" />
@@ -133,29 +152,33 @@
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
   );
 
+  let userId = null;
+
   async function loadProfile() {
     const { data: { session } } = await supabase.auth.getSession();
-    if (!session?.user) {
-      window.location.href = "login.html";
-      return;
-    }
+    if (!session?.user) return window.location.href = "login.html";
 
     const user = session.user;
+    userId = user.id;
     document.getElementById('email').value = user.email;
 
     const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+
     if (data) {
       document.getElementById('name').value = data.name || '';
       document.getElementById('phone').value = data.phone || '';
       document.getElementById('city').value = data.city || '';
       document.getElementById('bio').value = data.bio || '';
+
+      const avatarUrl = data.avatar_url
+        || `https://ui-avatars.com/api/?name=${encodeURIComponent(data.name || user.email)}&background=66bb6a&color=fff`;
+      document.getElementById('avatar-preview').src = avatarUrl;
     }
   }
 
   async function saveProfile() {
-    const { data: { user } } = await supabase.auth.getUser();
     const updates = {
-      id: user.id,
+      id: userId,
       name: document.getElementById('name').value,
       phone: document.getElementById('phone').value,
       city: document.getElementById('city').value,
@@ -176,6 +199,29 @@
       document.getElementById('password').value = '';
     }
   }
+
+  async function uploadAvatar(file) {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${userId}.${fileExt}`;
+    const filePath = `${fileName}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from('avatars')
+      .upload(filePath, file, { upsert: true });
+
+    if (uploadError) return alert("Fehler beim Hochladen: " + uploadError.message);
+
+    const { data } = supabase.storage.from('avatars').getPublicUrl(filePath);
+    document.getElementById('avatar-preview').src = data.publicUrl;
+
+    await supabase.from('profiles').update({ avatar_url: data.publicUrl }).eq('id', userId);
+    alert("Avatar aktualisiert!");
+  }
+
+  document.getElementById("avatar-upload").addEventListener("change", async (e) => {
+    const file = e.target.files[0];
+    if (file) await uploadAvatar(file);
+  });
 
   document.getElementById("logoutBtn").addEventListener("click", async () => {
     await supabase.auth.signOut();
