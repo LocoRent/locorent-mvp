@@ -132,11 +132,6 @@
       .eq('id', listingId)
       .single();
 
-    const { data: images } = await supabase
-      .from('listing_images')
-      .select('*')
-      .eq('listing_id', listingId);
-
     const container = document.getElementById('listing-details');
     if (error || !listing) {
       container.innerHTML = '<p>Fehler beim Laden des Inserats.</p>';
@@ -146,15 +141,16 @@
     listingOwnerId = listing.user_id;
     await loadUnavailableDates();
 
-    const mainImage = images?.[0]?.image_url || listing.image_url || '';
-    const thumbnails = images?.map((img, idx) =>
-      `<img src="${img.image_url}" class="${idx === 0 ? 'active' : ''}" onclick="switchImage(this)">`
-    ).join('') || '';
+    const imageUrls = listing.image_urls || [];
+    const mainImage = imageUrls[0] || 'https://via.placeholder.com/800x300?text=Kein+Bild';
+    const thumbnails = imageUrls.map((url, idx) =>
+      `<img src="${url}" class="${idx === 0 ? 'active' : ''}" onclick="switchImage(this)">`
+    ).join('');
 
     container.innerHTML = `
       <h2>${listing.title}</h2>
       <img src="${mainImage}" alt="Hauptbild" class="main-image" id="mainImage">
-      ${thumbnails ? `<div class="thumbnail-bar">${thumbnails}</div>` : ''}
+      ${imageUrls.length > 1 ? `<div class="thumbnail-bar">${thumbnails}</div>` : ''}
       <p><strong>Kategorie:</strong> ${listing.category}</p>
       <p><strong>Preis pro Tag:</strong> ${listing.price_per_day} €</p>
       <p><strong>Beschreibung:</strong><br>${listing.description}</p>
