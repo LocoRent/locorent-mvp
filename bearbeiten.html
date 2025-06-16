@@ -16,6 +16,15 @@
       background-color: #2e7d32;
       color: white;
       padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      margin-left: 1rem;
     }
     main {
       max-width: 800px;
@@ -32,10 +41,25 @@
     }
     input, textarea {
       width: 100%;
-      padding: 0.6rem;
-      margin-top: 0.3rem;
+      padding: 0.7rem;
+      margin-top: 0.4rem;
       border: 1px solid #ccc;
       border-radius: 8px;
+    }
+    #image-preview {
+      margin-top: 1rem;
+      max-width: 100%;
+      max-height: 250px;
+      border-radius: 8px;
+    }
+    .dropzone {
+      margin-top: 1rem;
+      padding: 1rem;
+      border: 2px dashed #2e7d32;
+      border-radius: 10px;
+      text-align: center;
+      background-color: #f9fff4;
+      color: #2e7d32;
     }
     button {
       margin-top: 1.5rem;
@@ -47,66 +71,35 @@
       font-weight: 600;
       cursor: pointer;
     }
-    #drop-zone {
-      margin-top: 1rem;
-      padding: 2rem;
-      border: 2px dashed #ccc;
-      border-radius: 12px;
-      text-align: center;
-      color: #666;
-    }
-    .images {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      margin-top: 1rem;
-    }
-    .images img {
-      height: 100px;
-      border-radius: 6px;
-      object-fit: cover;
-    }
-    .image-container {
-      position: relative;
-    }
-    .delete-btn {
-      position: absolute;
-      top: 4px;
-      right: 4px;
-      background: rgba(255, 0, 0, 0.8);
-      border: none;
-      color: white;
-      border-radius: 50%;
-      width: 24px;
-      height: 24px;
-      cursor: pointer;
-    }
   </style>
 </head>
 <body>
 
 <header>
   <h1>Inserat bearbeiten</h1>
+  <nav>
+    <a href="inserate.html">Zurück</a>
+  </nav>
 </header>
 
 <main>
-  <label>Titel</label>
+  <label for="title">Titel</label>
   <input type="text" id="title" />
 
-  <label>Kategorie</label>
+  <label for="category">Kategorie</label>
   <input type="text" id="category" />
 
-  <label>Preis pro Tag (€)</label>
+  <label for="price">Preis pro Tag (€)</label>
   <input type="number" id="price" />
 
-  <label>Beschreibung</label>
+  <label for="description">Beschreibung</label>
   <textarea id="description" rows="4"></textarea>
 
-  <label>Bilder</label>
-  <div id="drop-zone">Bilder hierher ziehen oder klicken</div>
-  <div class="images" id="image-preview"></div>
+  <label>Bild</label>
+  <img id="image-preview" src="" alt="Bildvorschau" style="display: none;" />
+  <div class="dropzone" id="dropzone">Datei hierher ziehen oder klicken</div>
 
-  <button onclick="saveListing()">Speichern</button>
+  <button onclick="save()">Änderungen speichern</button>
 </main>
 
 <script>
@@ -115,124 +108,113 @@
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
   );
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const listingId = urlParams.get("id");
-  let imageUrls = [];
+  const params = new URLSearchParams(window.location.search);
+  const listingId = params.get("id");
+  const bucket = 'inserate';
+  let imageUrl = null;
 
-  async function loadListing() {
-    const { data: listing } = await supabase.from("listings").select("*").eq("id", listingId).single();
-    if (!listing) return alert("Inserat nicht gefunden");
+  async function loadData() {
+    const { data, error } = await supabase.from('listings').select('*').eq('id', listingId).single();
+    if (error || !data) {
+      alert('Fehler beim Laden.');
+      return;
+    }
+    document.getElementById('title').value = data.title || '';
+    document.getElementById('category').value = data.category || '';
+    document.getElementById('price').value = data.price_per_day || '';
+    document.getElementById('description').value = data.description || '';
+    imageUrl = data.image_url;
 
-    document.getElementById("title").value = listing.title;
-    document.getElementById("category").value = listing.category;
-    document.getElementById("price").value = listing.price_per_day;
-    document.getElementById("description").value = listing.description;
-
-    const { data: images } = await supabase
-      .from("listing_images")
-      .select("*")
-      .eq("listing_id", listingId)
-      .order("sort_order", { ascending: true });
-
-    imageUrls = images || [];
-    renderImages();
+    if (imageUrl) {
+      document.getElementById('image-preview').src = imageUrl;
+      document.getElementById('image-preview').style.display = 'block';
+    }
   }
 
-  function renderImages() {
-    const container = document.getElementById("image-preview");
-    container.innerHTML = "";
-    imageUrls.forEach(img => {
-      const div = document.createElement("div");
-      div.className = "image-container";
-      div.innerHTML = `
-        <img src="${img.image_url}" />
-        <button class="delete-btn" onclick="deleteImage('${img.id}')">×</button>
-      `;
-      container.appendChild(div);
-    });
-  }
+  async function uploadImage(file) {
+    const fileExt = file.name.split('.').pop();
+    const filePath = `${listingId}.${fileExt}`;
+    const { error: uploadError } = await supabase.storage.from(bucket).upload(filePath, file, { upsert: true });
 
-  async function deleteImage(imageId) {
-    await supabase.from("listing_images").delete().eq("id", imageId);
-    imageUrls = imageUrls.filter(i => i.id !== imageId);
-    renderImages();
-  }
-
-  async function handleUpload(file) {
-    const filename = `${Date.now()}-${file.name}`;
-    const { data, error } = await supabase.storage
-      .from("images")
-      .upload(filename, file);
-
-    if (error) return alert("Upload fehlgeschlagen");
-
-    const { data: { publicUrl } } = supabase.storage
-      .from("images")
-      .getPublicUrl(filename);
-
-    await supabase.from("listing_images").insert({
-      listing_id: listingId,
-      image_url: publicUrl,
-      sort_order: imageUrls.length
-    });
-
-    // Falls kein Hauptbild gesetzt ist → setzen
-    const { data: listing } = await supabase.from('listings').select('image_url').eq('id', listingId).single();
-    if (!listing.image_url) {
-      await supabase.from("listings").update({ image_url: publicUrl }).eq("id", listingId);
+    if (uploadError) {
+      alert('Upload fehlgeschlagen');
+      return null;
     }
 
-    imageUrls.push({ image_url: publicUrl });
-    renderImages();
+    const { data } = supabase.storage.from(bucket).getPublicUrl(filePath);
+    return data.publicUrl;
   }
 
-  function setupDropZone() {
-    const dropZone = document.getElementById("drop-zone");
-    dropZone.addEventListener("click", () => {
-      const input = document.createElement("input");
-      input.type = "file";
-      input.accept = "image/*";
-      input.onchange = e => handleUpload(e.target.files[0]);
-      input.click();
+  function setupDropzone() {
+    const dropzone = document.getElementById("dropzone");
+
+    dropzone.addEventListener("click", () => {
+      const fileInput = document.createElement("input");
+      fileInput.type = "file";
+      fileInput.accept = "image/*";
+      fileInput.onchange = async () => {
+        const file = fileInput.files[0];
+        if (file) {
+          const url = await uploadImage(file);
+          if (url) {
+            imageUrl = url;
+            document.getElementById("image-preview").src = url;
+            document.getElementById("image-preview").style.display = "block";
+          }
+        }
+      };
+      fileInput.click();
     });
 
-    dropZone.addEventListener("dragover", e => {
+    dropzone.addEventListener("dragover", (e) => {
       e.preventDefault();
-      dropZone.style.borderColor = "#1b5e20";
+      dropzone.style.background = "#dcedc8";
     });
 
-    dropZone.addEventListener("dragleave", () => {
-      dropZone.style.borderColor = "#ccc";
+    dropzone.addEventListener("dragleave", () => {
+      dropzone.style.background = "#f9fff4";
     });
 
-    dropZone.addEventListener("drop", e => {
+    dropzone.addEventListener("drop", async (e) => {
       e.preventDefault();
+      dropzone.style.background = "#f9fff4";
       const file = e.dataTransfer.files[0];
-      if (file) handleUpload(file);
-      dropZone.style.borderColor = "#ccc";
+      if (file) {
+        const url = await uploadImage(file);
+        if (url) {
+          imageUrl = url;
+          document.getElementById("image-preview").src = url;
+          document.getElementById("image-preview").style.display = "block";
+        }
+      }
     });
   }
 
-  async function saveListing() {
-    const title = document.getElementById("title").value.trim();
-    const category = document.getElementById("category").value.trim();
-    const price = parseFloat(document.getElementById("price").value);
-    const description = document.getElementById("description").value.trim();
+  async function save() {
+    const title = document.getElementById('title').value.trim();
+    const category = document.getElementById('category').value.trim();
+    const price = document.getElementById('price').value;
+    const description = document.getElementById('description').value.trim();
 
-    if (!title || !price) return alert("Titel und Preis erforderlich");
+    const updates = {
+      title,
+      category,
+      price_per_day: parseFloat(price),
+      description,
+      image_url: imageUrl
+    };
 
-    const { error } = await supabase.from("listings").update({
-      title, category, price_per_day: price, description
-    }).eq("id", listingId);
-
-    if (error) return alert("Fehler beim Speichern");
-
-    alert("Gespeichert!");
-    window.location.href = "inserate.html";
+    const { error } = await supabase.from('listings').update(updates).eq('id', listingId);
+    if (error) {
+      alert('Fehler beim Speichern.');
+    } else {
+      alert('Gespeichert!');
+      window.location.href = 'inserate.html';
+    }
   }
 
-  loadListing();
-  setupDropZone();
+  loadData();
+  setupDropzone();
 </script>
 
 </body>
