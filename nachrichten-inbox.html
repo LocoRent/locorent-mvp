@@ -3,81 +3,131 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Nachrichten – Locorent</title>
+  <title>Nachrichteneingang – Locorent</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
       font-family: 'Poppins', sans-serif;
-      background: #f1f8e9;
-      margin: 0;
+      background: linear-gradient(to right, #e8f5e9, #f1f8e9);
       color: #1b5e20;
     }
 
     header {
-      background-color: #2e7d32;
+      background: linear-gradient(to right, #2e7d32, #66bb6a);
       color: white;
-      padding: 1rem 2rem;
+      padding: 1.5rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
 
     nav a {
       color: white;
-      margin-left: 1rem;
       text-decoration: none;
       font-weight: 600;
+      font-size: 1rem;
+      margin-left: 1rem;
     }
 
     main {
-      max-width: 800px;
+      max-width: 900px;
       margin: 2rem auto;
-      background: white;
-      padding: 1.5rem;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      padding: 1rem;
     }
 
     h2 {
+      font-size: 2rem;
       margin-bottom: 1.5rem;
-      font-size: 1.6rem;
+      color: #2e7d32;
     }
 
-    .conversation {
-      border: 1px solid #ccc;
-      border-radius: 8px;
+    .chat-card {
+      display: flex;
+      align-items: center;
+      background: white;
       padding: 1rem;
       margin-bottom: 1rem;
-      background: #f9fff4;
+      border-radius: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.07);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
       cursor: pointer;
-      transition: background 0.2s;
     }
 
-    .conversation:hover {
-      background: #e6f4ea;
+    .chat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.1);
     }
 
-    .conversation-title {
+    .chat-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #c8e6c9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: #1b5e20;
+      margin-right: 1rem;
+    }
+
+    .chat-info {
+      flex: 1;
+    }
+
+    .chat-name {
       font-weight: 600;
-      margin-bottom: 0.3rem;
+      font-size: 1.1rem;
     }
 
-    .conversation-meta {
-      font-size: 0.9rem;
+    .chat-title {
+      font-size: 0.95rem;
       color: #4b8b4b;
+    }
+
+    .chat-preview {
+      margin-top: 0.3rem;
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    @media (max-width: 600px) {
+      .chat-card {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .chat-avatar {
+        margin-bottom: 0.5rem;
+      }
+
+      .chat-preview {
+        font-size: 0.85rem;
+      }
     }
   </style>
 </head>
 <body>
+
 <header>
   <h1>Locorent</h1>
-  <nav><a href="index.html">Zurück zur Startseite</a></nav>
+  <nav>
+    <a href="index.html">Startseite</a>
+  </nav>
 </header>
 
 <main>
-  <h2>Nachrichteneingang</h2>
-  <div id="inbox">Lade Konversationen...</div>
+  <h2>📨 Nachrichteneingang</h2>
+  <div id="inbox">Lade Nachrichten...</div>
 </main>
 
 <script>
@@ -86,71 +136,63 @@
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
   );
 
-  let currentUser = null;
-
   async function loadInbox() {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      alert("Bitte einloggen.");
-      window.location.href = "login.html";
-      return;
-    }
-
-    currentUser = user;
-
-    // Alle Nachrichten des Nutzers (als Sender oder Empfänger)
-    const { data: messages, error } = await supabase
+    if (!user) return window.location.href = "login.html";
+    
+    const { data: messages } = await supabase
       .from('messages')
       .select('*')
       .or(`sender_id.eq.${user.id},receiver_id.eq.${user.id}`)
       .order('created_at', { ascending: false });
 
-    if (error || !messages) {
-      document.getElementById('inbox').innerHTML = '<p>Fehler beim Laden der Nachrichten.</p>';
+    const inbox = document.getElementById('inbox');
+    inbox.innerHTML = '';
+
+    if (!messages || messages.length === 0) {
+      inbox.innerHTML = "<p>Keine Nachrichten gefunden.</p>";
       return;
     }
 
-    const chatMap = new Map();
+    const uniqueChats = new Map();
 
     messages.forEach(msg => {
       const otherId = msg.sender_id === user.id ? msg.receiver_id : msg.sender_id;
       const key = `${msg.listing_id}_${otherId}`;
-      if (!chatMap.has(key)) {
-        chatMap.set(key, msg);
+      if (!uniqueChats.has(key)) {
+        uniqueChats.set(key, msg);
       }
     });
 
-    const inboxContainer = document.getElementById('inbox');
-    inboxContainer.innerHTML = '';
-
-    if (chatMap.size === 0) {
-      inboxContainer.innerHTML = '<p>Keine Nachrichten vorhanden.</p>';
-      return;
-    }
-
-    for (const [key, msg] of chatMap.entries()) {
+    for (const [key, msg] of uniqueChats.entries()) {
       const otherId = msg.sender_id === user.id ? msg.receiver_id : msg.sender_id;
 
-      const [listingRes, userRes] = await Promise.all([
-        supabase.from('listings').select('title').eq('id', msg.listing_id).single(),
-        supabase.from('profiles').select('name').eq('id', otherId).single()
+      const [userRes, listingRes] = await Promise.all([
+        supabase.from('profiles').select('name').eq('id', otherId).single(),
+        supabase.from('listings').select('title').eq('id', msg.listing_id).single()
       ]);
 
-      const listingTitle = listingRes.data?.title || 'Unbekanntes Inserat';
-      const partnerName = userRes.data?.name || 'Unbekannt';
+      const name = userRes.data?.name || 'Unbekannt';
+      const listing = listingRes.data?.title || 'Inserat gelöscht';
+
+      const avatarLetter = name.charAt(0).toUpperCase();
 
       const div = document.createElement('div');
-      div.className = 'conversation';
+      div.className = 'chat-card';
       div.onclick = () => {
         window.location.href = `nachrichten.html?listing_id=${msg.listing_id}&with=${otherId}`;
       };
 
       div.innerHTML = `
-        <div class="conversation-title">${listingTitle}</div>
-        <div class="conversation-meta">Mit: ${partnerName}</div>
+        <div class="chat-avatar">${avatarLetter}</div>
+        <div class="chat-info">
+          <div class="chat-name">${name}</div>
+          <div class="chat-title">Inserat: ${listing}</div>
+          <div class="chat-preview">${msg.content.slice(0, 80)}${msg.content.length > 80 ? '…' : ''}</div>
+        </div>
       `;
 
-      inboxContainer.appendChild(div);
+      inbox.appendChild(div);
     }
   }
 
@@ -158,3 +200,4 @@
 </script>
 </body>
 </html>
+
