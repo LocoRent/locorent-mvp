@@ -4,7 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Mietobjekt – Locorent</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     body {
@@ -49,15 +50,12 @@
       border-radius: 8px;
       background: #f9fff4;
     }
-    .calendar {
-      margin-bottom: 1.5rem;
-    }
-    input[type="date"] {
+    input[type="text"] {
+      width: 100%;
       padding: 0.5rem;
       border-radius: 6px;
       border: 1px solid #ccc;
       margin: 0.5rem 0;
-      width: 100%;
     }
     button {
       margin-top: 1rem;
@@ -94,6 +92,7 @@
 
     const params = new URLSearchParams(window.location.search);
     const listingId = params.get('id');
+    let unavailableRanges = [];
 
     async function loadListing() {
       if (!listingId) return;
@@ -110,7 +109,6 @@
         return;
       }
 
-      // Vermieter-Name laden
       let ownerName = 'Unbekannt';
       if (listing.user_id) {
         const { data: profile } = await supabase
@@ -121,6 +119,8 @@
         if (profile?.name) ownerName = profile.name;
       }
 
+      await loadUnavailableDates();
+
       container.innerHTML = `
         <h2>${listing.title}</h2>
         ${listing.image_url ? `<img src="${listing.image_url}" alt="${listing.title}" />` : ''}
@@ -130,29 +130,54 @@
         <p><strong>Vermieter:</strong> ${ownerName}</p>
 
         <div class="calendar">
-          <strong>Verfügbarkeit:</strong><br>
-          <em>Belegte Daten werden hier angezeigt (in Entwicklung)</em>
+          <strong>Verfügbarkeit auswählen:</strong><br>
+          <label>Zeitraum auswählen</label>
+          <input type="text" id="date-range" readonly />
         </div>
 
         <div class="booking-form">
-          <strong>Jetzt anfragen:</strong><br>
-          <label>Startdatum:</label>
-          <input type="date" id="start-date" />
-          <label>Enddatum:</label>
-          <input type="date" id="end-date" />
           <button onclick="requestBooking()">Anfrage senden</button>
         </div>
       `;
+
+      setupFlatpickr();
+    }
+
+    async function loadUnavailableDates() {
+      const { data, error } = await supabase
+        .from('rentals')
+        .select('start_date, end_date')
+        .eq('listing_id', listingId);
+
+      if (error) {
+        console.error("Fehler beim Laden belegter Daten:", error.message);
+        return;
+      }
+
+      unavailableRanges = data.map(r => ({
+        from: r.start_date,
+        to: r.end_date
+      }));
+    }
+
+    function setupFlatpickr() {
+      flatpickr("#date-range", {
+        mode: "range",
+        minDate: "today",
+        dateFormat: "Y-m-d",
+        disable: unavailableRanges
+      });
     }
 
     async function requestBooking() {
-      const start = document.getElementById('start-date').value;
-      const end = document.getElementById('end-date').value;
-
-      if (!start || !end || new Date(end) < new Date(start)) {
-        alert('Bitte gültige Daten eingeben.');
+      const input = document.getElementById('date-range').value;
+      const dates = input.split(" to ");
+      if (dates.length !== 2) {
+        alert("Bitte einen Zeitraum auswählen.");
         return;
       }
+
+      const [start, end] = dates;
 
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
@@ -165,13 +190,17 @@
         listing_id: listingId,
         start_date: start,
         end_date: end,
-        title: 'Anfrage für Mietobjekt'
+        status: "offen",
+        title: "Mietanfrage"
       });
 
       if (error) {
         alert("Fehler bei der Anfrage: " + error.message);
       } else {
         alert("Anfrage erfolgreich gesendet!");
+        document.getElementById("date-range").value = "";
+        await loadUnavailableDates();
+        setupFlatpickr();
       }
     }
 
