@@ -12,7 +12,6 @@
       --light: #f1f8e9;
       --dark: #1b5e20;
       --white: #fff;
-      --gray: #e0e0e0;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -32,7 +31,6 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      position: relative;
     }
 
     nav a {
@@ -41,52 +39,6 @@
       margin-left: 1rem;
       font-weight: 600;
     }
-
-    .profile-menu {
-      position: relative;
-      cursor: pointer;
-    }
-
-    .profile-menu span {
-      padding: 0.4rem 0.6rem;
-      background: rgba(255 255 255 / 0.2);
-      border-radius: 6px;
-      font-weight: 600;
-    }
-
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      right: 0;
-      top: 2.8rem;
-      background-color: white;
-      color: var(--dark);
-      min-width: 160px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-      border-radius: 8px;
-      z-index: 1000;
-    }
-
-    .dropdown-content a, .dropdown-content button {
-      display: block;
-      padding: 0.7rem 1rem;
-      text-decoration: none;
-      color: var(--dark);
-      background: none;
-      border: none;
-      width: 100%;
-      text-align: left;
-      cursor: pointer;
-      font-family: inherit;
-      font-size: 1rem;
-    }
-
-    .dropdown-content a:hover,
-    .dropdown-content button:hover {
-      background-color: var(--light);
-    }
-
-    .profile-menu.open .dropdown-content { display: block; }
 
     .container {
       max-width: 600px;
@@ -98,11 +50,21 @@
     }
 
     h2 { margin-bottom: 1rem; }
-    label { display: block; margin-top: 1rem; font-weight: 600; }
-    input, textarea {
-      width: 100%; padding: 0.7rem; margin-top: 0.3rem;
-      border: 1px solid #ccc; border-radius: 8px;
+
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 600;
     }
+
+    input, textarea {
+      width: 100%;
+      padding: 0.7rem;
+      margin-top: 0.3rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
     button {
       margin-top: 1.5rem;
       padding: 0.7rem 1.5rem;
@@ -113,19 +75,8 @@
       font-weight: 600;
       cursor: pointer;
     }
-    button:hover { background-color: #1b5e20; }
 
-    .history { margin-top: 2rem; }
-    .history-item {
-      padding: 0.5rem 0;
-      border-bottom: 1px solid #ccc;
-    }
-    .action-buttons {
-      margin-top: 0.5rem;
-    }
-    .action-buttons button {
-      margin-right: 0.5rem;
-    }
+    button:hover { background-color: #1b5e20; }
 
     footer {
       margin-top: auto;
@@ -142,23 +93,19 @@
   <h1>Locorent</h1>
   <nav>
     <a href="index.html">Startseite</a>
-    <div class="profile-menu" id="profileMenu">
-      <span id="profileName">Profil</span>
-      <div class="dropdown-content" id="dropdownContent">
-        <a href="profil.html">Mein Profil</a>
-        <button id="logoutBtn">Abmelden</button>
-      </div>
-    </div>
+    <a href="inserate.html">Meine Inserate</a>
+    <a href="#" id="logoutBtn">Abmelden</a>
   </nav>
 </header>
 
 <section class="container">
   <h2>Mein Profil</h2>
+
   <label for="name">Name</label>
   <input type="text" id="name" placeholder="Dein Name" />
 
   <label for="email">E-Mail</label>
-  <input type="email" id="email" />
+  <input type="email" id="email" disabled />
 
   <label for="phone">Telefon</label>
   <input type="text" id="phone" />
@@ -174,16 +121,6 @@
   <label for="password">Neues Passwort</label>
   <input type="password" id="password" />
   <button onclick="changePassword()">Passwort ändern</button>
-
-  <div class="history">
-    <h2>Meine Mietvorgänge</h2>
-    <div id="rental-history"></div>
-  </div>
-
-  <div class="history">
-    <h2>Anfragen zu meinen Inseraten</h2>
-    <div id="incoming-requests"></div>
-  </div>
 </section>
 
 <footer>
@@ -193,7 +130,7 @@
 <script>
   const supabase = window.supabase.createClient(
     'https://flnjalgqtkqycsaymmbd.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
   );
 
   async function loadProfile() {
@@ -205,7 +142,6 @@
 
     const user = session.user;
     document.getElementById('email').value = user.email;
-    document.getElementById('profileName').textContent = user.email.split('@')[0];
 
     const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single();
     if (data) {
@@ -214,9 +150,6 @@
       document.getElementById('city').value = data.city || '';
       document.getElementById('bio').value = data.bio || '';
     }
-
-    loadRentalHistory(user.id);
-    loadListingRequests(user.id);
   }
 
   async function saveProfile() {
@@ -228,6 +161,7 @@
       city: document.getElementById('city').value,
       bio: document.getElementById('bio').value
     };
+
     await supabase.from('profiles').upsert(updates);
     alert("Profil gespeichert!");
   }
@@ -243,88 +177,9 @@
     }
   }
 
-  async function loadRentalHistory(userId) {
-    const container = document.getElementById("rental-history");
-    container.innerHTML = "";
-    const { data, error } = await supabase
-      .from('rentals')
-      .select('title, start_date, end_date, status')
-      .eq('user_id', userId)
-      .order('start_date', { ascending: false });
-
-    if (error || !data.length) {
-      container.innerHTML = "<p>Keine Mietvorgänge vorhanden.</p>";
-      return;
-    }
-
-    data.forEach(rental => {
-      const div = document.createElement("div");
-      div.className = "history-item";
-      div.innerHTML = `
-        <strong>${rental.title}</strong><br>
-        <small>${rental.start_date} bis ${rental.end_date} – ${rental.status}</small>
-      `;
-      container.appendChild(div);
-    });
-  }
-
-  async function loadListingRequests(userId) {
-    const container = document.getElementById("incoming-requests");
-    container.innerHTML = "";
-
-    const { data: listings } = await supabase.from('listings').select('id').eq('user_id', userId);
-    if (!listings?.length) {
-      container.innerHTML = "<p>Keine Inserate gefunden.</p>";
-      return;
-    }
-
-    const listingIds = listings.map(l => l.id);
-    const { data: requests } = await supabase
-      .from('rentals')
-      .select('id, user_id, listing_id, start_date, end_date, status')
-      .in('listing_id', listingIds);
-
-    if (!requests?.length) {
-      container.innerHTML = "<p>Keine Anfragen gefunden.</p>";
-      return;
-    }
-
-    for (const r of requests) {
-      const div = document.createElement("div");
-      div.className = "history-item";
-      div.innerHTML = `
-        <strong>Inserat-ID: ${r.listing_id}</strong><br>
-        <small>${r.start_date} bis ${r.end_date} – Status: ${r.status}</small>
-        ${r.status === 'offen' ? `<div class="action-buttons">
-          <button onclick="updateRequestStatus(${r.id}, 'angenommen')">Annehmen</button>
-          <button onclick="updateRequestStatus(${r.id}, 'abgelehnt')">Ablehnen</button>
-        </div>` : ''}
-      `;
-      container.appendChild(div);
-    }
-  }
-
-  async function updateRequestStatus(id, status) {
-    const { error } = await supabase.from('rentals').update({ status }).eq('id', id);
-    if (error) return alert("Fehler: " + error.message);
-    loadProfile();
-  }
-
-  async function logout() {
+  document.getElementById("logoutBtn").addEventListener("click", async () => {
     await supabase.auth.signOut();
     window.location.href = "login.html";
-  }
-
-  document.getElementById("profileMenu").addEventListener("click", () => {
-    document.getElementById("profileMenu").classList.toggle("open");
-  });
-
-  document.getElementById("logoutBtn").addEventListener("click", logout);
-
-  window.addEventListener("click", (e) => {
-    if (!document.getElementById("profileMenu").contains(e.target)) {
-      document.getElementById("profileMenu").classList.remove("open");
-    }
   });
 
   loadProfile();
