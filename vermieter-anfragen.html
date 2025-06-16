@@ -56,6 +56,27 @@
     }
     .accept { background: #2e7d32; color: white; }
     .decline { background: #c62828; color: white; }
+
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #2e7d32;
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      font-weight: 600;
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .toast.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
   </style>
 </head>
 <body>
@@ -65,16 +86,29 @@
       <a href="index.html">Zurück</a>
     </nav>
   </header>
+
   <main>
     <h2>Erhaltene Mietanfragen</h2>
     <div id="requests">Lade Anfragen...</div>
   </main>
+
+  <div id="toast" class="toast">Aktion erfolgreich</div>
 
   <script>
     const supabase = window.supabase.createClient(
       'https://flnjalgqtkqycsaymmbd.supabase.co',
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
     );
+
+    function showToast(msg, isError = false) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.style.backgroundColor = isError ? '#c62828' : '#2e7d32';
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
 
     async function loadRequests() {
       const { data: { session } } = await supabase.auth.getSession();
@@ -129,16 +163,16 @@
         .from('rentals')
         .update({ status })
         .eq('id', id);
+
       if (error) {
-        alert("Fehler beim Aktualisieren: " + error.message);
+        showToast("Fehler: " + error.message, true);
       } else {
-        loadRequests(); // Seite neu laden
+        showToast(`Anfrage wurde ${status === 'angenommen' ? 'angenommen' : 'abgelehnt'}`);
+        loadRequests();
       }
     }
 
-    // Wichtig: Funktion für HTML-Buttons global verfügbar machen
     window.updateStatus = updateStatus;
-
     loadRequests();
   </script>
 </body>
