@@ -127,6 +127,14 @@
       border-radius: 10px;
       padding: 1rem;
       margin-bottom: 1rem;
+      cursor: pointer;
+    }
+    .result-card img {
+      width: 100%;
+      max-height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
     }
     .result-card h3 { margin-bottom: 0.5rem; }
 
@@ -140,14 +148,12 @@
   </style>
 </head>
 <body>
-
 <script>
   const hash = window.location.hash;
   if (hash.includes("type=recovery")) {
     window.location.href = "/update-password.html" + hash;
   }
 </script>
-
 <header>
   <h1>Locorent</h1>
   <nav id="nav-links"></nav>
@@ -200,7 +206,7 @@
 <script>
   const supabase = window.supabase.createClient(
     'https://flnjalgqtkqycsaymmbd.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
   );
 
   async function updateNav() {
@@ -253,7 +259,9 @@
     items.forEach(item => {
       const card = document.createElement('div');
       card.className = 'result-card';
+      card.onclick = () => window.location.href = `mietobjekt.html?id=${item.id}`;
       card.innerHTML = `
+        ${item.image_url ? `<img src="${item.image_url}" alt="${item.title}" />` : ''}
         <h3>${item.title}</h3>
         <p><strong>Kategorie:</strong> ${item.category || 'Unbekannt'}</p>
         <p><strong>Preis pro Tag:</strong> ${item.price_per_day ? item.price_per_day + ' €' : 'k. A.'}</p>
@@ -288,10 +296,7 @@
     const keyword = document.getElementById('search-input').value.trim().toLowerCase();
     const category = document.getElementById('category-select').value;
 
-    loadListings({
-      keyword,
-      category
-    });
+    loadListings({ keyword, category });
   }
 
   function filterByCategory(cat) {
@@ -305,4 +310,3 @@
 
 </body>
 </html>
-
