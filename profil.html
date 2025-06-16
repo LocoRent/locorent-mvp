@@ -14,6 +14,7 @@
       --white: #fff;
     }
 
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Poppins', sans-serif;
       background-color: var(--light);
@@ -21,7 +22,6 @@
       display: flex;
       flex-direction: column;
       min-height: 100vh;
-      margin: 0;
     }
 
     header {
@@ -42,7 +42,7 @@
 
     .container {
       max-width: 600px;
-      margin: 3rem auto;
+      margin: 3rem auto 2rem auto;
       background: white;
       padding: 2rem;
       border-radius: 12px;
@@ -78,17 +78,53 @@
 
     button:hover { background-color: #1b5e20; }
 
-    .avatar-container {
-      text-align: center;
-      margin-bottom: 2rem;
+    .gallery {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 1rem;
     }
 
-    .avatar-container img {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
+    .gallery h3 {
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      padding: 0.8rem;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+    }
+
+    .card img {
+      width: 100%;
+      height: 140px;
       object-fit: cover;
+      border-radius: 8px;
       margin-bottom: 0.5rem;
+    }
+
+    .card h4 {
+      margin: 0.3rem 0;
+      font-size: 1.1rem;
+    }
+
+    .card p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: #555;
     }
 
     footer {
@@ -114,12 +150,6 @@
 <section class="container">
   <h2>Mein Profil</h2>
 
-  <div class="avatar-container">
-    <img id="avatar-preview" src="" alt="Profilbild" />
-    <br/>
-    <input type="file" id="avatar-upload" accept="image/*" />
-  </div>
-
   <label for="name">Name</label>
   <input type="text" id="name" placeholder="Dein Name" />
 
@@ -142,6 +172,13 @@
   <button onclick="changePassword()">Passwort ändern</button>
 </section>
 
+<section class="gallery">
+  <h3>Meine Inserate</h3>
+  <div id="listing-grid" class="grid">
+    <p>Wird geladen...</p>
+  </div>
+</section>
+
 <footer>
   © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
 </footer>
@@ -152,33 +189,31 @@
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
   );
 
-  let userId = null;
-
   async function loadProfile() {
     const { data: { session } } = await supabase.auth.getSession();
-    if (!session?.user) return window.location.href = "login.html";
+    if (!session?.user) {
+      window.location.href = "login.html";
+      return;
+    }
 
     const user = session.user;
-    userId = user.id;
     document.getElementById('email').value = user.email;
 
     const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single();
-
     if (data) {
       document.getElementById('name').value = data.name || '';
       document.getElementById('phone').value = data.phone || '';
       document.getElementById('city').value = data.city || '';
       document.getElementById('bio').value = data.bio || '';
-
-      const avatarUrl = data.avatar_url
-        || `https://ui-avatars.com/api/?name=${encodeURIComponent(data.name || user.email)}&background=66bb6a&color=fff`;
-      document.getElementById('avatar-preview').src = avatarUrl;
     }
+
+    loadUserListings(user.id);
   }
 
   async function saveProfile() {
+    const { data: { user } } = await supabase.auth.getUser();
     const updates = {
-      id: userId,
+      id: user.id,
       name: document.getElementById('name').value,
       phone: document.getElementById('phone').value,
       city: document.getElementById('city').value,
@@ -200,28 +235,35 @@
     }
   }
 
-  async function uploadAvatar(file) {
-    const fileExt = file.name.split('.').pop();
-    const fileName = `${userId}.${fileExt}`;
-    const filePath = `${fileName}`;
+  async function loadUserListings(userId) {
+    const { data, error } = await supabase
+      .from('listings')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false });
 
-    const { error: uploadError } = await supabase.storage
-      .from('avatars')
-      .upload(filePath, file, { upsert: true });
+    const grid = document.getElementById('listing-grid');
+    grid.innerHTML = '';
 
-    if (uploadError) return alert("Fehler beim Hochladen: " + uploadError.message);
+    if (error || !data || data.length === 0) {
+      grid.innerHTML = '<p>Keine Inserate gefunden.</p>';
+      return;
+    }
 
-    const { data } = supabase.storage.from('avatars').getPublicUrl(filePath);
-    document.getElementById('avatar-preview').src = data.publicUrl;
+    data.forEach(listing => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.onclick = () => window.location.href = `mietobjekt.html?id=${listing.id}`;
 
-    await supabase.from('profiles').update({ avatar_url: data.publicUrl }).eq('id', userId);
-    alert("Avatar aktualisiert!");
+      card.innerHTML = `
+        ${listing.image_url ? `<img src="${listing.image_url}" alt="${listing.title}" />` : ''}
+        <h4>${listing.title}</h4>
+        <p>${listing.price_per_day} € pro Tag</p>
+      `;
+
+      grid.appendChild(card);
+    });
   }
-
-  document.getElementById("avatar-upload").addEventListener("change", async (e) => {
-    const file = e.target.files[0];
-    if (file) await uploadAvatar(file);
-  });
 
   document.getElementById("logoutBtn").addEventListener("click", async () => {
     await supabase.auth.signOut();
