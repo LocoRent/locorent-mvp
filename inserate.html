@@ -210,25 +210,12 @@
           <p class="price">${i.price_per_day} € / Tag</p>
         </div>
         <div class="actions">
-          <button onclick="editListing('${i.id}')">Bearbeiten</button>
+          <button onclick="window.location.href='bearbeiten.html?id=${i.id}'">Bearbeiten</button>
           <button class="delete" onclick="deleteListing('${i.id}')">Löschen</button>
         </div>
       `;
       gallery.appendChild(div);
     });
-  }
-
-  async function editListing(id) {
-    const { data: i, error } = await supabase.from('listings').select('*').eq('id', id).single();
-    if (error) return alert('Fehler beim Laden.');
-
-    editId = id;
-    document.getElementById('form-title').textContent = 'Inserat bearbeiten';
-    document.getElementById('title-input').value = i.title;
-    document.getElementById('category-input').value = i.category;
-    document.getElementById('price-input').value = i.price_per_day;
-    document.getElementById('desc-input').value = i.description;
-    document.getElementById('image-input').value = i.image_url || '';
   }
 
   async function deleteListing(id) {
@@ -247,20 +234,17 @@
 
     if (!title || !price) return alert('Titel und Preis sind Pflichtfelder.');
 
-    const payload = { title, category, price_per_day: price, description, image_url };
+    const { data: { user } } = await supabase.auth.getUser();
+    const payload = {
+      title, category, price_per_day: price,
+      description, image_url, user_id: user.id
+    };
 
-    let opts = editId
-      ? supabase.from('listings').update(payload).eq('id', editId)
-      : supabase.from('listings').insert(payload);
-
-    const { error } = await opts;
+    const { error } = await supabase.from('listings').insert(payload);
     if (error) return alert('Fehler: ' + error.message);
 
     alert('Inserat gespeichert!');
-    editId = null;
-    document.getElementById('form-title').textContent = 'Neues Inserat erstellen';
     document.querySelectorAll('#image-input, #title-input, #category-input, #price-input, #desc-input').forEach(i => i.value = '');
-
     loadGallery();
   });
 
