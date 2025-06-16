@@ -217,6 +217,7 @@
     if (session?.user) {
       const menu = document.createElement('div');
       menu.className = 'profile-menu';
+
       const btn = document.createElement('button');
       btn.className = 'profile-button';
       btn.textContent = session.user.email;
@@ -227,6 +228,7 @@
         <a href="profil.html">Mein Profil</a>
         <a href="inserate.html">Meine Inserate</a>
         <a href="vermieter-anfragen.html">Mietanfragen</a>
+        <a href="nachrichten.html">Nachrichten</a>
         <a href="#" id="logout-link">Logout</a>
       `;
 
@@ -278,7 +280,6 @@
     if (filters.category) query = query.eq('category', filters.category);
 
     const { data, error } = await query;
-
     if (error) {
       console.error('Fehler beim Laden:', error.message);
       return;
@@ -290,7 +291,6 @@
   function search() {
     const keyword = document.getElementById('search-input').value.trim().toLowerCase();
     const category = document.getElementById('category-select').value;
-
     loadListings({ keyword, category });
   }
 
