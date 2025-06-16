@@ -43,7 +43,7 @@
       object-fit: cover;
       margin-bottom: 1rem;
     }
-    .calendar, .booking-form, .chat {
+    .calendar, .booking-form {
       margin-top: 2rem;
       padding: 1rem;
       border: 1px solid #ccc;
@@ -70,15 +70,8 @@
     button:hover {
       background-color: #1b5e20;
     }
-    .message {
-      background: #e8f5e9;
-      padding: 0.5rem;
-      margin: 0.3rem 0;
-      border-radius: 6px;
-    }
-    .message.sender {
-      background: #c8e6c9;
-      text-align: right;
+    .chat-link {
+      margin-top: 1rem;
     }
   </style>
 </head>
@@ -93,12 +86,6 @@
 
   <main>
     <div id="listing-details">Lade Daten...</div>
-    <div class="chat">
-      <h3>Nachrichten</h3>
-      <div id="chat-box" style="max-height: 300px; overflow-y: auto;"></div>
-      <textarea id="chat-message" rows="2" placeholder="Nachricht schreiben..."></textarea>
-      <button onclick="sendMessage()">Senden</button>
-    </div>
   </main>
 
   <script>
@@ -111,10 +98,14 @@
     const listingId = params.get('id');
     let currentUser = null;
     let listingOwnerId = null;
+    let unavailableRanges = [];
 
     async function loadListing() {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return alert("Bitte einloggen.");
+      if (!user) {
+        alert("Bitte einloggen.");
+        return;
+      }
       currentUser = user;
 
       const { data: listing, error } = await supabase
@@ -139,6 +130,10 @@
         <p><strong>Preis pro Tag:</strong> ${listing.price_per_day} €</p>
         <p><strong>Beschreibung:</strong><br>${listing.description}</p>
 
+        <div class="chat-link">
+          <button onclick="goToChat()">Nachricht an Vermieter senden</button>
+        </div>
+
         <div class="calendar">
           <label><strong>Verfügbarkeit:</strong></label><br>
           <input type="text" id="date-range" readonly />
@@ -150,10 +145,7 @@
       `;
 
       setupFlatpickr();
-      loadMessages();
     }
-
-    let unavailableRanges = [];
 
     async function loadUnavailableDates() {
       const { data, error } = await supabase
@@ -204,46 +196,13 @@
       }
     }
 
-    async function loadMessages() {
-      const { data, error } = await supabase
-        .from('messages')
-        .select('*')
-        .eq('listing_id', listingId)
-        .order('created_at', { ascending: true });
-
-      const chatBox = document.getElementById('chat-box');
-      chatBox.innerHTML = '';
-
-      if (!error && data.length) {
-        data.forEach(msg => {
-          const div = document.createElement('div');
-          div.className = 'message' + (msg.sender_id === currentUser.id ? ' sender' : '');
-          div.textContent = msg.content;
-          chatBox.appendChild(div);
-        });
-        chatBox.scrollTop = chatBox.scrollHeight;
+    function goToChat() {
+      if (!currentUser || !listingOwnerId) return;
+      if (currentUser.id === listingOwnerId) {
+        alert("Du kannst dir selbst keine Nachricht schicken.");
+        return;
       }
-    }
-
-    async function sendMessage() {
-      const text = document.getElementById('chat-message').value.trim();
-      if (!text || !listingOwnerId) return;
-
-      const receiver = currentUser.id === listingOwnerId ? null : listingOwnerId;
-
-      const { error } = await supabase.from('messages').insert({
-        sender_id: currentUser.id,
-        receiver_id: receiver,
-        listing_id: listingId,
-        content: text
-      });
-
-      if (!error) {
-        document.getElementById('chat-message').value = '';
-        loadMessages();
-      } else {
-        alert("Fehler beim Senden: " + error.message);
-      }
+      window.location.href = `nachrichten.html?listing_id=${listingId}&with=${listingOwnerId}`;
     }
 
     loadListing();
