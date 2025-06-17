@@ -40,27 +40,21 @@
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       margin-bottom: 2rem;
     }
-    .form-container h2 {
-      margin-top: 0;
-      margin-bottom: 1rem;
-    }
     .form-group {
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
     }
-    .form-group .field {
+    .field {
       flex: 1 1 200px;
       display: flex;
       flex-direction: column;
     }
-    .form-group .field label {
+    label {
       font-weight: 600;
       margin-bottom: 0.4rem;
     }
-    .form-group .field input,
-    .form-group .field textarea,
-    .form-group .field select {
+    input, textarea, select {
       padding: 0.6rem;
       border: 1px solid #ccc;
       border-radius: 6px;
@@ -176,7 +170,7 @@
     <div class="form-group">
       <div class="field">
         <label>Titel</label>
-        <input type="text" id="title-input">
+        <input type="text" id="title-input" />
       </div>
       <div class="field">
         <label>Kategorie</label>
@@ -198,7 +192,7 @@
       </div>
       <div class="field">
         <label>Preis €/Tag</label>
-        <input type="number" id="price-input">
+        <input type="number" id="price-input" />
       </div>
       <div class="field" style="flex: 1 1 100%;">
         <label>Beschreibung</label>
@@ -218,10 +212,10 @@
 </main>
 
 <script>
-  const supabase = window.supabase.createClient(
-    'https://flnjalgqtkqycsaymmbd.supabase.co',
-    'YOUR_SUPABASE_PUBLIC_ANON_KEY'
-  );
+const supabase = window.supabase.createClient(
+  'https://flnjalgqtkqycsaymmbd.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+);
 
   let uploadedImageUrls = [];
 
@@ -268,8 +262,8 @@
   }
 
   document.getElementById("save-btn").addEventListener("click", async () => {
-    const { data, error } = await supabase.auth.getUser();
-    const user = data?.user;
+    const { data: sessionData } = await supabase.auth.getSession();
+    const user = sessionData?.session?.user;
     if (!user) return alert("Nicht eingeloggt!");
 
     const title = document.getElementById('title-input').value.trim();
@@ -298,9 +292,12 @@
   });
 
   async function loadGallery() {
-    const { data, error } = await supabase.auth.getUser();
-    const user = data?.user;
-    if (!user) return;
+    const { data: sessionData } = await supabase.auth.getSession();
+    const user = sessionData?.session?.user;
+    if (!user) {
+      document.getElementById('gallery').innerHTML = 'Nicht eingeloggt.';
+      return;
+    }
 
     const { data: listings, error: listErr } = await supabase
       .from('listings')
