@@ -59,7 +59,8 @@
       margin-bottom: 0.4rem;
     }
     .form-group .field input,
-    .form-group .field textarea {
+    .form-group .field textarea,
+    .form-group .field select {
       padding: 0.6rem;
       border: 1px solid #ccc;
       border-radius: 6px;
@@ -179,7 +180,21 @@
       </div>
       <div class="field">
         <label>Kategorie</label>
-        <input type="text" id="category-input">
+        <select id="category-input">
+          <option value="">Bitte wählen</option>
+          <option value="fahrzeuge">Fahrzeuge</option>
+          <option value="transporter">Transporter</option>
+          <option value="boote">Boote</option>
+          <option value="fahrrad">Fahrräder & E-Bikes</option>
+          <option value="werkzeuge">Werkzeuge</option>
+          <option value="maschinen">Maschinen & Baugeräte</option>
+          <option value="party">Party & Event</option>
+          <option value="technik">Technik</option>
+          <option value="haushalt">Haushalt & Möbel</option>
+          <option value="garten">Garten</option>
+          <option value="freizeit">Freizeit & Sport</option>
+          <option value="baby">Baby & Kind</option>
+        </select>
       </div>
       <div class="field">
         <label>Preis €/Tag</label>
@@ -205,12 +220,11 @@
 <script>
   const supabase = window.supabase.createClient(
     'https://flnjalgqtkqycsaymmbd.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+    'YOUR_SUPABASE_PUBLIC_ANON_KEY'
   );
 
   let uploadedImageUrls = [];
 
-  // Dropzone Handling
   document.getElementById("dropzone").addEventListener("click", () => {
     const input = document.createElement("input");
     input.type = "file";
@@ -256,34 +270,28 @@
   document.getElementById("save-btn").addEventListener("click", async () => {
     const { data, error } = await supabase.auth.getUser();
     const user = data?.user;
-
-    if (!user) {
-      alert("Nicht eingeloggt!");
-      return;
-    }
+    if (!user) return alert("Nicht eingeloggt!");
 
     const title = document.getElementById('title-input').value.trim();
-    const category = document.getElementById('category-input').value.trim();
+    const category = document.getElementById('category-input').value;
     const price = parseFloat(document.getElementById('price-input').value);
     const description = document.getElementById('desc-input').value.trim();
 
-    if (!title || !price) {
-      alert("Titel und Preis sind Pflichtfelder.");
+    if (!title || !price || !category) {
+      alert("Titel, Kategorie und Preis sind Pflichtfelder.");
       return;
     }
 
     const { error: insertError } = await supabase.from('listings').insert({
-      title, category, price_per_day: price, description,
-      user_id: user.id, image_urls: uploadedImageUrls
+      title, category, price_per_day: price,
+      description, user_id: user.id,
+      image_urls: uploadedImageUrls
     });
 
-    if (insertError) {
-      alert("Fehler beim Speichern: " + insertError.message);
-      return;
-    }
+    if (insertError) return alert("Fehler beim Speichern: " + insertError.message);
 
     alert("Inserat gespeichert!");
-    document.querySelectorAll('input, textarea').forEach(el => el.value = '');
+    document.querySelectorAll('input, textarea, select').forEach(el => el.value = '');
     uploadedImageUrls = [];
     renderPreviews();
     loadGallery();
@@ -292,11 +300,7 @@
   async function loadGallery() {
     const { data, error } = await supabase.auth.getUser();
     const user = data?.user;
-
-    if (!user) {
-      document.getElementById('gallery').innerHTML = 'Nicht eingeloggt.';
-      return;
-    }
+    if (!user) return;
 
     const { data: listings, error: listErr } = await supabase
       .from('listings')
@@ -334,11 +338,8 @@
   async function deleteListing(id) {
     if (!confirm("Wirklich löschen?")) return;
     const { error } = await supabase.from('listings').delete().eq('id', id);
-    if (!error) {
-      loadGallery();
-    } else {
-      alert("Löschen fehlgeschlagen.");
-    }
+    if (!error) loadGallery();
+    else alert("Löschen fehlgeschlagen.");
   }
 
   loadGallery();
