@@ -33,51 +33,6 @@
       margin: 2rem auto;
       padding: 1rem;
     }
-    .gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 1rem;
-      margin-bottom: 2rem;
-    }
-    .card {
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      overflow: hidden;
-    }
-    .card img {
-      width: 100%;
-      height: 150px;
-      object-fit: cover;
-    }
-    .card-content {
-      padding: 0.8rem;
-    }
-    .card-content h3 {
-      margin: 0.2rem 0;
-      font-size: 1.1rem;
-    }
-    .card-content .price {
-      font-weight: 600;
-      color: #2e7d32;
-    }
-    .card .actions {
-      display: flex;
-      justify-content: space-between;
-      padding: 0.5rem 0.8rem;
-    }
-    .card .actions button {
-      background: #2e7d32;
-      color: white;
-      padding: 0.4rem 0.8rem;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    .card .actions button.delete {
-      background: #c62828;
-    }
-
     .form-container {
       background: white;
       padding: 1.5rem;
@@ -159,6 +114,50 @@
       cursor: pointer;
       font-weight: 600;
     }
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    .card img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+    }
+    .card-content {
+      padding: 0.8rem;
+    }
+    .card-content h3 {
+      margin: 0.2rem 0;
+      font-size: 1.1rem;
+    }
+    .card-content .price {
+      font-weight: 600;
+      color: #2e7d32;
+    }
+    .card .actions {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 0.8rem;
+    }
+    .card .actions button {
+      background: #2e7d32;
+      color: white;
+      padding: 0.4rem 0.8rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .card .actions button.delete {
+      background: #c62828;
+    }
   </style>
 </head>
 <body>
@@ -172,7 +171,7 @@
 
 <main>
   <section class="form-container">
-    <h2 id="form-title">Neues Inserat erstellen</h2>
+    <h2>Neues Inserat erstellen</h2>
     <div class="form-group">
       <div class="field">
         <label>Titel</label>
@@ -206,11 +205,12 @@
 <script>
   const supabase = window.supabase.createClient(
     'https://flnjalgqtkqycsaymmbd.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
   );
 
   let uploadedImageUrls = [];
 
+  // Dropzone Handling
   document.getElementById("dropzone").addEventListener("click", () => {
     const input = document.createElement("input");
     input.type = "file";
@@ -222,13 +222,13 @@
 
   async function handleFiles(files) {
     for (let file of files) {
-      const filePath = `listing-images/${Date.now()}-${file.name}`;
-      const { error } = await supabase.storage.from('listing-images').upload(filePath, file);
+      const path = `listing-images/${Date.now()}-${file.name}`;
+      const { error } = await supabase.storage.from('listing-images').upload(path, file);
       if (!error) {
-        const { data } = supabase.storage.from('listing-images').getPublicUrl(filePath);
+        const { data } = supabase.storage.from('listing-images').getPublicUrl(path);
         uploadedImageUrls.push(data.publicUrl);
       } else {
-        alert("Fehler beim Hochladen: " + error.message);
+        alert("Fehler beim Upload: " + error.message);
       }
     }
     renderPreviews();
@@ -254,33 +254,51 @@
   }
 
   document.getElementById("save-btn").addEventListener("click", async () => {
+    const { data, error } = await supabase.auth.getUser();
+    const user = data?.user;
+
+    if (!user) {
+      alert("Nicht eingeloggt!");
+      return;
+    }
+
     const title = document.getElementById('title-input').value.trim();
     const category = document.getElementById('category-input').value.trim();
     const price = parseFloat(document.getElementById('price-input').value);
     const description = document.getElementById('desc-input').value.trim();
 
-    if (!title || !price) return alert("Titel und Preis sind Pflichtfelder.");
+    if (!title || !price) {
+      alert("Titel und Preis sind Pflichtfelder.");
+      return;
+    }
 
-    const { data: { user } } = await supabase.auth.getUser();
-    const payload = {
-      title, category, price_per_day: price,
-      description, user_id: user.id,
-      image_urls: uploadedImageUrls
-    };
+    const { error: insertError } = await supabase.from('listings').insert({
+      title, category, price_per_day: price, description,
+      user_id: user.id, image_urls: uploadedImageUrls
+    });
 
-    const { error } = await supabase.from('listings').insert(payload);
-    if (error) return alert("Fehler: " + error.message);
+    if (insertError) {
+      alert("Fehler beim Speichern: " + insertError.message);
+      return;
+    }
 
     alert("Inserat gespeichert!");
+    document.querySelectorAll('input, textarea').forEach(el => el.value = '');
     uploadedImageUrls = [];
     renderPreviews();
-    document.querySelectorAll('input, textarea').forEach(el => el.value = '');
     loadGallery();
   });
 
   async function loadGallery() {
-    const { data: { user } } = await supabase.auth.getUser();
-    const { data: listings, error } = await supabase
+    const { data, error } = await supabase.auth.getUser();
+    const user = data?.user;
+
+    if (!user) {
+      document.getElementById('gallery').innerHTML = 'Nicht eingeloggt.';
+      return;
+    }
+
+    const { data: listings, error: listErr } = await supabase
       .from('listings')
       .select('*')
       .eq('user_id', user.id)
@@ -289,7 +307,7 @@
     const gallery = document.getElementById('gallery');
     gallery.innerHTML = '';
 
-    if (error || !listings) {
+    if (listErr || !listings) {
       gallery.textContent = 'Fehler beim Laden.';
       return;
     }
@@ -316,8 +334,11 @@
   async function deleteListing(id) {
     if (!confirm("Wirklich löschen?")) return;
     const { error } = await supabase.from('listings').delete().eq('id', id);
-    if (error) return alert("Löschen fehlgeschlagen.");
-    loadGallery();
+    if (!error) {
+      loadGallery();
+    } else {
+      alert("Löschen fehlgeschlagen.");
+    }
   }
 
   loadGallery();
