@@ -44,7 +44,7 @@
     }
 
     nav a {
-      color: white;
+      color: var(--white);
       margin-left: 1.5rem;
       text-decoration: none;
       font-weight: 600;
@@ -53,30 +53,23 @@
     main {
       max-width: 1200px;
       margin: 2rem auto;
-      display: flex;
+      display: grid;
+      grid-template-columns: 3fr 1fr; /* 3:1 Ratio für Hauptinhalt und Vermieter */
       gap: 2rem;
-      flex-wrap: wrap;
     }
 
-    .left, .right {
+    .left {
       padding: 2rem;
-      background: white;
+      background: var(--white);
       border-radius: var(--border-radius);
       box-shadow: 0 4px 12px var(--shadow-color);
     }
 
-    .left {
-      flex: 2;
-      min-width: 60%;
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-
     .right {
-      flex: 1;
-      min-width: 300px;
+      padding: 2rem;
       background-color: var(--light-grey);
+      border-radius: var(--border-radius);
+      box-shadow: 0 4px 12px var(--shadow-color);
     }
 
     .main-image {
@@ -129,7 +122,7 @@
     .vermieter-box {
       margin-top: 2rem;
       padding: 1.5rem;
-      background-color: var(--light-grey);
+      background-color: var(--white);
       border-radius: var(--border-radius);
       box-shadow: 0 4px 12px var(--shadow-color);
     }
@@ -153,13 +146,12 @@
     /* Mobile styling */
     @media (max-width: 768px) {
       main {
-        flex-direction: column;
+        grid-template-columns: 1fr; /* Auf Mobilgeräten wird es einspaltig */
         padding: 1rem;
       }
 
       .left, .right {
-        width: 100%;
-        margin-bottom: 1rem;
+        margin-bottom: 2rem;
       }
     }
   </style>
@@ -176,7 +168,10 @@
   </header>
 
   <main>
-    <div id="listing-details">Lade Daten...</div>
+    <div class="left" id="listing-details">Lade Daten...</div>
+    <div class="right">
+      <div class="vermieter-box" id="vermieter-details">Lade Vermieter...</div>
+    </div>
   </main>
 
   <script>
@@ -224,32 +219,24 @@
       const vermieterHTML = await loadVermieterInfo(listingOwnerId);
 
       container.innerHTML = `
-        <div class="left">
-          <h2>${listing.title}</h2>
-          <img src="${mainImage}" alt="Hauptbild" class="main-image" id="mainImage">
-          ${imageUrls.length > 1 ? `<div class="thumbnail-bar">${thumbnails}</div>` : ''}
-          <p><strong>Kategorie:</strong> ${listing.category}</p>
-          <p><strong>Preis pro Tag:</strong> ${listing.price_per_day} €</p>
-          <p><strong>Beschreibung:</strong><br>${listing.description}</p>
+        <h2>${listing.title}</h2>
+        <img src="${mainImage}" alt="Hauptbild" class="main-image" id="mainImage">
+        ${imageUrls.length > 1 ? `<div class="thumbnail-bar">${thumbnails}</div>` : ''}
+        <p><strong>Kategorie:</strong> ${listing.category}</p>
+        <p><strong>Preis pro Tag:</strong> ${listing.price_per_day} €</p>
+        <p><strong>Beschreibung:</strong><br>${listing.description}</p>
 
-          <div class="chat-link">
-            <button onclick="goToChat()">Nachricht an Vermieter senden</button>
-          </div>
-
-          <div class="calendar">
-            <label><strong>Verfügbarkeit:</strong></label><br>
-            <input type="text" id="date-range" readonly />
-          </div>
-
-          <div class="booking-form">
-            <button onclick="requestBooking()">Mietanfrage senden</button>
-          </div>
+        <div class="chat-link">
+          <button onclick="goToChat()">Nachricht an Vermieter senden</button>
         </div>
-        <div class="right">
-          <div class="vermieter-box">
-            <h3>Vermieter</h3>
-            ${vermieterHTML}
-          </div>
+
+        <div class="calendar">
+          <label><strong>Verfügbarkeit:</strong></label><br>
+          <input type="text" id="date-range" readonly />
+        </div>
+
+        <div class="booking-form">
+          <button onclick="requestBooking()">Mietanfrage senden</button>
         </div>
       `;
 
@@ -275,6 +262,7 @@
       }
 
       return `
+        <h3>Vermieter Informationen</h3>
         <p><strong>Name:</strong> ${profile.name || 'Unbekannt'}</p>
         <p><strong>Telefon:</strong> ${profile.phone || 'Unbekannt'}</p>
         <p><strong>Wohnort:</strong> ${profile.city || 'Unbekannt'}</p>
