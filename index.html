@@ -1,6 +1,6 @@
-<!-- AB HIER DEIN HTML -->
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -9,246 +9,332 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
-      --primary: #2e7d32;
-      --secondary: #a5d6a7;
-      --light: #f1f8e9;
-      --dark: #1b5e20;
-      --accent: #66bb6a;
+      --primary-color: #2e7d32;
+      --secondary-color: #a5d6a7;
+      --background-color: #f1f8e9;
+      --dark-color: #1b5e20;
+      --highlight-color: #66bb6a;
       --white: #fff;
+      --gray-light: #f7f7f7;
+      --gray-dark: #333;
+      --border-radius: 12px;
+      --shadow-color: rgba(0, 0, 0, 0.1);
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Poppins', sans-serif; background-color: var(--light); color: var(--dark); }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--background-color);
+      color: var(--gray-dark);
+      line-height: 1.6;
+    }
 
     header {
-      background-color: var(--primary);
-      color: white;
-      padding: 1rem 2rem;
+      background-color: var(--primary-color);
+      color: var(--white);
+      padding: 1.5rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
     }
-    nav a {
-      margin-left: 1.5rem;
-      text-decoration: none;
-      color: white;
+
+    header h1 {
+      font-size: 1.8rem;
       font-weight: 600;
     }
 
-    .hero, .category-grid, .results, footer {
-      max-width: 1000px;
-      margin: 2rem auto;
-      padding: 0 1rem;
+    nav a {
+      color: var(--white);
+      margin-left: 1.5rem;
+      text-decoration: none;
+      font-weight: 600;
     }
+
+    nav a:hover {
+      border-bottom: 2px solid var(--highlight-color);
+    }
+
     .hero {
-      background-color: white;
-      padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      background-color: var(--white);
+      padding: 3rem 2rem;
+      border-radius: var(--border-radius);
+      box-shadow: 0 2px 12px var(--shadow-color);
+      margin-top: 2rem;
     }
+
     .search-row {
       display: flex;
-      gap: 1rem;
       flex-wrap: wrap;
+      gap: 1rem;
       margin-bottom: 1rem;
     }
+
     .search-row input,
     .search-row select {
-      padding: 0.8rem;
+      padding: 1rem;
       border: 1px solid #ccc;
       border-radius: 8px;
       font-size: 1rem;
       flex: 1;
       min-width: 200px;
     }
+
     .search-row button {
-      padding: 0.8rem 1.5rem;
-      background-color: var(--accent);
-      color: white;
+      padding: 1rem 2rem;
+      background-color: var(--highlight-color);
+      color: var(--white);
       font-weight: 600;
       border: none;
       border-radius: 8px;
       cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .search-row button:hover {
+      background-color: var(--secondary-color);
     }
 
     .category-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 1rem;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
     }
+
     .category-card {
-      background-color: var(--secondary);
-      padding: 1rem;
-      border-radius: 10px;
+      background-color: var(--secondary-color);
+      padding: 2rem;
+      border-radius: 12px;
       text-align: center;
       font-weight: 600;
       cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .category-card:hover {
+      transform: scale(1.05);
+      background-color: var(--highlight-color);
+      color: var(--white);
+    }
+
+    .category-card i {
+      font-size: 2rem;
+      margin-bottom: 1rem;
     }
 
     .result-card {
-      background-color: white;
+      background-color: var(--white);
       border-radius: 10px;
       padding: 1rem;
-      margin-bottom: 1rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      box-shadow: 0 2px 8px var(--shadow-color);
+      margin-bottom: 1.5rem;
       cursor: pointer;
+      transition: transform 0.2s ease;
     }
+
+    .result-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 16px var(--shadow-color);
+    }
+
     .result-card img {
       width: 100%;
-      max-height: 200px;
+      height: 200px;
       object-fit: cover;
       border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+
+    .result-card h3 {
       margin-bottom: 0.5rem;
+      font-size: 1.2rem;
+      font-weight: 600;
     }
 
     footer {
       padding: 2rem;
       text-align: center;
-      background-color: var(--primary);
-      color: white;
-      border-radius: 12px;
+      background-color: var(--primary-color);
+      color: var(--white);
+      border-radius: var(--border-radius);
+      margin-top: 2rem;
     }
   </style>
 </head>
+
 <body>
 
-<header>
-  <h1>Locorent</h1>
-  <nav id="nav-links"></nav>
-</header>
+  <header>
+    <h1>Locorent</h1>
+    <nav id="nav-links"></nav>
+  </header>
 
-<section class="hero">
-  <div class="search-row">
-    <input type="text" placeholder="Was suchst du?" id="search-input" />
-    <select id="category-select">
-      <option value="">Alle Kategorien</option>
-      <option value="fahrzeuge">Fahrzeuge</option>
-      <option value="transporter">Transporter</option>
-      <option value="boote">Boote</option>
-      <option value="fahrrad">Fahrräder & E-Bikes</option>
-      <option value="werkzeuge">Werkzeuge</option>
-      <option value="maschinen">Maschinen & Baugeräte</option>
-      <option value="party">Party & Event</option>
-      <option value="technik">Technik</option>
-      <option value="haushalt">Haushalt & Möbel</option>
-      <option value="garten">Garten</option>
-      <option value="freizeit">Freizeit & Sport</option>
-      <option value="baby">Baby & Kind</option>
-    </select>
-    <button onclick="search()">Suchen</button>
-  </div>
+  <section class="hero">
+    <div class="search-row">
+      <input type="text" placeholder="Was suchst du?" id="search-input" />
+      <select id="category-select">
+        <option value="">Alle Kategorien</option>
+        <option value="fahrzeuge">Fahrzeuge</option>
+        <option value="transporter">Transporter</option>
+        <option value="boote">Boote</option>
+        <option value="fahrrad">Fahrräder & E-Bikes</option>
+        <option value="werkzeuge">Werkzeuge</option>
+        <option value="maschinen">Maschinen & Baugeräte</option>
+        <option value="party">Party & Event</option>
+        <option value="technik">Technik</option>
+        <option value="haushalt">Haushalt & Möbel</option>
+        <option value="garten">Garten</option>
+        <option value="freizeit">Freizeit & Sport</option>
+        <option value="baby">Baby & Kind</option>
+      </select>
+      <button onclick="search()">Suchen</button>
+    </div>
 
-  <div class="category-grid">
-    <div class="category-card" onclick="filterByCategory('fahrzeuge')">🚗 Fahrzeuge</div>
-    <div class="category-card" onclick="filterByCategory('transporter')">🚚 Transporter</div>
-    <div class="category-card" onclick="filterByCategory('boote')">🛥️ Boote</div>
-    <div class="category-card" onclick="filterByCategory('fahrrad')">🚴 Fahrräder</div>
-    <div class="category-card" onclick="filterByCategory('werkzeuge')">🔧 Werkzeuge</div>
-    <div class="category-card" onclick="filterByCategory('maschinen')">🏗️ Maschinen</div>
-    <div class="category-card" onclick="filterByCategory('party')">🎉 Party</div>
-    <div class="category-card" onclick="filterByCategory('technik')">💻 Technik</div>
-    <div class="category-card" onclick="filterByCategory('haushalt')">🏠 Haushalt</div>
-    <div class="category-card" onclick="filterByCategory('garten')">🌿 Garten</div>
-    <div class="category-card" onclick="filterByCategory('freizeit')">🏸 Freizeit</div>
-    <div class="category-card" onclick="filterByCategory('baby')">👶 Baby</div>
-  </div>
+    <div class="category-grid">
+      <div class="category-card" onclick="filterByCategory('fahrzeuge')">
+        <i class="fas fa-car"></i> Fahrzeuge
+      </div>
+      <div class="category-card" onclick="filterByCategory('transporter')">
+        <i class="fas fa-truck"></i> Transporter
+      </div>
+      <div class="category-card" onclick="filterByCategory('boote')">
+        <i class="fas fa-ship"></i> Boote
+      </div>
+      <div class="category-card" onclick="filterByCategory('fahrrad')">
+        <i class="fas fa-bicycle"></i> Fahrräder
+      </div>
+      <div class="category-card" onclick="filterByCategory('werkzeuge')">
+        <i class="fas fa-wrench"></i> Werkzeuge
+      </div>
+      <div class="category-card" onclick="filterByCategory('maschinen')">
+        <i class="fas fa-cogs"></i> Maschinen
+      </div>
+      <div class="category-card" onclick="filterByCategory('party')">
+        <i class="fas fa-cocktail"></i> Party
+      </div>
+      <div class="category-card" onclick="filterByCategory('technik')">
+        <i class="fas fa-laptop"></i> Technik
+      </div>
+      <div class="category-card" onclick="filterByCategory('haushalt')">
+        <i class="fas fa-home"></i> Haushalt
+      </div>
+      <div class="category-card" onclick="filterByCategory('garten')">
+        <i class="fas fa-leaf"></i> Garten
+      </div>
+      <div class="category-card" onclick="filterByCategory('freizeit')">
+        <i class="fas fa-futbol"></i> Freizeit
+      </div>
+      <div class="category-card" onclick="filterByCategory('baby')">
+        <i class="fas fa-baby"></i> Baby
+      </div>
+    </div>
 
-  <div class="results" id="results"></div>
-</section>
+    <div class="results" id="results"></div>
+  </section>
 
-<footer>
-  © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
-</footer>
+  <footer>
+    © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
+  </footer>
 
-<script>
-  const supabase = window.supabase.createClient(
-    'https://flnjalgqtkqycsaymmbd.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-  );
+  <script>
+    const supabase = window.supabase.createClient(
+      'https://flnjalgqtkqycsaymmbd.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+    );
 
-  async function updateNav() {
-    const { data: { session } } = await supabase.auth.getSession();
-    const nav = document.getElementById('nav-links');
-    nav.innerHTML = '';
+    async function updateNav() {
+      const { data: { session } } = await supabase.auth.getSession();
+      const nav = document.getElementById('nav-links');
+      nav.innerHTML = '';
 
-    if (session?.user) {
-      nav.innerHTML = `
-        <a href="profil.html">Mein Profil</a>
-        <a href="inserate.html">Meine Inserate</a>
-        <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-        <a href="#" onclick="logout()">Logout</a>
-      `;
-    } else {
-      nav.innerHTML = `
-        <a href="login.html">Einloggen</a>
-        <a href="register.html">Registrieren</a>
-      `;
-    }
-  }
-
-  async function logout() {
-    await supabase.auth.signOut();
-    window.location.href = "login.html";
-  }
-
-  async function loadListings(filters = {}) {
-    let query = supabase.from('listings').select('*').order('created_at', { ascending: false });
-
-    if (filters.keyword) {
-      query = query.ilike('title', `%${filters.keyword}%`);
-    }
-    if (filters.category) {
-      query = query.eq('category', filters.category.toLowerCase());
-    }
-
-    const { data, error } = await query;
-    if (error) {
-      console.error('Fehler beim Laden:', error.message);
-      return;
-    }
-
-    renderResults(data);
-  }
-
-  function renderResults(items) {
-    const container = document.getElementById("results");
-    container.innerHTML = "";
-
-    if (!items || items.length === 0) {
-      container.innerHTML = "<p>Keine passenden Angebote gefunden.</p>";
-      return;
+      if (session?.user) {
+        nav.innerHTML = `
+          <a href="profil.html">Mein Profil</a>
+          <a href="inserate.html">Meine Inserate</a>
+          <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+          <a href="#" onclick="logout()">Logout</a>
+        `;
+      } else {
+        nav.innerHTML = `
+          <a href="login.html">Einloggen</a>
+          <a href="register.html">Registrieren</a>
+        `;
+      }
     }
 
-    items.forEach(item => {
-      const image = item.image_urls?.[0] || item.image_url || 'https://via.placeholder.com/400x200?text=Kein+Bild';
+    async function logout() {
+      await supabase.auth.signOut();
+      window.location.href = "login.html";
+    }
 
-      const card = document.createElement("div");
-      card.className = "result-card";
-      card.onclick = () => window.location.href = `mietobjekt.html?id=${item.id}`;
-      card.innerHTML = `
-        <img src="${image}" alt="${item.title}" />
-        <h3>${item.title}</h3>
-        <p><strong>Kategorie:</strong> ${item.category || 'Unbekannt'}</p>
-        <p><strong>Preis pro Tag:</strong> ${item.price_per_day || 'k. A.'} €</p>
-        <p>${item.description || ''}</p>
-      `;
-      container.appendChild(card);
-    });
-  }
+    async function loadListings(filters = {}) {
+      let query = supabase.from('listings').select('*').order('created_at', { ascending: false });
 
-  function search() {
-    const keyword = document.getElementById("search-input").value.trim();
-    const category = document.getElementById("category-select").value.trim();
-    loadListings({ keyword, category });
-  }
+      if (filters.keyword) {
+        query = query.ilike('title', `%${filters.keyword}%`);
+      }
+      if (filters.category) {
+        query = query.eq('category', filters.category.toLowerCase());
+      }
 
-  function filterByCategory(category) {
-    document.getElementById("category-select").value = category;
-    search();
-  }
+      const { data, error } = await query;
+      if (error) {
+        console.error('Fehler beim Laden:', error.message);
+        return;
+      }
 
-  updateNav();
-  loadListings();
-</script>
+      renderResults(data);
+    }
+
+    function renderResults(items) {
+      const container = document.getElementById("results");
+      container.innerHTML = "";
+
+      if (!items || items.length === 0) {
+        container.innerHTML = "<p>Keine passenden Angebote gefunden.</p>";
+        return;
+      }
+
+      items.forEach(item => {
+        const image = item.image_urls?.[0] || item.image_url || 'https://via.placeholder.com/400x200?text=Kein+Bild';
+
+        const card = document.createElement("div");
+        card.className = "result-card";
+        card.onclick = () => window.location.href = `mietobjekt.html?id=${item.id}`;
+        card.innerHTML = `
+          <img src="${image}" alt="${item.title}" />
+          <h3>${item.title}</h3>
+          <p><strong>Kategorie:</strong> ${item.category || 'Unbekannt'}</p>
+          <p><strong>Preis pro Tag:</strong> ${item.price_per_day || 'k. A.'} €</p>
+          <p>${item.description || ''}</p>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function search() {
+      const keyword = document.getElementById("search-input").value.trim();
+      const category = document.getElementById("category-select").value.trim();
+      loadListings({ keyword, category });
+    }
+
+    function filterByCategory(category) {
+      document.getElementById("category-select").value = category;
+      search();
+    }
+
+    updateNav();
+    loadListings();
+  </script>
 
 </body>
+
 </html>
