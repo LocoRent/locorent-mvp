@@ -197,9 +197,9 @@
         <div class="right">
           <div class="vermieter-box">
             <h3>Vermieter</h3>
-            <p><strong>Name:</strong> <span id="vermieter-name"></span></p>
-            <p><strong>Wohnort:</strong> <span id="vermieter-city"></span></p>
-            <p><strong>Email:</strong> <span id="vermieter-email"></span></p>
+            <p><strong>Name:</strong> <span id="vermieter-name">Lade Name...</span></p>
+            <p><strong>Wohnort:</strong> <span id="vermieter-city">Lade Wohnort...</span></p>
+            <p><strong>Email:</strong> <span id="vermieter-email">Lade E-Mail...</span></p>
           </div>
         </div>
       </div>
@@ -223,9 +223,11 @@
       .single();
 
     if (error || !profile) {
+      console.error("Fehler beim Laden der Vermieterinformationen:", error);
       return;
     }
 
+    // Setze die Vermieterinformationen in die HTML-Elemente
     document.getElementById('vermieter-name').textContent = profile.name || 'Unbekannt';
     document.getElementById('vermieter-city').textContent = profile.city || 'Unbekannt';
     document.getElementById('vermieter-email').textContent = profile.email || 'Unbekannt';
