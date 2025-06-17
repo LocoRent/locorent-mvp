@@ -9,129 +9,128 @@
   <style>
     :root {
       --primary: #2e7d32;
+      --secondary: #a5d6a7;
+      --light: #f1f8e9;
+      --dark: #1b5e20;
       --accent: #66bb6a;
-      --background: #f1f8e9;
-      --text: #1b5e20;
-      --light: #ffffff;
-      --shadow: rgba(0, 0, 0, 0.1);
+      --white: #fff;
     }
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    body {
-      font-family: 'Poppins', sans-serif;
-      background-color: var(--background);
-      color: var(--text);
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Poppins', sans-serif; background-color: var(--light); color: var(--dark); }
 
     header {
       background-color: var(--primary);
+      color: white;
       padding: 1rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      color: white;
     }
-    header nav a {
-      color: white;
+    header h1 { font-size: 1.8rem; }
+    nav a {
+      margin-left: 1.5rem;
       text-decoration: none;
-      margin-left: 1rem;
+      color: white;
       font-weight: 600;
     }
 
-    .hero {
-      background: white;
+    .hero, .category-grid, .results, footer {
+      max-width: 1000px;
       margin: 2rem auto;
-      max-width: 960px;
+      padding: 0 1rem;
+    }
+
+    .hero {
+      background-color: white;
       padding: 2rem;
       border-radius: 12px;
-      box-shadow: 0 4px 12px var(--shadow);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
-    .hero h2 {
-      margin-bottom: 1rem;
-      font-size: 1.5rem;
-    }
+
     .search-row {
       display: flex;
-      flex-wrap: wrap;
       gap: 1rem;
-      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
     }
+
     .search-row input,
     .search-row select {
-      flex: 1;
       padding: 0.8rem;
       border: 1px solid #ccc;
       border-radius: 8px;
       font-size: 1rem;
-      min-width: 150px;
+      flex: 1;
+      min-width: 200px;
     }
+
     .search-row button {
+      padding: 0.8rem 1.5rem;
       background-color: var(--accent);
       color: white;
-      padding: 0.8rem 1.2rem;
       font-weight: 600;
       border: none;
       border-radius: 8px;
       cursor: pointer;
     }
 
+    .search-row button:hover {
+      background-color: var(--primary);
+    }
+
     .category-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
       gap: 1rem;
-      margin-bottom: 2rem;
+      margin-top: 2rem;
     }
+
     .category-card {
-      background-color: var(--primary);
-      color: white;
+      background-color: var(--secondary);
       padding: 1rem;
       border-radius: 10px;
       text-align: center;
+      font-weight: 600;
       cursor: pointer;
-      transition: background 0.2s ease;
-    }
-    .category-card:hover {
-      background-color: var(--accent);
+      transition: background-color 0.2s ease;
     }
 
-    .results {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 1.5rem;
+    .category-card:hover {
+      background-color: var(--accent);
+      color: white;
     }
+
     .result-card {
-      background-color: white;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 2px 8px var(--shadow);
-      transition: transform 0.2s ease;
+      background-color: var(--white);
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
       cursor: pointer;
+      transition: box-shadow 0.2s ease;
     }
+
     .result-card:hover {
-      transform: translateY(-4px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
+
     .result-card img {
       width: 100%;
-      height: 180px;
+      max-height: 200px;
       object-fit: cover;
-    }
-    .result-content {
-      padding: 1rem;
-    }
-    .result-content h3 {
+      border-radius: 8px;
       margin-bottom: 0.5rem;
-      font-size: 1.1rem;
+    }
+
+    .result-card h3 {
+      margin-bottom: 0.5rem;
     }
 
     footer {
+      padding: 2rem;
       text-align: center;
-      margin: 3rem auto;
-      padding: 1rem;
-      color: var(--text);
-      font-size: 0.9rem;
+      background-color: var(--primary);
+      color: white;
+      border-radius: 12px;
     }
   </style>
 </head>
@@ -143,46 +142,65 @@
 </header>
 
 <section class="hero">
-  <h2>Finde dein Mietobjekt</h2>
   <div class="search-row">
-    <input type="text" id="search-input" placeholder="Was suchst du?" />
+    <input type="text" placeholder="Was suchst du?" id="search-input" />
     <select id="category-select">
       <option value="">Alle Kategorien</option>
       <option value="fahrzeuge">Fahrzeuge</option>
+      <option value="transporter">Transporter</option>
+      <option value="boote">Boote</option>
+      <option value="fahrrad">Fahrräder & E-Bikes</option>
       <option value="werkzeuge">Werkzeuge</option>
+      <option value="maschinen">Maschinen & Baugeräte</option>
+      <option value="party">Party & Event</option>
       <option value="technik">Technik</option>
-      <option value="freizeit">Freizeit</option>
+      <option value="haushalt">Haushalt & Möbel</option>
+      <option value="garten">Garten</option>
+      <option value="freizeit">Freizeit & Sport</option>
+      <option value="baby">Baby & Kind</option>
     </select>
+    <input type="text" placeholder="PLZ oder Ort" id="location-input" disabled />
     <button onclick="search()">Suchen</button>
   </div>
 
   <div class="category-grid">
     <div class="category-card" onclick="filterByCategory('fahrzeuge')">🚗 Fahrzeuge</div>
+    <div class="category-card" onclick="filterByCategory('transporter')">🚚 Transporter</div>
+    <div class="category-card" onclick="filterByCategory('boote')">🛥️ Boote</div>
+    <div class="category-card" onclick="filterByCategory('fahrrad')">🚴 Fahrräder</div>
     <div class="category-card" onclick="filterByCategory('werkzeuge')">🔧 Werkzeuge</div>
+    <div class="category-card" onclick="filterByCategory('maschinen')">🏗️ Maschinen</div>
+    <div class="category-card" onclick="filterByCategory('party')">🎉 Party</div>
     <div class="category-card" onclick="filterByCategory('technik')">💻 Technik</div>
+    <div class="category-card" onclick="filterByCategory('haushalt')">🏠 Haushalt</div>
+    <div class="category-card" onclick="filterByCategory('garten')">🌿 Garten</div>
     <div class="category-card" onclick="filterByCategory('freizeit')">🏸 Freizeit</div>
+    <div class="category-card" onclick="filterByCategory('baby')">👶 Baby</div>
   </div>
 
   <div class="results" id="results"></div>
 </section>
 
 <footer>
-  © 2025 Locorent – Gemeinsam nachhaltiger mieten.
+  © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
 </footer>
 
 <script>
   const supabase = window.supabase.createClient(
     'https://flnjalgqtkqycsaymmbd.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' // Dein Key
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
   );
 
   async function updateNav() {
     const { data: { session } } = await supabase.auth.getSession();
     const nav = document.getElementById('nav-links');
+
     if (session?.user) {
       nav.innerHTML = `
         <a href="profil.html">Profil</a>
         <a href="inserate.html">Meine Inserate</a>
+        <a href="vermieter-anfragen.html">Anfragen</a>
+        <a href="nachrichten-inbox.html">📨 Nachrichten</a>
         <a href="#" onclick="logout()">Logout</a>
       `;
     } else {
@@ -195,48 +213,52 @@
 
   async function logout() {
     await supabase.auth.signOut();
-    window.location.reload();
-  }
-
-  async function loadListings(filters = {}) {
-    let query = supabase.from('listings').select('*').order('created_at', { ascending: false });
-    if (filters.keyword) query = query.ilike('title', `%${filters.keyword}%`);
-    if (filters.category) query = query.eq('category', filters.category);
-
-    const { data, error } = await query;
-    if (error) {
-      console.error(error.message);
-      return;
-    }
-    renderResults(data);
+    window.location.href = "login.html";
   }
 
   function renderResults(items) {
-    const container = document.getElementById('results');
-    container.innerHTML = '';
-    if (!items.length) {
-      container.innerHTML = '<p>Keine Angebote gefunden.</p>';
+    const results = document.getElementById('results');
+    results.innerHTML = '';
+
+    if (!items || items.length === 0) {
+      results.innerHTML = '<p>Keine passenden Angebote gefunden.</p>';
       return;
     }
 
     items.forEach(item => {
-      const image = item.image_urls?.[0] || 'https://via.placeholder.com/300x200?text=Kein+Bild';
+      const imageUrl = item.image_urls?.[0] || item.image_url || 'https://via.placeholder.com/600x300?text=Kein+Bild';
+
       const card = document.createElement('div');
       card.className = 'result-card';
-      card.innerHTML = `
-        <img src="${image}" alt="${item.title}">
-        <div class="result-content">
-          <h3>${item.title}</h3>
-          <p><strong>${item.price_per_day} € / Tag</strong></p>
-        </div>
-      `;
       card.onclick = () => window.location.href = `mietobjekt.html?id=${item.id}`;
-      container.appendChild(card);
+      card.innerHTML = `
+        <img src="${imageUrl}" alt="${item.title}" />
+        <h3>${item.title}</h3>
+        <p><strong>Kategorie:</strong> ${item.category || 'Unbekannt'}</p>
+        <p><strong>Preis pro Tag:</strong> ${item.price_per_day ? item.price_per_day + ' €' : 'k. A.'}</p>
+        <p>${item.description || ''}</p>
+      `;
+      results.appendChild(card);
     });
   }
 
+  async function loadListings(filters = {}) {
+    let query = supabase.from('listings').select('*').order('created_at', { ascending: false });
+
+    if (filters.keyword) query = query.like('title', `%${filters.keyword}%`);
+    if (filters.category) query = query.eq('category', filters.category);
+
+    const { data, error } = await query;
+    if (error) {
+      console.error('Fehler beim Laden:', error.message);
+      return;
+    }
+
+    renderResults(data);
+  }
+
   function search() {
-    const keyword = document.getElementById('search-input').value.trim();
+    const keyword = document.getElementById('search-input').value.trim().toLowerCase();
     const category = document.getElementById('category-select').value;
     loadListings({ keyword, category });
   }
