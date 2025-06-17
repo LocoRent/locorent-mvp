@@ -167,7 +167,7 @@
     const mainImage = imageUrls[0] || 'https://via.placeholder.com/800x300?text=Kein+Bild';
     const thumbnails = imageUrls.map((url, idx) =>
       `<img src="${url}" class="${idx === 0 ? 'active' : ''}" onclick="switchImage(this)">`
-    ).join('');  
+    ).join('');
 
     await loadVermieterInfo(listingOwnerId);
 
@@ -198,7 +198,9 @@
           <div class="vermieter-box">
             <h3>Vermieter</h3>
             <p><strong>Name:</strong> <span id="vermieter-name">Lade Name...</span></p>
+            <p><strong>Telefon:</strong> <span id="vermieter-phone">Lade Telefonnummer...</span></p>
             <p><strong>Wohnort:</strong> <span id="vermieter-city">Lade Wohnort...</span></p>
+            <p><strong>Über mich:</strong> <span id="vermieter-bio">Lade Bio...</span></p>
             <div class="chat-link">
               <button onclick="goToChat()">Nachricht an Vermieter senden</button>
             </div>
@@ -218,23 +220,25 @@
   }
 
   async function loadVermieterInfo(userId) {
-    // Hole Vermieterinformationen aus der profiles-Tabelle
     const { data: profile, error } = await supabase
       .from('profiles')
-      .select('name, city')
+      .select('name, phone, city, bio')
       .eq('id', userId)
       .single();
 
     if (error || !profile) {
       console.error("Fehler beim Laden der Vermieterinformationen:", error);
       document.getElementById('vermieter-name').textContent = 'Unbekannt';
+      document.getElementById('vermieter-phone').textContent = 'Unbekannt';
       document.getElementById('vermieter-city').textContent = 'Unbekannt';
+      document.getElementById('vermieter-bio').textContent = 'Unbekannt';
       return;
     }
 
-    // Setze die Werte im HTML
     document.getElementById('vermieter-name').textContent = profile.name || 'Unbekannt';
+    document.getElementById('vermieter-phone').textContent = profile.phone || 'Unbekannt';
     document.getElementById('vermieter-city').textContent = profile.city || 'Unbekannt';
+    document.getElementById('vermieter-bio').textContent = profile.bio || 'Unbekannt';
   }
 
   async function loadUnavailableDates() {
