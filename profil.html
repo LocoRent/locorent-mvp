@@ -78,55 +78,6 @@
 
     button:hover { background-color: #1b5e20; }
 
-    .gallery {
-      max-width: 1000px;
-      margin: 2rem auto;
-      padding: 1rem;
-    }
-
-    .gallery h3 {
-      margin-bottom: 1rem;
-      font-size: 1.5rem;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 1rem;
-    }
-
-    .card {
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-      padding: 0.8rem;
-      cursor: pointer;
-      transition: transform 0.2s;
-    }
-
-    .card:hover {
-      transform: translateY(-3px);
-    }
-
-    .card img {
-      width: 100%;
-      height: 140px;
-      object-fit: cover;
-      border-radius: 8px;
-      margin-bottom: 0.5rem;
-    }
-
-    .card h4 {
-      margin: 0.3rem 0;
-      font-size: 1.1rem;
-    }
-
-    .card p {
-      margin: 0;
-      font-size: 0.9rem;
-      color: #555;
-    }
-
     footer {
       margin-top: auto;
       padding: 1.5rem;
@@ -189,6 +140,7 @@
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
   );
 
+  // Laden des Benutzerprofils
   async function loadProfile() {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session?.user) {
@@ -197,8 +149,9 @@
     }
 
     const user = session.user;
-    document.getElementById('email').value = user.email; // Setze die E-Mail in das Feld
+    document.getElementById('email').value = user.email; // E-Mail aus der auth.Users-Tabelle holen
 
+    // Lade Profildaten aus der "profiles"-Tabelle
     const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single();
     if (data) {
       document.getElementById('name').value = data.name || '';
@@ -210,6 +163,7 @@
     loadUserListings(user.id);
   }
 
+  // Profil speichern
   async function saveProfile() {
     const { data: { user } } = await supabase.auth.getUser();
     const updates = {
@@ -224,6 +178,7 @@
     alert("Profil gespeichert!");
   }
 
+  // Passwort ändern
   async function changePassword() {
     const password = document.getElementById('password').value;
     if (!password) return alert("Bitte Passwort eingeben.");
