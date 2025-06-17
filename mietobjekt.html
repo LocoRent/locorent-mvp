@@ -57,6 +57,7 @@
       border-radius: var(--border-radius);
       box-shadow: 0 4px 12px var(--shadow-color);
       display: flex;
+      flex-wrap: wrap;
       gap: 2rem;
     }
 
@@ -156,6 +157,31 @@
       padding: 1.5rem;
       margin-top: 3rem;
     }
+
+    /* Styling für den Kalender */
+    .flatpickr-calendar {
+      width: 100% !important; /* Damit der Kalender sich innerhalb des Containers anpasst */
+      box-sizing: border-box;
+    }
+
+    .flatpickr-day {
+      font-size: 1rem; /* Größere Schrift für bessere Lesbarkeit */
+    }
+
+    /* Mobile Optimierungen */
+    @media screen and (max-width: 768px) {
+      main {
+        flex-direction: column;
+      }
+
+      .left {
+        flex: 1;
+      }
+
+      .right {
+        margin-top: 2rem;
+      }
+    }
   </style>
 </head>
 
@@ -223,11 +249,10 @@
             <h2>${listing.title}</h2>
             <img src="${mainImage}" alt="Hauptbild" class="main-image" id="mainImage">
             ${imageUrls.length > 1 ? `<div class="thumbnail-bar">${thumbnails}</div>` : ''}
-            <div class="listing-info">
-              <p><strong>Kategorie:</strong> ${listing.category}</p>
-              <p><strong>Preis pro Tag:</strong> ${listing.price_per_day} €</p>
-              <p><strong>Beschreibung:</strong><br>${listing.description}</p>
-            </div>
+            <p><strong>Kategorie:</strong> ${listing.category}</p>
+            <p><strong>Preis pro Tag:</strong> ${listing.price_per_day} €</p>
+            <p><strong>Beschreibung:</strong><br>${listing.description}</p>
+
             <div class="chat-link">
               <button onclick="goToChat()">Nachricht an Vermieter senden</button>
             </div>
