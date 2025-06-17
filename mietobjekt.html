@@ -218,7 +218,8 @@
   }
 
   async function loadVermieterInfo(userId) {
-    const { data: user, error } = await supabase.auth.api.getUser(userId);
+    // Benutzerdaten des aktuell angemeldeten Benutzers holen
+    const { data: user, error } = await supabase.auth.getUser();
 
     if (error || !user) {
       console.error("Fehler beim Laden der Vermieterinformationen:", error);
@@ -227,7 +228,7 @@
       return;
     }
 
-    // Setze die Vermieterinformationen in die HTML-Elemente
+    // Hier wird die E-Mail des aktuell angemeldeten Benutzers (Vermieter) gesetzt
     document.getElementById('vermieter-name').textContent = user.email || 'Unbekannt';
   }
 
