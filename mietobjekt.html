@@ -199,7 +199,9 @@
             <h3>Vermieter</h3>
             <p><strong>Name:</strong> <span id="vermieter-name">Lade Name...</span></p>
             <p><strong>Wohnort:</strong> <span id="vermieter-city">Lade Wohnort...</span></p>
-            <p><strong>Email:</strong> <span id="vermieter-email">Lade E-Mail...</span></p>
+            <div class="chat-link">
+              <button onclick="goToChat()">Nachricht an Vermieter senden</button>
+            </div>
           </div>
         </div>
       </div>
@@ -216,22 +218,17 @@
   }
 
   async function loadVermieterInfo(userId) {
-    const { data: user, error } = await supabase
-      .from('users')  // Benutzen der `Users` Tabelle von Supabase Authentication
-      .select('Email')  // Nur die E-Mail-Adresse holen
-      .eq('id', userId)
-      .single();
+    const { data: user, error } = await supabase.auth.api.getUser(userId);
 
     if (error || !user) {
       console.error("Fehler beim Laden der Vermieterinformationen:", error);
       document.getElementById('vermieter-name').textContent = 'Unbekannt';
       document.getElementById('vermieter-city').textContent = 'Unbekannt';
-      document.getElementById('vermieter-email').textContent = 'Unbekannt';
       return;
     }
 
-    // E-Mail des Vermieters laden
-    document.getElementById('vermieter-email').textContent = user.Email || 'Unbekannt'; // Hier ist die E-Mail aus der Users-Tabelle
+    // Setze die Vermieterinformationen in die HTML-Elemente
+    document.getElementById('vermieter-name').textContent = user.email || 'Unbekannt';
   }
 
   async function loadUnavailableDates() {
