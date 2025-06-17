@@ -30,12 +30,28 @@
       font-weight: 600;
     }
     main {
-      max-width: 800px;
+      max-width: 1000px;
       margin: 2rem auto;
       padding: 1rem;
       background: white;
       border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    .container {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    .left {
+      flex: 2;
+      min-width: 300px;
+    }
+    .right {
+      flex: 1;
+      min-width: 250px;
+      background: #f9f9f9;
+      padding: 1rem;
+      border-radius: 8px;
     }
     .main-image {
       width: 100%;
@@ -68,7 +84,7 @@
       border-radius: 8px;
       background: #f9fff4;
     }
-    input[type="text"], textarea {
+    input[type="text"] {
       width: 100%;
       padding: 0.5rem;
       border-radius: 6px;
@@ -90,6 +106,12 @@
     }
     .chat-link {
       margin-top: 1rem;
+    }
+    .vermieter-box h3 {
+      margin-top: 0;
+    }
+    .vermieter-box p {
+      margin: 0.4rem 0;
     }
   </style>
 </head>
@@ -147,25 +169,37 @@
       `<img src="${url}" class="${idx === 0 ? 'active' : ''}" onclick="switchImage(this)">`
     ).join('');
 
+    const vermieterHTML = await loadVermieterInfo(listingOwnerId);
+
     container.innerHTML = `
-      <h2>${listing.title}</h2>
-      <img src="${mainImage}" alt="Hauptbild" class="main-image" id="mainImage">
-      ${imageUrls.length > 1 ? `<div class="thumbnail-bar">${thumbnails}</div>` : ''}
-      <p><strong>Kategorie:</strong> ${listing.category}</p>
-      <p><strong>Preis pro Tag:</strong> ${listing.price_per_day} €</p>
-      <p><strong>Beschreibung:</strong><br>${listing.description}</p>
+      <div class="container">
+        <div class="left">
+          <h2>${listing.title}</h2>
+          <img src="${mainImage}" alt="Hauptbild" class="main-image" id="mainImage">
+          ${imageUrls.length > 1 ? `<div class="thumbnail-bar">${thumbnails}</div>` : ''}
+          <p><strong>Kategorie:</strong> ${listing.category}</p>
+          <p><strong>Preis pro Tag:</strong> ${listing.price_per_day} €</p>
+          <p><strong>Beschreibung:</strong><br>${listing.description}</p>
 
-      <div class="chat-link">
-        <button onclick="goToChat()">Nachricht an Vermieter senden</button>
-      </div>
+          <div class="chat-link">
+            <button onclick="goToChat()">Nachricht an Vermieter senden</button>
+          </div>
 
-      <div class="calendar">
-        <label><strong>Verfügbarkeit:</strong></label><br>
-        <input type="text" id="date-range" readonly />
-      </div>
+          <div class="calendar">
+            <label><strong>Verfügbarkeit:</strong></label><br>
+            <input type="text" id="date-range" readonly />
+          </div>
 
-      <div class="booking-form">
-        <button onclick="requestBooking()">Mietanfrage senden</button>
+          <div class="booking-form">
+            <button onclick="requestBooking()">Mietanfrage senden</button>
+          </div>
+        </div>
+        <div class="right">
+          <div class="vermieter-box">
+            <h3>Vermieter</h3>
+            ${vermieterHTML}
+          </div>
+        </div>
       </div>
     `;
 
@@ -177,6 +211,23 @@
     document.getElementById("mainImage").setAttribute("src", newSrc);
     document.querySelectorAll(".thumbnail-bar img").forEach(img => img.classList.remove("active"));
     imgElement.classList.add("active");
+  }
+
+  async function loadVermieterInfo(userId) {
+    const { data: profile, error } = await supabase
+      .from('profiles')
+      .select('full_name, email')
+      .eq('id', userId)
+      .single();
+
+    if (error || !profile) {
+      return `<p>Keine Vermieterinformationen verfügbar.</p>`;
+    }
+
+    return `
+      <p><strong>Name:</strong><br>${profile.full_name || 'Unbekannt'}</p>
+      <p><strong>Email:</strong><br>${profile.email}</p>
+    `;
   }
 
   async function loadUnavailableDates() {
