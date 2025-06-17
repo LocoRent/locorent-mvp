@@ -167,9 +167,9 @@
     const mainImage = imageUrls[0] || 'https://via.placeholder.com/800x300?text=Kein+Bild';
     const thumbnails = imageUrls.map((url, idx) =>
       `<img src="${url}" class="${idx === 0 ? 'active' : ''}" onclick="switchImage(this)">`
-    ).join('');
+    ).join('');  
 
-    const vermieterHTML = await loadVermieterInfo(listingOwnerId);
+    await loadVermieterInfo(listingOwnerId);
 
     container.innerHTML = `
       <div class="container">
@@ -197,7 +197,9 @@
         <div class="right">
           <div class="vermieter-box">
             <h3>Vermieter</h3>
-            ${vermieterHTML}
+            <p><strong>Name:</strong> <span id="vermieter-name"></span></p>
+            <p><strong>Wohnort:</strong> <span id="vermieter-city"></span></p>
+            <p><strong>Email:</strong> <span id="vermieter-email"></span></p>
           </div>
         </div>
       </div>
@@ -216,18 +218,17 @@
   async function loadVermieterInfo(userId) {
     const { data: profile, error } = await supabase
       .from('profiles')
-      .select('full_name, email')
+      .select('name, city, email')
       .eq('id', userId)
       .single();
 
     if (error || !profile) {
-      return `<p>Keine Vermieterinformationen verfügbar.</p>`;
+      return;
     }
 
-    return `
-      <p><strong>Name:</strong><br>${profile.full_name || 'Unbekannt'}</p>
-      <p><strong>Email:</strong><br>${profile.email}</p>
-    `;
+    document.getElementById('vermieter-name').textContent = profile.name || 'Unbekannt';
+    document.getElementById('vermieter-city').textContent = profile.city || 'Unbekannt';
+    document.getElementById('vermieter-email').textContent = profile.email || 'Unbekannt';
   }
 
   async function loadUnavailableDates() {
