@@ -194,26 +194,40 @@
   async function updateNav() {
     const { data: { session } } = await supabase.auth.getSession();
     const nav = document.getElementById('nav-links');
+    nav.innerHTML = '';
 
     if (session?.user) {
-      nav.innerHTML = `
-        <a href="profil.html">Profil</a>
+      const menu = document.createElement('div');
+      menu.className = 'profile-menu';
+      const btn = document.createElement('button');
+      btn.className = 'profile-button';
+      btn.textContent = session.user.email;
+
+      const dropdown = document.createElement('div');
+      dropdown.className = 'dropdown-content';
+      dropdown.innerHTML = `
+        <a href="profil.html">Mein Profil</a>
         <a href="inserate.html">Meine Inserate</a>
-        <a href="vermieter-anfragen.html">Anfragen</a>
+        <a href="vermieter-anfragen.html">Mietanfragen</a>
         <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-        <a href="#" onclick="logout()">Logout</a>
+        <a href="#" id="logout-link">Logout</a>
       `;
+
+      menu.appendChild(btn);
+      menu.appendChild(dropdown);
+      nav.appendChild(menu);
+
+      document.getElementById("logout-link").onclick = async () => {
+        await supabase.auth.signOut();
+        window.location.href = "login.html";
+      };
     } else {
       nav.innerHTML = `
-        <a href="login.html">Login</a>
+        <a href="index.html">Start</a>
+        <a href="login.html">Einloggen</a>
         <a href="register.html">Registrieren</a>
       `;
     }
-  }
-
-  async function logout() {
-    await supabase.auth.signOut();
-    window.location.href = "login.html";
   }
 
   function renderResults(items) {
@@ -226,8 +240,7 @@
     }
 
     items.forEach(item => {
-      const imageUrl = item.image_urls?.[0] || item.image_url || 'https://via.placeholder.com/600x300?text=Kein+Bild';
-
+      const imageUrl = item.image_urls?.[0] || item.image_url || 'https://via.placeholder.com/400x200?text=Kein+Bild';
       const card = document.createElement('div');
       card.className = 'result-card';
       card.onclick = () => window.location.href = `mietobjekt.html?id=${item.id}`;
@@ -243,10 +256,18 @@
   }
 
   async function loadListings(filters = {}) {
-    let query = supabase.from('listings').select('*').order('created_at', { ascending: false });
+    let query = supabase
+      .from('listings')
+      .select('*')
+      .order('created_at', { ascending: false });
 
-    if (filters.keyword) query = query.like('title', `%${filters.keyword}%`);
-    if (filters.category) query = query.eq('category', filters.category);
+    if (filters.keyword) {
+      query = query.ilike('title', `%${filters.keyword}%`);
+    }
+
+    if (filters.category) {
+      query = query.eq('category', filters.category);
+    }
 
     const { data, error } = await query;
     if (error) {
@@ -258,9 +279,13 @@
   }
 
   function search() {
-    const keyword = document.getElementById('search-input').value.trim().toLowerCase();
+    const keyword = document.getElementById('search-input').value.trim();
     const category = document.getElementById('category-select').value;
-    loadListings({ keyword, category });
+
+    loadListings({
+      keyword: keyword || undefined,
+      category: category || undefined
+    });
   }
 
   function filterByCategory(cat) {
@@ -271,6 +296,3 @@
   updateNav();
   loadListings();
 </script>
-
-</body>
-</html>
