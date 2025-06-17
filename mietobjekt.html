@@ -114,7 +114,8 @@
       margin: 0.5rem 0;
     }
 
-    .calendar, .booking-form {
+    .calendar,
+    .booking-form {
       margin-top: 2rem;
     }
 
@@ -222,10 +223,11 @@
             <h2>${listing.title}</h2>
             <img src="${mainImage}" alt="Hauptbild" class="main-image" id="mainImage">
             ${imageUrls.length > 1 ? `<div class="thumbnail-bar">${thumbnails}</div>` : ''}
-            <p><strong>Kategorie:</strong> ${listing.category}</p>
-            <p><strong>Preis pro Tag:</strong> ${listing.price_per_day} €</p>
-            <p><strong>Beschreibung:</strong><br>${listing.description}</p>
-
+            <div class="listing-info">
+              <p><strong>Kategorie:</strong> ${listing.category}</p>
+              <p><strong>Preis pro Tag:</strong> ${listing.price_per_day} €</p>
+              <p><strong>Beschreibung:</strong><br>${listing.description}</p>
+            </div>
             <div class="chat-link">
               <button onclick="goToChat()">Nachricht an Vermieter senden</button>
             </div>
@@ -339,4 +341,5 @@
   </script>
 
 </body>
+
 </html>
