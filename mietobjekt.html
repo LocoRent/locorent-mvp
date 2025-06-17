@@ -166,17 +166,17 @@
     const imageUrls = listing.image_urls || [];
     const mainImage = imageUrls[0] || 'https://via.placeholder.com/800x300?text=Kein+Bild';
     const thumbnails = imageUrls.map((url, idx) =>
-      `<img src="${url}" class="${idx === 0 ? 'active' : ''}" onclick="switchImage(this)">`
+      <img src="${url}" class="${idx === 0 ? 'active' : ''}" onclick="switchImage(this)">
     ).join('');
 
     const vermieterHTML = await loadVermieterInfo(listingOwnerId);
 
-    container.innerHTML = `
+    container.innerHTML = 
       <div class="container">
         <div class="left">
           <h2>${listing.title}</h2>
           <img src="${mainImage}" alt="Hauptbild" class="main-image" id="mainImage">
-          ${imageUrls.length > 1 ? `<div class="thumbnail-bar">${thumbnails}</div>` : ''}
+          ${imageUrls.length > 1 ? <div class="thumbnail-bar">${thumbnails}</div> : ''}
           <p><strong>Kategorie:</strong> ${listing.category}</p>
           <p><strong>Preis pro Tag:</strong> ${listing.price_per_day} €</p>
           <p><strong>Beschreibung:</strong><br>${listing.description}</p>
@@ -201,7 +201,7 @@
           </div>
         </div>
       </div>
-    `;
+    ;
 
     setupFlatpickr();
   }
@@ -221,13 +221,13 @@
       .single();
 
     if (error || !profile) {
-      return `<p>Keine Vermieterinformationen verfügbar.</p>`;
+      return <p>Keine Vermieterinformationen verfügbar.</p>;
     }
 
-    return `
+    return 
       <p><strong>Name:</strong><br>${profile.full_name || 'Unbekannt'}</p>
       <p><strong>Email:</strong><br>${profile.email}</p>
-    `;
+    ;
   }
 
   async function loadUnavailableDates() {
@@ -285,7 +285,7 @@
       alert("Du kannst dir selbst keine Nachricht schicken.");
       return;
     }
-    window.location.href = `nachrichten.html?listing_id=${listingId}&with=${listingOwnerId}`;
+    window.location.href = nachrichten.html?listing_id=${listingId}&with=${listingOwnerId};
   }
 
   loadListing();
