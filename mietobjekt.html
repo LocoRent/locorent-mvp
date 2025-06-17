@@ -218,18 +218,23 @@
   }
 
   async function loadVermieterInfo(userId) {
-    // Benutzerdaten des aktuell angemeldeten Benutzers holen
-    const { data: user, error } = await supabase.auth.getUser();
+    // Hole Vermieterinformationen aus der profiles-Tabelle
+    const { data: profile, error } = await supabase
+      .from('profiles')
+      .select('name, city')
+      .eq('id', userId)
+      .single();
 
-    if (error || !user) {
+    if (error || !profile) {
       console.error("Fehler beim Laden der Vermieterinformationen:", error);
       document.getElementById('vermieter-name').textContent = 'Unbekannt';
       document.getElementById('vermieter-city').textContent = 'Unbekannt';
       return;
     }
 
-    // Hier wird die E-Mail des aktuell angemeldeten Benutzers (Vermieter) gesetzt
-    document.getElementById('vermieter-name').textContent = user.email || 'Unbekannt';
+    // Setze die Werte im HTML
+    document.getElementById('vermieter-name').textContent = profile.name || 'Unbekannt';
+    document.getElementById('vermieter-city').textContent = profile.city || 'Unbekannt';
   }
 
   async function loadUnavailableDates() {
