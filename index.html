@@ -258,11 +258,12 @@
     }
 
     items.forEach(item => {
+      const imageUrl = item.image_urls?.[0] || 'https://via.placeholder.com/600x300?text=Kein+Bild';
       const card = document.createElement('div');
       card.className = 'result-card';
       card.onclick = () => window.location.href = `mietobjekt.html?id=${item.id}`;
       card.innerHTML = `
-        ${item.image_url ? `<img src="${item.image_url}" alt="${item.title}" />` : ''}
+        <img src="${imageUrl}" alt="${item.title}" />
         <h3>${item.title}</h3>
         <p><strong>Kategorie:</strong> ${item.category || 'Unbekannt'}</p>
         <p><strong>Preis pro Tag:</strong> ${item.price_per_day ? item.price_per_day + ' €' : 'k. A.'}</p>
@@ -291,7 +292,6 @@
   function search() {
     const keyword = document.getElementById('search-input').value.trim().toLowerCase();
     const category = document.getElementById('category-select').value;
-
     loadListings({ keyword, category });
   }
 
