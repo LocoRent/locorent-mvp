@@ -224,6 +224,9 @@
 
     if (error || !profile) {
       console.error("Fehler beim Laden der Vermieterinformationen:", error);
+      document.getElementById('vermieter-name').textContent = 'Unbekannt';
+      document.getElementById('vermieter-city').textContent = 'Unbekannt';
+      document.getElementById('vermieter-email').textContent = 'Unbekannt';
       return;
     }
 
