@@ -1,3 +1,4 @@
+<!-- AB HIER DEIN HTML -->
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -26,48 +27,11 @@
       justify-content: space-between;
       align-items: center;
     }
-    header h1 { font-size: 1.8rem; }
     nav a {
       margin-left: 1.5rem;
       text-decoration: none;
       color: white;
       font-weight: 600;
-    }
-
-    .profile-menu {
-      position: relative;
-      display: inline-block;
-    }
-    .profile-button {
-      background: none;
-      border: none;
-      color: white;
-      font-weight: 600;
-      cursor: pointer;
-      padding: 0.5rem 1rem;
-    }
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      right: 0;
-      background-color: white;
-      min-width: 200px;
-      box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
-      z-index: 1;
-      border-radius: 8px;
-      overflow: hidden;
-    }
-    .dropdown-content a {
-      color: var(--dark);
-      padding: 0.8rem 1rem;
-      text-decoration: none;
-      display: block;
-    }
-    .dropdown-content a:hover {
-      background-color: var(--secondary);
-    }
-    .profile-menu:hover .dropdown-content {
-      display: block;
     }
 
     .hero, .category-grid, .results, footer {
@@ -105,7 +69,6 @@
       border-radius: 8px;
       cursor: pointer;
     }
-    .search-row button:hover { background-color: var(--primary); }
 
     .category-grid {
       display: grid;
@@ -119,21 +82,15 @@
       text-align: center;
       font-weight: 600;
       cursor: pointer;
-      transition: background-color 0.2s ease;
     }
-    .category-card:hover { background-color: var(--accent); color: white; }
 
     .result-card {
-      background-color: var(--white);
+      background-color: white;
       border-radius: 10px;
       padding: 1rem;
       margin-bottom: 1rem;
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
       cursor: pointer;
-      transition: box-shadow 0.2s ease;
-    }
-    .result-card:hover {
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
     .result-card img {
       width: 100%;
@@ -215,21 +172,11 @@
 
     if (session?.user) {
       nav.innerHTML = `
-        <div class="profile-menu">
-          <button class="profile-button">${session.user.email}</button>
-          <div class="dropdown-content">
-            <a href="profil.html">Mein Profil</a>
-            <a href="inserate.html">Meine Inserate</a>
-            <a href="vermieter-anfragen.html">Mietanfragen</a>
-            <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-            <a href="#" id="logout-link">Logout</a>
-          </div>
-        </div>
+        <a href="profil.html">Mein Profil</a>
+        <a href="inserate.html">Meine Inserate</a>
+        <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+        <a href="#" onclick="logout()">Logout</a>
       `;
-      document.getElementById("logout-link").onclick = async () => {
-        await supabase.auth.signOut();
-        window.location.href = "login.html";
-      };
     } else {
       nav.innerHTML = `
         <a href="login.html">Einloggen</a>
@@ -238,29 +185,9 @@
     }
   }
 
-  function renderResults(items) {
-    const results = document.getElementById('results');
-    results.innerHTML = '';
-
-    if (!items || items.length === 0) {
-      results.innerHTML = '<p>Keine passenden Angebote gefunden.</p>';
-      return;
-    }
-
-    items.forEach(item => {
-      const image = item.image_urls?.[0] || item.image_url || 'https://via.placeholder.com/400x200?text=Kein+Bild';
-      const card = document.createElement('div');
-      card.className = 'result-card';
-      card.onclick = () => window.location.href = `mietobjekt.html?id=${item.id}`;
-      card.innerHTML = `
-        <img src="${image}" alt="${item.title}" />
-        <h3>${item.title}</h3>
-        <p><strong>Kategorie:</strong> ${item.category || 'Unbekannt'}</p>
-        <p><strong>Preis pro Tag:</strong> ${item.price_per_day ? item.price_per_day + ' €' : 'k. A.'}</p>
-        <p>${item.description || ''}</p>
-      `;
-      results.appendChild(card);
-    });
+  async function logout() {
+    await supabase.auth.signOut();
+    window.location.href = "login.html";
   }
 
   async function loadListings(filters = {}) {
@@ -269,9 +196,8 @@
     if (filters.keyword) {
       query = query.ilike('title', `%${filters.keyword}%`);
     }
-
     if (filters.category) {
-      query = query.eq('category', filters.category);
+      query = query.eq('category', filters.category.toLowerCase());
     }
 
     const { data, error } = await query;
@@ -283,14 +209,40 @@
     renderResults(data);
   }
 
+  function renderResults(items) {
+    const container = document.getElementById("results");
+    container.innerHTML = "";
+
+    if (!items || items.length === 0) {
+      container.innerHTML = "<p>Keine passenden Angebote gefunden.</p>";
+      return;
+    }
+
+    items.forEach(item => {
+      const image = item.image_urls?.[0] || item.image_url || 'https://via.placeholder.com/400x200?text=Kein+Bild';
+
+      const card = document.createElement("div");
+      card.className = "result-card";
+      card.onclick = () => window.location.href = `mietobjekt.html?id=${item.id}`;
+      card.innerHTML = `
+        <img src="${image}" alt="${item.title}" />
+        <h3>${item.title}</h3>
+        <p><strong>Kategorie:</strong> ${item.category || 'Unbekannt'}</p>
+        <p><strong>Preis pro Tag:</strong> ${item.price_per_day || 'k. A.'} €</p>
+        <p>${item.description || ''}</p>
+      `;
+      container.appendChild(card);
+    });
+  }
+
   function search() {
-    const keyword = document.getElementById('search-input').value.trim();
-    const category = document.getElementById('category-select').value;
+    const keyword = document.getElementById("search-input").value.trim();
+    const category = document.getElementById("category-select").value.trim();
     loadListings({ keyword, category });
   }
 
-  function filterByCategory(cat) {
-    document.getElementById('category-select').value = cat;
+  function filterByCategory(category) {
+    document.getElementById("category-select").value = category;
     search();
   }
 
