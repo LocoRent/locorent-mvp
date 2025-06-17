@@ -210,7 +210,7 @@
       card.className = 'card';
       card.onclick = () => window.location.href = `mietobjekt.html?id=${listing.id}`;
 
-      card.innerHTML = `
+      card.innerHTML = ` 
         ${listing.image_url ? `<img src="${listing.image_url}" alt="${listing.title}" />` : ''}
         <h4>${listing.title}</h4>
         <p>${listing.price_per_day} € pro Tag</p>
