@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -58,7 +59,8 @@
       flex-wrap: wrap;
     }
 
-    .left, .right {
+    .left,
+    .right {
       padding: 2rem;
       background: white;
       border-radius: var(--border-radius);
@@ -77,6 +79,9 @@
       flex: 1;
       min-width: 300px;
       background-color: var(--light-grey);
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
     }
 
     .main-image {
@@ -111,7 +116,8 @@
       font-size: 1.1rem;
     }
 
-    .chat-link button, .booking-form button {
+    .chat-link button,
+    .booking-form button {
       background-color: var(--primary-color);
       color: var(--white);
       padding: 1rem 2rem;
@@ -122,7 +128,8 @@
       transition: background-color 0.3s ease;
     }
 
-    .chat-link button:hover, .booking-form button:hover {
+    .chat-link button:hover,
+    .booking-form button:hover {
       background-color: var(--secondary-color);
     }
 
@@ -157,7 +164,8 @@
         padding: 1rem;
       }
 
-      .left, .right {
+      .left,
+      .right {
         width: 100%;
         margin-bottom: 1rem;
       }
@@ -178,6 +186,10 @@
   <main>
     <div id="listing-details">Lade Daten...</div>
   </main>
+
+  <footer>
+    © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
+  </footer>
 
   <script>
     const supabase = window.supabase.createClient(
@@ -219,7 +231,7 @@
       const mainImage = imageUrls[0] || 'https://via.placeholder.com/800x300?text=Kein+Bild';
       const thumbnails = imageUrls.map((url, idx) =>
         `<img src="${url}" class="${idx === 0 ? 'active' : ''}" onclick="switchImage(this)">`
-      ).join(''); 
+      ).join('');
 
       const vermieterHTML = await loadVermieterInfo(listingOwnerId);
 
@@ -343,4 +355,5 @@
     loadListing();
   </script>
 </body>
+
 </html>
