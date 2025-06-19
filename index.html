@@ -62,19 +62,29 @@
       border-bottom: 2px solid var(--highlight-color);
     }
 
+    /* Hero Section */
     .hero {
       background-color: var(--white);
       padding: 3rem 2rem;
       border-radius: var(--border-radius);
       box-shadow: 0 2px 12px var(--shadow-color);
       margin-top: 2rem;
+      text-align: center;
     }
 
+    .hero h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    /* Search Section */
     .search-row {
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
-      margin-bottom: 1rem;
+      justify-content: center;
+      margin-bottom: 2rem;
     }
 
     .search-row input,
@@ -102,10 +112,30 @@
       background-color: var(--secondary-color);
     }
 
+    /* Filter Sidebar */
+    .filter-sidebar {
+      width: 250px;
+      padding: 1rem;
+      background-color: var(--white);
+      box-shadow: 0 2px 8px var(--shadow-color);
+      border-radius: var(--border-radius);
+      margin-right: 2rem;
+    }
+
+    .filter-sidebar select,
+    .filter-sidebar input {
+      width: 100%;
+      padding: 0.8rem;
+      margin: 1rem 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    /* Listings Section */
     .category-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: 1.5rem;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 2rem;
       margin-top: 2rem;
     }
 
@@ -167,6 +197,27 @@
       border-radius: var(--border-radius);
       margin-top: 2rem;
     }
+
+    /* Mobile Styling */
+    @media (max-width: 768px) {
+      .hero {
+        padding: 2rem;
+      }
+
+      .search-row {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .filter-sidebar {
+        width: 100%;
+        margin-bottom: 2rem;
+      }
+
+      .category-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
   </style>
 </head>
 
@@ -178,6 +229,7 @@
   </header>
 
   <section class="hero">
+    <h2>Finde das perfekte Mietobjekt</h2>
     <div class="search-row">
       <input type="text" placeholder="Was suchst du?" id="search-input" />
       <select id="category-select">
@@ -197,48 +249,29 @@
       </select>
       <button onclick="search()">Suchen</button>
     </div>
+  </section>
 
-    <div class="category-grid">
-      <div class="category-card" onclick="filterByCategory('fahrzeuge')">
-        <i class="fas fa-car"></i> Fahrzeuge
-      </div>
-      <div class="category-card" onclick="filterByCategory('transporter')">
-        <i class="fas fa-truck"></i> Transporter
-      </div>
-      <div class="category-card" onclick="filterByCategory('boote')">
-        <i class="fas fa-ship"></i> Boote
-      </div>
-      <div class="category-card" onclick="filterByCategory('fahrrad')">
-        <i class="fas fa-bicycle"></i> Fahrräder
-      </div>
-      <div class="category-card" onclick="filterByCategory('werkzeuge')">
-        <i class="fas fa-wrench"></i> Werkzeuge
-      </div>
-      <div class="category-card" onclick="filterByCategory('maschinen')">
-        <i class="fas fa-cogs"></i> Maschinen
-      </div>
-      <div class="category-card" onclick="filterByCategory('party')">
-        <i class="fas fa-cocktail"></i> Party
-      </div>
-      <div class="category-card" onclick="filterByCategory('technik')">
-        <i class="fas fa-laptop"></i> Technik
-      </div>
-      <div class="category-card" onclick="filterByCategory('haushalt')">
-        <i class="fas fa-home"></i> Haushalt
-      </div>
-      <div class="category-card" onclick="filterByCategory('garten')">
-        <i class="fas fa-leaf"></i> Garten
-      </div>
-      <div class="category-card" onclick="filterByCategory('freizeit')">
-        <i class="fas fa-futbol"></i> Freizeit
-      </div>
-      <div class="category-card" onclick="filterByCategory('baby')">
-        <i class="fas fa-baby"></i> Baby
-      </div>
+  <div style="display: flex; flex-wrap: wrap;">
+    <div class="filter-sidebar">
+      <h3>Filter</h3>
+      <select id="price-filter">
+        <option value="">Preisbereich</option>
+        <option value="0-50">0 - 50 €</option>
+        <option value="51-100">51 - 100 €</option>
+        <option value="101-200">101 - 200 €</option>
+        <option value="201-500">201 - 500 €</option>
+      </select>
+      <select id="availability-filter">
+        <option value="">Verfügbarkeit</option>
+        <option value="available">Verfügbar</option>
+        <option value="unavailable">Nicht verfügbar</option>
+      </select>
     </div>
 
-    <div class="results" id="results"></div>
-  </section>
+    <div style="flex: 1;">
+      <div class="category-grid" id="results"></div>
+    </div>
+  </div>
 
   <footer>
     © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
