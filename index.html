@@ -62,7 +62,6 @@
       border-bottom: 2px solid var(--highlight-color);
     }
 
-    /* Hero Section */
     .hero {
       background-color: var(--white);
       padding: 3rem 2rem;
@@ -78,7 +77,6 @@
       margin-bottom: 1rem;
     }
 
-    /* Search Section */
     .search-row {
       display: flex;
       flex-wrap: wrap;
@@ -110,82 +108,6 @@
       background-color: var(--secondary-color);
     }
 
-    /* Filter Sidebar */
-    .filter-sidebar {
-      width: 250px;
-      padding: 1rem;
-      background-color: var(--white);
-      box-shadow: 0 2px 8px var(--shadow-color);
-      border-radius: var(--border-radius);
-      margin-right: 2rem;
-    }
-
-    .filter-sidebar select,
-    .filter-sidebar input {
-      width: 100%;
-      padding: 0.8rem;
-      margin: 1rem 0;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-    }
-
-    .category-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 2rem;
-      margin-top: 2rem;
-    }
-
-    .category-card {
-      background-color: var(--secondary-color);
-      padding: 2rem;
-      border-radius: 12px;
-      text-align: center;
-      font-weight: 600;
-      cursor: pointer;
-      transition: transform 0.3s ease;
-    }
-
-    .category-card:hover {
-      transform: scale(1.05);
-      background-color: var(--highlight-color);
-      color: var(--white);
-    }
-
-    .category-card i {
-      font-size: 2rem;
-      margin-bottom: 1rem;
-    }
-
-    .result-card {
-      background-color: var(--white);
-      border-radius: 10px;
-      padding: 1rem;
-      box-shadow: 0 2px 8px var(--shadow-color);
-      margin-bottom: 1.5rem;
-      cursor: pointer;
-      transition: transform 0.2s ease;
-    }
-
-    .result-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 4px 16px var(--shadow-color);
-    }
-
-    .result-card img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-      border-radius: 8px;
-      margin-bottom: 1rem;
-    }
-
-    .result-card h3 {
-      margin-bottom: 0.5rem;
-      font-size: 1.2rem;
-      font-weight: 600;
-    }
-
     footer {
       padding: 2rem;
       text-align: center;
@@ -195,26 +117,6 @@
       margin-top: 2rem;
     }
 
-    /* Mobile Styling */
-    @media (max-width: 768px) {
-      .hero {
-        padding: 2rem;
-      }
-
-      .search-row {
-        flex-direction: column;
-        gap: 0.5rem;
-      }
-
-      .filter-sidebar {
-        width: 100%;
-        margin-bottom: 2rem;
-      }
-
-      .category-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
   </style>
 </head>
 
@@ -248,24 +150,6 @@
     </div>
   </section>
 
-  <div style="display: flex; flex-wrap: wrap;">
-    <div class="filter-sidebar">
-      <h3>Filter</h3>
-      <input type="number" id="min-price" placeholder="Min Preis" />
-      <input type="number" id="max-price" placeholder="Max Preis" />
-      <select id="availability-filter">
-        <option value="">Verfügbarkeit</option>
-        <option value="available">Verfügbar</option>
-        <option value="unavailable">Nicht verfügbar</option>
-      </select>
-      <button onclick="applyFilters()">Filter anwenden</button>
-    </div>
-
-    <div style="flex: 1;">
-      <div class="category-grid" id="results"></div>
-    </div>
-  </div>
-
   <footer>
     © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
   </footer>
@@ -275,6 +159,19 @@
       'https://flnjalgqtkqycsaymmbd.supabase.co',
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
     );
+
+    function search() {
+      const keyword = document.getElementById("search-input").value.trim();
+      const category = document.getElementById("category-select").value.trim();
+
+      if (!keyword && !category) {
+        alert("Bitte einen Suchbegriff oder eine Kategorie eingeben!");
+        return;
+      }
+
+      // Weiterleitung zur Suchergebnisseite
+      window.location.href = `search_results.html?keyword=${keyword}&category=${category}`;
+    }
 
     async function updateNav() {
       const { data: { session } } = await supabase.auth.getSession();
@@ -301,81 +198,7 @@
       window.location.href = "login.html";
     }
 
-    async function loadListings(filters = {}) {
-      let query = supabase.from('listings').select('*').order('created_at', { ascending: false });
-
-      // Apply keyword filter
-      if (filters.keyword) {
-        query = query.ilike('title', `%${filters.keyword}%`);
-      }
-
-      // Apply category filter
-      if (filters.category) {
-        query = query.eq('category', filters.category.toLowerCase());
-      }
-
-      // Apply price filter
-      if (filters.price) {
-        const [minPrice, maxPrice] = filters.price.split('-');
-        query = query.gte('price_per_day', minPrice).lte('price_per_day', maxPrice);
-      }
-
-      // Apply availability filter
-      if (filters.availability) {
-        query = query.eq('available', filters.availability === 'available');
-      }
-
-      const { data, error } = await query;
-      if (error) {
-        console.error('Fehler beim Laden:', error.message);
-        return;
-      }
-
-      renderResults(data);
-    }
-
-    function renderResults(items) {
-      const container = document.getElementById("results");
-      container.innerHTML = "";
-
-      if (!items || items.length === 0) {
-        container.innerHTML = "<p>Keine passenden Angebote gefunden.</p>";
-        return;
-      }
-
-      items.forEach(item => {
-        const image = item.image_urls?.[0] || item.image_url || 'https://via.placeholder.com/400x200?text=Kein+Bild';
-
-        const card = document.createElement("div");
-        card.className = "result-card";
-        card.onclick = () => window.location.href = `mietobjekt.html?id=${item.id}`;
-        card.innerHTML = `
-          <img src="${image}" alt="${item.title}" />
-          <h3>${item.title}</h3>
-          <p><strong>Kategorie:</strong> ${item.category || 'Unbekannt'}</p>
-          <p><strong>Preis pro Tag:</strong> ${item.price_per_day || 'k. A.'} €</p>
-          <p>${item.description || ''}</p>
-        `;
-        container.appendChild(card);
-      });
-    }
-
-    function search() {
-      const keyword = document.getElementById("search-input").value.trim();
-      const category = document.getElementById("category-select").value.trim();
-      const price = document.getElementById("min-price").value.trim() + '-' + document.getElementById("max-price").value.trim();
-      const availability = document.getElementById("availability-filter").value.trim();
-      loadListings({ keyword, category, price, availability });
-    }
-
-    function applyFilters() {
-      const price = document.getElementById("min-price").value.trim() + '-' + document.getElementById("max-price").value.trim();
-      const availability = document.getElementById("availability-filter").value.trim();
-      loadListings({ price, availability });
-    }
-
     updateNav();
-    loadListings();
   </script>
 
 </body>
