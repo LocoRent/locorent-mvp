@@ -88,7 +88,8 @@
     }
 
     .search-row input,
-    .search-row select {
+    .search-row select,
+    .search-row button {
       padding: 1rem;
       border: 1px solid #ccc;
       border-radius: 8px;
@@ -98,12 +99,9 @@
     }
 
     .search-row button {
-      padding: 1rem 2rem;
       background-color: var(--highlight-color);
       color: var(--white);
       font-weight: 600;
-      border: none;
-      border-radius: 8px;
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
@@ -131,7 +129,6 @@
       border: 1px solid #ccc;
     }
 
-    /* Listings Section */
     .category-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -254,13 +251,8 @@
   <div style="display: flex; flex-wrap: wrap;">
     <div class="filter-sidebar">
       <h3>Filter</h3>
-      <select id="price-filter">
-        <option value="">Preisbereich</option>
-        <option value="0-50">0 - 50 €</option>
-        <option value="51-100">51 - 100 €</option>
-        <option value="101-200">101 - 200 €</option>
-        <option value="201-500">201 - 500 €</option>
-      </select>
+      <input type="number" id="min-price" placeholder="Min Preis" />
+      <input type="number" id="max-price" placeholder="Max Preis" />
       <select id="availability-filter">
         <option value="">Verfügbarkeit</option>
         <option value="available">Verfügbar</option>
@@ -311,11 +303,25 @@
     async function loadListings(filters = {}) {
       let query = supabase.from('listings').select('*').order('created_at', { ascending: false });
 
+      // Apply keyword filter
       if (filters.keyword) {
         query = query.ilike('title', `%${filters.keyword}%`);
       }
+
+      // Apply category filter
       if (filters.category) {
         query = query.eq('category', filters.category.toLowerCase());
+      }
+
+      // Apply price filter
+      if (filters.price) {
+        const [minPrice, maxPrice] = filters.price.split('-');
+        query = query.gte('price_per_day', minPrice).lte('price_per_day', maxPrice);
+      }
+
+      // Apply availability filter
+      if (filters.availability) {
+        query = query.eq('available', filters.availability === 'available');
       }
 
       const { data, error } = await query;
@@ -356,7 +362,9 @@
     function search() {
       const keyword = document.getElementById("search-input").value.trim();
       const category = document.getElementById("category-select").value.trim();
-      loadListings({ keyword, category });
+      const price = document.getElementById("min-price").value.trim() + '-' + document.getElementById("max-price").value.trim();
+      const availability = document.getElementById("availability-filter").value.trim();
+      loadListings({ keyword, category, price, availability });
     }
 
     function filterByCategory(category) {
