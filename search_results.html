@@ -135,4 +135,118 @@
     footer {
       padding: 2rem;
       text-align: center;
-      background-color
+      background-color: var(--primary-color);
+      color: var(--white);
+      border-radius: var(--border-radius);
+      margin-top: 2rem;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>Locorent</h1>
+    <nav id="nav-links"></nav>
+  </header>
+
+  <section class="hero">
+    <h2>Suchergebnisse</h2>
+    <div class="filter-sidebar">
+      <h3>Filter anwenden</h3>
+      <input type="number" id="min-price" placeholder="Min Preis" />
+      <input type="number" id="max-price" placeholder="Max Preis" />
+      <select id="availability-filter">
+        <option value="">Verfügbarkeit</option>
+        <option value="available">Verfügbar</option>
+        <option value="unavailable">Nicht verfügbar</option>
+      </select>
+      <button onclick="applyFilters()">Filter anwenden</button>
+    </div>
+  </section>
+
+  <div class="category-grid" id="results"></div>
+
+  <footer>
+    © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
+  </footer>
+
+  <script>
+    const supabase = window.supabase.createClient(
+      'https://flnjalgqtkqycsaymmbd.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+    );
+
+    const params = new URLSearchParams(location.search);
+    const keyword = params.get('keyword') || '';
+    const category = params.get('category') || '';
+
+    function applyFilters() {
+      const price = document.getElementById("min-price").value.trim() + '-' + document.getElementById("max-price").value.trim();
+      const availability = document.getElementById("availability-filter").value.trim();
+      loadListings({ keyword, category, price, availability });
+    }
+
+    async function loadListings(filters = {}) {
+      let query = supabase.from('listings').select('*').order('created_at', { ascending: false });
+
+      if (filters.keyword) {
+        query = query.ilike('title', `%${filters.keyword}%`);
+      }
+
+      if (filters.category) {
+        query = query.eq('category', filters.category.toLowerCase());
+      }
+
+      if (filters.price) {
+        const [minPrice, maxPrice] = filters.price.split('-');
+        query = query.gte('price_per_day', minPrice).lte('price_per_day', maxPrice);
+      }
+
+      if (filters.availability) {
+        query = query.eq('available', filters.availability === 'available');
+      }
+
+      const { data, error } = await query;
+      if (error) {
+        console.error('Fehler beim Laden:', error.message);
+        return;
+      }
+
+      renderResults(data);
+    }
+
+    function renderResults(items) {
+      const container = document.getElementById("results");
+      container.innerHTML = "";
+
+      if (!items || items.length === 0) {
+        container.innerHTML = "<p>Keine passenden Angebote gefunden.</p>";
+        return;
+      }
+
+      items.forEach(item => {
+        const image = item.image_urls?.[0] || item.image_url || 'https://via.placeholder.com/400x200?text=Kein+Bild';
+
+        const card = document.createElement("div");
+        card.className = "result-card";
+        card.onclick = () => window.location.href = `mietobjekt.html?id=${item.id}`;
+        card.innerHTML = `
+          <img src="${image}" alt="${item.title}" />
+          <h3>${item.title}</h3>
+          <p><strong>Kategorie:</strong> ${item.category || 'Unbekannt'}</p>
+          <p><strong>Preis pro Tag:</strong> ${item.price_per_day || 'k. A.'} €</p>
+          <p>${item.description || ''}</p>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    applyFilters();  // Initial load with filters
+
+  </script>
+
+</body>
+
+</html>
