@@ -140,7 +140,6 @@
       border-radius: var(--border-radius);
       margin-top: 2rem;
     }
-
   </style>
 </head>
 
@@ -181,12 +180,6 @@
     const params = new URLSearchParams(location.search);
     const keyword = params.get('keyword') || '';
     const category = params.get('category') || '';
-
-    function applyFilters() {
-      const price = document.getElementById("min-price").value.trim() + '-' + document.getElementById("max-price").value.trim();
-      const availability = document.getElementById("availability-filter").value.trim();
-      loadListings({ keyword, category, price, availability });
-    }
 
     async function loadListings(filters = {}) {
       let query = supabase.from('listings').select('*').order('created_at', { ascending: false });
@@ -243,8 +236,13 @@
       });
     }
 
-    applyFilters();  // Initial load with filters
+    function applyFilters() {
+      const price = document.getElementById("min-price").value.trim() + '-' + document.getElementById("max-price").value.trim();
+      const availability = document.getElementById("availability-filter").value.trim();
+      loadListings({ keyword, category, price, availability });
+    }
 
+    loadListings({ keyword, category });
   </script>
 
 </body>
