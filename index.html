@@ -368,11 +368,6 @@
       loadListings({ keyword, category, price, availability });
     }
 
-    function filterByCategory(category) {
-      document.getElementById("category-select").value = category;
-      search();
-    }
-
     function applyFilters() {
       const price = document.getElementById("min-price").value.trim() + '-' + document.getElementById("max-price").value.trim();
       const availability = document.getElementById("availability-filter").value.trim();
