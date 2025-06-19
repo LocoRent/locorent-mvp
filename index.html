@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="de">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -108,6 +107,42 @@
       background-color: var(--secondary-color);
     }
 
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .result-card {
+      background-color: var(--white);
+      border-radius: 10px;
+      padding: 1rem;
+      box-shadow: 0 2px 8px var(--shadow-color);
+      margin-bottom: 1.5rem;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .result-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 16px var(--shadow-color);
+    }
+
+    .result-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+
+    .result-card h3 {
+      margin-bottom: 0.5rem;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
     footer {
       padding: 2rem;
       text-align: center;
@@ -117,6 +152,21 @@
       margin-top: 2rem;
     }
 
+    /* Mobile Styling */
+    @media (max-width: 768px) {
+      .hero {
+        padding: 2rem;
+      }
+
+      .search-row {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .category-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
   </style>
 </head>
 
@@ -150,6 +200,16 @@
     </div>
   </section>
 
+  <section>
+    <h2>Neueste Angebote</h2>
+    <div id="newest-offers" class="category-grid"></div>
+  </section>
+
+  <section>
+    <h2>Beliebte Angebote</h2>
+    <div id="popular-offers" class="category-grid"></div>
+  </section>
+
   <footer>
     © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
   </footer>
@@ -160,45 +220,64 @@
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
     );
 
-    function search() {
-      const keyword = document.getElementById("search-input").value.trim();
-      const category = document.getElementById("category-select").value.trim();
+    async function loadNewestOffers() {
+      const { data, error } = await supabase
+        .from('listings')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(5); // Last 5 listings
 
-      if (!keyword && !category) {
-        alert("Bitte einen Suchbegriff oder eine Kategorie eingeben!");
+      if (error) {
+        console.error('Fehler beim Laden der neuesten Angebote:', error.message);
         return;
       }
 
-      // Weiterleitung zur Suchergebnisseite
+      renderOffers(data, 'newest-offers');
+    }
+
+    async function loadPopularOffers() {
+      const { data, error } = await supabase
+        .from('listings')
+        .select('*')
+        .order('created_at', { ascending: false }) // Here you can modify based on your logic for popularity
+        .limit(5); // For simplicity, taking the 5 most recent as popular for now
+
+      if (error) {
+        console.error('Fehler beim Laden der beliebtesten Angebote:', error.message);
+        return;
+      }
+
+      renderOffers(data, 'popular-offers');
+    }
+
+    function renderOffers(items, containerId) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
+
+      items.forEach(item => {
+        const image = item.image_urls?.[0] || item.image_url || 'https://via.placeholder.com/400x200?text=Kein+Bild';
+        const card = document.createElement('div');
+        card.className = 'result-card';
+        card.onclick = () => window.location.href = `mietobjekt.html?id=${item.id}`;
+        card.innerHTML = `
+          <img src="${image}" alt="${item.title}" />
+          <h3>${item.title}</h3>
+          <p><strong>Kategorie:</strong> ${item.category || 'Unbekannt'}</p>
+          <p><strong>Preis pro Tag:</strong> ${item.price_per_day || 'k. A.'} €</p>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function search() {
+      const keyword = document.getElementById("search-input").value.trim();
+      const category = document.getElementById("category-select").value.trim();
       window.location.href = `search_results.html?keyword=${keyword}&category=${category}`;
     }
 
-    async function updateNav() {
-      const { data: { session } } = await supabase.auth.getSession();
-      const nav = document.getElementById('nav-links');
-      nav.innerHTML = '';
-
-      if (session?.user) {
-        nav.innerHTML = `
-          <a href="profil.html">Mein Profil</a>
-          <a href="inserate.html">Meine Inserate</a>
-          <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-          <a href="#" onclick="logout()">Logout</a>
-        `;
-      } else {
-        nav.innerHTML = `
-          <a href="login.html">Einloggen</a>
-          <a href="register.html">Registrieren</a>
-        `;
-      }
-    }
-
-    async function logout() {
-      await supabase.auth.signOut();
-      window.location.href = "login.html";
-    }
-
-    updateNav();
+    // Initialize the page with the latest and popular offers
+    loadNewestOffers();
+    loadPopularOffers();
   </script>
 
 </body>
