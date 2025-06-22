@@ -292,8 +292,8 @@
         const card = document.createElement("div");
         card.className = "result-card";
         card.onclick = () => window.location.href = `mietobjekt.html?id=${item.id}`;
-        
-        const isFavorite = false; // Logic to check if item is already a favorite
+
+        const isFavorite = false; // Replace with logic to check if the item is already a favorite
 
         card.innerHTML = `
           <img src="${image}" alt="${item.title}" />
@@ -308,7 +308,7 @@
     }
 
     async function addToFavorites(listingId, event) {
-      event.stopPropagation();  // Verhindert die Weiterleitung beim Klick auf den Card
+      event.stopPropagation();  // Prevent the card click action
       const { data: { user } } = await supabase.auth.getUser();
 
       if (!user) {
