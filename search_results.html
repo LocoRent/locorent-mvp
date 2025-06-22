@@ -77,6 +77,37 @@
       margin-bottom: 1rem;
     }
 
+    .search-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+
+    .search-row input,
+    .search-row select,
+    .search-row button {
+      padding: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .search-row button {
+      background-color: var(--highlight-color);
+      color: var(--white);
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .search-row button:hover {
+      background-color: var(--secondary-color);
+    }
+
     /* Filter Sidebar */
     .filter-sidebar {
       width: 250px;
