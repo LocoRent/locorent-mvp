@@ -202,7 +202,7 @@
         <option value="freizeit">Freizeit & Sport</option>
         <option value="baby">Baby & Kind</option>
       </select>
-      <button onclick="search()">Suchen</button>
+      <button id="search-btn">Suchen</button>
     </div>
     <div class="filter-sidebar">
       <h3>Filter anwenden</h3>
@@ -229,21 +229,25 @@
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
     );
 
-    // Get parameters from the URL
-    const params = new URLSearchParams(location.search);
-    const keyword = params.get('keyword') || '';
-    const category = params.get('category') || '';
+    // Function to search and redirect to the correct URL
+    function search() {
+      const keyword = document.getElementById("search-input").value.trim();
+      const category = document.getElementById("category-select").value.trim();
+      window.location.href = `search_results.html?title=${keyword}&category=${category}`;
+    }
 
-    // Load listings based on filters
+    // When the button is clicked, call the search function
+    document.getElementById("search-btn").addEventListener("click", search);
+
     async function loadListings(filters = {}) {
       let query = supabase.from('listings').select('*').order('created_at', { ascending: false });
 
-      if (filters.keyword) {
-        query = query.ilike('title', `%${filters.keyword}%`);  // Search by title
+      if (filters.title) {
+        query = query.ilike('title', `%${filters.title}%`);
       }
 
       if (filters.category) {
-        query = query.eq('category', filters.category.toLowerCase());  // Filter by category
+        query = query.eq('category', filters.category.toLowerCase());
       }
 
       if (filters.price) {
@@ -264,7 +268,6 @@
       renderResults(data);
     }
 
-    // Render the search results on the page
     function renderResults(items) {
       const container = document.getElementById("results");
       container.innerHTML = "";
@@ -291,15 +294,16 @@
       });
     }
 
-    // Apply the selected filters
     function applyFilters() {
       const price = document.getElementById("min-price").value.trim() + '-' + document.getElementById("max-price").value.trim();
       const availability = document.getElementById("availability-filter").value.trim();
-      loadListings({ keyword, category, price, availability });
+      loadListings({ title: "", category: "", price, availability });
     }
 
-    // Initialize the page
-    loadListings({ keyword, category });
+    const params = new URLSearchParams(location.search);
+    const title = params.get('title') || '';
+    const category = params.get('category') || '';
+    loadListings({ title, category });
   </script>
 
 </body>
