@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="de">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -210,15 +209,13 @@
 
     // Remove a listing from favorites
     async function removeFromFavorites(listingId, event) {
-      event.stopPropagation(); // Prevent the button's default behavior
+      event.stopPropagation(); // Prevent card click
       const { data: { user } } = await supabase.auth.getUser();
 
       if (!user) {
         alert("Bitte einloggen, um Favoriten zu entfernen.");
         return;
       }
-
-      console.log("Entfernen von Favoriten:", listingId); // Debugging Ausgabe
 
       const { error } = await supabase
         .from('favorites')
@@ -230,7 +227,7 @@
         console.error("Fehler beim Entfernen aus den Favoriten:", error.message);
         alert("Fehler beim Entfernen aus den Favoriten.");
       } else {
-        alert("Favorit erfolgreich entfernt!");
+        alert("Favorit entfernt!");
         loadFavorites();  // Reload favorites after removal
       }
     }
@@ -244,4 +241,3 @@
 </body>
 
 </html>
-
