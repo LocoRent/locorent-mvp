@@ -20,6 +20,7 @@
       --border-radius: 12px;
       --shadow-color: rgba(0, 0, 0, 0.1);
       --max-width: 1200px;
+      --button-radius: 8px;
     }
 
     * {
@@ -70,6 +71,8 @@
       box-shadow: 0 2px 12px var(--shadow-color);
       margin-top: 2rem;
       text-align: center;
+      max-width: var(--max-width);
+      margin: auto;
     }
 
     .hero h2 {
@@ -79,14 +82,34 @@
     }
 
     .profile-info {
+      background-color: var(--white);
+      padding: 2rem;
+      border-radius: var(--border-radius);
+      box-shadow: 0 4px 12px var(--shadow-color);
+      margin-top: 2rem;
+      text-align: center;
       max-width: var(--max-width);
       margin: auto;
-      text-align: center;
     }
 
     .profile-info p {
-      font-size: 1.1rem;
-      margin: 1rem 0;
+      font-size: 1.2rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .profile-info button {
+      background-color: var(--highlight-color);
+      color: var(--white);
+      font-weight: 600;
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: var(--button-radius);
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .profile-info button:hover {
+      background-color: var(--secondary-color);
     }
 
     footer {
@@ -124,6 +147,7 @@
       <p><strong>Benutzername:</strong> Max Mustermann</p>
       <p><strong>Email:</strong> max@mustermann.de</p>
       <p><strong>Registrierungsdatum:</strong> 01. Januar 2022</p>
+      <p><strong>Letztes Login:</strong> 15. Januar 2025</p>
       <!-- Weitere Profilinformationen können hier hinzugefügt werden -->
       <button onclick="editProfile()">Profil bearbeiten</button>
     </div>
