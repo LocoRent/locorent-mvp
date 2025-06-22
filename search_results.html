@@ -231,9 +231,9 @@
 
     // Function to search and redirect to the correct URL
     function search() {
-      const keyword = document.getElementById("search-input").value.trim();
+      const title = document.getElementById("search-input").value.trim();
       const category = document.getElementById("category-select").value.trim();
-      window.location.href = `search_results.html?title=${keyword}&category=${category}`;
+      window.location.href = `search_results.html?title=${title}&category=${category}`;
     }
 
     // When the button is clicked, call the search function
