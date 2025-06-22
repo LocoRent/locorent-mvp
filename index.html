@@ -144,6 +144,13 @@
       font-weight: 600;
     }
 
+    .favorite-btn {
+      color: var(--highlight-color);
+      font-size: 1.5rem;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+
     footer {
       padding: 2rem;
       text-align: center;
@@ -176,7 +183,7 @@
   <header>
     <h1>Locorent</h1>
     <nav id="nav-links">
-      <!-- This is where dynamic content will appear -->
+      <!-- Dynamic content will be inserted here -->
     </nav>
   </header>
 
@@ -232,7 +239,8 @@
           <a href="index.html">Start</a>
           <a href="profil.html">Mein Profil</a>
           <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-          <a href="inserate.html">Meine Inserate</a>
+          <a href="favoriten.html">Meine Favoriten</a>
+          <a href="meine-buchungen.html">Meine Buchungen</a>
           <a href="login.html" onclick="logout(event)">Logout</a>
         `;
       } else {
@@ -294,9 +302,29 @@
           <h3>${item.title}</h3>
           <p><strong>Kategorie:</strong> ${item.category || 'Unbekannt'}</p>
           <p><strong>Preis pro Tag:</strong> ${item.price_per_day || 'k. A.'} €</p>
+          <button class="favorite-btn" onclick="addToFavorites('${item.id}')">❤️</button>
         `;
         container.appendChild(card);
       });
+    }
+
+    async function addToFavorites(listingId) {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        alert('Du musst eingeloggt sein, um Favoriten hinzuzufügen.');
+        return;
+      }
+
+      const { error } = await supabase
+        .from('favorites')
+        .upsert([{ user_id: user.id, listing_id: listingId }]);
+
+      if (error) {
+        console.error('Fehler beim Hinzufügen zu den Favoriten:', error.message);
+        alert('Fehler beim Hinzufügen zu den Favoriten.');
+      } else {
+        alert('Angebot zu deinen Favoriten hinzugefügt!');
+      }
     }
 
     function search() {
