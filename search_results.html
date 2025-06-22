@@ -229,6 +229,34 @@
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
     );
 
+    // Update Navigation (based on user login state)
+    async function updateNav() {
+      const { data: { session } } = await supabase.auth.getSession();
+      const nav = document.getElementById('nav-links');
+
+      // Show profile & logout buttons if logged in
+      if (session?.user) {
+        nav.innerHTML = `
+          <a href="index.html">Start</a>
+          <a href="profil.html">Mein Profil</a>
+          <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+          <a href="inserate.html">Meine Inserate</a>
+          <a href="javascript:void(0);" onclick="logout()">Logout</a>
+        `;
+      } else {
+        nav.innerHTML = `
+          <a href="login.html">Einloggen</a>
+          <a href="register.html">Registrieren</a>
+        `;
+      }
+    }
+
+    async function logout(event) {
+      event.preventDefault();
+      await supabase.auth.signOut();
+      window.location.href = "login.html";
+    }
+
     // Function to search and redirect to the correct URL
     function search() {
       const title = document.getElementById("search-input").value.trim();
@@ -304,6 +332,9 @@
     const title = params.get('title') || '';
     const category = params.get('category') || '';
     loadListings({ title, category });
+
+    // Initialize the page with user info
+    updateNav();
   </script>
 
 </body>
