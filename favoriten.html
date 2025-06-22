@@ -94,12 +94,6 @@
       color: var(--white);
       margin-top: 3rem;
     }
-
-    .loading {
-      text-align: center;
-      font-size: 1.5rem;
-      color: var(--green);
-    }
   </style>
 </head>
 
@@ -126,6 +120,36 @@
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
     );
 
+    // Update Navigation (based on user login state)
+    async function updateNav() {
+      const { data: { session } } = await supabase.auth.getSession();
+      const nav = document.getElementById('nav-links');
+
+      if (session?.user) {
+        nav.innerHTML = `
+          <a href="index.html">Start</a>
+          <a href="profil.html">Mein Profil</a>
+          <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+          <a href="favoriten.html">Meine Favoriten</a>
+          <a href="inserate.html">Meine Inserate</a>
+          <a href="javascript:void(0);" onclick="logout()">Logout</a>
+        `;
+      } else {
+        nav.innerHTML = `
+          <a href="login.html">Einloggen</a>
+          <a href="register.html">Registrieren</a>
+        `;
+      }
+    }
+
+    // Handle logout
+    async function logout(event) {
+      event.preventDefault();
+      await supabase.auth.signOut();
+      window.location.href = "login.html";
+    }
+
+    // Load user's favorites
     async function loadFavorites() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
@@ -160,6 +184,7 @@
       renderFavorites(favoriteListings);
     }
 
+    // Render the favorite listings
     function renderFavorites(listings) {
       const container = document.getElementById("favorites-list");
       container.innerHTML = "";
@@ -173,13 +198,15 @@
           <p><strong>Kategorie:</strong> ${listing.category || 'Unbekannt'}</p>
           <p><strong>Preis pro Tag:</strong> ${listing.price_per_day || 'k. A.'} €</p>
           <button onclick="window.location.href='mietobjekt.html?id=${listing.id}'">Details ansehen</button>
-          <button onclick="removeFavorite(${listing.id})">Favorit entfernen</button>
+          <button onclick="removeFromFavorites(${listing.id}, event)">Favorit entfernen</button>
         `;
         container.appendChild(card);
       });
     }
 
-    async function removeFavorite(listingId) {
+    // Remove a listing from favorites
+    async function removeFromFavorites(listingId, event) {
+      event.stopPropagation(); // Prevent card click
       const { data: { user } } = await supabase.auth.getUser();
 
       if (!user) {
@@ -194,11 +221,11 @@
         .eq('listing_id', listingId);
 
       if (error) {
-        console.error("Fehler beim Entfernen aus den Favoriten:", error);
-        alert("Fehler beim Entfernen des Favoriten.");
+        console.error("Fehler beim Entfernen aus den Favoriten:", error.message);
+        alert("Fehler beim Entfernen aus den Favoriten.");
       } else {
         alert("Favorit entfernt!");
-        loadFavorites(); // Aktualisiert die Liste der Favoriten
+        loadFavorites();  // Reload favorites after removal
       }
     }
 
