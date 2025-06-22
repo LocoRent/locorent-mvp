@@ -204,7 +204,7 @@
 
     // Remove a listing from favorites
     async function removeFromFavorites(listingId, event) {
-      event.stopPropagation(); // Prevent card click
+      event.preventDefault(); // Prevent the button's default behavior
       const { data: { user } } = await supabase.auth.getUser();
 
       if (!user) {
@@ -212,7 +212,7 @@
         return;
       }
 
-      console.log("Versuche, Favorit zu entfernen:", listingId); // Protokollierung hinzugefügt
+      console.log("Entfernen von Favoriten:", listingId); // Debugging Ausgabe
 
       const { error } = await supabase
         .from('favorites')
@@ -224,8 +224,8 @@
         console.error("Fehler beim Entfernen aus den Favoriten:", error.message);
         alert("Fehler beim Entfernen aus den Favoriten.");
       } else {
-        alert("Favorit entfernt!");
-        loadFavorites();  // Favoriten nach dem Entfernen neu laden
+        alert("Favorit erfolgreich entfernt!");
+        loadFavorites();  // Reload favorites after removal
       }
     }
 
