@@ -145,14 +145,20 @@
     }
 
     .favorite-btn {
-      color: var(--highlight-color);
-      font-size: 2rem;
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background-color: var(--highlight-color);
+      color: var(--white);
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
       cursor: pointer;
-      transition: color 0.3s ease;
+      margin-top: 10px;
     }
 
-    .favorite-btn.active {
-      color: #ff6347;
+    .favorite-btn:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
     }
 
     footer {
@@ -298,11 +304,19 @@
         const card = document.createElement('div');
         card.className = 'result-card';
 
-        // Add functionality for saving favorites
-        const favoriteButton = document.createElement('span');
-        favoriteButton.classList.add('favorite-btn');
-        favoriteButton.innerHTML = '❤️';
+        // Button to add to favorites
+        const favoriteButton = document.createElement('button');
+        favoriteButton.className = 'favorite-btn';
+        favoriteButton.innerText = 'Zu Favoriten';
         favoriteButton.onclick = () => toggleFavorite(item.id);
+
+        // Disable button if already a favorite
+        checkIfFavorite(item.id).then(isFavorite => {
+          if (isFavorite) {
+            favoriteButton.disabled = true;
+            favoriteButton.innerText = 'Bereits Favorit';
+          }
+        });
 
         card.onclick = () => window.location.href = `mietobjekt.html?id=${item.id}`;
         card.innerHTML = `
@@ -314,6 +328,21 @@
         card.appendChild(favoriteButton);
         container.appendChild(card);
       });
+    }
+
+    // Check if the listing is already a favorite
+    async function checkIfFavorite(listingId) {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user) return false;
+
+      const { data, error } = await supabase
+        .from('favorites')
+        .select('*')
+        .eq('user_id', session.user.id)
+        .eq('listing_id', listingId)
+        .single();
+
+      return data ? true : false;
     }
 
     // Toggle favorite functionality
