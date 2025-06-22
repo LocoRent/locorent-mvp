@@ -229,12 +229,10 @@
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
     );
 
-    // Update Navigation (based on user login state)
     async function updateNav() {
       const { data: { session } } = await supabase.auth.getSession();
       const nav = document.getElementById('nav-links');
 
-      // Show profile & logout buttons if logged in
       if (session?.user) {
         nav.innerHTML = `
           <a href="index.html">Start</a>
@@ -257,14 +255,12 @@
       window.location.href = "login.html";
     }
 
-    // Function to search and redirect to the correct URL
     function search() {
       const title = document.getElementById("search-input").value.trim();
       const category = document.getElementById("category-select").value.trim();
       window.location.href = `search_results.html?title=${title}&category=${category}`;
     }
 
-    // When the button is clicked, call the search function
     document.getElementById("search-btn").addEventListener("click", search);
 
     async function loadListings(filters = {}) {
