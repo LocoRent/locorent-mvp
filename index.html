@@ -174,7 +174,13 @@
 
   <header>
     <h1>Locorent</h1>
-    <nav id="nav-links"></nav>
+    <nav id="nav-links">
+      <a href="index.html">Start</a>
+      <a href="profil.html">Mein Profil</a>
+      <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+      <a href="inserate.html">Meine Inserate</a>
+      <a href="login.html" onclick="logout()">Logout</a>
+    </nav>
   </header>
 
   <section class="hero">
@@ -220,6 +226,26 @@
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
     );
 
+    // Update Navigation (based on user login state)
+    async function updateNav() {
+      const { data: { session } } = await supabase.auth.getSession();
+      const nav = document.getElementById('nav-links');
+      nav.innerHTML = `
+        <a href="index.html">Start</a>
+        <a href="profil.html">Mein Profil</a>
+        <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+        <a href="inserate.html">Meine Inserate</a>
+        <a href="login.html" onclick="logout()">Logout</a>
+      `;
+    }
+
+    // Handle logout
+    async function logout(event) {
+      event.preventDefault();
+      await supabase.auth.signOut();
+      window.location.href = "login.html";
+    }
+
     async function loadNewestOffers() {
       const { data, error } = await supabase
         .from('listings')
@@ -239,8 +265,8 @@
       const { data, error } = await supabase
         .from('listings')
         .select('*')
-        .order('created_at', { ascending: false }) // For now just sorting by created date, you can add logic for "popular"
-        .limit(5); // Get the last 5 for simplicity
+        .order('created_at', { ascending: false }) // Here you can modify based on your logic for popularity
+        .limit(5); // For simplicity, taking the 5 most recent as popular for now
 
       if (error) {
         console.error('Fehler beim Laden der beliebtesten Angebote:', error.message);
@@ -276,6 +302,7 @@
     }
 
     // Initialize the page with the latest and popular offers
+    updateNav();
     loadNewestOffers();
     loadPopularOffers();
   </script>
