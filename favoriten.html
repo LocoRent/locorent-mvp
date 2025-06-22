@@ -212,6 +212,8 @@
         return;
       }
 
+      console.log("Versuche, Favorit zu entfernen:", listingId); // Protokollierung hinzugefügt
+
       const { error } = await supabase
         .from('favorites')
         .delete()
@@ -223,7 +225,7 @@
         alert("Fehler beim Entfernen aus den Favoriten.");
       } else {
         alert("Favorit entfernt!");
-        loadFavorites();  // Reload favorites after removal
+        loadFavorites();  // Favoriten nach dem Entfernen neu laden
       }
     }
 
