@@ -276,7 +276,6 @@
         query = query.eq('category', filters.category.toLowerCase());
       }
 
-      // Preisfilter
       if (filters.minPrice || filters.maxPrice) {
         const minPrice = filters.minPrice || 0;
         const maxPrice = filters.maxPrice || null;
