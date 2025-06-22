@@ -239,11 +239,11 @@
       let query = supabase.from('listings').select('*').order('created_at', { ascending: false });
 
       if (filters.keyword) {
-        query = query.ilike('title', `%${filters.keyword}%`);
+        query = query.ilike('title', `%${filters.keyword}%`);  // Search by title
       }
 
       if (filters.category) {
-        query = query.eq('category', filters.category.toLowerCase());
+        query = query.eq('category', filters.category.toLowerCase());  // Filter by category
       }
 
       if (filters.price) {
@@ -305,4 +305,3 @@
 </body>
 
 </html>
-
