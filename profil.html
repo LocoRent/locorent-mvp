@@ -9,125 +9,98 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
-      --primary-color: #2e7d32;
-      --secondary-color: #a5d6a7;
-      --background-color: #f1f8e9;
-      --dark-color: #1b5e20;
-      --highlight-color: #66bb6a;
+      --primary: #2e7d32;
+      --light: #f1f8e9;
+      --dark: #1b5e20;
       --white: #fff;
-      --gray-light: #f7f7f7;
-      --gray-dark: #333;
-      --border-radius: 12px;
-      --shadow-color: rgba(0, 0, 0, 0.1);
       --max-width: 1200px;
       --button-radius: 8px;
     }
 
     * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
     }
 
     body {
       font-family: 'Poppins', sans-serif;
-      background-color: var(--background-color);
-      color: var(--gray-dark);
-      line-height: 1.6;
+      background-color: var(--light);
+      color: var(--dark);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
 
     header {
-      background-color: var(--primary-color);
+      background-color: var(--primary);
       color: var(--white);
-      padding: 1.5rem 2rem;
+      padding: 1rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-    }
-
-    header h1 {
-      font-size: 2rem;
-      font-weight: 600;
     }
 
     nav a {
-      color: var(--white);
-      margin-left: 1.5rem;
+      color: white;
       text-decoration: none;
+      margin-left: 1rem;
       font-weight: 600;
     }
 
-    nav a:hover {
-      border-bottom: 2px solid var(--highlight-color);
+    .container {
+      max-width: 600px;
+      margin: 3rem auto 2rem auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
 
-    .hero {
-      background-color: var(--white);
-      padding: 3rem 2rem;
-      border-radius: var(--border-radius);
-      box-shadow: 0 2px 12px var(--shadow-color);
-      margin-top: 2rem;
-      text-align: center;
-      max-width: var(--max-width);
-      margin: auto;
-    }
-
-    .hero h2 {
-      font-size: 2.5rem;
-      font-weight: 700;
+    h2 {
       margin-bottom: 1rem;
     }
 
-    .profile-info {
-      background-color: var(--white);
-      padding: 2rem;
-      border-radius: var(--border-radius);
-      box-shadow: 0 4px 12px var(--shadow-color);
-      margin-top: 2rem;
-      text-align: center;
-      max-width: var(--max-width);
-      margin: auto;
-    }
-
-    .profile-info p {
-      font-size: 1.2rem;
-      margin-bottom: 1.2rem;
-    }
-
-    .profile-info button {
-      background-color: var(--highlight-color);
-      color: var(--white);
+    label {
+      display: block;
+      margin-top: 1rem;
       font-weight: 600;
-      padding: 1rem 2rem;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 0.7rem;
+      margin-top: 0.3rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    button {
+      margin-top: 1.5rem;
+      padding: 0.7rem 1.5rem;
+      background-color: var(--primary);
+      color: var(--white);
       border: none;
       border-radius: var(--button-radius);
+      font-weight: 600;
       cursor: pointer;
-      transition: background-color 0.3s ease;
     }
 
-    .profile-info button:hover {
-      background-color: var(--secondary-color);
+    button:hover {
+      background-color: #1b5e20;
     }
 
     footer {
-      padding: 2rem;
-      text-align: center;
-      background-color: var(--primary-color);
+      margin-top: auto;
+      padding: 1.5rem;
+      background-color: var(--primary);
       color: var(--white);
-      border-radius: var(--border-radius);
-      margin-top: 2rem;
+      text-align: center;
     }
 
     /* Mobile Styling */
     @media (max-width: 768px) {
-      .hero {
-        padding: 2rem;
-      }
-
-      .profile-info {
+      .container {
         padding: 1rem;
       }
     }
@@ -141,16 +114,28 @@
     <nav id="nav-links"></nav>
   </header>
 
-  <section class="hero">
+  <section class="container">
     <h2>Mein Profil</h2>
-    <div class="profile-info">
-      <p><strong>Benutzername:</strong> Max Mustermann</p>
-      <p><strong>Email:</strong> max@mustermann.de</p>
-      <p><strong>Registrierungsdatum:</strong> 01. Januar 2022</p>
-      <p><strong>Letztes Login:</strong> 15. Januar 2025</p>
-      <!-- Weitere Profilinformationen können hier hinzugefügt werden -->
-      <button onclick="editProfile()">Profil bearbeiten</button>
-    </div>
+    <label for="name">Name</label>
+    <input type="text" id="name" placeholder="Dein Name" />
+
+    <label for="email">E-Mail</label>
+    <input type="email" id="email" disabled /> <!-- E-Mail wird aus Supabase Auth geladen -->
+
+    <label for="phone">Telefon</label>
+    <input type="text" id="phone" />
+
+    <label for="city">Wohnort</label>
+    <input type="text" id="city" />
+
+    <label for="bio">Über mich</label>
+    <textarea id="bio" rows="3"></textarea>
+
+    <button onclick="saveProfile()">Profil speichern</button>
+
+    <label for="password">Neues Passwort</label>
+    <input type="password" id="password" />
+    <button onclick="changePassword()">Passwort ändern</button>
   </section>
 
   <footer>
@@ -168,7 +153,6 @@
       const { data: { session } } = await supabase.auth.getSession();
       const nav = document.getElementById('nav-links');
 
-      // Show profile & logout buttons if logged in
       if (session?.user) {
         nav.innerHTML = `
           <a href="index.html">Start</a>
@@ -184,20 +168,61 @@
       }
     }
 
-    // Handle logout
     async function logout(event) {
       event.preventDefault();
       await supabase.auth.signOut();
       window.location.href = "login.html";
     }
 
-    // Edit profile function (placeholder for actual editing functionality)
-    function editProfile() {
-      window.location.href = "edit_profile.html"; // Redirects to a page where users can edit their profile
+    // Function to load and display profile
+    async function loadProfile() {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user) {
+        window.location.href = "login.html";
+        return;
+      }
+
+      const user = session.user;
+      document.getElementById('email').value = user.email; // Set email from Supabase Auth
+
+      // Profildaten aus der "profiles"-Tabelle laden
+      const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+      if (data) {
+        document.getElementById('name').value = data.name || '';
+        document.getElementById('phone').value = data.phone || '';
+        document.getElementById('city').value = data.city || '';
+        document.getElementById('bio').value = data.bio || '';
+      }
     }
 
-    // Initialize the page with user info
-    updateNav();
+    // Profil speichern
+    async function saveProfile() {
+      const { data: { user } } = await supabase.auth.getUser();
+      const updates = {
+        id: user.id,
+        name: document.getElementById('name').value,
+        phone: document.getElementById('phone').value,
+        city: document.getElementById('city').value,
+        bio: document.getElementById('bio').value
+      };
+      await supabase.from('profiles').upsert(updates);
+      alert("Profil gespeichert!");
+    }
+
+    // Passwort ändern
+    async function changePassword() {
+      const password = document.getElementById('password').value;
+      if (!password) return alert("Bitte Passwort eingeben.");
+      const { error } = await supabase.auth.updateUser({ password });
+      if (error) alert("Fehler: " + error.message);
+      else {
+        alert("Passwort geändert.");
+        document.getElementById('password').value = '';
+      }
+    }
+
+    // Initial load of profile
+    loadProfile();
   </script>
 
 </body>
