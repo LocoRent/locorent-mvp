@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -175,11 +176,7 @@
   <header>
     <h1>Locorent</h1>
     <nav id="nav-links">
-      <a href="index.html">Start</a>
-      <a href="profil.html">Mein Profil</a>
-      <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-      <a href="inserate.html">Meine Inserate</a>
-      <a href="login.html" onclick="logout()">Logout</a>
+      <!-- The links will be dynamically updated based on the login state -->
     </nav>
   </header>
 
@@ -226,20 +223,27 @@
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
     );
 
-    // Update Navigation (based on user login state)
     async function updateNav() {
       const { data: { session } } = await supabase.auth.getSession();
       const nav = document.getElementById('nav-links');
-      nav.innerHTML = `
-        <a href="index.html">Start</a>
-        <a href="profil.html">Mein Profil</a>
-        <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-        <a href="inserate.html">Meine Inserate</a>
-        <a href="login.html" onclick="logout()">Logout</a>
-      `;
+      
+      if (session?.user) {
+        nav.innerHTML = `
+          <a href="index.html">Start</a>
+          <a href="profil.html">Mein Profil</a>
+          <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+          <a href="inserate.html">Meine Inserate</a>
+          <a href="login.html" onclick="logout()">Logout</a>
+        `;
+      } else {
+        nav.innerHTML = `
+          <a href="index.html">Start</a>
+          <a href="login.html">Einloggen</a>
+        `;
+      }
     }
 
-    // Handle logout
+    // Logout function
     async function logout(event) {
       event.preventDefault();
       await supabase.auth.signOut();
@@ -265,8 +269,8 @@
       const { data, error } = await supabase
         .from('listings')
         .select('*')
-        .order('created_at', { ascending: false }) // Here you can modify based on your logic for popularity
-        .limit(5); // For simplicity, taking the 5 most recent as popular for now
+        .order('created_at', { ascending: false })
+        .limit(5); // Last 5 listings
 
       if (error) {
         console.error('Fehler beim Laden der beliebtesten Angebote:', error.message);
@@ -308,4 +312,5 @@
   </script>
 
 </body>
+
 </html>
