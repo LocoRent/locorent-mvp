@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -8,225 +9,173 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
-      --primary: #2e7d32;
-      --light: #f1f8e9;
-      --dark: #1b5e20;
+      --primary-color: #2e7d32;
+      --secondary-color: #a5d6a7;
+      --background-color: #f1f8e9;
+      --dark-color: #1b5e20;
+      --highlight-color: #66bb6a;
       --white: #fff;
+      --gray-light: #f7f7f7;
+      --gray-dark: #333;
+      --border-radius: 12px;
+      --shadow-color: rgba(0, 0, 0, 0.1);
+      --max-width: 1200px;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
       font-family: 'Poppins', sans-serif;
-      background-color: var(--light);
-      color: var(--dark);
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
+      background-color: var(--background-color);
+      color: var(--gray-dark);
+      line-height: 1.6;
     }
 
     header {
-      background-color: var(--primary);
-      color: white;
-      padding: 1rem 2rem;
+      background-color: var(--primary-color);
+      color: var(--white);
+      padding: 1.5rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 600;
     }
 
     nav a {
-      color: white;
+      color: var(--white);
+      margin-left: 1.5rem;
       text-decoration: none;
-      margin-left: 1rem;
       font-weight: 600;
     }
 
-    .container {
-      max-width: 600px;
-      margin: 3rem auto 2rem auto;
-      background: white;
-      padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    nav a:hover {
+      border-bottom: 2px solid var(--highlight-color);
     }
 
-    h2 { margin-bottom: 1rem; }
-
-    label {
-      display: block;
-      margin-top: 1rem;
-      font-weight: 600;
+    .hero {
+      background-color: var(--white);
+      padding: 3rem 2rem;
+      border-radius: var(--border-radius);
+      box-shadow: 0 2px 12px var(--shadow-color);
+      margin-top: 2rem;
+      text-align: center;
     }
 
-    input, textarea {
-      width: 100%;
-      padding: 0.7rem;
-      margin-top: 0.3rem;
-      border: 1px solid #ccc;
-      border-radius: 8px;
+    .hero h2 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
     }
 
-    button {
-      margin-top: 1.5rem;
-      padding: 0.7rem 1.5rem;
-      background-color: var(--primary);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
+    .profile-info {
+      max-width: var(--max-width);
+      margin: auto;
+      text-align: center;
     }
 
-    button:hover { background-color: #1b5e20; }
+    .profile-info p {
+      font-size: 1.1rem;
+      margin: 1rem 0;
+    }
 
     footer {
-      margin-top: auto;
-      padding: 1.5rem;
-      background-color: var(--primary);
-      color: white;
+      padding: 2rem;
       text-align: center;
+      background-color: var(--primary-color);
+      color: var(--white);
+      border-radius: var(--border-radius);
+      margin-top: 2rem;
+    }
+
+    /* Mobile Styling */
+    @media (max-width: 768px) {
+      .hero {
+        padding: 2rem;
+      }
+
+      .profile-info {
+        padding: 1rem;
+      }
     }
   </style>
 </head>
+
 <body>
 
-<header>
-  <h1>Locorent</h1>
-  <nav>
-    <a href="index.html">Startseite</a>
-    <a href="inserate.html">Meine Inserate</a>
-    <a href="#" id="logoutBtn">Abmelden</a>
-  </nav>
-</header>
+  <header>
+    <h1>Locorent</h1>
+    <nav id="nav-links"></nav>
+  </header>
 
-<section class="container">
-  <h2>Mein Profil</h2>
+  <section class="hero">
+    <h2>Mein Profil</h2>
+    <div class="profile-info">
+      <p><strong>Benutzername:</strong> Max Mustermann</p>
+      <p><strong>Email:</strong> max@mustermann.de</p>
+      <p><strong>Registrierungsdatum:</strong> 01. Januar 2022</p>
+      <!-- Weitere Profilinformationen können hier hinzugefügt werden -->
+      <button onclick="editProfile()">Profil bearbeiten</button>
+    </div>
+  </section>
 
-  <label for="name">Name</label>
-  <input type="text" id="name" placeholder="Dein Name" />
+  <footer>
+    © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
+  </footer>
 
-  <label for="email">E-Mail</label>
-  <input type="email" id="email" disabled /> <!-- E-Mail wird aus Supabase Auth geladen -->
+  <script>
+    const supabase = window.supabase.createClient(
+      'https://flnjalgqtkqycsaymmbd.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+    );
 
-  <label for="phone">Telefon</label>
-  <input type="text" id="phone" />
+    // Update Navigation (based on user login state)
+    async function updateNav() {
+      const { data: { session } } = await supabase.auth.getSession();
+      const nav = document.getElementById('nav-links');
 
-  <label for="city">Wohnort</label>
-  <input type="text" id="city" />
+      // Show profile & logout buttons if logged in
+      if (session?.user) {
+        nav.innerHTML = `
+          <a href="index.html">Start</a>
+          <a href="profil.html">Mein Profil</a>
+          <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+          <a href="javascript:void(0);" onclick="logout()">Logout</a>
+        `;
+      } else {
+        nav.innerHTML = `
+          <a href="login.html">Einloggen</a>
+          <a href="register.html">Registrieren</a>
+        `;
+      }
+    }
 
-  <label for="bio">Über mich</label>
-  <textarea id="bio" rows="3"></textarea>
-
-  <button onclick="saveProfile()">Profil speichern</button>
-
-  <label for="password">Neues Passwort</label>
-  <input type="password" id="password" />
-  <button onclick="changePassword()">Passwort ändern</button>
-</section>
-
-<section class="gallery">
-  <h3>Meine Inserate</h3>
-  <div id="listing-grid" class="grid">
-    <p>Wird geladen...</p>
-  </div>
-</section>
-
-<footer>
-  © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
-</footer>
-
-<script>
-  const supabase = window.supabase.createClient(
-    'https://flnjalgqtkqycsaymmbd.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-  );
-
-  async function loadProfile() {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session?.user) {
+    // Handle logout
+    async function logout(event) {
+      event.preventDefault();
+      await supabase.auth.signOut();
       window.location.href = "login.html";
-      return;
     }
 
-    const user = session.user;
-    document.getElementById('email').value = user.email; // E-Mail aus der Supabase Auth-Tabelle holen
-
-    // Profildaten aus der "profiles"-Tabelle laden
-    const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single();
-    if (data) {
-      document.getElementById('name').value = data.name || '';
-      document.getElementById('phone').value = data.phone || '';
-      document.getElementById('city').value = data.city || '';
-      document.getElementById('bio').value = data.bio || '';
+    // Edit profile function (placeholder for actual editing functionality)
+    function editProfile() {
+      window.location.href = "edit_profile.html"; // Redirects to a page where users can edit their profile
     }
 
-    loadUserListings(user.id);
-  }
-
-  // Profil speichern
-  async function saveProfile() {
-    const { data: { user } } = await supabase.auth.getUser();
-    const updates = {
-      id: user.id,
-      name: document.getElementById('name').value,
-      phone: document.getElementById('phone').value,
-      city: document.getElementById('city').value,
-      bio: document.getElementById('bio').value
-    };
-
-    await supabase.from('profiles').upsert(updates);
-    alert("Profil gespeichert!");
-  }
-
-  // Passwort ändern
-  async function changePassword() {
-    const password = document.getElementById('password').value;
-    if (!password) return alert("Bitte Passwort eingeben.");
-    const { error } = await supabase.auth.updateUser({ password });
-    if (error) alert("Fehler: " + error.message);
-    else {
-      alert("Passwort geändert.");
-      document.getElementById('password').value = '';
-    }
-  }
-
-  // Anzeigen der Benutzerinserate
-  async function loadUserListings(userId) {
-    const { data, error } = await supabase
-      .from('listings')
-      .select('*')
-      .eq('user_id', userId)
-      .order('created_at', { ascending: false });
-
-    const grid = document.getElementById('listing-grid');
-    grid.innerHTML = '';
-
-    if (error || !data || data.length === 0) {
-      grid.innerHTML = '<p>Keine Inserate gefunden.</p>';
-      return;
-    }
-
-    data.forEach(listing => {
-      const card = document.createElement('div');
-      card.className = 'card';
-      card.onclick = () => window.location.href = `mietobjekt.html?id=${listing.id}`;
-
-      card.innerHTML = `
-        ${listing.image_url ? `<img src="${listing.image_url}" alt="${listing.title}" />` : ''}
-        <h4>${listing.title}</h4>
-        <p>${listing.price_per_day} € pro Tag</p>
-      `;
-
-      grid.appendChild(card);
-    });
-  }
-
-  document.getElementById("logoutBtn").addEventListener("click", async () => {
-    await supabase.auth.signOut();
-    window.location.href = "login.html";
-  });
-
-  loadProfile();
-</script>
+    // Initialize the page with user info
+    updateNav();
+  </script>
 
 </body>
+
 </html>
