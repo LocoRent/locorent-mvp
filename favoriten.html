@@ -124,7 +124,6 @@
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
     );
 
-    // Update Navigation
     async function updateNav() {
       const { data: { session } } = await supabase.auth.getSession();
       const nav = document.getElementById('nav-links');
@@ -146,14 +145,12 @@
       }
     }
 
-    // Handle logout
     async function logout(event) {
       event.preventDefault();
       await supabase.auth.signOut();
       window.location.href = "login.html";
     }
 
-    // Load user's favorites
     async function loadFavorites() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
@@ -188,7 +185,6 @@
       renderFavorites(favoriteListings);
     }
 
-    // Render the favorite listings
     function renderFavorites(listings) {
       const container = document.getElementById("favorites-list");
       container.innerHTML = "";
@@ -208,7 +204,6 @@
       });
     }
 
-    // Remove a listing from favorites
     async function removeFromFavorites(listingId, event) {
       event.preventDefault();  // Verhindert das Standardverhalten (z.B. Weiterleitung)
       event.stopPropagation(); // Verhindert, dass das Klickereignis weitergegeben wird
@@ -235,10 +230,7 @@
       }
     }
 
-    // Initial load of favorites
     loadFavorites();
-
-    // Initialize the page with user info
     updateNav();
   </script>
 </body>
