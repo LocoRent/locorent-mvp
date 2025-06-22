@@ -229,10 +229,12 @@
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
     );
 
+    // Get parameters from the URL
     const params = new URLSearchParams(location.search);
     const keyword = params.get('keyword') || '';
     const category = params.get('category') || '';
 
+    // Load listings based on filters
     async function loadListings(filters = {}) {
       let query = supabase.from('listings').select('*').order('created_at', { ascending: false });
 
@@ -262,6 +264,7 @@
       renderResults(data);
     }
 
+    // Render the search results on the page
     function renderResults(items) {
       const container = document.getElementById("results");
       container.innerHTML = "";
@@ -288,15 +291,18 @@
       });
     }
 
+    // Apply the selected filters
     function applyFilters() {
       const price = document.getElementById("min-price").value.trim() + '-' + document.getElementById("max-price").value.trim();
       const availability = document.getElementById("availability-filter").value.trim();
       loadListings({ keyword, category, price, availability });
     }
 
+    // Initialize the page
     loadListings({ keyword, category });
   </script>
 
 </body>
 
 </html>
+
