@@ -18,7 +18,12 @@
       --shadow: rgba(0, 0, 0, 0.1);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
       font-family: 'Poppins', sans-serif;
       background: var(--bg);
@@ -150,7 +155,9 @@
         flex-direction: column;
         padding: 1rem;
       }
-      .gallery, .content {
+
+      .gallery,
+      .content {
         max-width: 100%;
         margin-bottom: 1rem;
       }
@@ -161,9 +168,8 @@
 <body>
   <header>
     <h1>Locorent</h1>
-    <nav>
-      <a href="index.html">Start</a>
-      <a href="profil.html">Profil</a>
+    <nav id="nav-links">
+      <!-- Dynamically filled based on login state -->
     </nav>
   </header>
 
@@ -179,15 +185,44 @@
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
     );
 
-    const params = new URLSearchParams(location.search);
-    const listingId = params.get('id');
     let currentUser = null;
     let listingOwnerId = null;
+
+    // Update Navigation (based on user login state)
+    async function updateNav() {
+      const { data: { session } } = await supabase.auth.getSession();
+      const nav = document.getElementById('nav-links');
+
+      // Show profile & logout buttons if logged in
+      if (session?.user) {
+        nav.innerHTML = `
+          <a href="index.html">Start</a>
+          <a href="profil.html">Profil</a>
+          <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+          <a href="javascript:void(0);" onclick="logout()">Logout</a>
+        `;
+      } else {
+        nav.innerHTML = `
+          <a href="login.html">Einloggen</a>
+          <a href="register.html">Registrieren</a>
+        `;
+      }
+    }
+
+    // Handle logout
+    async function logout(event) {
+      event.preventDefault();
+      await supabase.auth.signOut();
+      window.location.href = "login.html";
+    }
 
     async function loadListing() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return alert("Bitte einloggen."), location.href = "login.html";
       currentUser = user;
+
+      const params = new URLSearchParams(location.search);
+      const listingId = params.get('id');
 
       const { data: listing, error } = await supabase
         .from('listings')
@@ -219,23 +254,21 @@
           ${images.length > 1 ? `<div class="thumbnails">${thumbs}</div>` : ''}
         </div>
         <div class="content">
-          <div class="left">
-            <h2>${listing.title}</h2>
-            <p><strong>Kategorie:</strong> ${listing.category}</p>
-            <p><strong>Preis pro Tag:</strong> ${listing.price_per_day} €</p>
-            <p><strong>Beschreibung:</strong><br>${listing.description}</p>
-            <button onclick="requestBooking()">Mietanfrage senden</button>
-          </div>
-          <div class="right box">
-            <h3>Vermieter</h3>
-            <p><strong>Name:</strong> ${profile?.name || '–'}</p>
-            <p><strong>Telefon:</strong> ${profile?.phone || '–'}</p>
-            <p><strong>Ort:</strong> ${profile?.city || '–'}</p>
-            <p><strong>Über mich:</strong> ${profile?.bio || '–'}</p>
-          </div>
+          <h2>${listing.title}</h2>
+          <p><strong>Kategorie:</strong> ${listing.category}</p>
+          <p><strong>Preis pro Tag:</strong> ${listing.price_per_day} €</p>
+          <p><strong>Beschreibung:</strong><br>${listing.description}</p>
+          <button onclick="requestBooking()">Mietanfrage senden</button>
+          <button onclick="goToChat()">Nachricht an Vermieter</button>
+        </div>
+        <div class="content">
+          <h3>Vermieter</h3>
+          <p><strong>Name:</strong> ${profile?.name || '–'}</p>
+          <p><strong>Telefon:</strong> ${profile?.phone || '–'}</p>
+          <p><strong>Ort:</strong> ${profile?.city || '–'}</p>
+          <p><strong>Über mich:</strong> ${profile?.bio || '–'}</p>
         </div>
       `;
-
     }
 
     function switchImage(url, element) {
@@ -248,6 +281,17 @@
       alert("Mietanfrage gesendet!");
     }
 
+    function goToChat() {
+      if (!currentUser || !listingOwnerId) return;
+      if (currentUser.id === listingOwnerId) {
+        alert("Du kannst dir selbst keine Nachricht senden.");
+        return;
+      }
+      window.location.href = `nachrichten.html?listing_id=${listingId}&with=${listingOwnerId}`;
+    }
+
+    // Load page content
+    updateNav();
     loadListing();
   </script>
 </body>
