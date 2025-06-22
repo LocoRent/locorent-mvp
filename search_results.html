@@ -202,6 +202,8 @@
         <option value="freizeit">Freizeit & Sport</option>
         <option value="baby">Baby & Kind</option>
       </select>
+      <input type="number" id="min-price" placeholder="Min. Preis" />
+      <input type="number" id="max-price" placeholder="Max. Preis" />
       <button id="search-btn">Suchen</button>
     </div>
   </section>
@@ -248,7 +250,17 @@
     function search() {
       const title = document.getElementById("search-input").value.trim();
       const category = document.getElementById("category-select").value.trim();
-      window.location.href = `search_results.html?title=${title}&category=${category}`;
+      const minPrice = document.getElementById("min-price").value.trim();
+      const maxPrice = document.getElementById("max-price").value.trim();
+
+      const searchParams = new URLSearchParams({
+        title: title || '', 
+        category: category || '',
+        minPrice: minPrice || '0', 
+        maxPrice: maxPrice || ''
+      });
+
+      window.location.href = `search_results.html?${searchParams.toString()}`;
     }
 
     document.getElementById("search-btn").addEventListener("click", search);
@@ -262,6 +274,18 @@
 
       if (filters.category) {
         query = query.eq('category', filters.category.toLowerCase());
+      }
+
+      // Preisfilter
+      if (filters.minPrice || filters.maxPrice) {
+        const minPrice = filters.minPrice || 0;
+        const maxPrice = filters.maxPrice || null;
+
+        if (maxPrice) {
+          query = query.gte('price_per_day', minPrice).lte('price_per_day', maxPrice);
+        } else {
+          query = query.gte('price_per_day', minPrice);
+        }
       }
 
       const { data, error } = await query;
@@ -288,7 +312,6 @@
         favoriteButton.innerText = "Zu Favoriten";
         favoriteButton.onclick = (e) => toggleFavorite(item.id, e);
 
-        // Check if the listing is already a favorite
         checkIfFavorite(item.id).then(isFavorite => {
           if (isFavorite) {
             favoriteButton.innerText = "Bereits Favorit";
@@ -347,13 +370,13 @@
       }
     }
 
-    // Initial load of listings
     const params = new URLSearchParams(location.search);
     const title = params.get('title') || '';
     const category = params.get('category') || '';
-    loadListings({ title, category });
+    const minPrice = params.get('minPrice') || 0;
+    const maxPrice = params.get('maxPrice') || '';
+    loadListings({ title, category, minPrice, maxPrice });
 
-    // Initialize the page with user info
     updateNav();
   </script>
 
