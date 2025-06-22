@@ -180,9 +180,7 @@
 
   <header>
     <h1>Locorent</h1>
-    <nav id="nav-links">
-      <!-- This is where dynamic content will appear -->
-    </nav>
+    <nav id="nav-links"></nav>
   </header>
 
   <section class="hero">
@@ -205,17 +203,6 @@
         <option value="baby">Baby & Kind</option>
       </select>
       <button id="search-btn">Suchen</button>
-    </div>
-    <div class="filter-sidebar">
-      <h3>Filter anwenden</h3>
-      <input type="number" id="min-price" placeholder="Min Preis" />
-      <input type="number" id="max-price" placeholder="Max Preis" />
-      <select id="availability-filter">
-        <option value="">Verfügbarkeit</option>
-        <option value="available">Verfügbar</option>
-        <option value="unavailable">Nicht verfügbar</option>
-      </select>
-      <button onclick="applyFilters()">Filter anwenden</button>
     </div>
   </section>
 
@@ -311,7 +298,7 @@
           <p><strong>Kategorie:</strong> ${item.category || 'Unbekannt'}</p>
           <p><strong>Preis pro Tag:</strong> ${item.price_per_day || 'k. A.'} €</p>
           <p>${item.description || ''}</p>
-          <button onclick="addToFavorites(${item.id})">Favoriten hinzufügen</button>
+          <button onclick="addToFavorites(${item.id})">Zu Favoriten hinzufügen</button>
         `;
         container.appendChild(card);
       });
@@ -325,13 +312,26 @@
         return;
       }
 
-      const { error } = await supabase.from('favorites').upsert({
+      // Check if this listing is already a favorite
+      const { data: existingFavorite, error } = await supabase
+        .from('favorites')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('listing_id', listingId)
+        .single();
+
+      if (existingFavorite) {
+        alert("Dieses Angebot ist bereits in deinen Favoriten.");
+        return;
+      }
+
+      const { error: insertError } = await supabase.from('favorites').upsert({
         user_id: user.id,
         listing_id: listingId,
       });
 
-      if (error) {
-        console.error("Fehler beim Hinzufügen zu Favoriten:", error.message);
+      if (insertError) {
+        console.error("Fehler beim Hinzufügen zu Favoriten:", insertError.message);
         alert("Fehler beim Hinzufügen zu Favoriten.");
       } else {
         alert("Zum Favoriten hinzugefügt!");
