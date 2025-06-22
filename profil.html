@@ -34,7 +34,7 @@
 
     header {
       background-color: var(--primary);
-      color: var(--white);
+      color: white;
       padding: 1rem 2rem;
       display: flex;
       justify-content: space-between;
@@ -46,6 +46,10 @@
       text-decoration: none;
       margin-left: 1rem;
       font-weight: 600;
+    }
+
+    nav a:hover {
+      border-bottom: 2px solid var(--white);
     }
 
     .container {
@@ -223,6 +227,7 @@
 
     // Initial load of profile
     loadProfile();
+    updateNav();
   </script>
 
 </body>
