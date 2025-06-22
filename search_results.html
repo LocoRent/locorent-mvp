@@ -253,6 +253,7 @@
       const minPrice = document.getElementById("min-price").value.trim();
       const maxPrice = document.getElementById("max-price").value.trim();
 
+      // Store the search parameters in the URL
       const searchParams = new URLSearchParams({
         title: title || '', 
         category: category || '',
@@ -265,6 +266,7 @@
 
     document.getElementById("search-btn").addEventListener("click", search);
 
+    // Function to load the listings based on filters
     async function loadListings(filters = {}) {
       let query = supabase.from('listings').select('*').order('created_at', { ascending: false });
 
@@ -296,6 +298,7 @@
       renderResults(data);
     }
 
+    // Function to render the search results
     function renderResults(items) {
       const container = document.getElementById("results");
       container.innerHTML = "";
@@ -330,6 +333,7 @@
       });
     }
 
+    // Function to check if an item is already a favorite
     async function checkIfFavorite(listingId) {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.user) return false;
@@ -369,11 +373,19 @@
       }
     }
 
+    // Parse query parameters from the URL and load listings
     const params = new URLSearchParams(location.search);
     const title = params.get('title') || '';
     const category = params.get('category') || '';
     const minPrice = params.get('minPrice') || 0;
     const maxPrice = params.get('maxPrice') || '';
+    
+    // Set the input fields to the values from the URL parameters
+    document.getElementById("search-input").value = title;
+    document.getElementById("category-select").value = category;
+    document.getElementById("min-price").value = minPrice;
+    document.getElementById("max-price").value = maxPrice;
+
     loadListings({ title, category, minPrice, maxPrice });
 
     updateNav();
@@ -382,3 +394,4 @@
 </body>
 
 </html>
+
