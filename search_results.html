@@ -264,15 +264,6 @@
         query = query.eq('category', filters.category.toLowerCase());
       }
 
-      if (filters.price) {
-        const [minPrice, maxPrice] = filters.price.split('-');
-        query = query.gte('price_per_day', minPrice).lte('price_per_day', maxPrice);
-      }
-
-      if (filters.availability) {
-        query = query.eq('available', filters.availability === 'available');
-      }
-
       const { data, error } = await query;
       if (error) {
         console.error('Fehler beim Laden:', error.message);
@@ -294,14 +285,20 @@
         card.onclick = () => window.location.href = `mietobjekt.html?id=${item.id}`;
         
         const isFavorite = false; // Logic to check if item is already a favorite
+        checkIfFavorite(item.id).then(isFavorite => {
+          const buttonText = isFavorite ? 'Bereits Favorit' : 'Zu Favoriten';
+          const favoriteButton = document.createElement('button');
+          favoriteButton.className = 'favorite-btn';
+          favoriteButton.innerText = buttonText;
+          favoriteButton.onclick = (e) => addToFavorites(item.id, e);
+          card.appendChild(favoriteButton);
+        });
 
         card.innerHTML = `
           <img src="${image}" alt="${item.title}" />
           <h3>${item.title}</h3>
           <p><strong>Kategorie:</strong> ${item.category || 'Unbekannt'}</p>
           <p><strong>Preis pro Tag:</strong> ${item.price_per_day || 'k. A.'} €</p>
-          <p>${item.description || ''}</p>
-          <button onclick="addToFavorites(${item.id}, event)" ${isFavorite ? 'disabled' : ''}>Bereits Favorit</button>
         `;
         container.appendChild(card);
       });
