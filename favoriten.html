@@ -94,6 +94,12 @@
       color: var(--white);
       margin-top: 3rem;
     }
+
+    .loading {
+      text-align: center;
+      font-size: 1.5rem;
+      color: var(--green);
+    }
   </style>
 </head>
 
@@ -105,7 +111,9 @@
 
   <main>
     <h2>Meine Favoriten</h2>
-    <div id="favorites-list" class="category-grid">Lade Favoriten...</div>
+    <div id="favorites-list" class="category-grid">
+      <div class="loading">Lade Favoriten...</div>
+    </div>
   </main>
 
   <footer>
@@ -135,6 +143,11 @@
         return;
       }
 
+      if (favorites.length === 0) {
+        document.getElementById('favorites-list').innerHTML = "<p>Du hast noch keine Favoriten.</p>";
+        return;
+      }
+
       const favoriteListings = await Promise.all(favorites.map(async (favorite) => {
         const { data } = await supabase
           .from('listings')
@@ -160,9 +173,33 @@
           <p><strong>Kategorie:</strong> ${listing.category || 'Unbekannt'}</p>
           <p><strong>Preis pro Tag:</strong> ${listing.price_per_day || 'k. A.'} €</p>
           <button onclick="window.location.href='mietobjekt.html?id=${listing.id}'">Details ansehen</button>
+          <button onclick="removeFavorite(${listing.id})">Favorit entfernen</button>
         `;
         container.appendChild(card);
       });
+    }
+
+    async function removeFavorite(listingId) {
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (!user) {
+        alert("Bitte einloggen, um Favoriten zu entfernen.");
+        return;
+      }
+
+      const { error } = await supabase
+        .from('favorites')
+        .delete()
+        .eq('user_id', user.id)
+        .eq('listing_id', listingId);
+
+      if (error) {
+        console.error("Fehler beim Entfernen aus den Favoriten:", error);
+        alert("Fehler beim Entfernen des Favoriten.");
+      } else {
+        alert("Favorit entfernt!");
+        loadFavorites(); // Aktualisiert die Liste der Favoriten
+      }
     }
 
     // Initial load of favorites
