@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Mietobjekt – Locorent</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
@@ -15,7 +15,7 @@
       --white: #fff;
       --light: #f5f5f5;
       --radius: 12px;
-      --shadow: rgba(0,0,0,0.1);
+      --shadow: rgba(0, 0, 0, 0.1);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -121,13 +121,6 @@
       margin: 0.4rem 0;
     }
 
-    .flatpickr-input {
-      width: 100%;
-      padding: 0.8rem;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
-
     button {
       margin-top: 1rem;
       padding: 0.8rem 1.5rem;
@@ -190,7 +183,6 @@
     const listingId = params.get('id');
     let currentUser = null;
     let listingOwnerId = null;
-    let unavailableRanges = [];
 
     async function loadListing() {
       const { data: { user } } = await supabase.auth.getUser();
@@ -209,7 +201,6 @@
       }
 
       listingOwnerId = listing.user_id;
-      await loadUnavailableDates();
 
       const { data: profile } = await supabase
         .from('profiles')
@@ -233,12 +224,7 @@
             <p><strong>Kategorie:</strong> ${listing.category}</p>
             <p><strong>Preis pro Tag:</strong> ${listing.price_per_day} €</p>
             <p><strong>Beschreibung:</strong><br>${listing.description}</p>
-            <div class="box">
-              <h3>Verfügbarkeit</h3>
-              <input id="date-range" readonly>
-              <button onclick="requestBooking()">Mietanfrage senden</button>
-            </div>
-            <button onclick="goToChat()">Nachricht an Vermieter</button>
+            <button onclick="requestBooking()">Mietanfrage senden</button>
           </div>
           <div class="right box">
             <h3>Vermieter</h3>
@@ -250,12 +236,6 @@
         </div>
       `;
 
-      flatpickr("#date-range", {
-        mode: "range",
-        minDate: "today",
-        dateFormat: "Y-m-d",
-        disable: unavailableRanges
-      });
     }
 
     function switchImage(url, element) {
@@ -264,44 +244,12 @@
       element.classList.add("active");
     }
 
-    async function loadUnavailableDates() {
-      const { data } = await supabase
-        .from('rentals')
-        .select('start_date, end_date')
-        .eq('listing_id', listingId);
-      unavailableRanges = data?.map(d => ({ from: d.start_date, to: d.end_date })) || [];
-    }
-
     async function requestBooking() {
-      const input = document.getElementById("date-range").value;
-      const [start, end] = input.split(" to ");
-      if (!start || !end) return alert("Bitte Zeitraum wählen.");
-
-      const { error } = await supabase.from('rentals').insert({
-        user_id: currentUser.id,
-        listing_id: listingId,
-        start_date: start,
-        end_date: end,
-        status: "offen",
-        title: "Mietanfrage"
-      });
-
-      if (error) return alert("Fehler: " + error.message);
-      alert("Anfrage gesendet!");
-      document.getElementById("date-range").value = "";
-      await loadUnavailableDates();
-    }
-
-    function goToChat() {
-      if (!currentUser || !listingOwnerId) return;
-      if (currentUser.id === listingOwnerId) {
-        alert("Du kannst dir selbst keine Nachricht senden.");
-        return;
-      }
-      window.location.href = `nachrichten.html?listing_id=${listingId}&with=${listingOwnerId}`;
+      alert("Mietanfrage gesendet!");
     }
 
     loadListing();
   </script>
 </body>
+
 </html>
