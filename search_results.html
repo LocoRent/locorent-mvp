@@ -292,13 +292,16 @@
         const card = document.createElement("div");
         card.className = "result-card";
         card.onclick = () => window.location.href = `mietobjekt.html?id=${item.id}`;
+        
+        const isFavorite = false; // Logic to check if item is already a favorite
+
         card.innerHTML = `
           <img src="${image}" alt="${item.title}" />
           <h3>${item.title}</h3>
           <p><strong>Kategorie:</strong> ${item.category || 'Unbekannt'}</p>
           <p><strong>Preis pro Tag:</strong> ${item.price_per_day || 'k. A.'} €</p>
           <p>${item.description || ''}</p>
-          <button onclick="addToFavorites(${item.id}, event)">Zu Favoriten hinzufügen</button>
+          <button onclick="addToFavorites(${item.id}, event)" ${isFavorite ? 'disabled' : ''}>Zu Favoriten hinzufügen</button>
         `;
         container.appendChild(card);
       });
