@@ -105,9 +105,7 @@
 
   <main>
     <h2>Meine Favoriten</h2>
-    <div id="favorites-list" class="category-grid">
-      <div class="loading">Lade Favoriten...</div>
-    </div>
+    <div id="favorites-list" class="category-grid">Lade Favoriten...</div>
   </main>
 
   <footer>
@@ -120,7 +118,7 @@
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
     );
 
-    // Update Navigation (based on user login state)
+    // Update Navigation with Reitern
     async function updateNav() {
       const { data: { session } } = await supabase.auth.getSession();
       const nav = document.getElementById('nav-links');
