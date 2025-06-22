@@ -210,7 +210,9 @@
 
     // Remove a listing from favorites
     async function removeFromFavorites(listingId, event) {
-      event.stopPropagation(); // Prevent the button's default behavior
+      event.preventDefault();  // Verhindert das Standardverhalten (z.B. Weiterleitung)
+      event.stopPropagation(); // Verhindert, dass das Klickereignis weitergegeben wird
+
       const { data: { user } } = await supabase.auth.getUser();
 
       if (!user) {
