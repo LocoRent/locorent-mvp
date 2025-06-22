@@ -175,7 +175,9 @@
 
   <header>
     <h1>Locorent</h1>
-    <nav id="nav-links"></nav>
+    <nav id="nav-links">
+      <!-- This is where dynamic content will appear -->
+    </nav>
   </header>
 
   <section class="hero">
@@ -232,7 +234,7 @@
           <a href="nachrichten-inbox.html">📨 Nachrichten</a>
           <a href="favoriten.html">Meine Favoriten</a>
           <a href="inserate.html">Meine Inserate</a>
-          <a href="javascript:void(0);" onclick="logout()">Logout</a>
+          <a href="login.html" onclick="logout(event)">Logout</a>
         `;
       } else {
         nav.innerHTML = `
@@ -292,7 +294,7 @@
         const favoriteButton = document.createElement('button');
         favoriteButton.className = 'favorite-btn';
         favoriteButton.innerText = 'Zu Favoriten';
-        favoriteButton.onclick = () => toggleFavorite(item.id);
+        favoriteButton.onclick = (e) => toggleFavorite(item.id, e);
 
         // Disable button if already a favorite
         checkIfFavorite(item.id).then(isFavorite => {
@@ -330,7 +332,7 @@
     }
 
     // Toggle favorite functionality
-    async function toggleFavorite(listingId) {
+    async function toggleFavorite(listingId, event) {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.user) {
         alert('Bitte logge dich ein, um Favoriten hinzuzufügen.');
@@ -347,9 +349,11 @@
       if (data) {
         await supabase.from('favorites').delete().eq('id', data.id);
         alert('Favorit entfernt!');
+        event.target.innerText = 'Zu Favoriten';
       } else {
         await supabase.from('favorites').insert({ user_id: session.user.id, listing_id: listingId });
         alert('Favorit hinzugefügt!');
+        event.target.innerText = 'Bereits Favorit';
       }
     }
 
