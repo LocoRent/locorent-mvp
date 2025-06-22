@@ -204,7 +204,7 @@
 
     // Remove a listing from favorites
     async function removeFromFavorites(listingId, event) {
-      event.preventDefault(); // Prevent the button's default behavior
+      event.stopPropagation(); // Prevent the button's default behavior
       const { data: { user } } = await supabase.auth.getUser();
 
       if (!user) {
