@@ -168,9 +168,7 @@
 <body>
   <header>
     <h1>Locorent</h1>
-    <nav id="nav-links">
-      <!-- Dynamically filled based on login state -->
-    </nav>
+    <nav id="nav-links"></nav>
   </header>
 
   <main id="listing-details">Lade Daten...</main>
@@ -193,12 +191,12 @@
       const { data: { session } } = await supabase.auth.getSession();
       const nav = document.getElementById('nav-links');
 
-      // Show profile & logout buttons if logged in
       if (session?.user) {
         nav.innerHTML = `
           <a href="index.html">Start</a>
-          <a href="profil.html">Profil</a>
+          <a href="profil.html">Mein Profil</a>
           <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+          <a href="favoriten.html">Meine Favoriten</a>
           <a href="javascript:void(0);" onclick="logout()">Logout</a>
         `;
       } else {
@@ -260,6 +258,7 @@
           <p><strong>Beschreibung:</strong><br>${listing.description}</p>
           <button onclick="requestBooking()">Mietanfrage senden</button>
           <button onclick="goToChat()">Nachricht an Vermieter</button>
+          <button id="add-to-favorites" onclick="addToFavorites(${listing.id})">Zu Favoriten hinzufügen</button>
         </div>
         <div class="content">
           <h3>Vermieter</h3>
@@ -269,6 +268,8 @@
           <p><strong>Über mich:</strong> ${profile?.bio || '–'}</p>
         </div>
       `;
+
+      checkIfFavorite(listing.id);
     }
 
     function switchImage(url, element) {
@@ -277,17 +278,46 @@
       element.classList.add("active");
     }
 
-    async function requestBooking() {
-      alert("Mietanfrage gesendet!");
+    async function checkIfFavorite(listingId) {
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (!user) return;
+
+      const { data: existingFavorite } = await supabase
+        .from('favorites')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('listing_id', listingId)
+        .single();
+
+      if (existingFavorite) {
+        document.getElementById("add-to-favorites").disabled = true;
+        document.getElementById("add-to-favorites").textContent = "Bereits in den Favoriten";
+      }
     }
 
-    function goToChat() {
-      if (!currentUser || !listingOwnerId) return;
-      if (currentUser.id === listingOwnerId) {
-        alert("Du kannst dir selbst keine Nachricht senden.");
+    async function addToFavorites(listingId) {
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (!user) {
+        alert("Bitte einloggen, um Favoriten hinzuzufügen.");
         return;
       }
-      window.location.href = `nachrichten.html?listing_id=${listingId}&with=${listingOwnerId}`;
+
+      // Add to favorites
+      const { error } = await supabase.from('favorites').upsert({
+        user_id: user.id,
+        listing_id: listingId,
+      });
+
+      if (error) {
+        console.error("Fehler beim Hinzufügen zu Favoriten:", error.message);
+        alert("Fehler beim Hinzufügen zu Favoriten.");
+      } else {
+        alert("Zum Favoriten hinzugefügt!");
+        document.getElementById("add-to-favorites").disabled = true;
+        document.getElementById("add-to-favorites").textContent = "Bereits in den Favoriten";
+      }
     }
 
     // Load page content
