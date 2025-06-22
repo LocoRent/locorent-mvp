@@ -239,8 +239,8 @@
       const { data, error } = await supabase
         .from('listings')
         .select('*')
-        .order('created_at', { ascending: false }) // Here you can modify based on your logic for popularity
-        .limit(5); // For simplicity, taking the 5 most recent as popular for now
+        .order('created_at', { ascending: false }) // For now just sorting by created date, you can add logic for "popular"
+        .limit(5); // Get the last 5 for simplicity
 
       if (error) {
         console.error('Fehler beim Laden der beliebtesten Angebote:', error.message);
@@ -281,5 +281,4 @@
   </script>
 
 </body>
-
 </html>
