@@ -8,6 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
+    /* Styles bleiben unverändert */
     :root {
       --primary-color: #2e7d32;
       --secondary-color: #a5d6a7;
@@ -175,9 +176,7 @@
 
   <header>
     <h1>Locorent</h1>
-    <nav id="nav-links">
-      <!-- This is where dynamic content will appear -->
-    </nav>
+    <nav id="nav-links"></nav>
   </header>
 
   <section class="hero">
@@ -256,7 +255,7 @@
         .from('listings')
         .select('*')
         .order('created_at', { ascending: false })
-        .limit(5); // Last 5 listings
+        .limit(5);
 
       if (error) {
         console.error('Fehler beim Laden der neuesten Angebote:', error.message);
@@ -271,7 +270,7 @@
         .from('listings')
         .select('*')
         .order('created_at', { ascending: false })
-        .limit(5); // Last 5 listings
+        .limit(5);
 
       if (error) {
         console.error('Fehler beim Laden der beliebtesten Angebote:', error.message);
