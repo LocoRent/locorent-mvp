@@ -180,7 +180,9 @@
 
   <header>
     <h1>Locorent</h1>
-    <nav id="nav-links"></nav>
+    <nav id="nav-links">
+      <!-- This is where dynamic content will appear -->
+    </nav>
   </header>
 
   <section class="hero">
@@ -238,30 +240,24 @@
           <a href="index.html">Start</a>
           <a href="profil.html">Mein Profil</a>
           <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+          <a href="favoriten.html">Meine Favoriten</a>
           <a href="inserate.html">Meine Inserate</a>
-          <a href="javascript:void(0);" onclick="logout()">Logout</a>
+          <a href="login.html" onclick="logout(event)">Logout</a>
         `;
       } else {
         nav.innerHTML = `
+          <a href="index.html">Start</a>
           <a href="login.html">Einloggen</a>
-          <a href="register.html">Registrieren</a>
         `;
       }
     }
 
+    // Logout function
     async function logout(event) {
       event.preventDefault();
       await supabase.auth.signOut();
       window.location.href = "login.html";
     }
-
-    function search() {
-      const title = document.getElementById("search-input").value.trim();
-      const category = document.getElementById("category-select").value.trim();
-      window.location.href = `search_results.html?title=${title}&category=${category}`;
-    }
-
-    document.getElementById("search-btn").addEventListener("click", search);
 
     async function loadListings(filters = {}) {
       let query = supabase.from('listings').select('*').order('created_at', { ascending: false });
@@ -295,11 +291,6 @@
     function renderResults(items) {
       const container = document.getElementById("results");
       container.innerHTML = "";
-
-      if (!items || items.length === 0) {
-        container.innerHTML = "<p>Keine passenden Angebote gefunden.</p>";
-        return;
-      }
 
       items.forEach(item => {
         const image = item.image_urls?.[0] || item.image_url || 'https://via.placeholder.com/400x200?text=Kein+Bild';
