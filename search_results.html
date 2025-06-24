@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -46,11 +47,6 @@
       z-index: 1000;
     }
 
-    header h1 {
-      font-size: 2rem;
-      font-weight: 600;
-    }
-
     nav a {
       color: var(--white);
       margin-left: 1.5rem;
@@ -71,20 +67,14 @@
       text-align: center;
     }
 
-    .hero h2 {
-      font-size: 2.5rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-    }
-
     .search-row {
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
       justify-content: center;
-      margin-bottom: 2rem;
       max-width: var(--max-width);
       margin: auto;
+      margin-bottom: 2rem;
     }
 
     .search-row input,
@@ -125,7 +115,6 @@
       padding: 1.5rem;
       box-shadow: 0 2px 8px var(--shadow-color);
       margin-bottom: 1.5rem;
-      cursor: pointer;
       transition: transform 0.3s ease;
     }
 
@@ -142,9 +131,15 @@
       margin-bottom: 1rem;
     }
 
-    .result-card h3 {
-      margin-bottom: 0.5rem;
-      font-size: 1.2rem;
+    .result-card button {
+      margin-top: 1rem;
+      padding: 0.6rem;
+      width: 100%;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
       font-weight: 600;
     }
 
@@ -158,13 +153,8 @@
     }
 
     @media (max-width: 768px) {
-      .hero {
-        padding: 2rem;
-      }
-
       .search-row {
         flex-direction: column;
-        gap: 0.5rem;
       }
 
       .category-grid {
@@ -221,6 +211,7 @@
     async function updateNav() {
       const { data: { session } } = await supabase.auth.getSession();
       const nav = document.getElementById('nav-links');
+
       if (session?.user) {
         nav.innerHTML = `
           <a href="index.html">Start</a>
@@ -244,23 +235,14 @@
       window.location.href = "login.html";
     }
 
-    function search() {
+    document.getElementById("search-btn").addEventListener("click", () => {
       const title = document.getElementById("search-input").value.trim();
       const category = document.getElementById("category-select").value.trim();
       const minPrice = document.getElementById("min-price").value.trim();
       const maxPrice = document.getElementById("max-price").value.trim();
-
-      const searchParams = new URLSearchParams({
-        title: title || '',
-        category: category || '',
-        minPrice: minPrice || '0',
-        maxPrice: maxPrice || ''
-      });
-
+      const searchParams = new URLSearchParams({ title, category, minPrice, maxPrice });
       window.location.href = `search_results.html?${searchParams.toString()}`;
-    }
-
-    document.getElementById("search-btn").addEventListener("click", search);
+    });
 
     async function loadListings(filters = {}) {
       let query = supabase.from('listings').select('*').order('created_at', { ascending: false });
@@ -268,18 +250,13 @@
       if (filters.title) query = query.ilike('title', `%${filters.title}%`);
       if (filters.category) query = query.eq('category', filters.category.toLowerCase());
 
-      const minPrice = filters.minPrice || 0;
-      const maxPrice = filters.maxPrice || null;
-      if (maxPrice) query = query.gte('price_per_day', minPrice).lte('price_per_day', maxPrice);
-      else query = query.gte('price_per_day', minPrice);
+      const min = filters.minPrice || 0;
+      const max = filters.maxPrice;
+      if (max) query = query.gte('price_per_day', min).lte('price_per_day', max);
+      else query = query.gte('price_per_day', min);
 
       const { data, error } = await query;
-      if (error) {
-        console.error('Fehler beim Laden:', error.message);
-        return;
-      }
-
-      renderResults(data);
+      if (!error) renderResults(data);
     }
 
     function renderResults(items) {
@@ -287,27 +264,33 @@
       container.innerHTML = "";
 
       items.forEach(item => {
-        const image = item.image_urls?.[0] || item.image_url || 'https://via.placeholder.com/400x200?text=Kein+Bild';
         const card = document.createElement("div");
         card.className = "result-card";
-        card.onclick = () => window.location.href = `mietobjekt.html?id=${item.id}`;
 
-        const favoriteButton = document.createElement("button");
-        favoriteButton.className = "favorite-btn";
-        favoriteButton.innerText = "Zu Favoriten";
-        favoriteButton.onclick = (e) => toggleFavorite(item.id, e);
-
-        checkIfFavorite(item.id).then(isFavorite => {
-          if (isFavorite) favoriteButton.innerText = "Bereits Favorit";
-        });
-
-        card.innerHTML = `
-          <img src="${image}" alt="${item.title}" />
+        const content = document.createElement("div");
+        content.style.cursor = "pointer";
+        content.onclick = () => window.location.href = `mietobjekt.html?id=${item.id}`;
+        content.innerHTML = `
+          <img src="${item.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" alt="${item.title}" />
           <h3>${item.title}</h3>
           <p><strong>Kategorie:</strong> ${item.category || 'Unbekannt'}</p>
           <p><strong>Preis pro Tag:</strong> ${item.price_per_day || 'k. A.'} €</p>
           <p>${item.description || ''}</p>
         `;
+
+        const favoriteButton = document.createElement("button");
+        favoriteButton.innerText = "Zu Favoriten";
+        favoriteButton.onclick = async (e) => {
+          e.stopPropagation();
+          const toggled = await toggleFavorite(item.id);
+          favoriteButton.innerText = toggled ? "Bereits Favorit" : "Zu Favoriten";
+        };
+
+        checkIfFavorite(item.id).then(isFavorite => {
+          if (isFavorite) favoriteButton.innerText = "Bereits Favorit";
+        });
+
+        card.appendChild(content);
         card.appendChild(favoriteButton);
         container.appendChild(card);
       });
@@ -324,15 +307,12 @@
         .eq('listing_id', listingId)
         .single();
 
-      return data ? true : false;
+      return !!data;
     }
 
-    async function toggleFavorite(listingId, event) {
-      event.stopPropagation();
-      const button = event.target;
-
+    async function toggleFavorite(listingId) {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.user) return;
+      if (!session?.user) return false;
 
       const { data } = await supabase
         .from('favorites')
@@ -343,26 +323,29 @@
 
       if (data) {
         await supabase.from('favorites').delete().eq('id', data.id);
-        button.innerText = "Zu Favoriten";
+        return false;
       } else {
         await supabase.from('favorites').insert({ user_id: session.user.id, listing_id: listingId });
-        button.innerText = "Bereits Favorit";
+        return true;
       }
     }
 
     const params = new URLSearchParams(location.search);
-    const title = params.get('title') || '';
-    const category = params.get('category') || '';
-    const minPrice = params.get('minPrice') || 0;
-    const maxPrice = params.get('maxPrice') || '';
+    const filters = {
+      title: params.get('title') || '',
+      category: params.get('category') || '',
+      minPrice: params.get('minPrice') || 0,
+      maxPrice: params.get('maxPrice') || ''
+    };
 
-    document.getElementById("search-input").value = title;
-    document.getElementById("category-select").value = category;
-    document.getElementById("min-price").value = minPrice;
-    document.getElementById("max-price").value = maxPrice;
+    document.getElementById("search-input").value = filters.title;
+    document.getElementById("category-select").value = filters.category;
+    document.getElementById("min-price").value = filters.minPrice;
+    document.getElementById("max-price").value = filters.maxPrice;
 
-    loadListings({ title, category, minPrice, maxPrice });
     updateNav();
+    loadListings(filters);
   </script>
 </body>
+
 </html>
