@@ -158,7 +158,6 @@
       margin-top: 2rem;
     }
 
-    /* Mobile Styling */
     @media (max-width: 768px) {
       .hero {
         padding: 2rem;
@@ -224,21 +223,17 @@
       const { data: { session } } = await supabase.auth.getSession();
       const nav = document.getElementById('nav-links');
 
-      if (session?.user) {
-        nav.innerHTML = `
-          <a href="index.html">Start</a>
-          <a href="profil.html">Mein Profil</a>
-          <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-          <a href="favoriten.html">Meine Favoriten</a>
-          <a href="inserate.html">Meine Inserate</a>
-          <a href="javascript:void(0);" onclick="logout()">Logout</a>
-        `;
-      } else {
-        nav.innerHTML = `
-          <a href="login.html">Einloggen</a>
-          <a href="register.html">Registrieren</a>
-        `;
-      }
+      nav.innerHTML = session?.user ? `
+        <a href="index.html">Start</a>
+        <a href="profil.html">Mein Profil</a>
+        <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+        <a href="favoriten.html">Meine Favoriten</a>
+        <a href="inserate.html">Meine Inserate</a>
+        <a href="javascript:void(0);" onclick="logout()">Logout</a>
+      ` : `
+        <a href="login.html">Einloggen</a>
+        <a href="register.html">Registrieren</a>
+      `;
     }
 
     async function logout(event) {
@@ -253,11 +248,10 @@
       const minPrice = document.getElementById("min-price").value.trim();
       const maxPrice = document.getElementById("max-price").value.trim();
 
-      // Store the search parameters in the URL
       const searchParams = new URLSearchParams({
-        title: title || '', 
+        title: title || '',
         category: category || '',
-        minPrice: minPrice || '0', 
+        minPrice: minPrice || '0',
         maxPrice: maxPrice || ''
       });
 
@@ -266,51 +260,38 @@
 
     document.getElementById("search-btn").addEventListener("click", search);
 
-    // Function to load the listings based on filters
     async function loadListings(filters = {}) {
       let query = supabase.from('listings').select('*').order('created_at', { ascending: false });
 
-      if (filters.title) {
-        query = query.ilike('title', `%${filters.title}%`);
-      }
+      if (filters.title) query = query.ilike('title', `%${filters.title}%`);
+      if (filters.category) query = query.eq('category', filters.category.toLowerCase());
 
-      if (filters.category) {
-        query = query.eq('category', filters.category.toLowerCase());
-      }
+      const minPrice = filters.minPrice || 0;
+      const maxPrice = filters.maxPrice || null;
 
-      if (filters.minPrice || filters.maxPrice) {
-        const minPrice = filters.minPrice || 0;
-        const maxPrice = filters.maxPrice || null;
-
-        if (maxPrice) {
-          query = query.gte('price_per_day', minPrice).lte('price_per_day', maxPrice);
-        } else {
-          query = query.gte('price_per_day', minPrice);
-        }
+      if (maxPrice) {
+        query = query.gte('price_per_day', minPrice).lte('price_per_day', maxPrice);
+      } else {
+        query = query.gte('price_per_day', minPrice);
       }
 
       const { data, error } = await query;
-      if (error) {
-        console.error('Fehler beim Laden:', error.message);
-        return;
-      }
+      if (error) return console.error('Fehler beim Laden:', error.message);
 
       renderResults(data);
     }
 
-    // Function to render the search results
     function renderResults(items) {
       const container = document.getElementById("results");
       container.innerHTML = "";
 
       items.forEach(item => {
-        const image = item.image_urls?.[0] || item.image_url || 'https://via.placeholder.com/400x200?text=Kein+Bild';
+        const image = item.image_urls?.[0] || 'https://via.placeholder.com/400x200?text=Kein+Bild';
         const card = document.createElement("div");
         card.className = "result-card";
         card.onclick = () => window.location.href = `mietobjekt.html?id=${item.id}`;
 
         const favoriteButton = document.createElement("button");
-        favoriteButton.className = "favorite-btn";
         favoriteButton.innerText = "Zu Favoriten";
         favoriteButton.onclick = (e) => toggleFavorite(item.id, e);
 
@@ -328,36 +309,33 @@
           <p><strong>Preis pro Tag:</strong> ${item.price_per_day || 'k. A.'} €</p>
           <p>${item.description || ''}</p>
         `;
+
         card.appendChild(favoriteButton);
         container.appendChild(card);
       });
     }
 
-    // Function to check if an item is already a favorite
     async function checkIfFavorite(listingId) {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.user) return false;
 
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from('favorites')
         .select('*')
         .eq('user_id', session.user.id)
         .eq('listing_id', listingId)
         .single();
 
-      return data ? true : false;
+      return !!data;
     }
 
     async function toggleFavorite(listingId, event) {
-      event.stopPropagation();  // Prevent the card click action
+      event.stopPropagation();
 
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.user) {
-        alert('Bitte logge dich ein, um Favoriten hinzuzufügen.');
-        return;
-      }
+      if (!session?.user) return;
 
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from('favorites')
         .select('*')
         .eq('user_id', session.user.id)
@@ -366,32 +344,29 @@
 
       if (data) {
         await supabase.from('favorites').delete().eq('id', data.id);
-        alert('Favorit entfernt!');
+        event.target.innerText = "Zu Favoriten";
+        event.target.disabled = false;
       } else {
         await supabase.from('favorites').insert({ user_id: session.user.id, listing_id: listingId });
-        alert('Favorit hinzugefügt!');
+        event.target.innerText = "Bereits Favorit";
+        event.target.disabled = true;
       }
     }
 
-    // Parse query parameters from the URL and load listings
     const params = new URLSearchParams(location.search);
     const title = params.get('title') || '';
     const category = params.get('category') || '';
     const minPrice = params.get('minPrice') || 0;
     const maxPrice = params.get('maxPrice') || '';
-    
-    // Set the input fields to the values from the URL parameters
+
     document.getElementById("search-input").value = title;
     document.getElementById("category-select").value = category;
     document.getElementById("min-price").value = minPrice;
     document.getElementById("max-price").value = maxPrice;
 
     loadListings({ title, category, minPrice, maxPrice });
-
     updateNav();
   </script>
 
 </body>
-
 </html>
-
