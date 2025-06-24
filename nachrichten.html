@@ -200,8 +200,6 @@
     }
 
     currentUser = user;
-    console.log("Angemeldeter Benutzer:", currentUser.id);
-    console.log("Chat mit:", chatWith);
     await ensureProfileExists(user.id, user.email);
     await loadHeader();
     await loadMessages();
@@ -235,7 +233,6 @@
 
     chat.innerHTML = '';
     if (error) {
-      console.error("Fehler beim Laden:", error.message);
       chat.innerHTML = '<p>Fehler beim Laden.</p>';
       return;
     }
@@ -277,18 +274,21 @@
     const content = input.value.trim();
     if (!content) return;
 
-    const { error } = await supabase.from('messages').insert({
+    const { data, error } = await supabase.from('messages').insert({
       sender_id: currentUser.id,
       receiver_id: chatWith,
       content,
       listing_id: listingId
-    });
+    }).select().single();
 
-    if (!error) {
-      input.value = '';
-    } else {
+    if (error) {
       alert("Fehler beim Senden: " + error.message);
+      return;
     }
+
+    input.value = '';
+    renderMessage(data); // direkt anzeigen
+    document.getElementById('chat').scrollTop = document.getElementById('chat').scrollHeight;
   }
 
   function setupRealtime() {
@@ -302,11 +302,11 @@
       }, payload => {
         const msg = payload.new;
 
-        const relevant =
-          (msg.sender_id === currentUser.id && msg.receiver_id === chatWith) ||
-          (msg.sender_id === chatWith && msg.receiver_id === currentUser.id);
+        // Eigene Nachrichten überspringen – wurden bereits lokal angezeigt
+        if (msg.sender_id === currentUser.id) return;
 
-        console.log("Neue Nachricht empfangen:", msg);
+        const relevant =
+          (msg.sender_id === chatWith && msg.receiver_id === currentUser.id);
 
         if (relevant) {
           renderMessage(msg);
@@ -316,12 +316,10 @@
       }).subscribe();
   }
 
-  // Aufräumen beim Verlassen der Seite
   window.addEventListener('beforeunload', () => {
     if (channel) supabase.removeChannel(channel);
   });
 
-  // Enter-Taste zum Senden
   document.getElementById('message-input').addEventListener('keydown', e => {
     if (e.key === 'Enter') sendMessage();
   });
