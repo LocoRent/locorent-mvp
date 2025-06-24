@@ -1,6 +1,6 @@
+<!-- vollständige favoriten.html -->
 <!DOCTYPE html>
 <html lang="de">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -93,6 +93,22 @@
       font-weight: 600;
     }
 
+    .result-card button {
+      margin-top: 0.5rem;
+      padding: 0.5rem;
+      width: 100%;
+      background: var(--green);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .result-card button:last-child {
+      background: #c62828;
+    }
+
     footer {
       text-align: center;
       padding: 1.5rem;
@@ -102,7 +118,6 @@
     }
   </style>
 </head>
-
 <body>
   <header>
     <h1>Locorent</h1>
@@ -198,18 +213,17 @@
           <p><strong>Kategorie:</strong> ${listing.category || 'Unbekannt'}</p>
           <p><strong>Preis pro Tag:</strong> ${listing.price_per_day || 'k. A.'} €</p>
           <button onclick="window.location.href='mietobjekt.html?id=${listing.id}'">Details ansehen</button>
-          <button onclick="removeFromFavorites(${listing.id}, event)">Favorit entfernen</button>
+          <button onclick="removeFromFavorites('${listing.id}', event)">Favorit entfernen</button>
         `;
         container.appendChild(card);
       });
     }
 
     async function removeFromFavorites(listingId, event) {
-      event.preventDefault();  // Verhindert das Standardverhalten (z.B. Weiterleitung)
-      event.stopPropagation(); // Verhindert, dass das Klickereignis weitergegeben wird
+      event.preventDefault();
+      event.stopPropagation();
 
       const { data: { user } } = await supabase.auth.getUser();
-
       if (!user) {
         alert("Bitte einloggen, um Favoriten zu entfernen.");
         return;
@@ -226,7 +240,7 @@
         alert("Fehler beim Entfernen aus den Favoriten.");
       } else {
         alert("Favorit erfolgreich entfernt!");
-        loadFavorites();  // Reload favorites after removal
+        loadFavorites();
       }
     }
 
@@ -234,5 +248,4 @@
     updateNav();
   </script>
 </body>
-
 </html>
