@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="de">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -246,6 +245,7 @@
         `<img src="${url}" class="${i === 0 ? 'active' : ''}" onclick="switchImage('${url}', this)">`
       ).join('');
 
+
       document.getElementById('listing-details').innerHTML = `
         <div class="gallery">
           <img src="${images[0]}" class="main-image" id="mainImage">
@@ -325,5 +325,4 @@
     loadListing();
   </script>
 </body>
-
 </html>
