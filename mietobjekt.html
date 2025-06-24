@@ -254,7 +254,7 @@
           <p><strong>Preis pro Tag:</strong> ${listing.price_per_day} €</p>
           <p><strong>Beschreibung:</strong><br>${listing.description}</p>
           <button onclick="goToChat()">Nachricht an Vermieter</button>
-          <button id="add-to-favorites" onclick="addToFavorites(${listing.id})">Zu Favoriten hinzufügen</button>
+          <button id="add-to-favorites" onclick="addToFavorites('${listing.id}')">Zu Favoriten hinzufügen</button>
         </div>
         <div class="content">
           <h3>Vermieter</h3>
@@ -275,7 +275,6 @@
 
     async function checkIfFavorite(listingId) {
       const { data: { user } } = await supabase.auth.getUser();
-
       if (!user) return;
 
       const { data: existingFavorite } = await supabase
@@ -299,7 +298,6 @@
         return;
       }
 
-      // Add to favorites
       const { error } = await supabase.from('favorites').upsert({
         user_id: user.id,
         listing_id: listingId,
@@ -310,22 +308,20 @@
         alert("Fehler beim Hinzufügen zu Favoriten.");
       } else {
         alert("Zum Favoriten hinzugefügt!");
-        document.getElementById("add-to-favorites").disabled = true;
-        document.getElementById("add-to-favorites").textContent = "Bereits in den Favoriten";
+        const btn = document.getElementById("add-to-favorites");
+        btn.disabled = true;
+        btn.textContent = "Bereits in den Favoriten";
       }
     }
 
-    // Funktion für den Button "Nachricht an Vermieter"
     function goToChat() {
       const params = new URLSearchParams(location.search);
       const listingId = params.get('id');
-      const chatWith = listingOwnerId; // Setze die ID des Vermieters
+      const chatWith = listingOwnerId;
 
-      // Weiterleitung zur Chat-Seite
       window.location.href = `nachrichten.html?listing_id=${listingId}&with=${chatWith}`;
     }
 
-    // Load page content
     updateNav();
     loadListing();
   </script>
