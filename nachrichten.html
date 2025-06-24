@@ -99,6 +99,16 @@
       border-radius: 8px;
       max-width: 75%;
       word-wrap: break-word;
+      position: relative;
+      font-size: 0.95rem;
+    }
+
+    .message time {
+      display: block;
+      font-size: 0.7rem;
+      color: #555;
+      margin-top: 0.25rem;
+      text-align: right;
     }
 
     .sent .message {
@@ -167,15 +177,16 @@
   let currentUser = null;
   let partnerAvatar = '';
   let partnerName = '';
+  let channel = null;
 
   async function ensureProfileExists(userId, userEmail) {
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from('profiles')
       .select('id')
       .eq('id', userId)
       .maybeSingle();
 
-    if (!data && !error) {
+    if (!data) {
       await supabase.from('profiles').insert({ id: userId, name: userEmail });
     }
   }
@@ -195,21 +206,26 @@
   }
 
   async function loadHeader() {
-    const [{ data: partner }, { data: listing }] = await Promise.all([
-      supabase.from('profiles').select('name, avatar_url').eq('id', chatWith).single(),
-      supabase.from('listings').select('title').eq('id', listingId).single()
-    ]);
+    try {
+      const [{ data: partner }, { data: listing }] = await Promise.all([
+        supabase.from('profiles').select('name, avatar_url').eq('id', chatWith).single(),
+        supabase.from('listings').select('title').eq('id', listingId).single()
+      ]);
 
-    partnerName = partner?.name || 'Unbekannt';
-    partnerAvatar = partner?.avatar_url || '';
-
-    document.getElementById('chat-partner').textContent = partnerName;
-    document.getElementById('listing-title').textContent = listing?.title || '';
-
-    document.getElementById('partner-avatar').src = partnerAvatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(partnerName)}&background=66bb6a&color=fff`;
+      partnerName = partner?.name || 'Unbekannt';
+      partnerAvatar = partner?.avatar_url || '';
+      document.getElementById('chat-partner').textContent = partnerName;
+      document.getElementById('listing-title').textContent = listing?.title || '';
+      document.getElementById('partner-avatar').src = partnerAvatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(partnerName)}&background=66bb6a&color=fff`;
+    } catch {
+      alert("Fehler beim Laden von Chatdaten.");
+    }
   }
 
   async function loadMessages() {
+    const chat = document.getElementById('chat');
+    chat.innerHTML = '<p>Lade Nachrichten...</p>';
+
     const { data, error } = await supabase
       .from('messages')
       .select('*')
@@ -217,16 +233,14 @@
       .eq('listing_id', listingId)
       .order('created_at', { ascending: true });
 
-    const chat = document.getElementById('chat');
     chat.innerHTML = '';
 
     if (error) {
-      chat.innerHTML = '<p>Fehler beim Laden.</p>';
+      chat.innerHTML = '<p>Fehler beim Laden der Nachrichten.</p>';
       return;
     }
 
-    // Zeige sowohl gesendete als auch empfangene Nachrichten im Chat
-    data.forEach(msg => renderMessage(msg));
+    data.forEach(renderMessage);
     chat.scrollTop = chat.scrollHeight;
   }
 
@@ -237,6 +251,11 @@
     const bubble = document.createElement('div');
     bubble.className = 'message';
     bubble.textContent = msg.content;
+
+    const timestamp = document.createElement('time');
+    const time = new Date(msg.created_at);
+    timestamp.textContent = time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    bubble.appendChild(timestamp);
 
     const avatar = document.createElement('img');
     avatar.src = msg.sender_id === currentUser.id
@@ -262,14 +281,13 @@
 
     if (!error) {
       input.value = '';
-      await loadMessages();
     } else {
       alert("Fehler beim Senden: " + error.message);
     }
   }
 
   function setupRealtime() {
-    supabase
+    channel = supabase
       .channel('messages_channel')
       .on('postgres_changes', {
         event: 'INSERT',
@@ -288,6 +306,16 @@
         }
       }).subscribe();
   }
+
+  // Aufräumen bei Verlassen
+  window.addEventListener('beforeunload', () => {
+    if (channel) supabase.removeChannel(channel);
+  });
+
+  // Enter-Taste zum Senden
+  document.getElementById('message-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') sendMessage();
+  });
 
   init();
 </script>
