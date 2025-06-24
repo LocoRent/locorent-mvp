@@ -185,7 +185,6 @@
     let currentUser = null;
     let listingOwnerId = null;
 
-    // Update Navigation (based on user login state)
     async function updateNav() {
       const { data: { session } } = await supabase.auth.getSession();
       const nav = document.getElementById('nav-links');
@@ -206,7 +205,6 @@
       }
     }
 
-    // Handle logout
     async function logout(event) {
       event.preventDefault();
       await supabase.auth.signOut();
@@ -245,7 +243,6 @@
         `<img src="${url}" class="${i === 0 ? 'active' : ''}" onclick="switchImage('${url}', this)">`
       ).join('');
 
-
       document.getElementById('listing-details').innerHTML = `
         <div class="gallery">
           <img src="${images[0]}" class="main-image" id="mainImage">
@@ -256,14 +253,12 @@
           <p><strong>Kategorie:</strong> ${listing.category}</p>
           <p><strong>Preis pro Tag:</strong> ${listing.price_per_day} €</p>
           <p><strong>Beschreibung:</strong><br>${listing.description}</p>
-          <button onclick="requestBooking()">Mietanfrage senden</button>
           <button onclick="goToChat()">Nachricht an Vermieter</button>
           <button id="add-to-favorites" onclick="addToFavorites(${listing.id})">Zu Favoriten hinzufügen</button>
         </div>
         <div class="content">
           <h3>Vermieter</h3>
           <p><strong>Name:</strong> ${profile?.name || '–'}</p>
-          <p><strong>Telefon:</strong> ${profile?.phone || '–'}</p>
           <p><strong>Ort:</strong> ${profile?.city || '–'}</p>
           <p><strong>Über mich:</strong> ${profile?.bio || '–'}</p>
         </div>
