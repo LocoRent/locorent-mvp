@@ -315,6 +315,16 @@
       }
     }
 
+    // Funktion für den Button "Nachricht an Vermieter"
+    function goToChat() {
+      const params = new URLSearchParams(location.search);
+      const listingId = params.get('id');
+      const chatWith = listingOwnerId; // Setze die ID des Vermieters
+
+      // Weiterleitung zur Chat-Seite
+      window.location.href = `nachrichten.html?listing_id=${listingId}&with=${chatWith}`;
+    }
+
     // Load page content
     updateNav();
     loadListing();
