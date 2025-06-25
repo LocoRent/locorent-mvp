@@ -185,7 +185,6 @@
     <a href="index.html">Zurück zur Übersicht</a>
   </nav>
 </header>
-
 <main>
   <section class="form-container">
     <h2>Neues Inserat erstellen</h2>
@@ -217,8 +216,8 @@
         <input type="number" id="price-input" />
       </div>
       <div class="field">
-        <label>Ort</label>
-        <input type="text" id="location-input" placeholder="z. B. Berlin" />
+        <label>Ort (Pflichtfeld)</label>
+        <input type="text" id="location-input" placeholder="z. B. 10115 Berlin" />
       </div>
       <div class="field" style="flex: 1 1 100%;">
         <label>Beschreibung</label>
@@ -236,11 +235,10 @@
 
   <section class="gallery" id="gallery">Galerie lädt…</section>
 </main>
-
 <script>
 const supabase = window.supabase.createClient(
   'https://flnjalgqtkqycsaymmbd.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
 );
 
 let uploadedImageUrls = [];
@@ -312,25 +310,27 @@ document.getElementById("save-btn").addEventListener("click", async () => {
   const description = document.getElementById('desc-input').value.trim();
   const location = document.getElementById('location-input').value.trim();
 
-  if (!title || !price || !category) {
-    alert("Titel, Kategorie und Preis sind Pflichtfelder.");
+  if (!title || !price || !category || !location) {
+    alert("Titel, Kategorie, Preis und Ort sind Pflichtfelder.");
     return;
   }
 
   let latitude = null;
   let longitude = null;
 
-  if (location) {
-    try {
-      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(location)}`);
-      const data = await res.json();
-      if (data.length > 0) {
-        latitude = parseFloat(data[0].lat);
-        longitude = parseFloat(data[0].lon);
-      }
-    } catch (err) {
-      console.warn("Geocoding fehlgeschlagen:", err);
+  try {
+    const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(location)}`);
+    const data = await res.json();
+    if (data.length > 0) {
+      latitude = parseFloat(data[0].lat);
+      longitude = parseFloat(data[0].lon);
+    } else {
+      alert("Ort nicht gefunden. Bitte überprüfe PLZ oder Stadtname.");
+      return;
     }
+  } catch (err) {
+    alert("Geocoding fehlgeschlagen.");
+    return;
   }
 
   const { error: insertError } = await supabase.from('listings').insert({
