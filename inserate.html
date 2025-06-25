@@ -194,6 +194,10 @@
         <label>Preis €/Tag</label>
         <input type="number" id="price-input" />
       </div>
+      <div class="field">
+        <label>Ort</label>
+        <input type="text" id="location-input" placeholder="z. B. Berlin" />
+      </div>
       <div class="field" style="flex: 1 1 100%;">
         <label>Beschreibung</label>
         <textarea id="desc-input" rows="3"></textarea>
@@ -217,129 +221,151 @@ const supabase = window.supabase.createClient(
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
 );
 
-  let uploadedImageUrls = [];
+let uploadedImageUrls = [];
 
-  document.getElementById("dropzone").addEventListener("click", () => {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.accept = "image/*";
-    input.multiple = true;
-    input.onchange = () => handleFiles(input.files);
-    input.click();
+document.getElementById("dropzone").addEventListener("click", () => {
+  const input = document.createElement("input");
+  input.type = "file";
+  input.accept = "image/*";
+  input.multiple = true;
+  input.onchange = () => handleFiles(input.files);
+  input.click();
+});
+
+async function handleFiles(files) {
+  for (let file of files) {
+    const path = `listing-images/${Date.now()}-${file.name}`;
+    const { error } = await supabase.storage.from('listing-images').upload(path, file);
+    if (!error) {
+      const { data } = supabase.storage.from('listing-images').getPublicUrl(path);
+      uploadedImageUrls.push(data.publicUrl);
+    } else {
+      alert("Fehler beim Upload: " + error.message);
+    }
+  }
+  renderPreviews();
+}
+
+function renderPreviews() {
+  const container = document.getElementById("preview-gallery");
+  container.innerHTML = '';
+  uploadedImageUrls.forEach((url, index) => {
+    const box = document.createElement("div");
+    box.className = "preview-box";
+    box.innerHTML = `
+      <img src="${url}" alt="Bild ${index}">
+      <button class="remove-btn" onclick="removeImage(${index})">×</button>
+    `;
+    container.appendChild(box);
   });
+}
 
-  async function handleFiles(files) {
-    for (let file of files) {
-      const path = `listing-images/${Date.now()}-${file.name}`;
-      const { error } = await supabase.storage.from('listing-images').upload(path, file);
-      if (!error) {
-        const { data } = supabase.storage.from('listing-images').getPublicUrl(path);
-        uploadedImageUrls.push(data.publicUrl);
-      } else {
-        alert("Fehler beim Upload: " + error.message);
+function removeImage(index) {
+  uploadedImageUrls.splice(index, 1);
+  renderPreviews();
+}
+
+document.getElementById("save-btn").addEventListener("click", async () => {
+  const { data: sessionData } = await supabase.auth.getSession();
+  const user = sessionData?.session?.user;
+  if (!user) return alert("Nicht eingeloggt!");
+
+  const title = document.getElementById('title-input').value.trim();
+  const category = document.getElementById('category-input').value;
+  const price = parseFloat(document.getElementById('price-input').value);
+  const description = document.getElementById('desc-input').value.trim();
+  const location = document.getElementById('location-input').value.trim();
+
+  if (!title || !price || !category) {
+    alert("Titel, Kategorie und Preis sind Pflichtfelder.");
+    return;
+  }
+
+  let latitude = null;
+  let longitude = null;
+
+  if (location) {
+    try {
+      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(location)}`);
+      const data = await res.json();
+      if (data.length > 0) {
+        latitude = parseFloat(data[0].lat);
+        longitude = parseFloat(data[0].lon);
       }
+    } catch (err) {
+      console.warn("Geocoding fehlgeschlagen:", err);
     }
-    renderPreviews();
   }
 
-  function renderPreviews() {
-    const container = document.getElementById("preview-gallery");
-    container.innerHTML = '';
-    uploadedImageUrls.forEach((url, index) => {
-      const box = document.createElement("div");
-      box.className = "preview-box";
-      box.innerHTML = `
-        <img src="${url}" alt="Bild ${index}">
-        <button class="remove-btn" onclick="removeImage(${index})">×</button>
-      `;
-      container.appendChild(box);
-    });
-  }
-
-  function removeImage(index) {
-    uploadedImageUrls.splice(index, 1);
-    renderPreviews();
-  }
-
-  document.getElementById("save-btn").addEventListener("click", async () => {
-    const { data: sessionData } = await supabase.auth.getSession();
-    const user = sessionData?.session?.user;
-    if (!user) return alert("Nicht eingeloggt!");
-
-    const title = document.getElementById('title-input').value.trim();
-    const category = document.getElementById('category-input').value;
-    const price = parseFloat(document.getElementById('price-input').value);
-    const description = document.getElementById('desc-input').value.trim();
-
-    if (!title || !price || !category) {
-      alert("Titel, Kategorie und Preis sind Pflichtfelder.");
-      return;
-    }
-
-    const { error: insertError } = await supabase.from('listings').insert({
-      title, category, price_per_day: price,
-      description, user_id: user.id,
-      image_urls: uploadedImageUrls
-    });
-
-    if (insertError) return alert("Fehler beim Speichern: " + insertError.message);
-
-    alert("Inserat gespeichert!");
-    document.querySelectorAll('input, textarea, select').forEach(el => el.value = '');
-    uploadedImageUrls = [];
-    renderPreviews();
-    loadGallery();
+  const { error: insertError } = await supabase.from('listings').insert({
+    title,
+    category,
+    price_per_day: price,
+    description,
+    user_id: user.id,
+    image_urls: uploadedImageUrls,
+    latitude,
+    longitude
   });
 
-  async function loadGallery() {
-    const { data: sessionData } = await supabase.auth.getSession();
-    const user = sessionData?.session?.user;
-    if (!user) {
-      document.getElementById('gallery').innerHTML = 'Nicht eingeloggt.';
-      return;
-    }
+  if (insertError) return alert("Fehler beim Speichern: " + insertError.message);
 
-    const { data: listings, error: listErr } = await supabase
-      .from('listings')
-      .select('*')
-      .eq('user_id', user.id)
-      .order('created_at', { ascending: false });
-
-    const gallery = document.getElementById('gallery');
-    gallery.innerHTML = '';
-
-    if (listErr || !listings) {
-      gallery.textContent = 'Fehler beim Laden.';
-      return;
-    }
-
-    listings.forEach(i => {
-      const imageUrl = i.image_urls?.[0] || 'https://via.placeholder.com/300x150?text=Kein+Bild';
-      const div = document.createElement('div');
-      div.className = 'card';
-      div.innerHTML = `
-        <img src="${imageUrl}" alt="${i.title}">
-        <div class="card-content">
-          <h3>${i.title}</h3>
-          <p class="price">${i.price_per_day} € / Tag</p>
-        </div>
-        <div class="actions">
-          <button onclick="window.location.href='bearbeiten.html?id=${i.id}'">Bearbeiten</button>
-          <button class="delete" onclick="deleteListing('${i.id}')">Löschen</button>
-        </div>
-      `;
-      gallery.appendChild(div);
-    });
-  }
-
-  async function deleteListing(id) {
-    if (!confirm("Wirklich löschen?")) return;
-    const { error } = await supabase.from('listings').delete().eq('id', id);
-    if (!error) loadGallery();
-    else alert("Löschen fehlgeschlagen.");
-  }
-
+  alert("Inserat gespeichert!");
+  document.querySelectorAll('input, textarea, select').forEach(el => el.value = '');
+  uploadedImageUrls = [];
+  renderPreviews();
   loadGallery();
+});
+
+async function loadGallery() {
+  const { data: sessionData } = await supabase.auth.getSession();
+  const user = sessionData?.session?.user;
+  if (!user) {
+    document.getElementById('gallery').innerHTML = 'Nicht eingeloggt.';
+    return;
+  }
+
+  const { data: listings, error: listErr } = await supabase
+    .from('listings')
+    .select('*')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: false });
+
+  const gallery = document.getElementById('gallery');
+  gallery.innerHTML = '';
+
+  if (listErr || !listings) {
+    gallery.textContent = 'Fehler beim Laden.';
+    return;
+  }
+
+  listings.forEach(i => {
+    const imageUrl = i.image_urls?.[0] || 'https://via.placeholder.com/300x150?text=Kein+Bild';
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.innerHTML = `
+      <img src="${imageUrl}" alt="${i.title}">
+      <div class="card-content">
+        <h3>${i.title}</h3>
+        <p class="price">${i.price_per_day} € / Tag</p>
+      </div>
+      <div class="actions">
+        <button onclick="window.location.href='bearbeiten.html?id=${i.id}'">Bearbeiten</button>
+        <button class="delete" onclick="deleteListing('${i.id}')">Löschen</button>
+      </div>
+    `;
+    gallery.appendChild(div);
+  });
+}
+
+async function deleteListing(id) {
+  if (!confirm("Wirklich löschen?")) return;
+  const { error } = await supabase.from('listings').delete().eq('id', id);
+  if (!error) loadGallery();
+  else alert("Löschen fehlgeschlagen.");
+}
+
+loadGallery();
 </script>
 
 </body>
