@@ -103,6 +103,24 @@
     button:hover {
       background-color: #1b5e20;
     }
+    #suggestions {
+      border: 1px solid #ccc;
+      border-top: none;
+      max-height: 150px;
+      overflow-y: auto;
+      background: white;
+      position: absolute;
+      z-index: 10;
+      width: 100%;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+    #suggestions div {
+      padding: 0.5rem;
+      cursor: pointer;
+    }
+    #suggestions div:hover {
+      background: #e0f2f1;
+    }
   </style>
 </head>
 <body>
@@ -136,8 +154,10 @@
     <input type="number" id="price" required />
 
     <label for="location">Ort (PLZ oder Stadt)</label>
-    <input type="text" id="location" list="location-suggestions" required />
-    <datalist id="location-suggestions"></datalist>
+    <div style="position: relative;">
+      <input type="text" id="location" required autocomplete="off" />
+      <div id="suggestions"></div>
+    </div>
 
     <label for="desc">Beschreibung</label>
     <textarea id="desc" rows="4"></textarea>
@@ -166,7 +186,8 @@
       if (data.length > 0) {
         return {
           lat: parseFloat(data[0].lat),
-          lon: parseFloat(data[0].lon)
+          lon: parseFloat(data[0].lon),
+          display_name: data[0].display_name
         };
       }
       return null;
@@ -175,7 +196,6 @@
     async function loadData() {
       const { data, error } = await supabase.from('listings').select('*').eq('id', listingId).single();
       if (error) return alert("Fehler beim Laden.");
-
       document.getElementById('title').value = data.title || '';
       document.getElementById('category').value = data.category || '';
       document.getElementById('price').value = data.price_per_day || '';
@@ -211,14 +231,14 @@
       const category = document.getElementById('category').value;
       const price = parseFloat(document.getElementById('price').value);
       const description = document.getElementById('desc').value.trim();
-      const location = document.getElementById('location').value.trim();
+      const locationInput = document.getElementById('location').value.trim();
 
-      if (!title || !category || !price || !location) {
+      if (!title || !category || !price || !locationInput) {
         alert("Alle Pflichtfelder ausfüllen.");
         return;
       }
 
-      const coords = await geocodeLocation(location);
+      const coords = await geocodeLocation(locationInput);
       if (!coords) {
         alert("Ort konnte nicht gefunden werden.");
         return;
@@ -229,7 +249,7 @@
         category,
         price_per_day: price,
         description,
-        location,
+        location: coords.display_name,
         latitude: coords.lat,
         longitude: coords.lon,
         image_urls: imageUrls
@@ -239,7 +259,7 @@
       if (error) alert("Fehler beim Speichern: " + error.message);
       else {
         alert("Änderungen gespeichert!");
-        location.href = "inserate.html";
+        window.location.href = "inserate.html";
       }
     }
 
@@ -254,7 +274,6 @@
 
     async function handleFiles(files) {
       const gallery = document.getElementById("preview-gallery");
-
       for (let file of files) {
         const loader = document.createElement("div");
         loader.className = "preview-box";
@@ -273,30 +292,27 @@
       }
     }
 
-    // Autocomplete für Ort
-    const locationInput = document.getElementById("location");
-    const suggestionBox = document.getElementById("location-suggestions");
-    let debounce;
+    document.getElementById('location').addEventListener('input', async (e) => {
+      const value = e.target.value.trim();
+      const suggestionsBox = document.getElementById('suggestions');
+      if (value.length < 3) {
+        suggestionsBox.innerHTML = '';
+        return;
+      }
 
-    locationInput.addEventListener("input", () => {
-      const value = locationInput.value.trim();
-      if (!value) return;
-      clearTimeout(debounce);
-      debounce = setTimeout(async () => {
-        try {
-          const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(value)}&addressdetails=1&limit=5`);
-          const results = await res.json();
-          suggestionBox.innerHTML = '';
-          results.forEach(r => {
-            const label = `${r.address.postcode || ''} ${r.address.city || r.address.town || r.address.village || ''}`.trim();
-            const opt = document.createElement("option");
-            opt.value = label;
-            suggestionBox.appendChild(opt);
-          });
-        } catch (err) {
-          console.error("Ort-Vorschläge fehlgeschlagen", err);
-        }
-      }, 400);
+      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=5&q=${encodeURIComponent(value)}`);
+      const results = await res.json();
+
+      suggestionsBox.innerHTML = '';
+      results.forEach(r => {
+        const div = document.createElement('div');
+        div.textContent = r.display_name;
+        div.onclick = () => {
+          document.getElementById('location').value = r.display_name;
+          suggestionsBox.innerHTML = '';
+        };
+        suggestionsBox.appendChild(div);
+      });
     });
 
     (async () => {
