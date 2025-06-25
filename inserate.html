@@ -185,6 +185,7 @@
     <a href="index.html">Zurück zur Übersicht</a>
   </nav>
 </header>
+
 <main>
   <section class="form-container">
     <h2>Neues Inserat erstellen</h2>
@@ -235,10 +236,11 @@
 
   <section class="gallery" id="gallery">Galerie lädt…</section>
 </main>
+
 <script>
 const supabase = window.supabase.createClient(
   'https://flnjalgqtkqycsaymmbd.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+  'DEIN_ANON_KEY_HIER_EINFÜGEN'
 );
 
 let uploadedImageUrls = [];
@@ -256,15 +258,6 @@ async function handleFiles(files) {
   const container = document.getElementById("preview-gallery");
 
   for (let file of files) {
-    const tempBox = document.createElement("div");
-    tempBox.className = "preview-box";
-    tempBox.innerHTML = `
-      <div class="img-wrapper">
-        <div class="loader"></div>
-      </div>
-    `;
-    container.appendChild(tempBox);
-
     const path = `listing-images/${Date.now()}-${file.name}`;
     const { error } = await supabase.storage.from('listing-images').upload(path, file);
     if (!error) {
@@ -325,7 +318,7 @@ document.getElementById("save-btn").addEventListener("click", async () => {
       latitude = parseFloat(data[0].lat);
       longitude = parseFloat(data[0].lon);
     } else {
-      alert("Ort nicht gefunden. Bitte überprüfe PLZ oder Stadtname.");
+      alert("Ort nicht gefunden.");
       return;
     }
   } catch (err) {
@@ -371,6 +364,7 @@ async function loadGallery() {
   gallery.innerHTML = '';
 
   if (listErr || !listings) {
+    console.error("Fehler beim Laden:", listErr);
     gallery.textContent = 'Fehler beim Laden.';
     return;
   }
