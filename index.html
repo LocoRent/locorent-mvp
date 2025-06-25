@@ -190,7 +190,15 @@
         <option value="freizeit">Freizeit & Sport</option>
         <option value="baby">Baby & Kind</option>
       </select>
-      <input type="text" placeholder="Ort" id="location-input" />
+      <input type="text" placeholder="Ort (z. B. Berlin)" id="location-input" />
+      <select id="radius-select">
+        <option value="">+ Umkreis</option>
+        <option value="5">5 km</option>
+        <option value="10">10 km</option>
+        <option value="25">25 km</option>
+        <option value="50">50 km</option>
+        <option value="100">100 km</option>
+      </select>
       <button onclick="search()">Suchen</button>
     </div>
   </section>
@@ -334,8 +342,16 @@
       const keyword = document.getElementById("search-input").value.trim();
       const category = document.getElementById("category-select").value.trim();
       const location = document.getElementById("location-input").value.trim();
+      const radius = document.getElementById("radius-select").value.trim();
 
-      window.location.href = `search_results.html?keyword=${keyword}&category=${category}&location=${location}`;
+      const params = new URLSearchParams({
+        keyword,
+        category,
+        location,
+        radius
+      });
+
+      window.location.href = `search_results.html?${params.toString()}`;
     }
 
     updateNav();
