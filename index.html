@@ -190,6 +190,7 @@
         <option value="freizeit">Freizeit & Sport</option>
         <option value="baby">Baby & Kind</option>
       </select>
+      <input type="text" placeholder="Ort" id="location-input" />
       <button onclick="search()">Suchen</button>
     </div>
   </section>
@@ -332,7 +333,9 @@
     function search() {
       const keyword = document.getElementById("search-input").value.trim();
       const category = document.getElementById("category-select").value.trim();
-      window.location.href = `search_results.html?keyword=${keyword}&category=${category}`;
+      const location = document.getElementById("location-input").value.trim();
+
+      window.location.href = `search_results.html?keyword=${keyword}&category=${category}&location=${location}`;
     }
 
     updateNav();
