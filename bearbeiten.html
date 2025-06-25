@@ -136,7 +136,8 @@
     <input type="number" id="price" required />
 
     <label for="location">Ort (PLZ oder Stadt)</label>
-    <input type="text" id="location" required />
+    <input type="text" id="location" list="location-suggestions" required />
+    <datalist id="location-suggestions"></datalist>
 
     <label for="desc">Beschreibung</label>
     <textarea id="desc" rows="4"></textarea>
@@ -149,10 +150,10 @@
   </main>
 
   <script>
-   const supabase = window.supabase.createClient(
-  'https://flnjalgqtkqycsaymmbd.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-);
+    const supabase = window.supabase.createClient(
+      'https://flnjalgqtkqycsaymmbd.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+    );
 
     const listingId = new URLSearchParams(location.search).get("id");
     let imageUrls = [];
@@ -271,6 +272,32 @@
         renderGallery();
       }
     }
+
+    // Autocomplete für Ort
+    const locationInput = document.getElementById("location");
+    const suggestionBox = document.getElementById("location-suggestions");
+    let debounce;
+
+    locationInput.addEventListener("input", () => {
+      const value = locationInput.value.trim();
+      if (!value) return;
+      clearTimeout(debounce);
+      debounce = setTimeout(async () => {
+        try {
+          const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(value)}&addressdetails=1&limit=5`);
+          const results = await res.json();
+          suggestionBox.innerHTML = '';
+          results.forEach(r => {
+            const label = `${r.address.postcode || ''} ${r.address.city || r.address.town || r.address.village || ''}`.trim();
+            const opt = document.createElement("option");
+            opt.value = label;
+            suggestionBox.appendChild(opt);
+          });
+        } catch (err) {
+          console.error("Ort-Vorschläge fehlgeschlagen", err);
+        }
+      }, 400);
+    });
 
     (async () => {
       const { data: { session } } = await supabase.auth.getSession();
