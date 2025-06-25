@@ -184,6 +184,7 @@
 
     let currentUser = null;
     let listingOwnerId = null;
+    let isFavorite = false;
 
     async function updateNav() {
       const { data: { session } } = await supabase.auth.getSession();
@@ -252,9 +253,10 @@
           <h2>${listing.title}</h2>
           <p><strong>Kategorie:</strong> ${listing.category}</p>
           <p><strong>Preis pro Tag:</strong> ${listing.price_per_day} €</p>
+          <p><strong>Ort:</strong> ${listing.location || '–'}</p>
           <p><strong>Beschreibung:</strong><br>${listing.description}</p>
           <button onclick="goToChat()">Nachricht an Vermieter</button>
-          <button id="add-to-favorites" onclick="addToFavorites('${listing.id}')">Zu Favoriten hinzufügen</button>
+          <button id="add-to-favorites" onclick="toggleFavorite('${listing.id}')">Lade Favoritenstatus...</button>
         </div>
         <div class="content">
           <h3>Vermieter</h3>
@@ -264,7 +266,7 @@
         </div>
       `;
 
-      checkIfFavorite(listing.id);
+      await updateFavoriteButton(listing.id);
     }
 
     function switchImage(url, element) {
@@ -273,44 +275,49 @@
       element.classList.add("active");
     }
 
-    async function checkIfFavorite(listingId) {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
-      const { data: existingFavorite } = await supabase
+    async function updateFavoriteButton(listingId) {
+      const { data } = await supabase
         .from('favorites')
         .select('*')
-        .eq('user_id', user.id)
+        .eq('user_id', currentUser.id)
         .eq('listing_id', listingId)
         .single();
 
-      if (existingFavorite) {
-        document.getElementById("add-to-favorites").disabled = true;
-        document.getElementById("add-to-favorites").textContent = "Bereits in den Favoriten";
-      }
+      isFavorite = !!data;
+      const btn = document.getElementById("add-to-favorites");
+      btn.textContent = isFavorite ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufügen";
     }
 
-    async function addToFavorites(listingId) {
-      const { data: { user } } = await supabase.auth.getUser();
+    async function toggleFavorite(listingId) {
+      if (!currentUser) return alert("Bitte einloggen.");
 
-      if (!user) {
-        alert("Bitte einloggen, um Favoriten hinzuzufügen.");
-        return;
-      }
+      const btn = document.getElementById("add-to-favorites");
 
-      const { error } = await supabase.from('favorites').upsert({
-        user_id: user.id,
-        listing_id: listingId,
-      });
+      if (isFavorite) {
+        const { error } = await supabase
+          .from('favorites')
+          .delete()
+          .eq('user_id', currentUser.id)
+          .eq('listing_id', listingId);
 
-      if (error) {
-        console.error("Fehler beim Hinzufügen zu Favoriten:", error.message);
-        alert("Fehler beim Hinzufügen zu Favoriten.");
+        if (!error) {
+          isFavorite = false;
+          btn.textContent = "Zu Favoriten hinzufügen";
+        } else {
+          alert("Fehler beim Entfernen aus Favoriten.");
+        }
       } else {
-        alert("Zum Favoriten hinzugefügt!");
-        const btn = document.getElementById("add-to-favorites");
-        btn.disabled = true;
-        btn.textContent = "Bereits in den Favoriten";
+        const { error } = await supabase.from('favorites').insert({
+          user_id: currentUser.id,
+          listing_id: listingId,
+        });
+
+        if (!error) {
+          isFavorite = true;
+          btn.textContent = "Aus Favoriten entfernen";
+        } else {
+          alert("Fehler beim Hinzufügen zu Favoriten.");
+        }
       }
     }
 
