@@ -218,7 +218,8 @@
       </div>
       <div class="field">
         <label>Ort (Pflichtfeld)</label>
-        <input type="text" id="location-input" placeholder="z. B. 10115 Berlin" />
+        <input type="text" id="location-input" placeholder="z. B. 10115 Berlin" autocomplete="off" list="location-suggestions" />
+        <datalist id="location-suggestions"></datalist>
       </div>
       <div class="field" style="flex: 1 1 100%;">
         <label>Beschreibung</label>
@@ -244,6 +245,31 @@ const supabase = window.supabase.createClient(
 );
 
 let uploadedImageUrls = [];
+const locationInput = document.getElementById('location-input');
+const suggestionBox = document.getElementById('location-suggestions');
+let debounceTimeout = null;
+
+locationInput.addEventListener('input', () => {
+  const query = locationInput.value.trim();
+  if (!query) return;
+
+  clearTimeout(debounceTimeout);
+  debounceTimeout = setTimeout(async () => {
+    try {
+      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&addressdetails=1&limit=5`);
+      const results = await res.json();
+      suggestionBox.innerHTML = '';
+      results.forEach(place => {
+        const display = `${place.address.postcode || ''} ${place.address.city || place.address.town || place.address.village || ''}`.trim();
+        const opt = document.createElement('option');
+        opt.value = display;
+        suggestionBox.appendChild(opt);
+      });
+    } catch (e) {
+      console.error('Vorschläge fehlgeschlagen', e);
+    }
+  }, 400);
+});
 
 document.getElementById("dropzone").addEventListener("click", () => {
   const input = document.createElement("input");
@@ -256,8 +282,12 @@ document.getElementById("dropzone").addEventListener("click", () => {
 
 async function handleFiles(files) {
   const container = document.getElementById("preview-gallery");
-
   for (let file of files) {
+    const tempBox = document.createElement("div");
+    tempBox.className = "preview-box";
+    tempBox.innerHTML = '<div class="img-wrapper"><div class="loader"></div></div>';
+    container.appendChild(tempBox);
+
     const path = `listing-images/${Date.now()}-${file.name}`;
     const { error } = await supabase.storage.from('listing-images').upload(path, file);
     if (!error) {
@@ -267,41 +297,35 @@ async function handleFiles(files) {
       alert("Fehler beim Upload: " + error.message);
     }
   }
-
   renderPreviews();
 }
 
 function renderPreviews() {
   const container = document.getElementById("preview-gallery");
   container.innerHTML = '';
-  uploadedImageUrls.forEach((url, index) => {
-    const box = document.createElement("div");
-    box.className = "preview-box";
-    box.innerHTML = `
-      <div class="img-wrapper">
-        <img src="${url}" alt="Bild ${index}">
-      </div>
-      <button class="remove-btn" onclick="removeImage(${index})">×</button>
-    `;
-    container.appendChild(box);
+  uploadedImageUrls.forEach((url, i) => {
+    const div = document.createElement("div");
+    div.className = "preview-box";
+    div.innerHTML = `<div class="img-wrapper"><img src="${url}" alt="Bild ${i}"></div><button class="remove-btn" onclick="removeImage(${i})">×</button>`;
+    container.appendChild(div);
   });
 }
 
-function removeImage(index) {
-  uploadedImageUrls.splice(index, 1);
+function removeImage(idx) {
+  uploadedImageUrls.splice(idx, 1);
   renderPreviews();
 }
 
 document.getElementById("save-btn").addEventListener("click", async () => {
-  const { data: sessionData } = await supabase.auth.getSession();
-  const user = sessionData?.session?.user;
+  const { data: sd } = await supabase.auth.getSession();
+  const user = sd?.session?.user;
   if (!user) return alert("Nicht eingeloggt!");
 
   const title = document.getElementById('title-input').value.trim();
   const category = document.getElementById('category-input').value;
   const price = parseFloat(document.getElementById('price-input').value);
   const description = document.getElementById('desc-input').value.trim();
-  const location = document.getElementById('location-input').value.trim();
+  const location = locationInput.value.trim();
 
   if (!title || !price || !category || !location) {
     alert("Titel, Kategorie, Preis und Ort sind Pflichtfelder.");
@@ -312,11 +336,11 @@ document.getElementById("save-btn").addEventListener("click", async () => {
   let longitude = null;
 
   try {
-    const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(location)}`);
-    const data = await res.json();
-    if (data.length > 0) {
-      latitude = parseFloat(data[0].lat);
-      longitude = parseFloat(data[0].lon);
+    const r = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(location)}&addressdetails=1&limit=1`);
+    const arr = await r.json();
+    if (arr.length > 0) {
+      latitude = parseFloat(arr[0].lat);
+      longitude = parseFloat(arr[0].lon);
     } else {
       alert("Ort nicht gefunden.");
       return;
@@ -326,7 +350,7 @@ document.getElementById("save-btn").addEventListener("click", async () => {
     return;
   }
 
-  const { error: insertError } = await supabase.from('listings').insert({
+  const { error: ie } = await supabase.from('listings').insert({
     title,
     category,
     price_per_day: price,
@@ -337,7 +361,7 @@ document.getElementById("save-btn").addEventListener("click", async () => {
     longitude
   });
 
-  if (insertError) return alert("Fehler beim Speichern: " + insertError.message);
+  if (ie) return alert("Fehler beim Speichern: " + ie.message);
 
   alert("Inserat gespeichert!");
   document.querySelectorAll('input, textarea, select').forEach(el => el.value = '');
@@ -347,43 +371,33 @@ document.getElementById("save-btn").addEventListener("click", async () => {
 });
 
 async function loadGallery() {
-  const { data: sessionData } = await supabase.auth.getSession();
-  const user = sessionData?.session?.user;
-  if (!user) {
-    document.getElementById('gallery').innerHTML = 'Nicht eingeloggt.';
-    return;
-  }
+  const { data: sd } = await supabase.auth.getSession();
+  const user = sd?.session?.user;
+  const gallery = document.getElementById('gallery');
+  if (!user) return gallery.innerHTML = 'Nicht eingeloggt.';
 
-  const { data: listings, error: listErr } = await supabase
+  const { data: listings, error: le } = await supabase
     .from('listings')
     .select('*')
     .eq('user_id', user.id)
     .order('created_at', { ascending: false });
 
-  const gallery = document.getElementById('gallery');
   gallery.innerHTML = '';
-
-  if (listErr || !listings) {
-    console.error("Fehler beim Laden:", listErr);
-    gallery.textContent = 'Fehler beim Laden.';
-    return;
+  if (le || !listings) {
+    console.error("Fehler beim Laden:", le);
+    return gallery.textContent = 'Fehler beim Laden.';
   }
 
   listings.forEach(i => {
-    const imageUrl = i.image_urls?.[0] || 'https://via.placeholder.com/300x150?text=Kein+Bild';
+    const img = i.image_urls?.[0] || 'https://via.placeholder.com/300x150?text=Kein+Bild';
     const div = document.createElement('div');
     div.className = 'card';
-    div.innerHTML = `
-      <img src="${imageUrl}" alt="${i.title}">
-      <div class="card-content">
-        <h3>${i.title}</h3>
-        <p class="price">${i.price_per_day} € / Tag</p>
-      </div>
+    div.innerHTML = `<img src="${img}" alt="${i.title}">
+      <div class="card-content"><h3>${i.title}</h3><p class="price">${i.price_per_day} € / Tag</p></div>
       <div class="actions">
         <button onclick="window.location.href='bearbeiten.html?id=${i.id}'">Bearbeiten</button>
         <button class="delete" onclick="deleteListing('${i.id}')">Löschen</button>
-      </div>
-    `;
+      </div>`;
     gallery.appendChild(div);
   });
 }
