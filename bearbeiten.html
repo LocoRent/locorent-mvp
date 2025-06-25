@@ -78,6 +78,18 @@
       font-weight: bold;
       cursor: pointer;
     }
+    .loader {
+      width: 24px;
+      height: 24px;
+      border: 3px solid #c8e6c9;
+      border-top-color: #2e7d32;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: auto;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
     button {
       margin-top: 1.5rem;
       padding: 0.7rem 1.5rem;
@@ -101,10 +113,10 @@
 
   <main>
     <label for="title">Titel</label>
-    <input type="text" id="title" />
+    <input type="text" id="title" required />
 
     <label for="category">Kategorie</label>
-    <select id="category">
+    <select id="category" required>
       <option value="">Bitte wählen</option>
       <option value="fahrzeuge">Fahrzeuge</option>
       <option value="transporter">Transporter</option>
@@ -121,10 +133,10 @@
     </select>
 
     <label for="price">Preis pro Tag (€)</label>
-    <input type="number" id="price" />
+    <input type="number" id="price" required />
 
-    <label for="location">Ort (z. B. Berlin)</label>
-    <input type="text" id="location" />
+    <label for="location">Ort (PLZ oder Stadt)</label>
+    <input type="text" id="location" required />
 
     <label for="desc">Beschreibung</label>
     <textarea id="desc" rows="4"></textarea>
@@ -139,7 +151,7 @@
   <script>
     const supabase = window.supabase.createClient(
       'https://flnjalgqtkqycsaymmbd.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFz...<dein originaler Key>'
     );
 
     const listingId = new URLSearchParams(location.search).get("id");
@@ -200,18 +212,15 @@
       const description = document.getElementById('desc').value.trim();
       const location = document.getElementById('location').value.trim();
 
-      if (!title || !category || !price) {
-        alert("Titel, Kategorie und Preis sind Pflichtfelder.");
+      if (!title || !category || !price || !location) {
+        alert("Alle Pflichtfelder ausfüllen.");
         return;
       }
 
-      let coords = null;
-      if (location) {
-        coords = await geocodeLocation(location);
-        if (!coords) {
-          alert("Ort konnte nicht gefunden werden.");
-          return;
-        }
+      const coords = await geocodeLocation(location);
+      if (!coords) {
+        alert("Ort konnte nicht gefunden werden.");
+        return;
       }
 
       const updates = {
@@ -219,10 +228,10 @@
         category,
         price_per_day: price,
         description,
-        image_urls: imageUrls,
-        location: location || null,
-        latitude: coords?.lat || null,
-        longitude: coords?.lon || null
+        location,
+        latitude: coords.lat,
+        longitude: coords.lon,
+        image_urls: imageUrls
       };
 
       const { error } = await supabase.from('listings').update(updates).eq('id', listingId);
@@ -243,7 +252,14 @@
     });
 
     async function handleFiles(files) {
+      const gallery = document.getElementById("preview-gallery");
+
       for (let file of files) {
+        const loader = document.createElement("div");
+        loader.className = "preview-box";
+        loader.innerHTML = `<div class="loader"></div>`;
+        gallery.appendChild(loader);
+
         const filePath = `${listingId}_${Date.now()}_${file.name}`;
         const { error } = await supabase.storage.from('listing-images').upload(filePath, file);
         if (!error) {
@@ -252,12 +268,12 @@
         } else {
           alert("Upload fehlgeschlagen: " + error.message);
         }
+        renderGallery();
       }
-      renderGallery();
     }
 
     (async () => {
-      const { data: { session }, error } = await supabase.auth.getSession();
+      const { data: { session } } = await supabase.auth.getSession();
       if (!session || !session.user) {
         alert("Nicht eingeloggt – du wirst weitergeleitet.");
         window.location.href = "login.html";
