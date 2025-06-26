@@ -372,6 +372,7 @@ document.getElementById("save-btn").addEventListener("click", async () => {
     image_urls: uploadedImageUrls,
     latitude,
     longitude
+    location
   });
 
   if (ie) return alert("Fehler beim Speichern: " + ie.message);
