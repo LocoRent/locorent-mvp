@@ -126,6 +126,9 @@
       cursor: pointer;
       font-weight: 600;
     }
+    #radius-custom-input {
+      display: none;
+    }
     footer {
       padding: 2rem;
       text-align: center;
@@ -145,7 +148,6 @@
   </style>
 </head>
 <body>
-
   <header>
     <h1>Locorent</h1>
     <nav id="nav-links"></nav>
@@ -179,7 +181,9 @@
         <option value="10">10 km</option>
         <option value="20">20 km</option>
         <option value="50">50 km</option>
+        <option value="custom">Eigene Eingabe…</option>
       </select>
+      <input type="number" id="radius-custom-input" placeholder="Radius in km" min="1" />
       <button id="search-btn">Suchen</button>
     </div>
   </section>
@@ -189,12 +193,37 @@
   <footer>
     © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
   </footer>
-
   <script>
     const supabase = window.supabase.createClient(
       'https://flnjalgqtkqycsaymmbd.supabase.co',
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
     );
+
+    document.getElementById("radius-select").addEventListener("change", (e) => {
+      const customInput = document.getElementById("radius-custom-input");
+      if (e.target.value === "custom") {
+        customInput.style.display = "block";
+      } else {
+        customInput.style.display = "none";
+        customInput.value = "";
+      }
+    });
+
+    document.getElementById("search-btn").addEventListener("click", () => {
+      const title = document.getElementById("search-input").value.trim();
+      const category = document.getElementById("category-select").value.trim();
+      const minPrice = document.getElementById("min-price").value.trim();
+      const maxPrice = document.getElementById("max-price").value.trim();
+      const location = document.getElementById("location-input").value.trim();
+
+      let radius = document.getElementById("radius-select").value;
+      if (radius === "custom") {
+        radius = document.getElementById("radius-custom-input").value.trim();
+      }
+
+      const searchParams = new URLSearchParams({ title, category, minPrice, maxPrice, location, radius });
+      window.location.href = `search_results.html?${searchParams.toString()}`;
+    });
 
     async function updateNav() {
       const { data: { session } } = await supabase.auth.getSession();
@@ -217,17 +246,6 @@
       await supabase.auth.signOut();
       window.location.href = "login.html";
     }
-
-    document.getElementById("search-btn").addEventListener("click", () => {
-      const title = document.getElementById("search-input").value.trim();
-      const category = document.getElementById("category-select").value.trim();
-      const minPrice = document.getElementById("min-price").value.trim();
-      const maxPrice = document.getElementById("max-price").value.trim();
-      const location = document.getElementById("location-input").value.trim();
-      const radius = document.getElementById("radius-select").value.trim();
-      const searchParams = new URLSearchParams({ title, category, minPrice, maxPrice, location, radius });
-      window.location.href = `search_results.html?${searchParams.toString()}`;
-    });
 
     async function geocodeLocation(query) {
       const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`);
@@ -317,7 +335,7 @@
         .select('*')
         .eq('user_id', session.user.id)
         .eq('listing_id', listingId)
-        .single();
+        .maybeSingle();
       return !!data;
     }
 
@@ -329,7 +347,7 @@
         .select('*')
         .eq('user_id', session.user.id)
         .eq('listing_id', listingId)
-        .single();
+        .maybeSingle();
       if (data) {
         await supabase.from('favorites').delete().eq('id', data.id);
         return false;
@@ -354,11 +372,17 @@
     document.getElementById("min-price").value = filters.minPrice;
     document.getElementById("max-price").value = filters.maxPrice;
     document.getElementById("location-input").value = filters.location;
-    document.getElementById("radius-select").value = filters.radius;
+
+    if (filters.radius && !["5", "10", "20", "50"].includes(filters.radius)) {
+      document.getElementById("radius-select").value = "custom";
+      document.getElementById("radius-custom-input").style.display = "block";
+      document.getElementById("radius-custom-input").value = filters.radius;
+    } else {
+      document.getElementById("radius-select").value = filters.radius;
+    }
 
     updateNav();
     loadListings(filters);
   </script>
-
 </body>
 </html>
