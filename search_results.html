@@ -228,36 +228,36 @@
     }
 
     function renderResults(items) {
-      const container = document.getElementById("results");
-      container.innerHTML = "";
-      items.forEach(item => {
-        const card = document.createElement("div");
-        card.className = "result-card";
-        const content = document.createElement("div");
-        content.style.cursor = "pointer";
-        content.onclick = () => window.location.href = `mietobjekt.html?id=${item.id}`;
-        content.innerHTML = `
-          <img src="${item.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" alt="${item.title}" />
-          <h3>${item.title}</h3>
-          <p><strong>Kategorie:</strong> ${capitalize(item.category) || 'Unbekannt'}</p>
-          <p><strong>Preis pro Tag:</strong> ${item.price_per_day || 'k. A.'} €</p>
-          <p>${item.description || ''}</p>
-        `;
-        const favoriteButton = document.createElement("button");
-        favoriteButton.innerText = "Zu Favoriten";
-        favoriteButton.onclick = async (e) => {
-          e.stopPropagation();
-          const toggled = await toggleFavorite(item.id);
-          favoriteButton.innerText = toggled ? "Bereits Favorit" : "Zu Favoriten";
-        };
-        checkIfFavorite(item.id).then(isFavorite => {
-          if (isFavorite) favoriteButton.innerText = "Bereits Favorit";
-        });
-        card.appendChild(content);
-        card.appendChild(favoriteButton);
-        container.appendChild(card);
-      });
-    }
+  const container = document.getElementById("results");
+  container.innerHTML = "";
+
+  items.forEach(async (item) => {
+    const card = document.createElement("div");
+    card.className = "result-card";
+
+    const isFavorite = await checkIfFavorite(item.id);
+
+    card.innerHTML = `
+      <img src="${item.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" alt="${item.title}" />
+      <h3>${item.title}</h3>
+      <p><strong>Kategorie:</strong> ${capitalize(item.category) || 'Unbekannt'}</p>
+      <p><strong>Preis pro Tag:</strong> ${item.price_per_day || 'k. A.'} €</p>
+      <button onclick="window.location.href='mietobjekt.html?id=${item.id}'">Details ansehen</button>
+      <button class="fav-btn">${isFavorite ? "Favorit entfernen" : "Zu Favoriten"}</button>
+    `;
+
+    const favBtn = card.querySelector(".fav-btn");
+    favBtn.addEventListener("click", async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const toggled = await toggleFavorite(item.id);
+      favBtn.innerText = toggled ? "Favorit entfernen" : "Zu Favoriten";
+    });
+
+    container.appendChild(card);
+  });
+}
+
 
     async function checkIfFavorite(listingId) {
       const { data: { session } } = await supabase.auth.getSession();
