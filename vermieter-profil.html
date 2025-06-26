@@ -96,14 +96,32 @@
       font-weight: 600;
     }
 
-    .review {
-      border-top: 1px solid #ddd;
-      padding: 0.7rem 0;
+    .review-box {
+      margin-top: 2rem;
     }
 
-    .rating {
+    .review-item {
+      background-color: #f9f9f9;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+
+    .review-item strong {
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+
+    .review-btn {
+      margin-top: 1rem;
+      background-color: #2e7d32;
+      color: white;
+      border: none;
+      padding: 0.7rem 1.2rem;
+      border-radius: 6px;
+      cursor: pointer;
       font-weight: bold;
-      color: #2e7d32;
     }
 
     footer {
@@ -127,10 +145,10 @@
       <div id="profile-info" class="profile-box">Lade Profil...</div>
     </section>
 
-    <section id="reviews-section">
+    <section id="reviews-section" class="review-box">
       <h2>Bewertungen</h2>
-      <div id="rating-summary">⏳ Lade Bewertungen…</div>
-      <div id="reviews-list"></div>
+      <div id="reviews-list">⏳ Lade Bewertungen…</div>
+      <div id="review-button-container"></div>
     </section>
 
     <section id="listings-section">
@@ -152,7 +170,6 @@
     async function updateNav() {
       const { data: { session } } = await supabase.auth.getSession();
       const nav = document.getElementById("nav-links");
-
       nav.innerHTML = session?.user ? `
         <a href="index.html">Start</a>
         <a href="profil.html">Mein Profil</a>
@@ -175,34 +192,55 @@
     async function loadVermieterProfil() {
       const params = new URLSearchParams(location.search);
       const userId = params.get("id");
+      const { data: { session } } = await supabase.auth.getSession();
+      const currentUser = session?.user;
 
       if (!userId) {
         document.getElementById("profile-info").innerText = "Keine Vermieter-ID übergeben.";
         return;
       }
 
+      // Profil anzeigen
       const { data: profile } = await supabase
         .from("profiles")
         .select("name, city, bio")
         .eq("id", userId)
         .single();
 
-      if (!profile) {
-        document.getElementById("profile-info").innerText = "Vermieterprofil nicht gefunden.";
-        return;
-      }
-
       document.getElementById("profile-info").innerHTML = `
-        <p><strong>Name:</strong> ${profile.name || 'Unbekannt'}</p>
-        <p><strong>Ort:</strong> ${profile.city || '–'}</p>
-        <p><strong>Über mich:</strong> ${profile.bio || '–'}</p>
+        <p><strong>Name:</strong> ${profile?.name || 'Unbekannt'}</p>
+        <p><strong>Ort:</strong> ${profile?.city || '–'}</p>
+        <p><strong>Über mich:</strong> ${profile?.bio || '–'}</p>
       `;
 
-      loadInserate(userId);
-      loadReviews(userId);
-    }
+      // Bewertungen anzeigen
+      const { data: reviews } = await supabase
+        .from("reviews")
+        .select("rating, comment, reviewer_id, created_at")
+        .eq("to_user", userId)
+        .order("created_at", { ascending: false });
 
-    async function loadInserate(userId) {
+      const reviewList = document.getElementById("reviews-list");
+      reviewList.innerHTML = reviews.length > 0
+        ? reviews.map(r => `
+            <div class="review-item">
+              <strong>⭐ ${r.rating}/5</strong>
+              <p>${r.comment}</p>
+              <small>${new Date(r.created_at).toLocaleDateString()}</small>
+            </div>
+          `).join('')
+        : "<p>Noch keine Bewertungen.</p>";
+
+      // Nur zeigen, wenn eingeloggt & nicht selbst
+      if (currentUser && currentUser.id !== userId) {
+        document.getElementById("review-button-container").innerHTML = `
+          <button class="review-btn" onclick="location.href='bewertung-schreiben.html?id=${userId}'">
+            Bewertung abgeben
+          </button>
+        `;
+      }
+
+      // Inserate
       const { data: listings } = await supabase
         .from("listings")
         .select("*")
@@ -210,55 +248,17 @@
         .order("created_at", { ascending: false });
 
       const container = document.getElementById("listing-grid");
-      container.innerHTML = "";
-
-      if (!listings || listings.length === 0) {
-        container.innerHTML = "<p>Keine Inserate gefunden.</p>";
-        return;
-      }
-
-      for (const item of listings) {
-        const card = document.createElement("div");
-        card.className = "listing-card";
-        card.innerHTML = `
-          <img src="${item.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" alt="${item.title}" />
-          <h3>${item.title}</h3>
-          <p><strong>Kategorie:</strong> ${item.category}</p>
-          <p><strong>Preis:</strong> ${item.price_per_day} € / Tag</p>
-          <button onclick="window.location.href='mietobjekt.html?id=${item.id}'">Details</button>
-        `;
-        container.appendChild(card);
-      }
-    }
-
-    async function loadReviews(userId) {
-      const { data: reviews } = await supabase
-        .from("reviews")
-        .select("rating, comment, created_at, reviewer:profiles(name)")
-        .eq("reviewed_user_id", userId)
-        .order("created_at", { ascending: false });
-
-      const summary = document.getElementById("rating-summary");
-      const list = document.getElementById("reviews-list");
-      list.innerHTML = "";
-
-      if (!reviews || reviews.length === 0) {
-        summary.innerHTML = "<p>Keine Bewertungen vorhanden.</p>";
-        return;
-      }
-
-      const avg = (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1);
-      summary.innerHTML = `<p>Ø Bewertung: <span class="rating">${avg} ★</span> aus ${reviews.length} Bewertung(en)</p>`;
-
-      for (const r of reviews) {
-        const date = new Date(r.created_at).toLocaleDateString();
-        list.innerHTML += `
-          <div class="review">
-            <p><span class="rating">${r.rating} ★</span> – ${r.reviewer?.name || 'Anonym'} am ${date}</p>
-            <p>${r.comment}</p>
+      container.innerHTML = listings.length
+        ? listings.map(item => `
+          <div class="listing-card">
+            <img src="${item.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" alt="${item.title}" />
+            <h3>${item.title}</h3>
+            <p><strong>Kategorie:</strong> ${item.category}</p>
+            <p><strong>Preis:</strong> ${item.price_per_day} € / Tag</p>
+            <button onclick="location.href='mietobjekt.html?id=${item.id}'">Details</button>
           </div>
-        `;
-      }
+        `).join('')
+        : "<p>Keine Inserate gefunden.</p>";
     }
 
     updateNav();
