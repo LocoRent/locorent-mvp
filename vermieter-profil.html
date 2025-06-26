@@ -7,43 +7,102 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    :root {
-      --green: #2e7d32;
-      --green-dark: #1b5e20;
-      --bg: #f1f8e9;
-      --white: #fff;
-      --light: #f5f5f5;
-      --radius: 12px;
-      --shadow: rgba(0,0,0,0.1);
-      --max-width: 1200px;
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f1f8e9;
+      margin: 0;
+      padding: 0;
     }
-    * { box-sizing: border-box; margin:0; padding:0; }
-    body { background: var(--bg); font-family:'Poppins',sans-serif; color:#333; }
+
     header {
-      background: var(--green); color:var(--white);
-      padding:1rem 2rem; display:flex; justify-content:space-between; align-items:center;
+      background-color: #2e7d32;
+      color: white;
+      padding: 1.2rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
+
     header nav a {
-      color:white; margin-left:1rem; text-decoration:none; font-weight:600;
+      color: white;
+      margin-left: 1rem;
+      text-decoration: none;
+      font-weight: 600;
     }
-    header nav a:hover { border-bottom:2px solid var(--green-dark); }
-    main { max-width:var(--max-width); margin:2rem auto; background:var(--white); border-radius:var(--radius); box-shadow:0 4px 12px var(--shadow); padding:2rem; }
-    .profile-info { display:flex; flex-wrap:wrap; gap:2rem; }
-    .profile-info .box { flex:1; border-radius:var(--radius); background:var(--light); padding:1rem; box-shadow:0 2px 8px var(--shadow); }
-    .tabs { margin-top:2rem; display:flex; border-bottom:2px solid #ccc; }
-    .tabs button {
-      background:none; border:none; padding:1rem 2rem;
-      cursor:pointer; font-weight:600;
+
+    header nav a:hover {
+      border-bottom: 2px solid white;
     }
-    .tabs button.active { border-bottom:4px solid var(--green); }
-    .tab-content { margin-top:1rem; }
+
+    main {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      margin-bottom: 1rem;
+    }
+
+    .profile-box {
+      background-color: #f5f5f5;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+    }
+
+    .listing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+
     .listing-card {
-      background:var(--white); border-radius:10px; box-shadow:0 2px 8px var(--shadow);
-      padding:1rem; margin-bottom:1rem;
+      background-color: #fff;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
-    .listing-card h3 { margin-bottom:.5rem; }
-    .review { margin-bottom:1rem; padding:1rem; background:var(--light); border-radius:var(--radius); }
-    footer { text-align:center; padding:1.5rem; background:var(--green); color:var(--white); margin-top:3rem; }
+
+    .listing-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 6px;
+      margin-bottom: 0.5rem;
+    }
+
+    .listing-card h3 {
+      font-size: 1.2rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .listing-card p {
+      margin: 0.2rem 0;
+    }
+
+    .listing-card button {
+      margin-top: 0.5rem;
+      width: 100%;
+      padding: 0.6rem;
+      background-color: #2e7d32;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      background-color: #2e7d32;
+      color: white;
+      margin-top: 3rem;
+    }
   </style>
 </head>
 <body>
@@ -51,107 +110,112 @@
     <h1>Locorent</h1>
     <nav id="nav-links"></nav>
   </header>
-  <main id="main-content">
-    <div class="profile-info">
-      <div class="box">
-        <h2 id="profile-name">Name laden...</h2>
-        <p id="profile-city">Ort laden...</p>
-        <p id="profile-bio">Bio laden...</p>
-        <p id="profile-rating"></p>
-      </div>
-    </div>
-    <div class="tabs">
-      <button data-tab="messages" class="active">Nachrichten</button>
-      <button data-tab="listings">Inserate</button>
-      <button data-tab="reviews">Bewertungen</button>
-    </div>
-    <div class="tab-content" id="tab-content">
-      <p>Lade Nachrichten…</p>
-    </div>
+
+  <main>
+    <section id="profile-section">
+      <h2>Vermieterprofil</h2>
+      <div id="profile-info" class="profile-box">Lade Profil...</div>
+    </section>
+
+    <section id="listings-section">
+      <h2>Inserate dieses Vermieters</h2>
+      <div id="listing-grid" class="listing-grid"><p>⏳ Lade Inserate…</p></div>
+    </section>
   </main>
-  <footer>© 2025 Locorent – Mieten statt kaufen</footer>
+
+  <footer>
+    © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
+  </footer>
 
   <script>
-    const supabase = window.supabase.createClient('https://flnjalgqtkqycsaymmbd.supabase.co','[KEY]');
-    let currentUser = null, ownerId = null;
+    const supabase = window.supabase.createClient(
+      'https://flnjalgqtkqycsaymmbd.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+    );
 
-    async function updateNav(){
-      const { data:{session} } = await supabase.auth.getSession();
-      const nav = document.getElementById('nav-links');
-      if(session?.user){
-        nav.innerHTML = `
-         <a href="index.html">Start</a>
-         <a href="profil.html">Mein Profil</a>
-         <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-         <a href="favoriten.html">Meine Favoriten</a>
-         <a href="inserate.html">Meine Inserate</a>
-         <a href="#" onclick="logout()">Logout</a>`;
-      } else {
-        nav.innerHTML = `<a href="login.html">Einloggen</a><a href="register.html">Registrieren</a>`;
-      }
+    async function updateNav() {
+      const { data: { session } } = await supabase.auth.getSession();
+      const nav = document.getElementById("nav-links");
+
+      nav.innerHTML = session?.user ? `
+        <a href="index.html">Start</a>
+        <a href="profil.html">Mein Profil</a>
+        <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+        <a href="favoriten.html">Meine Favoriten</a>
+        <a href="inserate.html">Meine Inserate</a>
+        <a href="#" onclick="logout(event)">Logout</a>
+      ` : `
+        <a href="index.html">Start</a>
+        <a href="login.html">Einloggen</a>
+      `;
     }
 
-    async function logout(){
+    async function logout(event) {
+      event.preventDefault();
       await supabase.auth.signOut();
-      location.href='login.html';
+      window.location.href = "login.html";
     }
 
-    async function init(){
-      const { data:{ user } } = await supabase.auth.getUser();
-      currentUser = user || null;
-      updateNav();
-
+    async function loadVermieterProfil() {
       const params = new URLSearchParams(location.search);
-      ownerId = params.get('id');
+      const userId = params.get("id");
 
-      // Profil-Daten
-      const { data:profile } = await supabase.from('profiles').select('name,city,bio').eq('id',ownerId).single();
-      document.getElementById('profile-name').innerText = profile.name;
-      document.getElementById('profile-city').innerText = profile.city;
-      document.getElementById('profile-bio').innerText = profile.bio;
+      if (!userId) {
+        document.getElementById("profile-info").innerText = "Keine Vermieter-ID übergeben.";
+        return;
+      }
 
-      setupTabs();
-      loadTabContent('messages');
+      // Profil-Daten laden
+      const { data: profile, error: profileError } = await supabase
+        .from("profiles")
+        .select("name, city, bio")
+        .eq("id", userId)
+        .single();
+
+      if (profileError || !profile) {
+        document.getElementById("profile-info").innerText = "Vermieterprofil nicht gefunden.";
+        return;
+      }
+
+      document.getElementById("profile-info").innerHTML = `
+        <p><strong>Name:</strong> ${profile.name || 'Unbekannt'}</p>
+        <p><strong>Ort:</strong> ${profile.city || '–'}</p>
+        <p><strong>Über mich:</strong> ${profile.bio || '–'}</p>
+      `;
+
+      // Inserate laden
+      const { data: listings, error: listingError } = await supabase
+        .from("listings")
+        .select("*")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false });
+
+      const container = document.getElementById("listing-grid");
+      container.innerHTML = "";
+
+      if (listingError || listings.length === 0) {
+        container.innerHTML = "<p>Keine Inserate gefunden.</p>";
+        return;
+      }
+
+      for (const item of listings) {
+        const card = document.createElement("div");
+        card.className = "listing-card";
+
+        card.innerHTML = `
+          <img src="${item.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" alt="${item.title}" />
+          <h3>${item.title}</h3>
+          <p><strong>Kategorie:</strong> ${item.category}</p>
+          <p><strong>Preis:</strong> ${item.price_per_day} € / Tag</p>
+          <button onclick="window.location.href='mietobjekt.html?id=${item.id}'">Details</button>
+        `;
+
+        container.appendChild(card);
+      }
     }
 
-    function setupTabs(){
-      document.querySelectorAll('.tabs button').forEach(btn=>{
-        btn.onclick = ()=> {
-          document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));
-          btn.classList.add('active');
-          loadTabContent(btn.dataset.tab);
-        };
-      });
-    }
-
-    async function loadTabContent(tab){
-      const c = document.getElementById('tab-content');
-      c.innerHTML = '<p>Lade…</p>';
-      if(tab==='messages'){
-        if(!currentUser) { c.innerHTML='<p>Bitte einloggen, um Nachrichten zu sehen.</p>'; return; }
-        const { data:msgs } = await supabase.from('messages')
-          .select('id,content,created_at')
-          .eq('to_user', ownerId).order('created_at',{ascending:false});
-        c.innerHTML = msgs.map(m=>`<div class="listing-card"><p><em>${m.created_at}</em><br>${m.content}</p></div>`).join('') || '<p>Keine Nachrichten.</p>';
-      }
-      else if(tab==='listings'){
-        const { data:listings } = await supabase.from('listings')
-          .select('id,title,price_per_day,description')
-          .eq('user_id', ownerId).order('created_at',{ascending:false});
-        c.innerHTML = listings.map(l=>
-          `<div class="listing-card"><h3>${l.title}</h3><p>${l.price_per_day} €/Tag</p><p>${l.description}</p>
-           <button onclick="location.href='mietobjekt.html?id=${l.id}'">Details ansehen</button></div>`).join('') || '<p>Keine Inserate.</p>';
-      }
-      else if(tab==='reviews'){
-        // hier fiktive reviews-Tabelle
-        const { data:reviews } = await supabase.from('reviews')
-          .select('id,rating,comment,created_at').eq('for_user',ownerId).order('created_at',{ascending:false});
-        c.innerHTML = reviews.map(r=>
-          `<div class="review"><p><strong>${r.rating}★</strong> – ${r.created_at}</p><p>${r.comment}</p></div>`).join('') || '<p>Keine Bewertungen.</p>';
-      }
-    }
-
-    init();
+    updateNav();
+    loadVermieterProfil();
   </script>
 </body>
 </html>
