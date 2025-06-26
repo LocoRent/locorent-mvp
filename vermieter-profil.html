@@ -192,46 +192,50 @@
     async function loadVermieterProfil() {
       const params = new URLSearchParams(location.search);
       const userId = params.get("id");
-      const { data: { session } } = await supabase.auth.getSession();
-      const currentUser = session?.user;
 
       if (!userId) {
         document.getElementById("profile-info").innerText = "Keine Vermieter-ID übergeben.";
         return;
       }
 
+      const { data: { session } } = await supabase.auth.getSession();
+      const currentUser = session?.user;
+
       // Profil anzeigen
-      const { data: profile } = await supabase
+      const { data: profile, error: profileError } = await supabase
         .from("profiles")
         .select("name, city, bio")
         .eq("id", userId)
         .single();
 
-      document.getElementById("profile-info").innerHTML = `
-        <p><strong>Name:</strong> ${profile?.name || 'Unbekannt'}</p>
-        <p><strong>Ort:</strong> ${profile?.city || '–'}</p>
-        <p><strong>Über mich:</strong> ${profile?.bio || '–'}</p>
+      document.getElementById("profile-info").innerHTML = profileError || !profile ? `
+        <p>Profil nicht gefunden.</p>` : `
+        <p><strong>Name:</strong> ${profile.name || 'Unbekannt'}</p>
+        <p><strong>Ort:</strong> ${profile.city || '–'}</p>
+        <p><strong>Über mich:</strong> ${profile.bio || '–'}</p>
       `;
 
       // Bewertungen anzeigen
-      const { data: reviews } = await supabase
+      const { data: reviews, error: reviewError } = await supabase
         .from("reviews")
         .select("rating, comment, reviewer_id, created_at")
         .eq("to_user", userId)
         .order("created_at", { ascending: false });
 
       const reviewList = document.getElementById("reviews-list");
-      reviewList.innerHTML = reviews.length > 0
-        ? reviews.map(r => `
-            <div class="review-item">
-              <strong>⭐ ${r.rating}/5</strong>
-              <p>${r.comment}</p>
-              <small>${new Date(r.created_at).toLocaleDateString()}</small>
-            </div>
-          `).join('')
-        : "<p>Noch keine Bewertungen.</p>";
+      if (reviewError || !Array.isArray(reviews) || reviews.length === 0) {
+        reviewList.innerHTML = "<p>Noch keine Bewertungen.</p>";
+      } else {
+        reviewList.innerHTML = reviews.map(r => `
+          <div class="review-item">
+            <strong>⭐ ${r.rating}/5</strong>
+            <p>${r.comment}</p>
+            <small>${new Date(r.created_at).toLocaleDateString()}</small>
+          </div>
+        `).join('');
+      }
 
-      // Nur zeigen, wenn eingeloggt & nicht selbst
+      // Bewertungsbutton zeigen
       if (currentUser && currentUser.id !== userId) {
         document.getElementById("review-button-container").innerHTML = `
           <button class="review-btn" onclick="location.href='bewertung-schreiben.html?id=${userId}'">
@@ -240,16 +244,18 @@
         `;
       }
 
-      // Inserate
-      const { data: listings } = await supabase
+      // Inserate anzeigen
+      const { data: listings, error: listingError } = await supabase
         .from("listings")
         .select("*")
         .eq("user_id", userId)
         .order("created_at", { ascending: false });
 
       const container = document.getElementById("listing-grid");
-      container.innerHTML = listings.length
-        ? listings.map(item => `
+      if (listingError || !Array.isArray(listings) || listings.length === 0) {
+        container.innerHTML = "<p>Keine Inserate gefunden.</p>";
+      } else {
+        container.innerHTML = listings.map(item => `
           <div class="listing-card">
             <img src="${item.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" alt="${item.title}" />
             <h3>${item.title}</h3>
@@ -257,8 +263,8 @@
             <p><strong>Preis:</strong> ${item.price_per_day} € / Tag</p>
             <button onclick="location.href='mietobjekt.html?id=${item.id}'">Details</button>
           </div>
-        `).join('')
-        : "<p>Keine Inserate gefunden.</p>";
+        `).join('');
+      }
     }
 
     updateNav();
