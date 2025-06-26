@@ -49,6 +49,7 @@
       flex: 1 1 200px;
       display: flex;
       flex-direction: column;
+      position: relative;
     }
     label {
       font-weight: 600;
@@ -58,6 +59,25 @@
       padding: 0.6rem;
       border: 1px solid #ccc;
       border-radius: 6px;
+    }
+    #suggestions {
+      border: 1px solid #ccc;
+      border-top: none;
+      max-height: 150px;
+      overflow-y: auto;
+      background: white;
+      position: absolute;
+      z-index: 10;
+      top: 100%;
+      left: 0;
+      right: 0;
+    }
+    #suggestions div {
+      padding: 0.5rem;
+      cursor: pointer;
+    }
+    #suggestions div:hover {
+      background: #e0f2f1;
     }
     .dropzone {
       margin-top: 1rem;
@@ -80,10 +100,6 @@
     .img-wrapper {
       width: 120px;
       height: 100px;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       background: #e8f5e9;
       border-radius: 6px;
       overflow: hidden;
@@ -92,7 +108,6 @@
       width: 120px;
       height: 100px;
       object-fit: cover;
-      border-radius: 6px;
     }
     .remove-btn {
       position: absolute;
@@ -218,8 +233,8 @@
       </div>
       <div class="field">
         <label>Ort (Pflichtfeld)</label>
-        <input type="text" id="location-input" placeholder="z. B. 10115 Berlin" autocomplete="off" list="location-suggestions" />
-        <datalist id="location-suggestions"></datalist>
+        <input type="text" id="location-input" placeholder="z. B. 10115 Berlin" autocomplete="off" />
+        <div id="suggestions"></div>
       </div>
       <div class="field" style="flex: 1 1 100%;">
         <label>Beschreibung</label>
@@ -246,29 +261,27 @@ const supabase = window.supabase.createClient(
 
 let uploadedImageUrls = [];
 const locationInput = document.getElementById('location-input');
-const suggestionBox = document.getElementById('location-suggestions');
-let debounceTimeout = null;
+const suggestionBox = document.getElementById('suggestions');
 
-locationInput.addEventListener('input', () => {
-  const query = locationInput.value.trim();
-  if (!query) return;
+locationInput.addEventListener('input', async () => {
+  const value = locationInput.value.trim();
+  if (value.length < 3) {
+    suggestionBox.innerHTML = '';
+    return;
+  }
 
-  clearTimeout(debounceTimeout);
-  debounceTimeout = setTimeout(async () => {
-    try {
-      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&addressdetails=1&limit=5`);
-      const results = await res.json();
+  const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=5&q=${encodeURIComponent(value)}`);
+  const results = await res.json();
+  suggestionBox.innerHTML = '';
+  results.forEach(r => {
+    const div = document.createElement('div');
+    div.textContent = r.display_name;
+    div.onclick = () => {
+      locationInput.value = r.display_name;
       suggestionBox.innerHTML = '';
-      results.forEach(place => {
-        const display = `${place.address.postcode || ''} ${place.address.city || place.address.town || place.address.village || ''}`.trim();
-        const opt = document.createElement('option');
-        opt.value = display;
-        suggestionBox.appendChild(opt);
-      });
-    } catch (e) {
-      console.error('Vorschläge fehlgeschlagen', e);
-    }
-  }, 400);
+    };
+    suggestionBox.appendChild(div);
+  });
 });
 
 document.getElementById("dropzone").addEventListener("click", () => {
@@ -411,6 +424,5 @@ async function deleteListing(id) {
 
 loadGallery();
 </script>
-
 </body>
 </html>
