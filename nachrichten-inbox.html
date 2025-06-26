@@ -46,15 +46,15 @@
     }
 
     .chat-card {
-      display: flex;
-      align-items: center;
       background: white;
       padding: 1rem;
-      margin-bottom: 1rem;
+      margin-bottom: 1.2rem;
       border-radius: 14px;
       box-shadow: 0 4px 14px rgba(0,0,0,0.08);
       transition: all 0.2s ease;
       cursor: pointer;
+      display: flex;
+      gap: 1rem;
     }
 
     .chat-card:hover {
@@ -73,8 +73,8 @@
       font-size: 1.4rem;
       font-weight: bold;
       color: #1b5e20;
-      margin-right: 1rem;
       overflow: hidden;
+      flex-shrink: 0;
     }
 
     .chat-avatar img {
@@ -95,6 +95,25 @@
     .chat-title {
       font-size: 0.95rem;
       color: #4b8b4b;
+      margin-top: 0.2rem;
+    }
+
+    .listing-thumb {
+      width: 100%;
+      max-height: 140px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin: 0.6rem 0;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+
+    .listing-meta {
+      font-size: 0.85rem;
+      margin-bottom: 0.3rem;
+      color: #2e7d32;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
     }
 
     .chat-preview {
@@ -187,12 +206,15 @@
 
       const [{ data: userData }, { data: listingData }] = await Promise.all([
         supabase.from('profiles').select('name, avatar_url').eq('id', otherId).single(),
-        supabase.from('listings').select('title').eq('id', msg.listing_id).single()
+        supabase.from('listings').select('title, image_urls, price_per_day, location').eq('id', msg.listing_id).single()
       ]);
 
       const name = userData?.name || 'Unbekannt';
       const avatar = userData?.avatar_url || null;
       const title = listingData?.title || 'Inserat gelöscht';
+      const price = listingData?.price_per_day ? `${listingData.price_per_day} €/Tag` : '';
+      const location = listingData?.location || '';
+      const image = listingData?.image_urls?.[0] || '';
 
       const card = document.createElement('div');
       card.className = 'chat-card';
@@ -207,7 +229,12 @@
         <div class="chat-info">
           <div class="chat-name">${name}</div>
           <div class="chat-title">📦 ${title}</div>
-          <div class="chat-preview">${msg.content.slice(0, 90)}${msg.content.length > 90 ? '…' : ''}</div>
+          ${image ? `<img class="listing-thumb" src="${image}" alt="${title}" />` : ''}
+          <div class="listing-meta">
+            ${price ? `<span>💶 ${price}</span>` : ''}
+            ${location ? `<span>📍 ${location}</span>` : ''}
+          </div>
+          <div class="chat-preview">💬 ${msg.content.slice(0, 90)}${msg.content.length > 90 ? '…' : ''}</div>
           <div class="chat-time">⏱️ ${timeAgo(msg.created_at)}</div>
         </div>
       `;
