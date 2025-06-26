@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -162,6 +163,7 @@
     }
   </style>
 </head>
+
 <body>
 
   <header>
@@ -189,16 +191,16 @@
         <option value="baby">Baby & Kind</option>
       </select>
       <input type="text" placeholder="Ort (z. B. Berlin)" id="location-input" />
-      <select id="radius-select" onchange="handleRadiusChange()">
-        <option value="">+ Umkreis</option>
-        <option value="5">5 km</option>
-        <option value="10">10 km</option>
-        <option value="25">25 km</option>
-        <option value="50">50 km</option>
-        <option value="100">100 km</option>
-        <option value="custom">Benutzerdefiniert...</option>
-      </select>
-      <input type="number" id="custom-radius" placeholder="Eigener Umkreis (km)" style="display:none;" min="1" />
+
+      <input list="radius-options" id="radius-select" placeholder="Umkreis in km" />
+      <datalist id="radius-options">
+        <option value="5">
+        <option value="10">
+        <option value="25">
+        <option value="50">
+        <option value="100">
+      </datalist>
+
       <button onclick="search()">Suchen</button>
     </div>
   </section>
@@ -268,21 +270,25 @@
     function renderOffers(items, containerId) {
       const container = document.getElementById(containerId);
       container.innerHTML = '';
+
       items.forEach(async (item) => {
         const image = item.image_urls?.[0] || item.image_url || 'https://via.placeholder.com/400x200?text=Kein+Bild';
         const card = document.createElement('div');
         card.className = 'result-card';
+
         const favoriteButton = document.createElement('button');
         favoriteButton.innerText = 'Zu Favoriten';
         favoriteButton.addEventListener('click', async (e) => {
           e.stopPropagation();
           await toggleFavorite(item.id, e.target);
         });
+
         const isFav = await checkIfFavorite(item.id);
         if (isFav) {
           favoriteButton.disabled = true;
           favoriteButton.innerText = 'Bereits Favorit';
         }
+
         card.innerHTML = `
           <img src="${image}" alt="${item.title}" />
           <h3>${item.title}</h3>
@@ -292,6 +298,7 @@
         card.addEventListener('click', () => {
           window.location.href = `mietobjekt.html?id=${item.id}`;
         });
+
         card.appendChild(favoriteButton);
         container.appendChild(card);
       });
@@ -300,24 +307,28 @@
     async function checkIfFavorite(listingId) {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.user) return false;
+
       const { data } = await supabase
         .from('favorites')
         .select('*')
         .eq('user_id', session.user.id)
         .eq('listing_id', listingId)
         .maybeSingle();
+
       return !!data;
     }
 
     async function toggleFavorite(listingId, button) {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.user) return;
+
       const { data } = await supabase
         .from('favorites')
         .select('*')
         .eq('user_id', session.user.id)
         .eq('listing_id', listingId)
         .maybeSingle();
+
       if (data) {
         await supabase.from('favorites').delete().eq('id', data.id);
         button.innerText = 'Zu Favoriten';
@@ -329,26 +340,19 @@
       }
     }
 
-    function handleRadiusChange() {
-      const select = document.getElementById("radius-select");
-      const customInput = document.getElementById("custom-radius");
-      if (select.value === "custom") {
-        customInput.style.display = "block";
-      } else {
-        customInput.style.display = "none";
-        customInput.value = "";
-      }
-    }
-
     function search() {
       const keyword = document.getElementById("search-input").value.trim();
       const category = document.getElementById("category-select").value.trim();
       const location = document.getElementById("location-input").value.trim();
-      const radiusSelect = document.getElementById("radius-select").value.trim();
-      const radiusCustom = document.getElementById("custom-radius").value.trim();
-      const radius = radiusSelect === "custom" ? radiusCustom : radiusSelect;
+      const radius = document.getElementById("radius-select").value.trim();
 
-      const params = new URLSearchParams({ keyword, category, location, radius });
+      const params = new URLSearchParams({
+        keyword,
+        category,
+        location,
+        radius
+      });
+
       window.location.href = `search_results.html?${params.toString()}`;
     }
 
@@ -356,5 +360,6 @@
     loadNewestOffers();
     loadPopularOffers();
   </script>
+
 </body>
 </html>
