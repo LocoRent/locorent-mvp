@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="de">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -13,8 +12,8 @@
       --light: #f1f8e9;
       --dark: #1b5e20;
       --white: #fff;
-      --max-width: 1200px;
-      --button-radius: 8px;
+      --radius: 12px;
+      --shadow: rgba(0, 0, 0, 0.08);
     }
 
     * {
@@ -48,27 +47,52 @@
       font-weight: 600;
     }
 
-    nav a:hover {
-      border-bottom: 2px solid var(--white);
+    main {
+      max-width: 700px;
+      margin: 2rem auto;
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: 0 6px 20px var(--shadow);
+      padding: 2rem;
     }
 
-    .container {
-      max-width: 600px;
-      margin: 3rem auto 2rem auto;
-      background: white;
-      padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .profile-header img {
+      width: 90px;
+      height: 90px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 2px solid var(--primary);
+    }
+
+    .profile-header input[type="file"] {
+      display: none;
+    }
+
+    .upload-btn {
+      cursor: pointer;
+      font-size: 0.9rem;
+      color: var(--primary);
+      font-weight: 600;
+      text-decoration: underline;
     }
 
     h2 {
       margin-bottom: 1rem;
+      font-size: 1.6rem;
     }
 
     label {
       display: block;
       margin-top: 1rem;
       font-weight: 600;
+      font-size: 0.95rem;
     }
 
     input, textarea {
@@ -77,21 +101,27 @@
       margin-top: 0.3rem;
       border: 1px solid #ccc;
       border-radius: 8px;
+      font-size: 0.95rem;
     }
 
     button {
       margin-top: 1.5rem;
-      padding: 0.7rem 1.5rem;
+      padding: 0.8rem 1.5rem;
       background-color: var(--primary);
-      color: var(--white);
+      color: white;
       border: none;
-      border-radius: var(--button-radius);
+      border-radius: 8px;
       font-weight: 600;
       cursor: pointer;
+      width: 100%;
     }
 
     button:hover {
-      background-color: #1b5e20;
+      background-color: var(--dark);
+    }
+
+    .section {
+      margin-top: 2rem;
     }
 
     footer {
@@ -102,15 +132,14 @@
       text-align: center;
     }
 
-    /* Mobile Styling */
-    @media (max-width: 768px) {
-      .container {
-        padding: 1rem;
+    @media (max-width: 600px) {
+      .profile-header {
+        flex-direction: column;
+        text-align: center;
       }
     }
   </style>
 </head>
-
 <body>
 
   <header>
@@ -118,13 +147,22 @@
     <nav id="nav-links"></nav>
   </header>
 
-  <section class="container">
+  <main>
+    <div class="profile-header">
+      <img id="avatar-preview" src="https://via.placeholder.com/90" alt="Profilbild" />
+      <div>
+        <label for="avatar" class="upload-btn">📷 Profilbild ändern</label>
+        <input type="file" id="avatar" accept="image/*" />
+      </div>
+    </div>
+
     <h2>Mein Profil</h2>
+
     <label for="name">Name</label>
     <input type="text" id="name" placeholder="Dein Name" />
 
     <label for="email">E-Mail</label>
-    <input type="email" id="email" disabled /> <!-- E-Mail wird aus Supabase Auth geladen -->
+    <input type="email" id="email" disabled />
 
     <label for="phone">Telefon</label>
     <input type="text" id="phone" />
@@ -135,12 +173,15 @@
     <label for="bio">Über mich</label>
     <textarea id="bio" rows="3"></textarea>
 
-    <button onclick="saveProfile()">Profil speichern</button>
+    <button onclick="saveProfile()">💾 Profil speichern</button>
 
-    <label for="password">Neues Passwort</label>
-    <input type="password" id="password" />
-    <button onclick="changePassword()">Passwort ändern</button>
-  </section>
+    <div class="section">
+      <h3>🔐 Passwort ändern</h3>
+      <label for="password">Neues Passwort</label>
+      <input type="password" id="password" placeholder="••••••••" />
+      <button onclick="changePassword()">🔁 Passwort ändern</button>
+    </div>
+  </main>
 
   <footer>
     © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
@@ -152,7 +193,8 @@
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
     );
 
-    // Update Navigation (based on user login state)
+    let currentUser = null;
+
     async function updateNav() {
       const { data: { session } } = await supabase.auth.getSession();
       const nav = document.getElementById('nav-links');
@@ -162,7 +204,7 @@
           <a href="index.html">Start</a>
           <a href="profil.html">Mein Profil</a>
           <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-          <a href="javascript:void(0);" onclick="logout()">Logout</a>
+          <a href="#" onclick="logout()">Logout</a>
         `;
       } else {
         nav.innerHTML = `
@@ -172,38 +214,31 @@
       }
     }
 
-    async function logout(event) {
-      event.preventDefault();
+    async function logout() {
       await supabase.auth.signOut();
       window.location.href = "login.html";
     }
 
-    // Function to load and display profile
     async function loadProfile() {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.user) {
-        window.location.href = "login.html";
-        return;
-      }
+      if (!session?.user) return window.location.href = "login.html";
 
-      const user = session.user;
-      document.getElementById('email').value = user.email; // Set email from Supabase Auth
+      currentUser = session.user;
+      document.getElementById('email').value = currentUser.email;
 
-      // Profildaten aus der "profiles"-Tabelle laden
-      const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+      const { data } = await supabase.from('profiles').select('*').eq('id', currentUser.id).single();
       if (data) {
         document.getElementById('name').value = data.name || '';
         document.getElementById('phone').value = data.phone || '';
         document.getElementById('city').value = data.city || '';
         document.getElementById('bio').value = data.bio || '';
+        if (data.avatar_url) document.getElementById('avatar-preview').src = data.avatar_url;
       }
     }
 
-    // Profil speichern
     async function saveProfile() {
-      const { data: { user } } = await supabase.auth.getUser();
       const updates = {
-        id: user.id,
+        id: currentUser.id,
         name: document.getElementById('name').value,
         phone: document.getElementById('phone').value,
         city: document.getElementById('city').value,
@@ -213,23 +248,39 @@
       alert("Profil gespeichert!");
     }
 
-    // Passwort ändern
     async function changePassword() {
       const password = document.getElementById('password').value;
-      if (!password) return alert("Bitte Passwort eingeben.");
+      if (!password) return alert("Bitte ein Passwort eingeben.");
       const { error } = await supabase.auth.updateUser({ password });
       if (error) alert("Fehler: " + error.message);
       else {
-        alert("Passwort geändert.");
+        alert("Passwort erfolgreich geändert.");
         document.getElementById('password').value = '';
       }
     }
 
-    // Initial load of profile
+    document.getElementById('avatar').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file || !currentUser) return;
+
+      const filePath = `${currentUser.id}/${Date.now()}_${file.name}`;
+      const { error: uploadError } = await supabase.storage.from('avatars').upload(filePath, file, {
+        cacheControl: '3600',
+        upsert: true
+      });
+
+      if (uploadError) return alert("Upload fehlgeschlagen.");
+
+      const { data: { publicUrl } } = supabase.storage.from('avatars').getPublicUrl(filePath);
+      document.getElementById('avatar-preview').src = publicUrl;
+
+      await supabase.from('profiles').update({ avatar_url: publicUrl }).eq('id', currentUser.id);
+      alert("Profilbild aktualisiert!");
+    });
+
     loadProfile();
     updateNav();
   </script>
 
 </body>
-
 </html>
