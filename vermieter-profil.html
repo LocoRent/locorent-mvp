@@ -96,6 +96,16 @@
       font-weight: 600;
     }
 
+    .review {
+      border-top: 1px solid #ddd;
+      padding: 0.7rem 0;
+    }
+
+    .rating {
+      font-weight: bold;
+      color: #2e7d32;
+    }
+
     footer {
       text-align: center;
       padding: 2rem;
@@ -115,6 +125,12 @@
     <section id="profile-section">
       <h2>Vermieterprofil</h2>
       <div id="profile-info" class="profile-box">Lade Profil...</div>
+    </section>
+
+    <section id="reviews-section">
+      <h2>Bewertungen</h2>
+      <div id="rating-summary">⏳ Lade Bewertungen…</div>
+      <div id="reviews-list"></div>
     </section>
 
     <section id="listings-section">
@@ -165,14 +181,13 @@
         return;
       }
 
-      // Profil-Daten laden
-      const { data: profile, error: profileError } = await supabase
+      const { data: profile } = await supabase
         .from("profiles")
         .select("name, city, bio")
         .eq("id", userId)
         .single();
 
-      if (profileError || !profile) {
+      if (!profile) {
         document.getElementById("profile-info").innerText = "Vermieterprofil nicht gefunden.";
         return;
       }
@@ -183,8 +198,12 @@
         <p><strong>Über mich:</strong> ${profile.bio || '–'}</p>
       `;
 
-      // Inserate laden
-      const { data: listings, error: listingError } = await supabase
+      loadInserate(userId);
+      loadReviews(userId);
+    }
+
+    async function loadInserate(userId) {
+      const { data: listings } = await supabase
         .from("listings")
         .select("*")
         .eq("user_id", userId)
@@ -193,7 +212,7 @@
       const container = document.getElementById("listing-grid");
       container.innerHTML = "";
 
-      if (listingError || listings.length === 0) {
+      if (!listings || listings.length === 0) {
         container.innerHTML = "<p>Keine Inserate gefunden.</p>";
         return;
       }
@@ -201,7 +220,6 @@
       for (const item of listings) {
         const card = document.createElement("div");
         card.className = "listing-card";
-
         card.innerHTML = `
           <img src="${item.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" alt="${item.title}" />
           <h3>${item.title}</h3>
@@ -209,8 +227,37 @@
           <p><strong>Preis:</strong> ${item.price_per_day} € / Tag</p>
           <button onclick="window.location.href='mietobjekt.html?id=${item.id}'">Details</button>
         `;
-
         container.appendChild(card);
+      }
+    }
+
+    async function loadReviews(userId) {
+      const { data: reviews } = await supabase
+        .from("reviews")
+        .select("rating, comment, created_at, reviewer:profiles(name)")
+        .eq("reviewed_user_id", userId)
+        .order("created_at", { ascending: false });
+
+      const summary = document.getElementById("rating-summary");
+      const list = document.getElementById("reviews-list");
+      list.innerHTML = "";
+
+      if (!reviews || reviews.length === 0) {
+        summary.innerHTML = "<p>Keine Bewertungen vorhanden.</p>";
+        return;
+      }
+
+      const avg = (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1);
+      summary.innerHTML = `<p>Ø Bewertung: <span class="rating">${avg} ★</span> aus ${reviews.length} Bewertung(en)</p>`;
+
+      for (const r of reviews) {
+        const date = new Date(r.created_at).toLocaleDateString();
+        list.innerHTML += `
+          <div class="review">
+            <p><span class="rating">${r.rating} ★</span> – ${r.reviewer?.name || 'Anonym'} am ${date}</p>
+            <p>${r.comment}</p>
+          </div>
+        `;
       }
     }
 
