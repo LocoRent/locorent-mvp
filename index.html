@@ -138,6 +138,23 @@
       font-weight: 600;
     }
 
+    .result-card button {
+      margin-top: 1rem;
+      padding: 0.6rem;
+      width: 100%;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background-color 0.3s ease;
+    }
+
+    .result-card button:hover {
+      background-color: var(--highlight-color);
+    }
+
     footer {
       padding: 2rem;
       text-align: center;
@@ -177,6 +194,7 @@
       <input type="text" placeholder="Was suchst du?" id="search-input" />
       <select id="category-select">
         <option value="">Alle Kategorien</option>
+        <!-- Weitere Kategorien -->
         <option value="fahrzeuge">Fahrzeuge</option>
         <option value="transporter">Transporter</option>
         <option value="boote">Boote</option>
@@ -190,17 +208,8 @@
         <option value="freizeit">Freizeit & Sport</option>
         <option value="baby">Baby & Kind</option>
       </select>
-      <input type="text" placeholder="Ort (z. B. Berlin)" id="location-input" />
-
-      <input list="radius-options" id="radius-select" placeholder="Umkreis in km" />
-      <datalist id="radius-options">
-        <option value="5">
-        <option value="10">
-        <option value="25">
-        <option value="50">
-        <option value="100">
-      </datalist>
-
+      <input type="text" placeholder="Ort" id="location-input" />
+      <input type="number" placeholder="Umkreis (km)" id="radius-select" min="0" />
       <button onclick="search()">Suchen</button>
     </div>
   </section>
@@ -222,7 +231,7 @@
   <script>
     const supabase = window.supabase.createClient(
       'https://flnjalgqtkqycsaymmbd.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+      'eyJhbGciOiJI...QYNH_Q' // ← Dein Supabase Key
     );
 
     async function updateNav() {
@@ -272,22 +281,9 @@
       container.innerHTML = '';
 
       items.forEach(async (item) => {
-        const image = item.image_urls?.[0] || item.image_url || 'https://via.placeholder.com/400x200?text=Kein+Bild';
+        const image = item.image_urls?.[0] || 'https://via.placeholder.com/400x200?text=Kein+Bild';
         const card = document.createElement('div');
         card.className = 'result-card';
-
-        const favoriteButton = document.createElement('button');
-        favoriteButton.innerText = 'Zu Favoriten';
-        favoriteButton.addEventListener('click', async (e) => {
-          e.stopPropagation();
-          await toggleFavorite(item.id, e.target);
-        });
-
-        const isFav = await checkIfFavorite(item.id);
-        if (isFav) {
-          favoriteButton.disabled = true;
-          favoriteButton.innerText = 'Bereits Favorit';
-        }
 
         card.innerHTML = `
           <img src="${image}" alt="${item.title}" />
@@ -295,16 +291,40 @@
           <p><strong>Kategorie:</strong> ${item.category || 'Unbekannt'}</p>
           <p><strong>Preis pro Tag:</strong> ${item.price_per_day || 'k. A.'} €</p>
         `;
+
+        const button = document.createElement('button');
+        button.innerText = 'Zu Favoriten';
+        button.addEventListener('click', async (e) => {
+          e.stopPropagation();
+          const isNowFav = await toggleFavorite(item.id);
+          button.innerText = isNowFav ? 'Bereits Favorit' : 'Zu Favoriten';
+        });
+
+        const isFav = await checkIfFavorite(item.id);
+        if (isFav) button.innerText = 'Bereits Favorit';
+
         card.addEventListener('click', () => {
           window.location.href = `mietobjekt.html?id=${item.id}`;
         });
 
-        card.appendChild(favoriteButton);
+        card.appendChild(button);
         container.appendChild(card);
       });
     }
 
     async function checkIfFavorite(listingId) {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user) return false;
+      const { data } = await supabase
+        .from('favorites')
+        .select('*')
+        .eq('user_id', session.user.id)
+        .eq('listing_id', listingId)
+        .maybeSingle();
+      return !!data;
+    }
+
+    async function toggleFavorite(listingId) {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.user) return false;
 
@@ -315,28 +335,12 @@
         .eq('listing_id', listingId)
         .maybeSingle();
 
-      return !!data;
-    }
-
-    async function toggleFavorite(listingId, button) {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.user) return;
-
-      const { data } = await supabase
-        .from('favorites')
-        .select('*')
-        .eq('user_id', session.user.id)
-        .eq('listing_id', listingId)
-        .maybeSingle();
-
       if (data) {
         await supabase.from('favorites').delete().eq('id', data.id);
-        button.innerText = 'Zu Favoriten';
-        button.disabled = false;
+        return false;
       } else {
         await supabase.from('favorites').insert({ user_id: session.user.id, listing_id: listingId });
-        button.innerText = 'Bereits Favorit';
-        button.disabled = true;
+        return true;
       }
     }
 
