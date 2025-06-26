@@ -175,14 +175,13 @@
       <input type="number" id="min-price" placeholder="Min. Preis" />
       <input type="number" id="max-price" placeholder="Max. Preis" />
       <input type="text" id="location-input" placeholder="Ort (z. B. Berlin)" />
-      <select id="radius-select">
-        <option value="">Umkreis wählen</option>
-        <option value="5">5 km</option>
-        <option value="10">10 km</option>
-        <option value="20">20 km</option>
-        <option value="50">50 km</option>
-        <option value="custom">Eigene Eingabe…</option>
-      </select>
+    <input list="radius-options" id="radius-select" placeholder="Umkreis in km" type="number" min="1" />
+<datalist id="radius-options">
+  <option value="5">
+  <option value="10">
+  <option value="20">
+  <option value="50">
+</datalist>
       <input type="number" id="radius-custom-input" placeholder="Radius in km" min="1" />
       <button id="search-btn">Suchen</button>
     </div>
