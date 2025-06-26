@@ -132,7 +132,7 @@
     }
 
     .result-card button {
-      margin-top: 1rem;
+      margin-top: 0.5rem;
       padding: 0.6rem;
       width: 100%;
       background-color: var(--primary-color);
@@ -169,45 +169,12 @@
       }
 
       .category-grid {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr;
       }
 
       nav a {
         margin-left: 0;
         margin-top: 0.5rem;
-      }
-    }
-
-    @media (prefers-color-scheme: dark) {
-      body {
-        background-color: #121212;
-        color: #f0f0f0;
-      }
-
-      .hero,
-      .result-card,
-      footer {
-        background-color: #1e1e1e;
-        color: #ffffff;
-      }
-
-      header {
-        background-color: #1b5e20;
-      }
-
-      .search-row input,
-      .search-row select {
-        background-color: #2b2b2b;
-        color: #f0f0f0;
-        border: 1px solid #444;
-      }
-
-      .search-row button {
-        background-color: #388e3c;
-      }
-
-      .search-row button:hover {
-        background-color: #66bb6a;
       }
     }
   </style>
@@ -333,26 +300,31 @@
       items.forEach(async (item) => {
         const card = document.createElement('div');
         card.className = 'result-card';
+
+        const isFav = userSession?.user ? await checkIfFavorite(item.id) : false;
+
         card.innerHTML = `
-          <img src="${item.image_urls?.[0] || 'https://via.placeholder.com/400x200?text=Kein+Bild'}" alt="${item.title}" />
+          <img src="${item.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" alt="${item.title}" />
           <h3>${item.title}</h3>
-          <p><strong>Kategorie:</strong> ${capitalize(item.category)}</p>
+          <p><strong>Kategorie:</strong> ${capitalize(item.category) || 'Unbekannt'}</p>
           <p><strong>Preis pro Tag:</strong> ${item.price_per_day || 'k. A.'} €</p>
-          <button>Zu Favoriten</button>
+          <button onclick="window.location.href='mietobjekt.html?id=${item.id}'">Details ansehen</button>
+          <button class="fav-btn">${isFav ? 'Favorit entfernen' : 'Zu Favoriten'}</button>
         `;
-        const button = card.querySelector('button');
+
+        const favBtn = card.querySelector('.fav-btn');
         if (userSession?.user) {
-          const isFav = await checkIfFavorite(item.id);
-          if (isFav) button.innerText = 'Bereits Favorit';
-          button.onclick = async (e) => {
+          favBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
             e.stopPropagation();
-            const favNow = await toggleFavorite(item.id);
-            button.innerText = favNow ? 'Bereits Favorit' : 'Zu Favoriten';
-          };
+            const nowFav = await toggleFavorite(item.id);
+            favBtn.innerText = nowFav ? 'Favorit entfernen' : 'Zu Favoriten';
+          });
+        } else {
+          favBtn.disabled = true;
+          favBtn.innerText = "Login erforderlich";
         }
-        card.addEventListener('click', () => {
-          window.location.href = `mietobjekt.html?id=${item.id}`;
-        });
+
         container.appendChild(card);
       });
     }
