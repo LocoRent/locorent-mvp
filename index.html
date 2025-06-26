@@ -187,18 +187,18 @@
       <input type="text" placeholder="Was suchst du?" id="search-input" />
       <select id="category-select">
         <option value="">Alle Kategorien</option>
-        <option value="Fahrzeuge">Fahrzeuge</option>
-        <option value="Transporter">Transporter</option>
-        <option value="Boote">Boote</option>
-        <option value="Fahrrad">Fahrräder & E-Bikes</option>
-        <option value="Werkzeuge">Werkzeuge</option>
-        <option value="Maschinen">Maschinen & Baugeräte</option>
-        <option value="Party">Party & Event</option>
-        <option value="Technik">Technik</option>
-        <option value="Haushalt">Haushalt & Möbel</option>
-        <option value="Garten">Garten</option>
-        <option value="Freizeit">Freizeit & Sport</option>
-        <option value="Baby">Baby & Kind</option>
+        <option value="fahrzeuge">Fahrzeuge</option>
+        <option value="transporter">Transporter</option>
+        <option value="boote">Boote</option>
+        <option value="fahrrad">Fahrräder & E-Bikes</option>
+        <option value="werkzeuge">Werkzeuge</option>
+        <option value="maschinen">Maschinen & Baugeräte</option>
+        <option value="party">Party & Event</option>
+        <option value="technik">Technik</option>
+        <option value="haushalt">Haushalt & Möbel</option>
+        <option value="garten">Garten</option>
+        <option value="freizeit">Freizeit & Sport</option>
+        <option value="baby">Baby & Kind</option>
       </select>
       <input type="text" placeholder="Ort" id="location-input" />
       <input type="number" placeholder="Umkreis (km)" id="radius-select" min="0" />
@@ -268,6 +268,11 @@
       renderOffers(data, 'popular-offers');
     }
 
+    function capitalize(str) {
+      if (!str) return '';
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
     function renderOffers(items, containerId) {
       const container = document.getElementById(containerId);
       container.innerHTML = '';
@@ -284,7 +289,7 @@
         title.textContent = item.title;
 
         const category = document.createElement('p');
-        category.innerHTML = `<strong>Kategorie:</strong> ${item.category || 'Unbekannt'}`;
+        category.innerHTML = `<strong>Kategorie:</strong> ${capitalize(item.category) || 'Unbekannt'}`;
 
         const price = document.createElement('p');
         price.innerHTML = `<strong>Preis pro Tag:</strong> ${item.price_per_day || 'k. A.'} €`;
