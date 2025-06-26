@@ -132,8 +132,8 @@
       </div>
       <input type="hidden" id="rating" required />
 
-      <label for="comment">Kommentar (max. 150 Zeichen)</label>
-      <textarea id="comment" maxlength="150" placeholder="Was möchtest du sagen?" required></textarea>
+      <label for="comment">Kommentar</label>
+      <textarea id="comment" maxlength="150" placeholder="Was möchtest du sagen? (max. 150 Zeichen)" required></textarea>
       <div class="char-count"><span id="charCount">0</span>/150</div>
 
       <button type="submit">Bewertung speichern</button>
@@ -181,7 +181,6 @@
       star.addEventListener("click", () => {
         const value = parseInt(star.dataset.value);
         ratingInput.value = value;
-
         stars.forEach(s => {
           s.classList.toggle("selected", parseInt(s.dataset.value) <= value);
         });
@@ -216,8 +215,8 @@
       }
 
       const { error } = await supabase.from("reviews").insert({
-        to_user: toUser,
-        reviewer_id: user.id,
+        to_user_id: toUser,
+        from_user_id: user.id,
         rating,
         comment,
       });
