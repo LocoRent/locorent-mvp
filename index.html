@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="de">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -103,6 +102,25 @@
       background-color: var(--secondary-color);
     }
 
+    .autocomplete-suggestions {
+      position: absolute;
+      background-color: white;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      z-index: 999;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .autocomplete-suggestions div {
+      padding: 0.75rem 1rem;
+      cursor: pointer;
+    }
+
+    .autocomplete-suggestions div:hover {
+      background-color: var(--gray-light);
+    }
+
     .category-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -163,7 +181,6 @@
     }
   </style>
 </head>
-
 <body>
 
   <header>
@@ -173,7 +190,7 @@
 
   <section class="hero">
     <h2>Finde das perfekte Mietobjekt</h2>
-    <div class="search-row">
+    <div class="search-row" style="position: relative;">
       <input type="text" placeholder="Was suchst du?" id="search-input" />
       <select id="category-select">
         <option value="">Alle Kategorien</option>
@@ -190,8 +207,10 @@
         <option value="freizeit">Freizeit & Sport</option>
         <option value="baby">Baby & Kind</option>
       </select>
-      <input type="text" placeholder="Ort" id="location-input" />
-      <input type="text" placeholder="Ort (z. B. Berlin)" id="location-input" />
+      <div style="position: relative; flex: 1;">
+        <input type="text" placeholder="Ort (z. B. Berlin)" id="location-input" autocomplete="off" />
+        <div id="autocomplete-list" class="autocomplete-suggestions"></div>
+      </div>
       <select id="radius-select">
         <option value="">+ Umkreis</option>
         <option value="5">5 km</option>
@@ -200,6 +219,7 @@
         <option value="50">50 km</option>
         <option value="100">100 km</option>
       </select>
+      <input type="number" id="custom-radius" placeholder="Eigener Umkreis (km)" min="1" />
       <button onclick="search()">Suchen</button>
     </div>
   </section>
@@ -252,7 +272,7 @@
         .select('*')
         .order('created_at', { ascending: false })
         .limit(5);
-      if (error) return console.error('Fehler beim Laden der neuesten Angebote:', error.message);
+      if (error) return console.error(error);
       renderOffers(data, 'newest-offers');
     }
 
@@ -262,32 +282,28 @@
         .select('*')
         .order('created_at', { ascending: false })
         .limit(5);
-      if (error) return console.error('Fehler beim Laden der beliebtesten Angebote:', error.message);
+      if (error) return console.error(error);
       renderOffers(data, 'popular-offers');
     }
 
     function renderOffers(items, containerId) {
       const container = document.getElementById(containerId);
       container.innerHTML = '';
-
       items.forEach(async (item) => {
-        const image = item.image_urls?.[0] || item.image_url || 'https://via.placeholder.com/400x200?text=Kein+Bild';
+        const image = item.image_urls?.[0] || 'https://via.placeholder.com/400x200?text=Kein+Bild';
         const card = document.createElement('div');
         card.className = 'result-card';
-
         const favoriteButton = document.createElement('button');
         favoriteButton.innerText = 'Zu Favoriten';
         favoriteButton.addEventListener('click', async (e) => {
           e.stopPropagation();
           await toggleFavorite(item.id, e.target);
         });
-
         const isFav = await checkIfFavorite(item.id);
         if (isFav) {
           favoriteButton.disabled = true;
           favoriteButton.innerText = 'Bereits Favorit';
         }
-
         card.innerHTML = `
           <img src="${image}" alt="${item.title}" />
           <h3>${item.title}</h3>
@@ -297,7 +313,6 @@
         card.addEventListener('click', () => {
           window.location.href = `mietobjekt.html?id=${item.id}`;
         });
-
         card.appendChild(favoriteButton);
         container.appendChild(card);
       });
@@ -306,28 +321,24 @@
     async function checkIfFavorite(listingId) {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.user) return false;
-
       const { data } = await supabase
         .from('favorites')
         .select('*')
         .eq('user_id', session.user.id)
         .eq('listing_id', listingId)
         .maybeSingle();
-
       return !!data;
     }
 
     async function toggleFavorite(listingId, button) {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.user) return;
-
       const { data } = await supabase
         .from('favorites')
         .select('*')
         .eq('user_id', session.user.id)
         .eq('listing_id', listingId)
         .maybeSingle();
-
       if (data) {
         await supabase.from('favorites').delete().eq('id', data.id);
         button.innerText = 'Zu Favoriten';
@@ -343,7 +354,9 @@
       const keyword = document.getElementById("search-input").value.trim();
       const category = document.getElementById("category-select").value.trim();
       const location = document.getElementById("location-input").value.trim();
-      const radius = document.getElementById("radius-select").value.trim();
+      const dropdownRadius = document.getElementById("radius-select").value.trim();
+      const customRadius = document.getElementById("custom-radius").value.trim();
+      const radius = customRadius || dropdownRadius;
 
       const params = new URLSearchParams({
         keyword,
@@ -352,14 +365,32 @@
         radius
       });
 
-      window.location.href = `search_results.html?keyword=${keyword}&category=${category}&location=${location}`;
       window.location.href = `search_results.html?${params.toString()}`;
     }
+
+    document.getElementById("location-input").addEventListener("input", async (e) => {
+      const val = e.target.value;
+      const list = document.getElementById("autocomplete-list");
+      list.innerHTML = "";
+      if (val.length < 2) return;
+
+      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(val)}`);
+      const results = await res.json();
+
+      results.slice(0, 5).forEach(place => {
+        const div = document.createElement("div");
+        div.innerText = place.display_name;
+        div.onclick = () => {
+          document.getElementById("location-input").value = place.display_name;
+          list.innerHTML = "";
+        };
+        list.appendChild(div);
+      });
+    });
 
     updateNav();
     loadNewestOffers();
     loadPopularOffers();
   </script>
-
-</body>More actions
+</body>
 </html>
