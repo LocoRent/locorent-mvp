@@ -138,6 +138,10 @@
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
     );
 
+    function capitalize(str) {
+      return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
+    }
+
     async function updateNav() {
       const { data: { session } } = await supabase.auth.getSession();
       const nav = document.getElementById('nav-links');
@@ -209,7 +213,7 @@
         card.innerHTML = `
           <img src="${listing.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" alt="${listing.title}" />
           <h3>${listing.title}</h3>
-          <p><strong>Kategorie:</strong> ${listing.category || 'Unbekannt'}</p>
+          <p><strong>Kategorie:</strong> ${capitalize(listing.category) || 'Unbekannt'}</p>
           <p><strong>Preis pro Tag:</strong> ${listing.price_per_day || 'k. A.'} €</p>
           <button onclick="window.location.href='mietobjekt.html?id=${listing.id}'">Details ansehen</button>
           <button onclick="removeFromFavorites('${listing.id}', event)">Favorit entfernen</button>
@@ -234,10 +238,9 @@
       if (error) {
         console.error("Fehler beim Entfernen aus den Favoriten:", error.message);
       } else {
-        // Visuelles Feedback
         event.target.innerText = "Entfernt...";
         event.target.disabled = true;
-        setTimeout(loadFavorites, 300); // Neuladen nach kurzem Feedback
+        setTimeout(loadFavorites, 300);
       }
     }
 
