@@ -2,130 +2,215 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>AGB & Impressum – Locorent</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
   <style>
+    :root {
+      --primary: #2e7d32;
+      --primary-light: #66bb6a;
+      --primary-dark: #1b5e20;
+      --background: #f1f8e9;
+      --white: #fff;
+      --text-dark: #0f2e13;
+      --text-muted: #466843;
+      --accent: #b9f6ca;
+      --highlight: #a5d6a7;
+      --radius: 18px;
+      --shadow-light: rgba(46, 125, 50, 0.08);
+      --shadow-strong: rgba(46, 125, 50, 0.25);
+      --transition: 0.4s ease;
+      --font-primary: 'Poppins', sans-serif;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      line-height: 1.6;
-      padding: 40px;
-      max-width: 900px;
-      margin: auto;
-      background: #f9f9f9;
-      color: #222;
+      margin: 0;
+      font-family: var(--font-primary);
+      background: linear-gradient(to bottom, #e8f5e9 0%, #ffffff 100%);
+      color: var(--text-dark);
+      scroll-behavior: smooth;
     }
-    h1, h2, h3 {
-      color: #1a1a1a;
+
+    header {
+      background-color: var(--primary);
+      color: var(--white);
+      padding: 1.6rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 700;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
     }
-    a {
-      color: #0077cc;
+
+    header h1 {
+      font-size: 1.8rem;
     }
-    hr {
-      margin: 40px 0;
+
+    header nav a {
+      color: var(--white);
+      text-decoration: none;
+      margin-left: 2rem;
+      font-weight: 600;
+      font-size: 1rem;
+      position: relative;
+    }
+
+    header nav a::after {
+      content: '';
+      position: absolute;
+      left: 0; bottom: -4px;
+      width: 0;
+      height: 2px;
+      background-color: var(--accent);
+      transition: width 0.3s ease;
+    }
+
+    header nav a:hover::after {
+      width: 100%;
+    }
+
+    main {
+      max-width: 1000px;
+      margin: 3rem auto;
+      padding: 0 2rem 5rem;
+    }
+
+    h2 {
+      color: var(--primary-dark);
+      font-size: 2rem;
+      margin-top: 2rem;
+    }
+
+    h3 {
+      font-size: 1.5rem;
+      color: var(--primary);
+      margin-top: 1.5rem;
+    }
+
+    p, li {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      line-height: 1.7;
+    }
+
+    ul {
+      padding-left: 1.2rem;
+    }
+
+    footer {
+      background-color: var(--primary);
+      color: var(--white);
+      text-align: center;
+      padding: 4rem 2rem;
+      margin: 0 2rem 3rem;
+      border-radius: var(--radius);
+      font-size: 0.95rem;
+    }
+
+    footer h4 {
+      font-size: 1.2rem;
+      margin-top: 1rem;
+      font-weight: 600;
+    }
+
+    footer ul {
+      list-style: none;
+      padding: 0;
+      margin: 1rem auto 0;
+      max-width: 320px;
+    }
+
+    footer ul li {
+      margin: 0.4rem 0;
+    }
+
+    footer ul li a {
+      color: var(--white);
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
+  <header>
+    <h1>Locorent</h1>
+    <nav>
+      <a href="index.html">Start</a>
+      <a href="login.html">Einloggen</a>
+    </nav>
+  </header>
 
-  <h1>Allgemeine Geschäftsbedingungen (AGB)</h1>
+  <main>
+    <h2>Allgemeine Geschäftsbedingungen (AGB)</h2>
 
-  <h2>1. Geltungsbereich</h2>
-  <p>
-    Diese Allgemeinen Geschäftsbedingungen ("AGB") gelten für die Nutzung der Online-Plattform <strong>Locorent</strong> unter <a href="https://www.locorent.de">www.locorent.de</a>.
-    Locorent bietet registrierten Nutzer:innen die Möglichkeit, Gegenstände aller Art zu vermieten und zu mieten.
-    Mit der Registrierung und Nutzung der Plattform erklärst du dich mit diesen AGB einverstanden.
-  </p>
-  <p>
-    Locorent stellt ausschließlich die technische Infrastruktur für das Zustandekommen von Mietverträgen zwischen Mieter:innen und Vermieter:innen bereit.
-    Ein Vertragsverhältnis über einzelne Mietobjekte entsteht ausschließlich zwischen diesen beiden Parteien.
-    Locorent ist <strong>nicht</strong> selbst Vertragspartei dieser Mietverhältnisse.
-  </p>
+    <h3>1. Geltungsbereich</h3>
+    <p>Diese AGB gelten für die Nutzung der Plattform <strong>Locorent</strong> unter <a href="https://www.locorent.de">www.locorent.de</a>. Locorent vermittelt Mietobjekte zwischen privaten Nutzer:innen. Verträge über Mietobjekte kommen ausschließlich zwischen den Nutzer:innen zustande, nicht mit Locorent.</p>
 
-  <h2>2. Registrierung und Nutzerkonto</h2>
-  <p>
-    Die Nutzung der Plattform erfordert eine Registrierung. Diese ist nur voll geschäftsfähigen Personen mit Wohnsitz in Deutschland oder juristischen Personen mit Sitz in Deutschland gestattet.
-    Nutzer:innen verpflichten sich, bei der Registrierung korrekte Angaben zu machen und ihre Zugangsdaten vertraulich zu behandeln.
-  </p>
+    <h3>2. Registrierung & Nutzerkonto</h3>
+    <p>Zur Nutzung ist eine Registrierung erforderlich. Du musst volljährig und geschäftsfähig sein. Die Daten müssen korrekt angegeben werden. Das Konto ist nicht übertragbar.</p>
 
-  <h2>3. Leistungen von Locorent</h2>
-  <p>
-    Locorent bietet eine Plattform, über die Mietgegenstände eingestellt, gesucht, gebucht und verwaltet werden können.
-    Locorent übernimmt keine Haftung für die Qualität, Sicherheit oder Rechtmäßigkeit der angebotenen Mietobjekte.
-  </p>
+    <h3>3. Leistungen von Locorent</h3>
+    <p>Locorent bietet die technische Plattform zum Inserieren, Buchen und Verwalten von Mietobjekten. Locorent prüft Inhalte nicht vorab und haftet nicht für deren Richtigkeit.</p>
 
-  <h2>4. Zustandekommen von Mietverträgen</h2>
-  <p>
-    Das Inserat eines Gegenstands stellt eine Einladung zur Abgabe eines Angebots dar.
-    Ein Mietvertrag entsteht, wenn der/die Vermieter:in die Anfrage eines/einer Mieter:in über die Plattform annimmt.
-    Locorent übernimmt keine Verantwortung für Erfüllung, Mängel oder Schäden aus dem Mietverhältnis.
-  </p>
+    <h3>4. Zustandekommen von Mietverträgen</h3>
+    <p>Der Mietvertrag entsteht, wenn ein:e Vermieter:in eine Anfrage über die Plattform annimmt. Locorent haftet nicht für Mängel, Schäden oder Nichterfüllung.</p>
 
-  <h2>5. Pflichten der Nutzer:innen</h2>
-  <ul>
-    <li>Keine gesetzeswidrigen Inhalte verbreiten</li>
-    <li>Keine Rechte Dritter verletzen</li>
-    <li>Keine automatisierten Programme einsetzen</li>
-    <li>Vermieter:innen müssen Mietobjekte wahrheitsgemäß beschreiben</li>
-  </ul>
+    <h3>5. Pflichten der Nutzer:innen</h3>
+    <ul>
+      <li>Keine illegalen Inhalte oder Nutzungen</li>
+      <li>Keine Rechte Dritter verletzen</li>
+      <li>Nur zur Verfügung stellen, was dir gehört oder was du vermieten darfst</li>
+    </ul>
 
-  <h2>6. Haftung</h2>
-  <p>
-    Locorent haftet nur für Schäden, die auf vorsätzlichem oder grob fahrlässigem Verhalten beruhen.
-    Für Inhalte oder Mängel der Mietobjekte haften ausschließlich die jeweiligen Anbieter:innen.
-  </p>
+    <h3>6. Haftung</h3>
+    <p>Locorent haftet nur für Schäden, die durch grobe Fahrlässigkeit oder Vorsatz entstanden sind. Für Inhalte, Schäden oder Vertragsverletzungen haftet allein der/die jeweilige Nutzer:in.</p>
 
-  <h2>7. Vertragslaufzeit und Kündigung</h2>
-  <p>
-    Das Nutzungsverhältnis beginnt mit der Registrierung und ist unbefristet.
-    Eine Kündigung ist jederzeit möglich. Locorent behält sich das Recht vor, Konten bei Verstößen zu sperren.
-  </p>
+    <h3>7. Kündigung & Sperrung</h3>
+    <p>Du kannst dein Konto jederzeit löschen. Locorent kann bei Verstößen oder Missbrauch den Zugang sperren.</p>
 
-  <h2>8. Datenschutz</h2>
-  <p>
-    Die Verarbeitung personenbezogener Daten erfolgt gemäß der <a href="/datenschutz.html">Datenschutzerklärung</a>.
-    Mit der Nutzung erklärst du dich mit der Speicherung und Verarbeitung deiner Daten einverstanden.
-  </p>
+    <h3>8. Datenschutz</h3>
+    <p>Details zur Verarbeitung personenbezogener Daten findest du in unserer <a href="datenschutz.html">Datenschutzerklärung</a>.</p>
 
-  <h2>9. Schlussbestimmungen</h2>
-  <p>
-    Sollte eine Bestimmung dieser AGB unwirksam sein, bleibt die Wirksamkeit der übrigen unberührt.
-    Es gilt deutsches Recht. Gerichtsstand ist, soweit zulässig, der Sitz von Locorent.
-  </p>
+    <h3>9. Gerichtsstand & Recht</h3>
+    <p>Es gilt deutsches Recht. Gerichtsstand ist Maintal, sofern gesetzlich zulässig. Sollte eine Bestimmung unwirksam sein, bleibt der Rest der AGB gültig.</p>
 
-  <hr />
+    <hr style="margin: 4rem 0;" />
 
-  <h1>Impressum</h1>
+    <h2>Impressum</h2>
+    <p><strong>Angaben gemäß § 5 TMG:</strong><br />
+      Pascal Merten<br />
+      Wilhelmsbader Straße 15<br />
+      63477 Maintal<br />
+      Deutschland</p>
 
-  <h2>Angaben gemäß § 5 TMG</h2>
-  <p>
-    <strong>Betreiber der Website:</strong><br />
-    Pascal Merten<br />
-    Wilhelmsbader Straße 15<br />
-    63477 Maintal<br />
-    Deutschland
-  </p>
+    <p><strong>Kontakt:</strong><br />
+      E-Mail: <a href="mailto:info@locorent.de">info@locorent.de</a></p>
 
-  <p>
-    <strong>Kontakt:</strong><br />
-    E-Mail: <a href="mailto:info@locorent.de">info@locorent.de</a>
-  </p>
+    <p><strong>Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV:</strong><br />
+      Pascal Merten, Adresse wie oben.</p>
 
-  <p>
-    <strong>Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV:</strong><br />
-    Pascal Merten<br />
-    Wilhelmsbader Straße 15<br />
-    63477 Maintal
-  </p>
+    <p><strong>Hinweis:</strong><br />
+      Diese Website wird aktuell privat und nicht kommerziell betrieben. Es erfolgt keine Werbung, kein Verkauf, kein Umsatz. Die Inhalte dienen ausschließlich der Demonstration eines Mietkonzepts.</p>
+  </main>
 
-  <h2>Haftungsausschluss</h2>
-  <p>
-    Diese Website befindet sich aktuell in einem nicht-kommerziellen Entwicklungsstadium. Es erfolgen keine Verkäufe, keine Werbung und keine gewerblichen Angebote. Für externe Links wird keine Haftung übernommen – für den Inhalt verlinkter Seiten sind ausschließlich deren Betreiber verantwortlich.
-  </p>
-
-  <h2>Urheberrecht</h2>
-  <p>
-    Alle Inhalte auf dieser Website, insbesondere Texte, Bilder und Grafiken, unterliegen dem deutschen Urheberrecht. Die Vervielfältigung oder Verwendung außerhalb der Grenzen des Urheberrechts bedarf der schriftlichen Zustimmung.
-  </p>
-
+  <footer>
+    © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
+    <div>
+      <h4>Mieten & Vermieten</h4>
+      <ul>
+        <li><a href="so-funktionierts.html">So funktioniert's</a></li>
+        <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
+        <li><a href="kategorien.html">Beliebte Kategorien</a></li>
+        <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
+        <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
+      </ul>
+    </div>
+  </footer>
 </body>
 </html>
