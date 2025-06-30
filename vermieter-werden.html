@@ -6,6 +6,7 @@
   <title>Werde Vermieter:in – Locorent</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
   <style>
     :root {
       --primary: #2e7d32;
@@ -154,10 +155,15 @@
     <section class="section" style="text-align:center;">
       <h2>Werde Vermieter:in auf Locorent</h2>
       <p>Verdiene Geld mit Dingen, die du nicht täglich brauchst – einfach, sicher und nachhaltig.</p>
-      <div style="max-width: 100%; margin: 2rem auto;">
-        <img src="https://i.imgur.com/fkOWgFy.png" 
-             alt="Introbild Vermietung Locorent" 
-             style="width: 100%; max-width: 600px; border-radius: 16px; box-shadow: 0 4px 16px rgba(0,0,0,0.1);" />
+      <div style="max-width: 400px; margin: 2rem auto;">
+        <lottie-player 
+          src="https://assets10.lottiefiles.com/packages/lf20_bhw1ul4g.json" 
+          background="transparent" 
+          speed="1" 
+          style="width: 100%; height: 250px;" 
+          loop 
+          autoplay>
+        </lottie-player>
       </div>
       <a href="register.html" class="cta-btn">Jetzt kostenlos starten</a>
     </section>
@@ -247,18 +253,18 @@
 
     async function loadPlatformStats() {
       const mieterRes = await supabase
-        .from('profiles') // <- Hier wurde 'users' zu 'profiles' geändert
+        .from('profiles')
         .select('id', { count: 'exact', head: true });
 
       const listingsRes = await supabase
         .from('listings')
         .select('id', { count: 'exact', head: true });
 
-      if (mieterRes && typeof mieterRes.count === "number") {
+      if (mieterRes?.count >= 0) {
         document.querySelector("#stats-mieter h3").textContent = `${mieterRes.count}+`;
       }
 
-      if (listingsRes && typeof listingsRes.count === "number") {
+      if (listingsRes?.count >= 0) {
         document.querySelector("#stats-inserate h3").textContent = `${listingsRes.count}+`;
       }
     }
@@ -269,4 +275,3 @@
 
 </body>
 </html>
-
