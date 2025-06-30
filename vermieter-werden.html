@@ -8,7 +8,7 @@
   <style>
     :root {
       --primary: #2e7d32;
-      --secondary: #a5d6a7;
+      --highlight: #66bb6a;
       --light-bg: #f1f8e9;
       --white: #fff;
       --gray: #333;
@@ -30,136 +30,234 @@
 
     header {
       background-color: var(--primary);
-      color: var(--white);
-      padding: 1.5rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      color: white;
+      padding: 2rem;
+      text-align: center;
     }
 
-    header nav a {
-      color: var(--white);
-      text-decoration: none;
-      margin-left: 1.5rem;
+    header h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    header p {
+      font-size: 1.1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .cta-btn {
+      background-color: var(--highlight);
+      color: white;
+      padding: 0.9rem 1.8rem;
+      border: none;
+      border-radius: 8px;
       font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+    }
+
+    .cta-btn:hover {
+      background-color: #4caf50;
     }
 
     main {
-      max-width: 900px;
+      max-width: 1100px;
       margin: 2rem auto;
       padding: 0 1rem;
     }
 
-    h1 {
-      color: var(--primary);
-      margin-bottom: 1rem;
-    }
-
-    h2 {
-      margin-top: 2rem;
-      color: var(--primary);
+    section {
+      margin-bottom: 3rem;
     }
 
     .section {
-      background-color: var(--white);
+      background-color: white;
       padding: 2rem;
       border-radius: var(--radius);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-      margin-bottom: 2rem;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
     }
 
-    .section h3 {
-      margin-top: 1.5rem;
-      color: #2e7d32;
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
     }
 
-    .cta {
-      display: inline-block;
-      margin-top: 1.5rem;
-      padding: 0.8rem 1.5rem;
-      background-color: var(--primary);
-      color: white;
-      text-decoration: none;
+    .feature {
+      text-align: center;
+    }
+
+    .feature img {
+      width: 64px;
+      margin-bottom: 0.5rem;
+    }
+
+    .gallery {
+      display: flex;
+      gap: 1.5rem;
+      overflow-x: auto;
+      padding-bottom: 1rem;
+    }
+
+    .gallery-item {
+      min-width: 220px;
+      background-color: white;
+      border-radius: var(--radius);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+    }
+
+    .testimonial {
+      font-style: italic;
+      background-color: #ffffff;
+      padding: 1.5rem;
+      border-left: 4px solid var(--primary);
+      margin-bottom: 1rem;
       border-radius: 8px;
-      font-weight: 600;
+    }
+
+    .faq p {
+      margin-bottom: 1rem;
+    }
+
+    .stats {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      text-align: center;
+    }
+
+    .stat {
+      flex: 1;
+      min-width: 150px;
+    }
+
+    .stat h3 {
+      font-size: 2rem;
+      color: var(--primary);
     }
 
     footer {
       background-color: var(--primary);
-      color: var(--white);
-      padding: 2rem;
+      color: white;
       text-align: center;
-      margin-top: 3rem;
-    }
-
-    footer h4 {
-      margin-top: 1.5rem;
-      margin-bottom: 0.5rem;
+      padding: 2rem;
     }
 
     footer ul {
       list-style: none;
       padding: 0;
       line-height: 1.8;
+      margin-top: 1rem;
     }
 
     footer a {
-      color: var(--white);
+      color: white;
       text-decoration: underline;
     }
 
-    small {
-      display: block;
-      margin-top: 0.3rem;
-      font-size: 0.85rem;
-      color: #666;
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 1.6rem;
+      }
     }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>Locorent</h1>
-    <nav>
-      <a href="index.html">Start</a>
-      <a href="login.html">Einloggen</a>
-    </nav>
+    <h1>Werde Vermieter:in auf Locorent</h1>
+    <p>Verdiene Geld mit Dingen, die du nicht täglich brauchst – ganz einfach & nachhaltig.</p>
+    <a href="registrierung.html" class="cta-btn">Jetzt kostenlos starten</a>
   </header>
 
   <main>
-    <h1>Werde Vermieter:in auf Locorent</h1>
-    <div class="section">
-      <p><strong>Nutze, was du hast. Verdiene, was du kannst. Teile, was andere brauchen.</strong></p>
-      <p>Egal ob Privatperson oder Unternehmen – bei <strong>Locorent</strong> wirst du in wenigen Minuten zur Vermieter:in. Ohne Fixkosten, ohne Risiko – dafür mit echtem Mehrwert.</p>
-      <p>Statt Dinge ungenutzt herumliegen zu lassen, biete sie zur Miete an. Du schaffst Platz, generierst Einkommen und hilfst dabei, Ressourcen zu schonen. Mit Locorent wirst du Teil einer aktiven und nachhaltigen Community.</p>
-    </div>
+    <section class="section">
+      <h2>Dein Einstieg in die Kreislaufwirtschaft</h2>
+      <p>Bei Locorent kannst du als Privatperson oder Unternehmen unkompliziert Artikel vermieten. Ganz ohne Fixkosten oder technisches Know-how – dafür mit echtem Impact.</p>
+      <div class="features">
+        <div class="feature">
+          <img src="https://cdn-icons-png.flaticon.com/512/3208/3208707.png" alt="Starten">
+          <h3>In 2 Minuten dabei</h3>
+          <p>Registrieren, Artikel hochladen – fertig.</p>
+        </div>
+        <div class="feature">
+          <img src="https://cdn-icons-png.flaticon.com/512/3064/3064197.png" alt="Absicherung">
+          <h3>Du bestimmst die Regeln</h3>
+          <p>Ob Kaution, Übergabe oder Rückgabe – du hast die Kontrolle.</p>
+        </div>
+        <div class="feature">
+          <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Reichweite">
+          <h3>Neue Kunden erreichen</h3>
+          <p>Erreiche tausende Mieter:innen aus deiner Region.</p>
+        </div>
+      </div>
+    </section>
 
-    <div class="section">
-      <h2>Warum Vermieten auf Locorent?</h2>
+    <section class="section">
+      <h2>Beispiele aus der Community</h2>
+      <div class="gallery">
+        <div class="gallery-item">
+          <img src="https://via.placeholder.com/300x150?text=Bohrmaschine" alt="Bohrmaschine" />
+          <p><strong>Bohrmaschine</strong><br>ab 5 €/Tag</p>
+        </div>
+        <div class="gallery-item">
+          <img src="https://via.placeholder.com/300x150?text=E-Bike" alt="E-Bike" />
+          <p><strong>E-Bike</strong><br>ab 15 €/Tag</p>
+        </div>
+        <div class="gallery-item">
+          <img src="https://via.placeholder.com/300x150?text=Beamer" alt="Beamer" />
+          <p><strong>Beamer</strong><br>ab 8 €/Tag</p>
+        </div>
+      </div>
+    </section>
 
-      <h3>🟢 Einfach starten</h3>
-      <p>Registriere dich kostenlos in unter zwei Minuten. Lade deine Artikel hoch – ganz ohne technische Hürden.</p>
+    <section class="section">
+      <h2>Was unsere Vermieter:innen sagen</h2>
+      <div class="testimonial">„Ich war überrascht, wie schnell meine erste Anfrage kam. Seitdem vermiete ich regelmäßig meine Kamera – einfach und zuverlässig.“<br><strong>– Lisa, Köln</strong></div>
+      <div class="testimonial">„Unser Unternehmen bietet jetzt Baumaschinen zur Miete an – Locorent hilft uns, neue Kundschaft zu erreichen, ohne viel Aufwand.“<br><strong>– Max, Stuttgart</strong></div>
+    </section>
 
-      <h3>🔐 Sicher vermieten – nach deinen Regeln</h3>
-      <p>Zum Start klärst du Übergabe und Absicherung direkt mit dem Mieter – etwa durch Kaution oder persönliche Vereinbarung. Du legst die Bedingungen fest. Eine Partnerschaft mit einer Versicherung ist bereits in Planung, um dir in Zukunft noch mehr Schutz und Komfort zu bieten.</p>
+    <section class="section faq">
+      <h2>Häufige Fragen</h2>
+      <p><strong>Wie funktioniert die Übergabe?</strong><br>Du klärst Ort und Zeit direkt mit dem Mieter über den Chat.</p>
+      <p><strong>Was ist mit Schäden?</strong><br>Du kannst individuell eine Kaution vereinbaren. Eine Versicherungslösung ist in Planung.</p>
+      <p><strong>Muss ich ein Gewerbe anmelden?</strong><br>Für gelegentliche private Vermietungen ist das nicht notwendig – bei gewerblicher Nutzung empfehlen wir eine Beratung.</p>
+    </section>
 
-      <h3>🚀 Reichweite nutzen</h3>
-      <p>Erreiche auf Locorent gezielt Mieter:innen aus deiner Region – ohne Marketingaufwand oder Inseratskosten.</p>
-
-      <h3>🌱 Nachhaltig handeln & Umsatz steigern</h3>
-      <p>Jede Vermietung reduziert Ressourcenverschwendung und CO₂-Ausstoß – und eröffnet dir zugleich ein zusätzliches, umweltbewusstes Einnahmemodell.</p>
-
-      <h3>🏢 Für Unternehmen</h3>
-      <p>Stellen Sie Ihr Sortiment mietbar zur Verfügung, erschließen Sie neue Kundengruppen und positionieren Sie sich klar als nachhaltiges Unternehmen der Zukunft.</p>
-
-      <a href="registrierung.html" class="cta">Jetzt kostenlos Vermieter:in werden</a>
-    </div>
+    <section class="section">
+      <h2>Locorent in Zahlen</h2>
+      <div class="stats">
+        <div class="stat">
+          <h3>1000+</h3>
+          <p>aktive Mieter:innen</p>
+        </div>
+        <div class="stat">
+          <h3>250+</h3>
+          <p>verfügbare Artikel</p>
+        </div>
+        <div class="stat">
+          <h3>0 €</h3>
+          <p>Fixkosten für Vermieter:innen</p>
+        </div>
+      </div>
+    </section>
   </main>
 
   <footer>
     © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
-
-    <h4>Mieten & Vermieten</h4>
+    <h4 style="margin-top: 1.5rem;">Mieten & Vermieten</h4>
     <ul>
       <li><a href="so-funktionierts.html">So funktioniert's</a></li>
       <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
