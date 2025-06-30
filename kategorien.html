@@ -38,7 +38,6 @@
     line-height: 1.6;
   }
 
-  /* Header - dunkelgrün wie so-funktionierts.html */
   header {
     background-color: var(--primary);
     color: var(--white);
@@ -98,7 +97,6 @@
     text-align: center;
   }
 
-  /* Hero-Text mit weißem BG, klar & clean */
   .hero-section {
     background: var(--white);
     border-radius: var(--radius);
@@ -130,21 +128,23 @@
   }
 
   .category-card {
-    position: relative;
     background: var(--white);
     border-radius: var(--radius);
-    padding: 1.4rem 1.4rem 3.6rem;
     box-shadow: 0 12px 28px var(--shadow-light);
     cursor: pointer;
     text-decoration: none;
     color: inherit;
+
+    /* Flexbox-Layout für gleiche Höhe und Textverteilung */
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: 1.4rem 1.4rem 3.6rem;
+
+    /* Feste Höhe */
+    height: 470px;
+
     transition: box-shadow var(--transition), transform var(--transition);
-    will-change: transform;
-    overflow: hidden;
-    min-height: 470px; /* Einheitliche Höhe */
   }
 
   .category-card:hover,
@@ -162,12 +162,14 @@
     overflow: hidden;
     margin-bottom: 1.8rem;
     box-shadow: 0 10px 22px rgba(46, 125, 50, 0.1);
+    flex-shrink: 0;
   }
 
   .category-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center center;
     transition: transform 0.5s ease;
     will-change: transform;
     border-radius: var(--radius);
@@ -200,6 +202,7 @@
     color: var(--primary-dark);
     margin-bottom: 0.7rem;
     line-height: 1.1;
+    flex-shrink: 0;
   }
 
   .category-card p {
@@ -207,8 +210,14 @@
     color: var(--text-muted);
     font-size: 1.06rem;
     line-height: 1.55;
-    margin-bottom: 3rem;
-    min-height: 80px;
+    margin-bottom: auto;
+    max-height: 4.65em; /* ca. 3 Zeilen */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    /* Macht den Text gleichmäßig kurz */
   }
 
   .category-cta {
@@ -249,7 +258,6 @@
     stroke-linejoin: round;
   }
 
-  /* Footer - dunkelgrün wie so-funktionierts.html */
   footer {
     background-color: var(--primary);
     color: var(--white);
@@ -291,12 +299,13 @@
     outline: none;
   }
 
+  /* Responsive Anpassungen */
   @media (max-width: 900px) {
     main {
       padding: 0 1.25rem;
     }
     .category-card {
-      min-height: auto;
+      height: auto;
       padding: 1.3rem 1.4rem 3rem;
     }
     .category-image-wrapper {
@@ -307,6 +316,7 @@
       font-size: 1.7rem;
     }
     .category-card p {
+      max-height: none;
       font-size: 1rem;
       margin-bottom: 2rem;
     }
