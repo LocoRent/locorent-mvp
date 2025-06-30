@@ -218,18 +218,18 @@
         <label>Kategorie</label>
         <select id="category-input">
           <option value="">Bitte wählen</option>
-          <option value="fahrzeuge">Fahrzeuge</option>
-          <option value="transporter">Transporter</option>
-          <option value="boote">Boote</option>
-          <option value="fahrrad">Fahrräder & E-Bikes</option>
-          <option value="werkzeuge">Werkzeuge</option>
-          <option value="maschinen">Maschinen & Baugeräte</option>
-          <option value="party">Party & Event</option>
-          <option value="technik">Technik</option>
-          <option value="haushalt">Haushalt & Möbel</option>
-          <option value="garten">Garten</option>
-          <option value="freizeit">Freizeit & Sport</option>
-          <option value="baby">Baby & Kind</option>
+          <option value="Fahrzeuge">Fahrzeuge</option>
+          <option value="Transporter">Transporter</option>
+          <option value="Boote">Boote</option>
+          <option value="Fahrrad">Fahrräder & E-Bikes</option>
+          <option value="Werkzeuge">Werkzeuge</option>
+          <option value="Maschinen">Maschinen & Baugeräte</option>
+          <option value="Party">Party & Event</option>
+          <option value="Technik">Technik</option>
+          <option value="Haushalt">Haushalt & Möbel</option>
+          <option value="Garten">Garten</option>
+          <option value="Freizeit">Freizeit & Sport</option>
+          <option value="Baby">Baby & Kind</option>
         </select>
       </div>
       <div class="field">
@@ -237,7 +237,7 @@
         <input type="number" id="price-input" />
       </div>
       <div class="field">
-        <label>Ort (Pflichtfeld)</label>
+        <label>Ort (nur Städte in Deutschland)</label>
         <input type="text" id="location-input" placeholder="z. B. 10115 Berlin" autocomplete="off" />
         <div id="suggestions"></div>
       </div>
@@ -261,7 +261,7 @@
 <script>
 const supabase = window.supabase.createClient(
   'https://flnjalgqtkqycsaymmbd.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
 );
 
 let uploadedImageUrls = [];
@@ -274,7 +274,8 @@ locationInput.addEventListener('input', async () => {
     suggestionBox.innerHTML = '';
     return;
   }
-  const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=5&q=${encodeURIComponent(value)}`);
+
+  const res = await fetch(`https://nominatim.openstreetmap.org/search?countrycodes=de&format=json&limit=5&city=${encodeURIComponent(value)}`);
   const results = await res.json();
   suggestionBox.innerHTML = '';
   results.forEach(r => {
@@ -289,6 +290,10 @@ locationInput.addEventListener('input', async () => {
 });
 
 document.getElementById("dropzone").addEventListener("click", () => {
+  if (uploadedImageUrls.length >= 2) {
+    alert("Maximal 2 Bilder erlaubt.");
+    return;
+  }
   const input = document.createElement("input");
   input.type = "file";
   input.accept = "image/*";
@@ -298,14 +303,15 @@ document.getElementById("dropzone").addEventListener("click", () => {
 });
 
 async function handleFiles(files) {
-  if (uploadedImageUrls.length >= 2) {
-    alert("Du kannst maximal 2 Bilder hochladen.");
-    return;
-  }
-  const remaining = 2 - uploadedImageUrls.length;
-  const filesToUpload = Array.from(files).slice(0, remaining);
+  const container = document.getElementById("preview-gallery");
+  for (let file of files) {
+    if (uploadedImageUrls.length >= 2) break;
 
-  for (let file of filesToUpload) {
+    const tempBox = document.createElement("div");
+    tempBox.className = "preview-box";
+    tempBox.innerHTML = '<div class="img-wrapper"><div class="loader"></div></div>';
+    container.appendChild(tempBox);
+
     const path = `listing-images/${Date.now()}-${file.name}`;
     const { error } = await supabase.storage.from('listing-images').upload(path, file);
     if (!error) {
@@ -344,9 +350,7 @@ document.getElementById("save-btn").addEventListener("click", async () => {
     .select('id')
     .eq('user_id', user.id);
 
-  if ((existing?.length || 0) >= 15) {
-    return alert("Du kannst maximal 15 Inserate erstellen.");
-  }
+  if (existing.length >= 15) return alert("Du kannst maximal 15 Inserate erstellen.");
 
   const title = document.getElementById('title-input').value.trim();
   const category = document.getElementById('category-input').value;
@@ -363,7 +367,7 @@ document.getElementById("save-btn").addEventListener("click", async () => {
   let longitude = null;
 
   try {
-    const r = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(location)}&addressdetails=1&limit=1`);
+    const r = await fetch(`https://nominatim.openstreetmap.org/search?format=json&countrycodes=de&q=${encodeURIComponent(location)}&limit=1`);
     const arr = await r.json();
     if (arr.length > 0) {
       latitude = parseFloat(arr[0].lat);
@@ -372,12 +376,12 @@ document.getElementById("save-btn").addEventListener("click", async () => {
       alert("Ort nicht gefunden.");
       return;
     }
-  } catch {
+  } catch (err) {
     alert("Geocoding fehlgeschlagen.");
     return;
   }
 
-  const { error } = await supabase.from('listings').insert({
+  const { error: ie } = await supabase.from('listings').insert({
     title,
     category,
     price_per_day: price,
@@ -389,7 +393,7 @@ document.getElementById("save-btn").addEventListener("click", async () => {
     location
   });
 
-  if (error) return alert("Fehler beim Speichern: " + error.message);
+  if (ie) return alert("Fehler beim Speichern: " + ie.message);
 
   alert("Inserat gespeichert!");
   document.querySelectorAll('input, textarea, select').forEach(el => el.value = '');
