@@ -22,7 +22,6 @@
     --gap: 2.8rem;
     --font-primary: 'Poppins', sans-serif;
   }
-  /* Reset */
   *, *::before, *::after {
     box-sizing: border-box;
   }
@@ -119,7 +118,6 @@
   .intro p + p {
     margin-top: 1.2rem;
   }
-
   @keyframes fadeUp {
     to {
       opacity: 1;
@@ -138,7 +136,7 @@
     position: relative;
     background: white;
     border-radius: var(--radius);
-    padding: 3rem 2rem 2.8rem;
+    padding: 1.4rem 1.4rem 3.6rem;
     box-shadow: 0 14px 28px var(--shadow-light);
     cursor: pointer;
     text-decoration: none;
@@ -146,9 +144,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    transition: 
-      box-shadow var(--transition), 
-      transform var(--transition);
+    transition: box-shadow var(--transition), transform var(--transition);
     will-change: transform;
     overflow: hidden;
   }
@@ -158,40 +154,67 @@
     transform: translateY(-14px);
     outline: none;
   }
-  .category-icon {
-    width: 96px;
-    height: 96px;
-    margin-bottom: 2rem;
-    filter: drop-shadow(0 3px 5px rgba(46, 125, 50, 0.15));
-    flex-shrink: 0;
-    user-select: none;
+
+  /* Image wrapper & overlay */
+  .category-image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 160px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 1.8rem;
+    box-shadow: 0 10px 20px rgba(46, 125, 50, 0.12);
   }
+  .category-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+  .category-card:hover .category-image,
+  .category-card:focus-visible .category-image {
+    transform: scale(1.05);
+  }
+  .image-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(46, 125, 50, 0.22);
+    mix-blend-mode: multiply;
+    pointer-events: none;
+    transition: background 0.5s ease;
+  }
+  .category-card:hover .image-overlay,
+  .category-card:focus-visible .image-overlay {
+    background: rgba(46, 125, 50, 0.36);
+  }
+
   .category-card h3 {
     font-weight: 800;
-    font-size: 2rem;
+    font-size: 1.95rem;
     color: var(--primary-dark);
-    margin-bottom: 0.85rem;
+    margin-bottom: 0.75rem;
     line-height: 1.1;
   }
   .category-card p {
     font-weight: 400;
     color: var(--text-muted);
-    font-size: 1.05rem;
-    line-height: 1.5;
-    margin-bottom: 3rem;
+    font-size: 1.06rem;
+    line-height: 1.55;
+    margin-bottom: 2.8rem;
+    min-height: 70px;
   }
 
   /* CTA Button Overlay */
   .category-cta {
     position: absolute;
-    bottom: 25px;
+    bottom: 28px;
     left: 50%;
     transform: translateX(-50%) translateY(10px);
     background: var(--primary-light);
     color: var(--white);
-    padding: 0.65rem 1.7rem;
+    padding: 0.75rem 1.9rem;
     font-weight: 600;
-    font-size: 1.05rem;
+    font-size: 1.1rem;
     border-radius: 40px;
     box-shadow: 0 6px 12px rgba(102, 187, 106, 0.45);
     opacity: 0;
@@ -200,7 +223,8 @@
     user-select: none;
     display: flex;
     align-items: center;
-    gap: 0.6rem;
+    gap: 0.65rem;
+    font-family: 'Poppins', sans-serif;
   }
   .category-card:hover .category-cta,
   .category-card:focus-visible .category-cta {
@@ -209,8 +233,8 @@
     transform: translateX(-50%) translateY(0);
   }
   .category-cta svg {
-    width: 22px;
-    height: 22px;
+    width: 24px;
+    height: 24px;
     stroke: var(--white);
     stroke-width: 3;
     stroke-linecap: round;
@@ -219,7 +243,7 @@
 
   /* Footer */
   footer {
-    background: var(--primary-color);
+    background: var(--primary);
     color: var(--white);
     text-align: center;
     padding: 3rem 2rem;
@@ -262,23 +286,22 @@
     }
     .category-card {
       max-width: 100%;
-      padding: 2.5rem 1.8rem 2.4rem;
+      padding: 1.3rem 1.4rem 3rem;
     }
-    .category-icon {
-      width: 80px;
-      height: 80px;
-      margin-bottom: 1.6rem;
+    .category-image-wrapper {
+      height: 140px;
+      margin-bottom: 1.2rem;
     }
     .category-card h3 {
-      font-size: 1.65rem;
+      font-size: 1.7rem;
     }
     .category-card p {
       font-size: 1rem;
-      margin-bottom: 2.3rem;
+      margin-bottom: 2rem;
     }
     .category-cta {
       font-size: 1rem;
-      padding: 0.55rem 1.4rem;
+      padding: 0.6rem 1.5rem;
       bottom: 20px;
     }
   }
@@ -335,7 +358,10 @@
 
   <nav class="category-grid" aria-label="Beliebte Kategorien">
     <a href="search_results.html?category=fahrzeuge" class="category-card" tabindex="0" aria-label="Fahrzeuge mieten">
-      <img src="https://cdn-icons-png.flaticon.com/512/743/743922.png" alt="" class="category-icon" aria-hidden="true" />
+      <div class="category-image-wrapper">
+        <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=400&q=80" alt="" class="category-image" />
+        <div class="image-overlay"></div>
+      </div>
       <h3>Fahrzeuge</h3>
       <p>PKWs, Motorräder und mehr – mobil bleiben leicht gemacht.</p>
       <span class="category-cta" aria-hidden="true">Hier klicken →
@@ -346,7 +372,10 @@
     </a>
 
     <a href="search_results.html?category=transporter" class="category-card" tabindex="0" aria-label="Transporter mieten">
-      <img src="https://cdn-icons-png.flaticon.com/512/1995/1995566.png" alt="" class="category-icon" aria-hidden="true" />
+      <div class="category-image-wrapper">
+        <img src="https://images.unsplash.com/photo-1561149738-923dd08a9b3a?auto=format&fit=crop&w=400&q=80" alt="" class="category-image" />
+        <div class="image-overlay"></div>
+      </div>
       <h3>Transporter</h3>
       <p>Für den großen Umzug oder den Wocheneinkauf.</p>
       <span class="category-cta" aria-hidden="true">Hier klicken →
@@ -357,7 +386,10 @@
     </a>
 
     <a href="search_results.html?category=boote" class="category-card" tabindex="0" aria-label="Boote mieten">
-      <img src="https://cdn-icons-png.flaticon.com/512/3617/3617442.png" alt="" class="category-icon" aria-hidden="true" />
+      <div class="category-image-wrapper">
+        <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80" alt="" class="category-image" />
+        <div class="image-overlay"></div>
+      </div>
       <h3>Boote</h3>
       <p>Für entspannte Tage auf dem Wasser.</p>
       <span class="category-cta" aria-hidden="true">Hier klicken →
@@ -368,7 +400,10 @@
     </a>
 
     <a href="search_results.html?category=fahrrad" class="category-card" tabindex="0" aria-label="Fahrräder & E-Bikes mieten">
-      <img src="https://cdn-icons-png.flaticon.com/512/272/272282.png" alt="" class="category-icon" aria-hidden="true" />
+      <div class="category-image-wrapper">
+        <img src="https://images.unsplash.com/photo-1517959105826-b8c7b68b9dd2?auto=format&fit=crop&w=400&q=80" alt="" class="category-image" />
+        <div class="image-overlay"></div>
+      </div>
       <h3>Fahrräder & E-Bikes</h3>
       <p>Aktiv und nachhaltig unterwegs.</p>
       <span class="category-cta" aria-hidden="true">Hier klicken →
@@ -379,7 +414,10 @@
     </a>
 
     <a href="search_results.html?category=werkzeuge" class="category-card" tabindex="0" aria-label="Werkzeuge mieten">
-      <img src="https://cdn-icons-png.flaticon.com/512/564/564619.png" alt="" class="category-icon" aria-hidden="true" />
+      <div class="category-image-wrapper">
+        <img src="https://images.unsplash.com/photo-1581092334336-151a9d97aeb1?auto=format&fit=crop&w=400&q=80" alt="" class="category-image" />
+        <div class="image-overlay"></div>
+      </div>
       <h3>Werkzeuge</h3>
       <p>Vom Bohrer bis zur Säge – alles für dein Projekt.</p>
       <span class="category-cta" aria-hidden="true">Hier klicken →
@@ -390,7 +428,10 @@
     </a>
 
     <a href="search_results.html?category=maschinen" class="category-card" tabindex="0" aria-label="Maschinen & Baugeräte mieten">
-      <img src="https://cdn-icons-png.flaticon.com/512/3063/3063915.png" alt="" class="category-icon" aria-hidden="true" />
+      <div class="category-image-wrapper">
+        <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=400&q=80" alt="" class="category-image" />
+        <div class="image-overlay"></div>
+      </div>
       <h3>Maschinen & Baugeräte</h3>
       <p>Professionelle Geräte für den Bau.</p>
       <span class="category-cta" aria-hidden="true">Hier klicken →
@@ -401,7 +442,10 @@
     </a>
 
     <a href="search_results.html?category=party" class="category-card" tabindex="0" aria-label="Party & Event mieten">
-      <img src="https://cdn-icons-png.flaticon.com/512/2589/2589175.png" alt="" class="category-icon" aria-hidden="true" />
+      <div class="category-image-wrapper">
+        <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=400&q=80" alt="" class="category-image" />
+        <div class="image-overlay"></div>
+      </div>
       <h3>Party & Event</h3>
       <p>Alles für die perfekte Feier.</p>
       <span class="category-cta" aria-hidden="true">Hier klicken →
@@ -412,7 +456,10 @@
     </a>
 
     <a href="search_results.html?category=technik" class="category-card" tabindex="0" aria-label="Technik mieten">
-      <img src="https://cdn-icons-png.flaticon.com/512/3106/3106722.png" alt="" class="category-icon" aria-hidden="true" />
+      <div class="category-image-wrapper">
+        <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=400&q=80" alt="" class="category-image" />
+        <div class="image-overlay"></div>
+      </div>
       <h3>Technik</h3>
       <p>Beamer, Kameras, Soundsysteme und mehr.</p>
       <span class="category-cta" aria-hidden="true">Hier klicken →
@@ -423,7 +470,10 @@
     </a>
 
     <a href="search_results.html?category=haushalt" class="category-card" tabindex="0" aria-label="Haushalt & Möbel mieten">
-      <img src="https://cdn-icons-png.flaticon.com/512/857/857681.png" alt="" class="category-icon" aria-hidden="true" />
+      <div class="category-image-wrapper">
+        <img src="https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=400&q=80" alt="" class="category-image" />
+        <div class="image-overlay"></div>
+      </div>
       <h3>Haushalt & Möbel</h3>
       <p>Alles, was dein Zuhause braucht.</p>
       <span class="category-cta" aria-hidden="true">Hier klicken →
@@ -434,7 +484,10 @@
     </a>
 
     <a href="search_results.html?category=garten" class="category-card" tabindex="0" aria-label="Garten mieten">
-      <img src="https://cdn-icons-png.flaticon.com/512/1146/1146869.png" alt="" class="category-icon" aria-hidden="true" />
+      <div class="category-image-wrapper">
+        <img src="https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=400&q=80" alt="" class="category-image" />
+        <div class="image-overlay"></div>
+      </div>
       <h3>Garten</h3>
       <p>Geräte und Möbel für draußen.</p>
       <span class="category-cta" aria-hidden="true">Hier klicken →
@@ -445,7 +498,10 @@
     </a>
 
     <a href="search_results.html?category=freizeit" class="category-card" tabindex="0" aria-label="Freizeit & Sport mieten">
-      <img src="https://cdn-icons-png.flaticon.com/512/181/181549.png" alt="" class="category-icon" aria-hidden="true" />
+      <div class="category-image-wrapper">
+        <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80" alt="" class="category-image" />
+        <div class="image-overlay"></div>
+      </div>
       <h3>Freizeit & Sport</h3>
       <p>Für Spaß und Bewegung in der Freizeit.</p>
       <span class="category-cta" aria-hidden="true">Hier klicken →
@@ -456,7 +512,10 @@
     </a>
 
     <a href="search_results.html?category=baby" class="category-card" tabindex="0" aria-label="Baby & Kind mieten">
-      <img src="https://cdn-icons-png.flaticon.com/512/747/747378.png" alt="" class="category-icon" aria-hidden="true" />
+      <div class="category-image-wrapper">
+        <img src="https://images.unsplash.com/photo-1523983308821-9335a6a92d47?auto=format&fit=crop&w=400&q=80" alt="" class="category-image" />
+        <div class="image-overlay"></div>
+      </div>
       <h3>Baby & Kind</h3>
       <p>Alles für die Kleinsten – flexibel und günstig.</p>
       <span class="category-cta" aria-hidden="true">Hier klicken →
@@ -470,14 +529,14 @@
 
 <footer>
   © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
-  <div style="margin-top: 1.8rem;">
-    <h4>Mieten & Vermieten</h4>
-    <ul>
-      <li><a href="so-funktionierts.html">So funktioniert's</a></li>
-      <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
-      <li><a href="kategorien.html">Beliebte Kategorien</a></li>
-      <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
-      <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
+  <div style="margin-top: 2rem;">
+    <h4 style="color: var(--white); font-weight: 700; margin-bottom: 1rem;">Mieten & Vermieten</h4>
+    <ul style="list-style:none; padding:0; max-width: 320px; margin: 0 auto; line-height: 1.8; color: var(--white);">
+      <li><a href="so-funktionierts.html" style="color: var(--white); text-decoration: underline;">So funktioniert's</a></li>
+      <li><a href="vermieter-werden.html" style="color: var(--white); text-decoration: underline;">Werde zum Vermieter</a></li>
+      <li><a href="kategorien.html" style="color: var(--white); text-decoration: underline;">Beliebte Kategorien</a></li>
+      <li><a href="vermieter-tipps.html" style="color: var(--white); text-decoration: underline;">Tipps & Tricks für Vermieter</a></li>
+      <li><a href="hilfe-faq.html" style="color: var(--white); text-decoration: underline;">Hilfe und FAQ</a></li>
     </ul>
   </div>
 </footer>
