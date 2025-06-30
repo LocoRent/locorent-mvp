@@ -238,7 +238,7 @@
       </div>
       <div class="field">
         <label>Ort</label>
-        <input type="text" id="location-input" placeholder="z. B. Berlin" autocomplete="off" />
+        <input type="text" id="location-input" placeholder="Nur Städte in Deutschland" autocomplete="off" />
         <div id="suggestions"></div>
       </div>
       <div class="field" style="flex: 1 1 100%;">
@@ -268,6 +268,10 @@ let uploadedImageUrls = [];
 const locationInput = document.getElementById('location-input');
 const suggestionBox = document.getElementById('suggestions');
 
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
 locationInput.addEventListener('input', async () => {
   const value = locationInput.value.trim();
   if (value.length < 2) {
@@ -275,10 +279,11 @@ locationInput.addEventListener('input', async () => {
     return;
   }
 
-  const res = await fetch(`https://nominatim.openstreetmap.org/search?country=Germany&format=json&limit=5&accept-language=de&q=${encodeURIComponent(value)}`);
+  const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=7&accept-language=de&countrycodes=de&q=${encodeURIComponent(value)}`);
   const results = await res.json();
+  const filtered = results.filter(r => ['city', 'town', 'village', 'hamlet', 'municipality'].includes(r.type));
   suggestionBox.innerHTML = '';
-  results.forEach(r => {
+  filtered.forEach(r => {
     const div = document.createElement('div');
     div.textContent = r.display_name;
     div.onclick = () => {
@@ -367,7 +372,7 @@ document.getElementById("save-btn").addEventListener("click", async () => {
   let longitude = null;
 
   try {
-    const r = await fetch(`https://nominatim.openstreetmap.org/search?format=json&country=Germany&q=${encodeURIComponent(location)}&limit=1`);
+    const r = await fetch(`https://nominatim.openstreetmap.org/search?format=json&countrycodes=de&q=${encodeURIComponent(location)}&limit=1`);
     const arr = await r.json();
     if (arr.length > 0) {
       latitude = parseFloat(arr[0].lat);
@@ -423,7 +428,7 @@ async function loadGallery() {
       <img src="${img}" alt="${i.title}">
       <div class="card-content">
         <h3>${i.title}</h3>
-        <p class="category"><strong>Kategorie:</strong> ${i.category}</p>
+        <p class="category"><strong>Kategorie:</strong> ${capitalize(i.category)}</p>
         <p class="price">${i.price_per_day} € / Tag</p>
       </div>
       <div class="actions">
@@ -444,5 +449,6 @@ async function deleteListing(id) {
 
 loadGallery();
 </script>
+
 </body>
 </html>
