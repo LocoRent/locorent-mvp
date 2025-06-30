@@ -1,4 +1,4 @@
-<!DOCTYPE html>More actions
+<!DOCTYPE html>
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
@@ -210,15 +210,15 @@
       listings.forEach(listing => {
         const card = document.createElement("div");
         card.className = "result-card";
-        card.innerHTML = `
-          <img src="${listing.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" alt="${listing.title}" />
-          <h3>${listing.title}</h3>
-          <p><strong>Kategorie:</strong> ${listing.category || 'Unbekannt'}</p>
-          <p><strong>Kategorie:</strong> ${capitalize(listing.category) || 'Unbekannt'}</p>
-          <p><strong>Preis pro Tag:</strong> ${listing.price_per_day || 'k. A.'} €</p>
-          <button onclick="window.location.href='mietobjekt.html?id=${listing.id}'">Details ansehen</button>
-          <button onclick="removeFromFavorites('${listing.id}', event)">Favorit entfernen</button>
-        `;
+       card.innerHTML = `
+  <img src="${listing.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" alt="${listing.title}" />
+  <h3>${listing.title}</h3>
+  <p><strong>Kategorie:</strong> ${capitalize(listing.category) || 'Unbekannt'}</p>
+  <p><strong>Preis pro Tag:</strong> ${listing.price_per_day || 'k. A.'} €</p>
+  <button onclick="window.location.href='mietobjekt.html?id=${listing.id}'">Details ansehen</button>
+  <button onclick="removeFromFavorites('${listing.id}', event)">Favorit entfernen</button>
+`;
+
         container.appendChild(card);
       });
     }
