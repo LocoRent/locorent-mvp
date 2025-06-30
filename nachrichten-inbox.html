@@ -52,9 +52,10 @@
       border-radius: 14px;
       box-shadow: 0 4px 14px rgba(0,0,0,0.08);
       transition: all 0.2s ease;
+      cursor: pointer;
       display: flex;
       gap: 1rem;
-      align-items: center;
+      position: relative;
     }
 
     .chat-card:hover {
@@ -85,7 +86,6 @@
 
     .chat-info {
       flex: 1;
-      cursor: pointer;
     }
 
     .chat-name {
@@ -129,13 +129,23 @@
       margin-top: 0.3rem;
     }
 
-    button.delete-btn {
-      background: #ef5350;
-      color: white;
+    .delete-btn {
+      background: transparent;
       border: none;
-      padding: 0.6rem 1rem;
-      border-radius: 8px;
+      color: #888;
+      font-size: 0.9rem;
       cursor: pointer;
+      transition: color 0.3s ease;
+      display: none;
+      margin-top: 0.6rem;
+    }
+
+    .chat-card:hover .delete-btn {
+      display: inline-block;
+    }
+
+    .delete-btn:hover {
+      color: #c62828;
     }
 
     @media (max-width: 600px) {
@@ -150,11 +160,6 @@
 
       .chat-preview {
         font-size: 0.85rem;
-      }
-
-      button.delete-btn {
-        width: 100%;
-        margin-top: 0.5rem;
       }
     }
   </style>
@@ -234,11 +239,16 @@
       const card = document.createElement('div');
       card.className = 'chat-card';
 
+      card.addEventListener('click', (e) => {
+        if (e.target.closest('.delete-btn')) return;
+        window.location.href = `nachrichten.html?listing_id=${msg.listing_id}&with=${otherId}`;
+      });
+
       card.innerHTML = `
         <div class="chat-avatar">
           ${avatar ? `<img src="${avatar}" alt="${name}" />` : `<span>${name.charAt(0).toUpperCase()}</span>`}
         </div>
-        <div class="chat-info" onclick="window.location.href='nachrichten.html?listing_id=${msg.listing_id}&with=${otherId}'">
+        <div class="chat-info">
           <div class="chat-name">${name}</div>
           <div class="chat-title">📦 ${title}</div>
           ${image ? `<img class="listing-thumb" src="${image}" alt="${title}" />` : ''}
@@ -248,27 +258,33 @@
           </div>
           <div class="chat-preview">💬 ${msg.content.slice(0, 90)}${msg.content.length > 90 ? '…' : ''}</div>
           <div class="chat-time">⏱️ ${timeAgo(msg.created_at)}</div>
+          <button class="delete-btn" onclick="deleteChat(event, '${msg.listing_id}', '${otherId}')">🗑️ Chat löschen</button>
         </div>
-        <button class="delete-btn" onclick="event.stopPropagation(); deleteChat('${msg.listing_id}', '${otherId}')">🗑️ Chat löschen</button>
       `;
 
       inbox.appendChild(card);
     }
   }
 
-  async function deleteChat(listingId, otherUserId) {
+  async function deleteChat(event, listingId, otherId) {
+    event.stopPropagation();
+
+    if (!confirm("Möchtest du diesen Chat wirklich löschen? Alle Nachrichten werden dauerhaft entfernt.")) return;
+
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
 
-    const confirmed = confirm("Möchtest du diesen Chat wirklich dauerhaft löschen?");
-    if (!confirmed) return;
-
-    await supabase
+    const { error } = await supabase
       .from('messages')
       .delete()
-      .or(`and(sender_id.eq.${user.id},receiver_id.eq.${otherUserId},listing_id.eq.${listingId}),and(sender_id.eq.${otherUserId},receiver_id.eq.${user.id},listing_id.eq.${listingId})`);
+      .or(`and(sender_id.eq.${user.id},receiver_id.eq.${otherId},listing_id.eq.${listingId}),and(sender_id.eq.${otherId},receiver_id.eq.${user.id},listing_id.eq.${listingId})`);
 
-    loadInbox();
+    if (error) {
+      alert("Fehler beim Löschen: " + error.message);
+    } else {
+      const card = event.target.closest('.chat-card');
+      card.style.opacity = '0';
+      setTimeout(() => card.remove(), 300);
+    }
   }
 
   loadInbox();
