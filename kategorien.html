@@ -7,28 +7,32 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --primary: #2e7d32;
-      --highlight: #66bb6a;
-      --light-bg: #f1f8e9;
+      --primary-color: #2e7d32;
+      --secondary-color: #a5d6a7;
+      --background-color: #f1f8e9;
+      --dark-color: #1b5e20;
+      --highlight-color: #66bb6a;
       --white: #fff;
-      --gray: #333;
-      --radius: 12px;
-      --shadow: rgba(0,0,0,0.12);
+      --gray-light: #f7f7f7;
+      --gray-dark: #333;
+      --border-radius: 12px;
+      --shadow-color: rgba(0, 0, 0, 0.1);
     }
     * {
       margin: 0; padding: 0; box-sizing: border-box;
     }
     body {
       font-family: 'Poppins', sans-serif;
-      background-color: var(--light-bg);
-      color: var(--gray);
+      background-color: var(--background-color);
+      color: var(--gray-dark);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      line-height: 1.5;
     }
     header {
-      background: var(--primary);
-      color: white;
+      background-color: var(--primary-color);
+      color: var(--white);
       padding: 1.5rem 2rem;
       display: flex;
       justify-content: space-between;
@@ -39,14 +43,15 @@
       font-size: 1.6rem;
     }
     header nav a {
-      color: white;
+      color: var(--white);
       margin-left: 1.5rem;
       text-decoration: none;
       font-weight: 600;
+      transition: border-bottom 0.3s ease;
     }
     header nav a:hover,
     header nav a:focus {
-      text-decoration: underline;
+      border-bottom: 2px solid var(--highlight-color);
       outline: none;
     }
     main {
@@ -57,85 +62,127 @@
     }
     h2 {
       text-align: center;
-      color: var(--primary);
-      font-size: 2rem;
-      margin-bottom: 2rem;
+      color: var(--primary-color);
+      font-size: 2.5rem;
+      margin-bottom: 1.75rem;
+      font-weight: 600;
     }
     .intro {
       max-width: 720px;
       margin: 0 auto 3rem;
-      color: #444;
-      font-size: 1.05rem;
-      line-height: 1.5;
+      font-size: 1.125rem;
+      color: var(--dark-color);
+      line-height: 1.6;
       text-align: center;
+      font-weight: 400;
+    }
+    .intro p + p {
+      margin-top: 1rem;
     }
     .category-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1.8rem;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 2.2rem;
     }
     .category-card {
-      background: var(--white);
-      border-radius: var(--radius);
-      box-shadow: 0 4px 14px var(--shadow);
-      cursor: pointer;
+      background-color: var(--white);
+      border-radius: var(--border-radius);
+      box-shadow: 0 6px 20px var(--shadow-color);
+      padding: 2rem 1.5rem 2.5rem;
+      text-align: center;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 1.6rem 1rem 2rem;
-      text-align: center;
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
-      user-select: none;
+      cursor: pointer;
       text-decoration: none;
       color: inherit;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      user-select: none;
     }
     .category-card:hover,
-    .category-card:focus {
-      transform: translateY(-6px);
-      box-shadow: 0 12px 32px rgba(0,0,0,0.18);
+    .category-card:focus-visible {
+      transform: translateY(-8px);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
       outline: none;
     }
     .category-icon {
-      width: 72px;
-      height: 72px;
-      margin-bottom: 1.25rem;
+      width: 80px;
+      height: 80px;
+      margin-bottom: 1.5rem;
       filter: var(--primary-filter, none);
+      flex-shrink: 0;
     }
     .category-card h3 {
-      font-size: 1.3rem;
-      margin-bottom: 0.6rem;
-      color: var(--primary);
+      font-size: 1.5rem;
+      margin-bottom: 0.75rem;
+      color: var(--primary-color);
+      font-weight: 600;
+      line-height: 1.2;
     }
     .category-card p {
       font-size: 1rem;
       color: #555;
-      line-height: 1.3;
+      line-height: 1.4;
       flex-grow: 1;
+      max-width: 260px;
     }
     footer {
-      background: var(--primary);
-      color: white;
+      background-color: var(--primary-color);
+      color: var(--white);
       text-align: center;
       padding: 2rem 1rem;
-      flex-shrink: 0;
+      border-radius: var(--border-radius);
+      margin-top: auto;
       font-size: 0.9rem;
+      user-select: none;
     }
-    /* Focus visible for accessibility */
-    .category-card:focus-visible {
-      outline: 3px solid var(--highlight);
-      outline-offset: 3px;
+    footer h4 {
+      margin-top: 1.5rem;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
     }
-    @media (max-width: 600px) {
+    footer ul {
+      list-style: none;
+      padding: 0;
+      line-height: 1.8;
+      max-width: 320px;
+      margin: 0 auto;
+    }
+    footer ul li {
+      margin-bottom: 0.35rem;
+    }
+    footer ul li a {
+      color: var(--white);
+      text-decoration: underline;
+      transition: color 0.3s ease;
+    }
+    footer ul li a:hover,
+    footer ul li a:focus {
+      color: var(--highlight-color);
+      outline: none;
+    }
+    @media (max-width: 768px) {
       main {
-        margin: 1rem;
+        margin: 1.5rem 1rem 3rem;
+      }
+      .category-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.6rem;
       }
       .category-card {
-        padding: 1.4rem 1rem 1.6rem;
+        padding: 1.6rem 1rem 2rem;
       }
       .category-icon {
-        width: 56px;
-        height: 56px;
+        width: 64px;
+        height: 64px;
         margin-bottom: 1rem;
+      }
+      h2 {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+      }
+      .intro {
+        font-size: 1rem;
       }
     }
   </style>
@@ -151,82 +198,82 @@
 </header>
 
 <main>
-  <h2>Beliebte Kategorien</h2>
+  <h2>Unsere beliebtesten Mietartikel und alles, was du darüber wissen musst</h2>
 
-  <section class="intro">
+  <section class="intro" aria-label="Einleitung zu beliebten Kategorien">
     <p>Locorent ist die nachhaltige Mietplattform für Alltagsgegenstände und besondere Artikel aus deiner Region. Unsere Mission: Weniger besitzen, mehr erleben. Du musst Dinge nicht besitzen, um sie zu nutzen und Neues zu entdecken.</p>
     <p>Mit Locorent kannst du einfach und schnell Mieter:in oder Vermieter:in werden und dir unzählige spannende Aktivitäten ermöglichen. So handelst du nachhaltig, senkst deinen Konsum und CO2-Verbrauch und sparst Geld – oder verdienst sogar welches.</p>
     <p>Damit du ganz leicht einsteigen kannst, findest du hier eine Auswahl der beliebtesten Produktkategorien auf Locorent – sowie die häufigsten Fragen rund ums Mieten.</p>
   </section>
 
   <nav class="category-grid" aria-label="Beliebte Kategorien">
-    <a href="search_results.html?category=fahrzeuge" class="category-card" tabindex="0" aria-label="Fahrzeuge">
+    <a href="search_results.html?category=fahrzeuge" class="category-card" tabindex="0" aria-label="Fahrzeuge mieten">
       <img src="https://cdn-icons-png.flaticon.com/512/743/743922.png" alt="" class="category-icon" aria-hidden="true" />
       <h3>Fahrzeuge</h3>
       <p>PKWs, Motorräder und mehr – mobil bleiben leicht gemacht.</p>
     </a>
 
-    <a href="search_results.html?category=transporter" class="category-card" tabindex="0" aria-label="Transporter">
+    <a href="search_results.html?category=transporter" class="category-card" tabindex="0" aria-label="Transporter mieten">
       <img src="https://cdn-icons-png.flaticon.com/512/1995/1995566.png" alt="" class="category-icon" aria-hidden="true" />
       <h3>Transporter</h3>
       <p>Für den großen Umzug oder den Wocheneinkauf.</p>
     </a>
 
-    <a href="search_results.html?category=boote" class="category-card" tabindex="0" aria-label="Boote">
+    <a href="search_results.html?category=boote" class="category-card" tabindex="0" aria-label="Boote mieten">
       <img src="https://cdn-icons-png.flaticon.com/512/3617/3617442.png" alt="" class="category-icon" aria-hidden="true" />
       <h3>Boote</h3>
       <p>Für entspannte Tage auf dem Wasser.</p>
     </a>
 
-    <a href="search_results.html?category=fahrrad" class="category-card" tabindex="0" aria-label="Fahrräder & E-Bikes">
+    <a href="search_results.html?category=fahrrad" class="category-card" tabindex="0" aria-label="Fahrräder & E-Bikes mieten">
       <img src="https://cdn-icons-png.flaticon.com/512/272/272282.png" alt="" class="category-icon" aria-hidden="true" />
       <h3>Fahrräder & E-Bikes</h3>
       <p>Aktiv und nachhaltig unterwegs.</p>
     </a>
 
-    <a href="search_results.html?category=werkzeuge" class="category-card" tabindex="0" aria-label="Werkzeuge">
+    <a href="search_results.html?category=werkzeuge" class="category-card" tabindex="0" aria-label="Werkzeuge mieten">
       <img src="https://cdn-icons-png.flaticon.com/512/564/564619.png" alt="" class="category-icon" aria-hidden="true" />
       <h3>Werkzeuge</h3>
       <p>Vom Bohrer bis zur Säge – alles für dein Projekt.</p>
     </a>
 
-    <a href="search_results.html?category=maschinen" class="category-card" tabindex="0" aria-label="Maschinen & Baugeräte">
+    <a href="search_results.html?category=maschinen" class="category-card" tabindex="0" aria-label="Maschinen & Baugeräte mieten">
       <img src="https://cdn-icons-png.flaticon.com/512/3063/3063915.png" alt="" class="category-icon" aria-hidden="true" />
       <h3>Maschinen & Baugeräte</h3>
       <p>Professionelle Geräte für den Bau.</p>
     </a>
 
-    <a href="search_results.html?category=party" class="category-card" tabindex="0" aria-label="Party & Event">
+    <a href="search_results.html?category=party" class="category-card" tabindex="0" aria-label="Party & Event mieten">
       <img src="https://cdn-icons-png.flaticon.com/512/2589/2589175.png" alt="" class="category-icon" aria-hidden="true" />
       <h3>Party & Event</h3>
       <p>Alles für die perfekte Feier.</p>
     </a>
 
-    <a href="search_results.html?category=technik" class="category-card" tabindex="0" aria-label="Technik">
+    <a href="search_results.html?category=technik" class="category-card" tabindex="0" aria-label="Technik mieten">
       <img src="https://cdn-icons-png.flaticon.com/512/3106/3106722.png" alt="" class="category-icon" aria-hidden="true" />
       <h3>Technik</h3>
       <p>Beamer, Kameras, Soundsysteme und mehr.</p>
     </a>
 
-    <a href="search_results.html?category=haushalt" class="category-card" tabindex="0" aria-label="Haushalt & Möbel">
+    <a href="search_results.html?category=haushalt" class="category-card" tabindex="0" aria-label="Haushalt & Möbel mieten">
       <img src="https://cdn-icons-png.flaticon.com/512/857/857681.png" alt="" class="category-icon" aria-hidden="true" />
       <h3>Haushalt & Möbel</h3>
       <p>Alles, was dein Zuhause braucht.</p>
     </a>
 
-    <a href="search_results.html?category=garten" class="category-card" tabindex="0" aria-label="Garten">
+    <a href="search_results.html?category=garten" class="category-card" tabindex="0" aria-label="Garten mieten">
       <img src="https://cdn-icons-png.flaticon.com/512/1146/1146869.png" alt="" class="category-icon" aria-hidden="true" />
       <h3>Garten</h3>
       <p>Geräte und Möbel für draußen.</p>
     </a>
 
-    <a href="search_results.html?category=freizeit" class="category-card" tabindex="0" aria-label="Freizeit & Sport">
+    <a href="search_results.html?category=freizeit" class="category-card" tabindex="0" aria-label="Freizeit & Sport mieten">
       <img src="https://cdn-icons-png.flaticon.com/512/181/181549.png" alt="" class="category-icon" aria-hidden="true" />
       <h3>Freizeit & Sport</h3>
       <p>Für Spaß und Bewegung in der Freizeit.</p>
     </a>
 
-    <a href="search_results.html?category=baby" class="category-card" tabindex="0" aria-label="Baby & Kind">
+    <a href="search_results.html?category=baby" class="category-card" tabindex="0" aria-label="Baby & Kind mieten">
       <img src="https://cdn-icons-png.flaticon.com/512/747/747378.png" alt="" class="category-icon" aria-hidden="true" />
       <h3>Baby & Kind</h3>
       <p>Alles für die Kleinsten – flexibel und günstig.</p>
@@ -236,6 +283,16 @@
 
 <footer>
   © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
+  <div style="margin-top: 1.5rem;">
+    <h4 style="margin-bottom: 0.5rem;">Mieten & Vermieten</h4>
+    <ul style="list-style: none; padding: 0; line-height: 1.8; max-width: 320px; margin: 0 auto;">
+      <li><a href="so-funktionierts.html" style="color: white; text-decoration: underline;">So funktioniert's</a></li>
+      <li><a href="vermieter-werden.html" style="color: white; text-decoration: underline;">Werde zum Vermieter</a></li>
+      <li><a href="kategorien.html" style="color: white; text-decoration: underline;">Beliebte Kategorien</a></li>
+      <li><a href="vermieter-tipps.html" style="color: white; text-decoration: underline;">Tipps & Tricks für Vermieter</a></li>
+      <li><a href="hilfe-faq.html" style="color: white; text-decoration: underline;">Hilfe und FAQ</a></li>
+    </ul>
+  </div>
 </footer>
 
 </body>
