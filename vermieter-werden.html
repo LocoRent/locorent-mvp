@@ -6,6 +6,7 @@
   <title>Werde Vermieter:in – Locorent</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --primary: #2e7d32;
@@ -15,27 +16,37 @@
       --gray: #333;
       --radius: 12px;
     }
-
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
-
     body {
       font-family: 'Poppins', sans-serif;
       background-color: var(--light-bg);
       color: var(--gray);
       line-height: 1.7;
     }
-
     header {
       background-color: var(--primary);
       color: white;
-      padding: 2rem;
-      text-align: center;
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
     }
-
+    header h1 {
+      font-size: 1.6rem;
+    }
+    header nav a {
+      color: white;
+      margin-left: 1.5rem;
+      text-decoration: none;
+      font-weight: 600;
+    }
     .cta-btn {
       background-color: var(--highlight);
       color: white;
@@ -50,51 +61,40 @@
       display: inline-block;
       margin-top: 1rem;
     }
-
     .cta-btn:hover {
       background-color: #4caf50;
     }
-
     main {
       max-width: 1100px;
       margin: 2rem auto;
       padding: 0 1rem;
     }
-
-    section {
-      margin-bottom: 3rem;
-    }
-
     .section {
       background-color: white;
       padding: 2rem;
       border-radius: var(--radius);
       box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+      margin-bottom: 3rem;
     }
-
     .features {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 2rem;
       margin-top: 2rem;
     }
-
     .feature {
       text-align: center;
     }
-
     .feature img {
       width: 64px;
       margin-bottom: 0.5rem;
     }
-
     .gallery {
       display: flex;
       gap: 1.5rem;
       overflow-x: auto;
       padding-bottom: 1rem;
     }
-
     .gallery-item {
       min-width: 220px;
       background-color: white;
@@ -103,26 +103,11 @@
       overflow: hidden;
       text-align: center;
     }
-
     .gallery-item img {
       width: 100%;
       height: 150px;
       object-fit: cover;
     }
-
-    .testimonial {
-      font-style: italic;
-      background-color: #ffffff;
-      padding: 1.5rem;
-      border-left: 4px solid var(--primary);
-      margin-bottom: 1rem;
-      border-radius: 8px;
-    }
-
-    .faq p {
-      margin-bottom: 1rem;
-    }
-
     .stats {
       display: flex;
       justify-content: space-around;
@@ -130,62 +115,52 @@
       gap: 1.5rem;
       text-align: center;
     }
-
     .stat {
       flex: 1;
       min-width: 150px;
     }
-
     .stat h3 {
       font-size: 2rem;
       color: var(--primary);
     }
-
     footer {
       background-color: var(--primary);
       color: white;
       text-align: center;
       padding: 2rem;
     }
-
     footer ul {
       list-style: none;
       padding: 0;
       line-height: 1.8;
       margin-top: 1rem;
     }
-
     footer a {
       color: white;
       text-decoration: underline;
-    }
-
-    @media (max-width: 600px) {
-      header h1 {
-        font-size: 1.6rem;
-      }
     }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>Werde Vermieter:in auf Locorent</h1>
-    <p>Verdiene Geld mit Dingen, die du nicht täglich brauchst – einfach, sicher und nachhaltig.</p>
-    <div style="max-width: 400px; margin: 2rem auto;">
-      <lottie-player
-        src="https://assets4.lottiefiles.com/packages/lf20_dyhtf3vz.json"
-        background="transparent"
-        speed="1"
-        style="width: 100%; height: 250px;"
-        loop
-        autoplay>
-      </lottie-player>
-    </div>
-    <a href="registrierung.html" class="cta-btn">Jetzt kostenlos starten</a>
+    <h1>Locorent</h1>
+    <nav>
+      <a href="index.html">Start</a>
+      <a href="login.html">Einloggen</a>
+    </nav>
   </header>
 
   <main>
+    <section class="section" style="text-align:center;">
+      <h2>Werde Vermieter:in auf Locorent</h2>
+      <p>Verdiene Geld mit Dingen, die du nicht täglich brauchst – einfach, sicher und nachhaltig.</p>
+      <div style="max-width: 400px; margin: 2rem auto;">
+        <lottie-player src="https://assets4.lottiefiles.com/packages/lf20_dyhtf3vz.json" background="transparent" speed="1" style="width: 100%; height: 250px;" loop autoplay></lottie-player>
+      </div>
+      <a href="registrierung.html" class="cta-btn">Jetzt kostenlos starten</a>
+    </section>
+
     <section class="section">
       <h2>So wirst du Vermieter:in – in 3 Schritten</h2>
       <div class="features">
@@ -209,54 +184,17 @@
 
     <section class="section">
       <h2>Beispiele aus der Community</h2>
-      <div class="gallery">
-        <div class="gallery-item">
-          <img src="https://images.unsplash.com/photo-1581092339369-49c8c3d504f4?auto=format&fit=crop&w=400&q=80" alt="Bohrschrauber" />
-          <p><strong>Makita Akku-Bohrschrauber</strong><br>6 €/Tag</p>
-        </div>
-        <div class="gallery-item">
-          <img src="https://images.unsplash.com/photo-1618322989111-e0b1dc476a9f?auto=format&fit=crop&w=400&q=80" alt="E-Bike" />
-          <p><strong>E-Bike Trek Powerfly</strong><br>18 €/Tag</p>
-        </div>
-        <div class="gallery-item">
-          <img src="https://images.unsplash.com/photo-1598550430214-d08c8e1cdb41?auto=format&fit=crop&w=400&q=80" alt="Beamer" />
-          <p><strong>Sony 4K Beamer</strong><br>15 €/Tag</p>
-        </div>
-        <div class="gallery-item">
-          <img src="https://images.unsplash.com/photo-1580685461413-d45760c9b8b2?auto=format&fit=crop&w=400&q=80" alt="Transporter" />
-          <p><strong>Transporter Mercedes Vito</strong><br>49 €/Tag</p>
-        </div>
+      <div id="community-gallery" class="gallery">
+        <p>⏳ Lade Inserate…</p>
       </div>
-    </section>
-
-    <section class="section">
-      <h2>Was unsere Vermieter:innen sagen</h2>
-      <div class="testimonial">„Ich war überrascht, wie schnell meine erste Anfrage kam. Seitdem vermiete ich regelmäßig meine Kamera – einfach und zuverlässig.“<br><strong>– Lisa, Köln</strong></div>
-      <div class="testimonial">„Unser Unternehmen bietet jetzt Baumaschinen zur Miete an – Locorent hilft uns, neue Kundschaft zu erreichen, ohne viel Aufwand.“<br><strong>– Max, Stuttgart</strong></div>
-    </section>
-
-    <section class="section faq">
-      <h2>Häufige Fragen</h2>
-      <p><strong>Wie funktioniert die Übergabe?</strong><br>Du klärst Ort und Zeit direkt mit dem Mieter über den Chat.</p>
-      <p><strong>Was ist mit Schäden?</strong><br>Du kannst individuell eine Kaution vereinbaren. Eine Versicherungslösung ist in Planung.</p>
-      <p><strong>Muss ich ein Gewerbe anmelden?</strong><br>Für gelegentliche private Vermietungen ist das nicht notwendig – bei gewerblicher Nutzung empfehlen wir eine Beratung.</p>
     </section>
 
     <section class="section">
       <h2>Locorent in Zahlen</h2>
       <div class="stats">
-        <div class="stat">
-          <h3>1.266+</h3>
-          <p>aktive Mieter:innen</p>
-        </div>
-        <div class="stat">
-          <h3>318+</h3>
-          <p>verfügbare Artikel</p>
-        </div>
-        <div class="stat">
-          <h3>0 €</h3>
-          <p>Fixkosten für Vermieter:innen</p>
-        </div>
+        <div id="stats-mieter" class="stat"><h3>–</h3><p>aktive Mieter:innen</p></div>
+        <div id="stats-inserate" class="stat"><h3>–</h3><p>verfügbare Artikel</p></div>
+        <div class="stat"><h3>0 €</h3><p>Fixkosten für Vermieter:innen</p></div>
       </div>
     </section>
   </main>
@@ -272,6 +210,61 @@
       <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
     </ul>
   </footer>
+
+  <script>
+const supabase = window.supabase.createClient(
+  'https://flnjalgqtkqycsaymmbd.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+
+    );
+
+    async function loadCommunityListings() {
+      const container = document.getElementById("community-gallery");
+      container.innerHTML = "";
+
+      const { data, error } = await supabase
+        .from('listings')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(4);
+
+      if (error || !data.length) {
+        container.innerHTML = "<p>Keine Inserate verfügbar.</p>";
+        return;
+      }
+
+      for (const item of data) {
+        const img = item.image_urls?.[0] || "https://via.placeholder.com/300x150?text=Kein+Bild";
+        const card = document.createElement("div");
+        card.className = "gallery-item";
+        card.innerHTML = `
+          <img src="${img}" alt="${item.title}" />
+          <p><strong>${item.title}</strong><br>${item.price_per_day || "k. A."} €/Tag</p>
+        `;
+        container.appendChild(card);
+      }
+    }
+
+    async function loadPlatformStats() {
+      const mieterRes = await supabase
+        .from('users')
+        .select('id', { count: 'exact', head: true });
+
+      const listingsRes = await supabase
+        .from('listings')
+        .select('id', { count: 'exact', head: true });
+
+      if (mieterRes && mieterRes.count) {
+        document.querySelector("#stats-mieter h3").textContent = `${mieterRes.count}+`;
+      }
+      if (listingsRes && listingsRes.count) {
+        document.querySelector("#stats-inserate h3").textContent = `${listingsRes.count}+`;
+      }
+    }
+
+    loadCommunityListings();
+    loadPlatformStats();
+  </script>
 
 </body>
 </html>
