@@ -14,7 +14,7 @@
     --white: #fff;
     --text-dark: #133214;
     --text-muted: #4f6d42;
-    --radius: 20px;
+    --radius: 12px;
     --shadow-light: rgba(46, 125, 50, 0.1);
     --shadow-strong: rgba(46, 125, 50, 0.3);
     --transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
@@ -38,10 +38,11 @@
     line-height: 1.6;
   }
 
+  /* Header - dunkelgrün wie so-funktionierts.html */
   header {
-    background: linear-gradient(135deg, #dcedc8, #a5d6a7);
-    box-shadow: 0 6px 15px var(--shadow-light);
-    padding: 1rem 2rem;
+    background-color: var(--primary);
+    color: var(--white);
+    padding: 1.5rem 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -50,7 +51,6 @@
     position: sticky;
     top: 0;
     z-index: 1000;
-    color: var(--primary-dark);
   }
 
   header h1 {
@@ -59,7 +59,7 @@
   }
 
   header nav a {
-    color: var(--primary-dark);
+    color: var(--white);
     text-decoration: none;
     margin-left: 2rem;
     font-weight: 600;
@@ -98,7 +98,7 @@
     text-align: center;
   }
 
-  /* Intro-Textbereich jetzt schlicht wie „so funktioniert's“ */
+  /* Hero-Text mit weißem BG, klar & clean */
   .hero-section {
     background: var(--white);
     border-radius: var(--radius);
@@ -144,6 +144,7 @@
     transition: box-shadow var(--transition), transform var(--transition);
     will-change: transform;
     overflow: hidden;
+    min-height: 470px; /* Einheitliche Höhe */
   }
 
   .category-card:hover,
@@ -156,7 +157,7 @@
   .category-image-wrapper {
     position: relative;
     width: 100%;
-    height: 180px;
+    height: 220px;
     border-radius: var(--radius);
     overflow: hidden;
     margin-bottom: 1.8rem;
@@ -170,6 +171,7 @@
     transition: transform 0.5s ease;
     will-change: transform;
     border-radius: var(--radius);
+    display: block;
   }
 
   .category-card:hover .category-image,
@@ -206,7 +208,7 @@
     font-size: 1.06rem;
     line-height: 1.55;
     margin-bottom: 3rem;
-    min-height: 70px;
+    min-height: 80px;
   }
 
   .category-cta {
@@ -247,8 +249,9 @@
     stroke-linejoin: round;
   }
 
+  /* Footer - dunkelgrün wie so-funktionierts.html */
   footer {
-    background: var(--primary);
+    background-color: var(--primary);
     color: var(--white);
     text-align: center;
     padding: 3rem 2rem;
@@ -293,11 +296,11 @@
       padding: 0 1.25rem;
     }
     .category-card {
-      max-width: 100%;
+      min-height: auto;
       padding: 1.3rem 1.4rem 3rem;
     }
     .category-image-wrapper {
-      height: 140px;
+      height: 180px;
       margin-bottom: 1.2rem;
     }
     .category-card h3 {
@@ -368,7 +371,7 @@
 
     <a href="search_results.html?category=fahrzeuge" class="category-card" tabindex="0" aria-label="Fahrzeuge mieten">
       <div class="category-image-wrapper">
-        <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=600&q=80" alt="Verschiedene Fahrzeuge auf einer Straße" class="category-image" loading="lazy" />
+        <img src="https://images.pexels.com/photos/3755762/pexels-photo-3755762.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=480&w=720" alt="Verschiedene Fahrzeuge auf einer Straße" class="category-image" loading="lazy" />
         <div class="image-overlay"></div>
       </div>
       <h3>Fahrzeuge</h3>
@@ -382,7 +385,7 @@
 
     <a href="search_results.html?category=transporter" class="category-card" tabindex="0" aria-label="Transporter mieten">
       <div class="category-image-wrapper">
-        <img src="https://images.unsplash.com/photo-1549924231-f129b911e442?auto=format&fit=crop&w=600&q=80" alt="Ein weißer Transporter vor einem Gebäude" class="category-image" loading="lazy" />
+        <img src="https://images.pexels.com/photos/1704122/pexels-photo-1704122.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=480&w=720" alt="Weißer Transporter parkt vor Haus" class="category-image" loading="lazy" />
         <div class="image-overlay"></div>
       </div>
       <h3>Transporter</h3>
@@ -396,7 +399,7 @@
 
     <a href="search_results.html?category=boote" class="category-card" tabindex="0" aria-label="Boote mieten">
       <div class="category-image-wrapper">
-        <img src="https://images.unsplash.com/photo-1465146344425-f00d5f5c8f1a?auto=format&fit=crop&w=600&q=80" alt="Segelboot auf ruhigem Wasser" class="category-image" loading="lazy" />
+        <img src="https://images.pexels.com/photos/258773/pexels-photo-258773.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=480&w=720" alt="Boot auf klarem Wasser" class="category-image" loading="lazy" />
         <div class="image-overlay"></div>
       </div>
       <h3>Boote</h3>
@@ -410,7 +413,7 @@
 
     <a href="search_results.html?category=fahrrad" class="category-card" tabindex="0" aria-label="Fahrräder & E-Bikes mieten">
       <div class="category-image-wrapper">
-        <img src="https://images.unsplash.com/photo-1463107971871-fbac9ddb920f?auto=format&fit=crop&w=600&q=80" alt="Person auf einem Fahrrad in der Natur" class="category-image" loading="lazy" />
+        <img src="https://images.pexels.com/photos/276517/pexels-photo-276517.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=480&w=720" alt="Fahrradpark an sonnigem Tag" class="category-image" loading="lazy" />
         <div class="image-overlay"></div>
       </div>
       <h3>Fahrräder & E-Bikes</h3>
@@ -424,7 +427,7 @@
 
     <a href="search_results.html?category=werkzeuge" class="category-card" tabindex="0" aria-label="Werkzeuge mieten">
       <div class="category-image-wrapper">
-        <img src="https://images.unsplash.com/photo-1581093588401-78d2a439d04e?auto=format&fit=crop&w=600&q=80" alt="Werkzeuge auf einem Werkbank" class="category-image" loading="lazy" />
+        <img src="https://images.pexels.com/photos/1170986/pexels-photo-1170986.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=480&w=720" alt="Handwerker Werkzeug" class="category-image" loading="lazy" />
         <div class="image-overlay"></div>
       </div>
       <h3>Werkzeuge</h3>
@@ -438,7 +441,7 @@
 
     <a href="search_results.html?category=maschinen" class="category-card" tabindex="0" aria-label="Maschinen & Baugeräte mieten">
       <div class="category-image-wrapper">
-        <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=600&q=80" alt="Baumaschinen auf einer Baustelle" class="category-image" loading="lazy" />
+        <img src="https://images.pexels.com/photos/247676/pexels-photo-247676.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=480&w=720" alt="Baugeräte auf Baustelle" class="category-image" loading="lazy" />
         <div class="image-overlay"></div>
       </div>
       <h3>Maschinen & Baugeräte</h3>
@@ -452,7 +455,7 @@
 
     <a href="search_results.html?category=party" class="category-card" tabindex="0" aria-label="Party & Event mieten">
       <div class="category-image-wrapper">
-        <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=600&q=80" alt="Party mit bunten Lichtern" class="category-image" loading="lazy" />
+        <img src="https://images.pexels.com/photos/1758160/pexels-photo-1758160.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=480&w=720" alt="Party mit Lichtern" class="category-image" loading="lazy" />
         <div class="image-overlay"></div>
       </div>
       <h3>Party & Event</h3>
@@ -466,7 +469,7 @@
 
     <a href="search_results.html?category=technik" class="category-card" tabindex="0" aria-label="Technik mieten">
       <div class="category-image-wrapper">
-        <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=600&q=80" alt="Technische Geräte und Ausrüstung" class="category-image" loading="lazy" />
+        <img src="https://images.pexels.com/photos/1008157/pexels-photo-1008157.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=480&w=720" alt="Technik Geräte mit Knöpfen" class="category-image" loading="lazy" />
         <div class="image-overlay"></div>
       </div>
       <h3>Technik</h3>
@@ -480,7 +483,7 @@
 
     <a href="search_results.html?category=haushalt" class="category-card" tabindex="0" aria-label="Haushalt & Möbel mieten">
       <div class="category-image-wrapper">
-        <img src="https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=600&q=80" alt="Moderne Möbel in einem Wohnzimmer" class="category-image" loading="lazy" />
+        <img src="https://images.pexels.com/photos/276724/pexels-photo-276724.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=480&w=720" alt="Modernes Wohnzimmer" class="category-image" loading="lazy" />
         <div class="image-overlay"></div>
       </div>
       <h3>Haushalt & Möbel</h3>
@@ -494,7 +497,7 @@
 
     <a href="search_results.html?category=garten" class="category-card" tabindex="0" aria-label="Garten mieten">
       <div class="category-image-wrapper">
-        <img src="https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=600&q=80" alt="Garten mit Rasen und Terrasse" class="category-image" loading="lazy" />
+        <img src="https://images.pexels.com/photos/1038838/pexels-photo-1038838.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=480&w=720" alt="Garten mit Möbeln und Pflanzen" class="category-image" loading="lazy" />
         <div class="image-overlay"></div>
       </div>
       <h3>Garten</h3>
@@ -508,7 +511,7 @@
 
     <a href="search_results.html?category=freizeit" class="category-card" tabindex="0" aria-label="Freizeit & Sport mieten">
       <div class="category-image-wrapper">
-        <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80" alt="Menschen beim Sport im Freien" class="category-image" loading="lazy" />
+        <img src="https://images.pexels.com/photos/3757143/pexels-photo-3757143.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=480&w=720" alt="Frau beim Sport" class="category-image" loading="lazy" />
         <div class="image-overlay"></div>
       </div>
       <h3>Freizeit & Sport</h3>
@@ -522,7 +525,7 @@
 
     <a href="search_results.html?category=baby" class="category-card" tabindex="0" aria-label="Baby & Kind mieten">
       <div class="category-image-wrapper">
-        <img src="https://images.unsplash.com/photo-1523983308821-9335a6a92d47?auto=format&fit=crop&w=600&q=80" alt="Spielzeug und Babyartikel" class="category-image" loading="lazy" />
+        <img src="https://images.pexels.com/photos/3661422/pexels-photo-3661422.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=480&w=720" alt="Babyspielzeug und Kuscheltiere" class="category-image" loading="lazy" />
         <div class="image-overlay"></div>
       </div>
       <h3>Baby & Kind</h3>
@@ -541,13 +544,13 @@
 <footer>
   © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
   <div style="margin-top: 2rem;">
-    <h4 style="color: var(--white); font-weight: 700; margin-bottom: 1rem;">Mieten & Vermieten</h4>
-    <ul style="list-style:none; padding:0; max-width: 320px; margin: 0 auto; line-height: 1.8; color: var(--white);">
-      <li><a href="so-funktionierts.html" style="color: var(--white); text-decoration: underline;">So funktioniert's</a></li>
-      <li><a href="vermieter-werden.html" style="color: var(--white); text-decoration: underline;">Werde zum Vermieter</a></li>
-      <li><a href="kategorien.html" style="color: var(--white); text-decoration: underline;">Beliebte Kategorien</a></li>
-      <li><a href="vermieter-tipps.html" style="color: var(--white); text-decoration: underline;">Tipps & Tricks für Vermieter</a></li>
-      <li><a href="hilfe-faq.html" style="color: var(--white); text-decoration: underline;">Hilfe und FAQ</a></li>
+    <h4>Mieten & Vermieten</h4>
+    <ul style="list-style:none; padding:0; max-width: 320px; margin: 0 auto; line-height: 1.8;">
+      <li><a href="so-funktionierts.html">So funktioniert's</a></li>
+      <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
+      <li><a href="kategorien.html">Beliebte Kategorien</a></li>
+      <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
+      <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
     </ul>
   </div>
 </footer>
