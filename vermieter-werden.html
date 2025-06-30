@@ -246,16 +246,21 @@
     }
 
     async function loadPlatformStats() {
-      const { count: userCount } = await supabase
-        .from('profiles')
-        .select('*', { count: 'exact' });
+      const mieterRes = await supabase
+        .from('profiles') // <- Hier wurde 'users' zu 'profiles' geändert
+        .select('id', { count: 'exact', head: true });
 
-      const { count: listingCount } = await supabase
+      const listingsRes = await supabase
         .from('listings')
-        .select('*', { count: 'exact' });
+        .select('id', { count: 'exact', head: true });
 
-      document.querySelector("#stats-mieter h3").textContent = userCount ? `${userCount}+` : "0+";
-      document.querySelector("#stats-inserate h3").textContent = listingCount ? `${listingCount}+` : "0+";
+      if (mieterRes && typeof mieterRes.count === "number") {
+        document.querySelector("#stats-mieter h3").textContent = `${mieterRes.count}+`;
+      }
+
+      if (listingsRes && typeof listingsRes.count === "number") {
+        document.querySelector("#stats-inserate h3").textContent = `${listingsRes.count}+`;
+      }
     }
 
     loadCommunityListings();
@@ -264,3 +269,4 @@
 
 </body>
 </html>
+
