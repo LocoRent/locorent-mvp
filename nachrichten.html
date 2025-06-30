@@ -74,6 +74,13 @@
       font-size: 1rem;
     }
 
+    .listing-info:hover {
+      background-color: #f0f4c3;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
     .chat-area {
       flex: 1;
       padding: 1rem;
@@ -165,13 +172,13 @@
 
 <main>
   <div class="chat-header">
-    <div class="listing-info">
+    <a class="listing-info" id="listing-link" href="#" style="text-decoration: none; color: inherit;">
       <img id="listing-image" src="" alt="Bild" />
       <div>
         <span class="title" id="listing-title">Titel</span>
         <small id="listing-price">–</small>
       </div>
-    </div>
+    </a>
     <div class="user-info">
       <img id="partner-avatar" src="" alt="Avatar" />
       <div>
@@ -219,6 +226,7 @@
     document.getElementById('listing-title').textContent = listing?.title || 'Kein Titel';
     document.getElementById('listing-price').textContent = `${listing?.price_per_day || '?'} € / Tag`;
     document.getElementById('listing-image').src = listing?.image_urls?.[0] || 'https://via.placeholder.com/60';
+    document.getElementById('listing-link').href = `mietobjekt.html?id=${listingId}`;
 
     loadMessages();
     setupRealtime();
