@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Werde Vermieter:in – Locorent</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
   <style>
     :root {
       --primary: #2e7d32;
@@ -35,16 +36,6 @@
       text-align: center;
     }
 
-    header h1 {
-      font-size: 2rem;
-      margin-bottom: 0.5rem;
-    }
-
-    header p {
-      font-size: 1.1rem;
-      margin-bottom: 1.5rem;
-    }
-
     .cta-btn {
       background-color: var(--highlight);
       color: white;
@@ -56,6 +47,8 @@
       cursor: pointer;
       text-decoration: none;
       transition: background-color 0.3s ease;
+      display: inline-block;
+      margin-top: 1rem;
     }
 
     .cta-btn:hover {
@@ -178,29 +171,38 @@
 
   <header>
     <h1>Werde Vermieter:in auf Locorent</h1>
-    <p>Verdiene Geld mit Dingen, die du nicht täglich brauchst – ganz einfach & nachhaltig.</p>
+    <p>Verdiene Geld mit Dingen, die du nicht täglich brauchst – einfach, sicher und nachhaltig.</p>
+    <div style="max-width: 400px; margin: 2rem auto;">
+      <lottie-player
+        src="https://assets4.lottiefiles.com/packages/lf20_dyhtf3vz.json"
+        background="transparent"
+        speed="1"
+        style="width: 100%; height: 250px;"
+        loop
+        autoplay>
+      </lottie-player>
+    </div>
     <a href="registrierung.html" class="cta-btn">Jetzt kostenlos starten</a>
   </header>
 
   <main>
     <section class="section">
-      <h2>Dein Einstieg in die Kreislaufwirtschaft</h2>
-      <p>Bei Locorent kannst du als Privatperson oder Unternehmen unkompliziert Artikel vermieten. Ganz ohne Fixkosten oder technisches Know-how – dafür mit echtem Impact.</p>
+      <h2>So wirst du Vermieter:in – in 3 Schritten</h2>
       <div class="features">
         <div class="feature">
-          <img src="https://cdn-icons-png.flaticon.com/512/3208/3208707.png" alt="Starten">
-          <h3>In 2 Minuten dabei</h3>
-          <p>Registrieren, Artikel hochladen – fertig.</p>
+          <img src="https://cdn-icons-png.flaticon.com/512/706/706797.png" alt="Konto erstellen" />
+          <h3>Konto erstellen</h3>
+          <p>Registriere dich kostenlos in unter 2 Minuten.</p>
         </div>
         <div class="feature">
-          <img src="https://cdn-icons-png.flaticon.com/512/3064/3064197.png" alt="Absicherung">
-          <h3>Du bestimmst die Regeln</h3>
-          <p>Ob Kaution, Übergabe oder Rückgabe – du hast die Kontrolle.</p>
+          <img src="https://cdn-icons-png.flaticon.com/512/753/753318.png" alt="Artikel hinzufügen" />
+          <h3>Artikel hochladen</h3>
+          <p>Fotos, Beschreibung, Preis – alles ganz einfach.</p>
         </div>
         <div class="feature">
-          <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Reichweite">
-          <h3>Neue Kunden erreichen</h3>
-          <p>Erreiche tausende Mieter:innen aus deiner Region.</p>
+          <img src="https://cdn-icons-png.flaticon.com/512/1256/1256650.png" alt="Vermieten" />
+          <h3>Vermieten & verdienen</h3>
+          <p>Erhalte Anfragen und teile, was du besitzt.</p>
         </div>
       </div>
     </section>
@@ -209,16 +211,20 @@
       <h2>Beispiele aus der Community</h2>
       <div class="gallery">
         <div class="gallery-item">
-          <img src="https://via.placeholder.com/300x150?text=Bohrmaschine" alt="Bohrmaschine" />
-          <p><strong>Bohrmaschine</strong><br>ab 5 €/Tag</p>
+          <img src="https://images.unsplash.com/photo-1581092339369-49c8c3d504f4?auto=format&fit=crop&w=400&q=80" alt="Bohrschrauber" />
+          <p><strong>Makita Akku-Bohrschrauber</strong><br>6 €/Tag</p>
         </div>
         <div class="gallery-item">
-          <img src="https://via.placeholder.com/300x150?text=E-Bike" alt="E-Bike" />
-          <p><strong>E-Bike</strong><br>ab 15 €/Tag</p>
+          <img src="https://images.unsplash.com/photo-1618322989111-e0b1dc476a9f?auto=format&fit=crop&w=400&q=80" alt="E-Bike" />
+          <p><strong>E-Bike Trek Powerfly</strong><br>18 €/Tag</p>
         </div>
         <div class="gallery-item">
-          <img src="https://via.placeholder.com/300x150?text=Beamer" alt="Beamer" />
-          <p><strong>Beamer</strong><br>ab 8 €/Tag</p>
+          <img src="https://images.unsplash.com/photo-1598550430214-d08c8e1cdb41?auto=format&fit=crop&w=400&q=80" alt="Beamer" />
+          <p><strong>Sony 4K Beamer</strong><br>15 €/Tag</p>
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.unsplash.com/photo-1580685461413-d45760c9b8b2?auto=format&fit=crop&w=400&q=80" alt="Transporter" />
+          <p><strong>Transporter Mercedes Vito</strong><br>49 €/Tag</p>
         </div>
       </div>
     </section>
@@ -240,15 +246,15 @@
       <h2>Locorent in Zahlen</h2>
       <div class="stats">
         <div class="stat">
-          <h3>1000+</h3>
+          <h3>1.266+</h3>
           <p>aktive Mieter:innen</p>
         </div>
         <div class="stat">
-          <h3>250+</h3>
+          <h3>318+</h3>
           <p>verfügbare Artikel</p>
         </div>
         <div class="stat">
-          <h3>0 €</h3>
+          <h3>0 €</h3>
           <p>Fixkosten für Vermieter:innen</p>
         </div>
       </div>
