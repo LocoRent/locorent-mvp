@@ -1,3 +1,4 @@
+<!-- Der gesamte HTML-Code inkl. aktualisierter handleFiles()-Funktion -->
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -163,10 +164,15 @@
       font-weight: 600;
       color: #2e7d32;
     }
+    .card-content .category {
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
     .card .actions {
       display: flex;
-      justify-content: space-between;
-      padding: 0.5rem 0.8rem;
+      flex-direction: column;
+      gap: 0.4rem;
+      padding: 0.8rem;
     }
     .card .actions button {
       background: #2e7d32;
@@ -242,7 +248,7 @@
       </div>
     </div>
 
-    <div class="dropzone" id="dropzone">Bilder hier ablegen oder klicken</div>
+    <div class="dropzone" id="dropzone">Bilder hier ablegen oder klicken (max. 2)</div>
     <div class="preview-gallery" id="preview-gallery"></div>
 
     <div class="form-actions">
@@ -269,7 +275,6 @@ locationInput.addEventListener('input', async () => {
     suggestionBox.innerHTML = '';
     return;
   }
-
   const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=5&q=${encodeURIComponent(value)}`);
   const results = await res.json();
   suggestionBox.innerHTML = '';
@@ -294,13 +299,14 @@ document.getElementById("dropzone").addEventListener("click", () => {
 });
 
 async function handleFiles(files) {
-  const container = document.getElementById("preview-gallery");
-  for (let file of files) {
-    const tempBox = document.createElement("div");
-    tempBox.className = "preview-box";
-    tempBox.innerHTML = '<div class="img-wrapper"><div class="loader"></div></div>';
-    container.appendChild(tempBox);
+  if (uploadedImageUrls.length >= 2) {
+    alert("Du kannst maximal 2 Bilder hochladen.");
+    return;
+  }
+  const remaining = 2 - uploadedImageUrls.length;
+  const filesToUpload = Array.from(files).slice(0, remaining);
 
+  for (let file of filesToUpload) {
     const path = `listing-images/${Date.now()}-${file.name}`;
     const { error } = await supabase.storage.from('listing-images').upload(path, file);
     if (!error) {
@@ -334,6 +340,15 @@ document.getElementById("save-btn").addEventListener("click", async () => {
   const user = sd?.session?.user;
   if (!user) return alert("Nicht eingeloggt!");
 
+  const { data: existing } = await supabase
+    .from('listings')
+    .select('id')
+    .eq('user_id', user.id);
+
+  if ((existing?.length || 0) >= 15) {
+    return alert("Du kannst maximal 15 Inserate erstellen.");
+  }
+
   const title = document.getElementById('title-input').value.trim();
   const category = document.getElementById('category-input').value;
   const price = parseFloat(document.getElementById('price-input').value);
@@ -358,12 +373,12 @@ document.getElementById("save-btn").addEventListener("click", async () => {
       alert("Ort nicht gefunden.");
       return;
     }
-  } catch (err) {
+  } catch {
     alert("Geocoding fehlgeschlagen.");
     return;
   }
 
-  const { error: ie } = await supabase.from('listings').insert({
+  const { error } = await supabase.from('listings').insert({
     title,
     category,
     price_per_day: price,
@@ -375,7 +390,7 @@ document.getElementById("save-btn").addEventListener("click", async () => {
     location
   });
 
-  if (ie) return alert("Fehler beim Speichern: " + ie.message);
+  if (error) return alert("Fehler beim Speichern: " + error.message);
 
   alert("Inserat gespeichert!");
   document.querySelectorAll('input, textarea, select').forEach(el => el.value = '');
@@ -390,28 +405,29 @@ async function loadGallery() {
   const gallery = document.getElementById('gallery');
   if (!user) return gallery.innerHTML = 'Nicht eingeloggt.';
 
-  const { data: listings, error: le } = await supabase
+  const { data: listings } = await supabase
     .from('listings')
     .select('*')
     .eq('user_id', user.id)
     .order('created_at', { ascending: false });
 
   gallery.innerHTML = '';
-  if (le || !listings) {
-    console.error("Fehler beim Laden:", le);
-    return gallery.textContent = 'Fehler beim Laden.';
-  }
-
   listings.forEach(i => {
     const img = i.image_urls?.[0] || 'https://via.placeholder.com/300x150?text=Kein+Bild';
     const div = document.createElement('div');
     div.className = 'card';
-    div.innerHTML = `<img src="${img}" alt="${i.title}">
-      <div class="card-content"><h3>${i.title}</h3><p class="price">${i.price_per_day} € / Tag</p></div>
+    div.innerHTML = `
+      <img src="${img}" alt="${i.title}">
+      <div class="card-content">
+        <h3>${i.title}</h3>
+        <p class="category"><strong>Kategorie:</strong> ${i.category}</p>
+        <p class="price">${i.price_per_day} € / Tag</p>
+      </div>
       <div class="actions">
         <button onclick="window.location.href='bearbeiten.html?id=${i.id}'">Bearbeiten</button>
         <button class="delete" onclick="deleteListing('${i.id}')">Löschen</button>
-      </div>`;
+      </div>
+    `;
     gallery.appendChild(div);
   });
 }
@@ -427,3 +443,4 @@ loadGallery();
 </script>
 </body>
 </html>
+
