@@ -279,19 +279,27 @@ locationInput.addEventListener('input', async () => {
     return;
   }
 
-  const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=7&accept-language=de&countrycodes=de&q=${encodeURIComponent(value)}`);
-  const results = await res.json();
-  const filtered = results.filter(r => ['city', 'town', 'village', 'hamlet', 'municipality'].includes(r.type));
-  suggestionBox.innerHTML = '';
-  filtered.forEach(r => {
-    const div = document.createElement('div');
-    div.textContent = r.display_name;
-    div.onclick = () => {
-      locationInput.value = r.display_name;
-      suggestionBox.innerHTML = '';
-    };
-    suggestionBox.appendChild(div);
-  });
+  try {
+    const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=10&countrycodes=de&accept-language=de&q=${encodeURIComponent(value)}`);
+    const results = await res.json();
+
+    // Nur Orte (Stadt, Dorf etc.) erlauben
+    const allowedTypes = ['city', 'town', 'village', 'hamlet', 'municipality'];
+    const filtered = results.filter(r => allowedTypes.includes(r.type));
+
+    suggestionBox.innerHTML = '';
+    filtered.forEach(r => {
+      const div = document.createElement('div');
+      div.textContent = r.display_name;
+      div.onclick = () => {
+        locationInput.value = r.display_name;
+        suggestionBox.innerHTML = '';
+      };
+      suggestionBox.appendChild(div);
+    });
+  } catch (err) {
+    console.error("Fehler bei der Ortssuche:", err);
+  }
 });
 
 document.getElementById("dropzone").addEventListener("click", () => {
