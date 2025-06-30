@@ -10,11 +10,10 @@
     --primary: #2e7d32;
     --primary-light: #66bb6a;
     --primary-dark: #1b5e20;
-    --background-gradient-start: #dcedc8;
-    --background-gradient-end: #a5d6a7;
+    --background: #f1f8e9;
+    --white: #fff;
     --text-dark: #133214;
     --text-muted: #4f6d42;
-    --white: #fff;
     --radius: 20px;
     --shadow-light: rgba(46, 125, 50, 0.1);
     --shadow-strong: rgba(46, 125, 50, 0.3);
@@ -30,19 +29,17 @@
 
   body {
     margin: 0; padding: 0;
-    background: var(--background-gradient-start);
+    background: var(--background);
     font-family: var(--font-primary);
     color: var(--text-dark);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
     line-height: 1.6;
   }
 
   header {
-    background: linear-gradient(135deg, var(--background-gradient-start), var(--background-gradient-end));
+    background: linear-gradient(135deg, #dcedc8, #a5d6a7);
     box-shadow: 0 6px 15px var(--shadow-light);
     padding: 1rem 2rem;
     display: flex;
@@ -53,11 +50,11 @@
     position: sticky;
     top: 0;
     z-index: 1000;
+    color: var(--primary-dark);
   }
 
   header h1 {
     font-size: 1.8rem;
-    color: var(--primary-dark);
     user-select: none;
   }
 
@@ -101,32 +98,28 @@
     text-align: center;
   }
 
-  /* Intro-Textbereich */
+  /* Intro-Textbereich jetzt schlicht wie „so funktioniert's“ */
   .hero-section {
-    position: relative;
-    background: linear-gradient(rgba(46, 125, 50, 0.65), rgba(46, 125, 50, 0.65)),
-                url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1200&q=80') no-repeat center/cover;
+    background: var(--white);
     border-radius: var(--radius);
     padding: 3rem 2rem 4rem;
-    color: var(--white);
+    color: var(--primary-dark);
     max-width: 900px;
     margin: 0 auto 3rem;
-    box-shadow: 0 12px 32px rgba(0,0,0,0.22);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
     font-weight: 400;
     font-size: 1.15rem;
-    line-height: 1.6;
+    line-height: 1.7;
   }
 
   .hero-section h2 {
     font-weight: 800;
     font-size: 2.8rem;
-    margin-bottom: 1.2rem;
-    text-shadow: 0 3px 10px rgba(0,0,0,0.5);
+    margin-bottom: 1.5rem;
   }
 
   .hero-section p {
-    margin-bottom: 1.15rem;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    margin-bottom: 1.25rem;
   }
 
   .category-grid {
@@ -176,6 +169,7 @@
     object-fit: cover;
     transition: transform 0.5s ease;
     will-change: transform;
+    border-radius: var(--radius);
   }
 
   .category-card:hover .category-image,
@@ -190,6 +184,7 @@
     mix-blend-mode: multiply;
     pointer-events: none;
     transition: background 0.5s ease;
+    border-radius: var(--radius);
   }
 
   .category-card:hover .image-overlay,
@@ -401,7 +396,7 @@
 
     <a href="search_results.html?category=boote" class="category-card" tabindex="0" aria-label="Boote mieten">
       <div class="category-image-wrapper">
-        <img src="https://images.unsplash.com/photo-1465146344425-f00d5f5c8f1a?auto=format&fit=crop&w=600&q=80" alt="Boot auf einem See bei Sonnenuntergang" class="category-image" loading="lazy" />
+        <img src="https://images.unsplash.com/photo-1465146344425-f00d5f5c8f1a?auto=format&fit=crop&w=600&q=80" alt="Segelboot auf ruhigem Wasser" class="category-image" loading="lazy" />
         <div class="image-overlay"></div>
       </div>
       <h3>Boote</h3>
@@ -415,7 +410,7 @@
 
     <a href="search_results.html?category=fahrrad" class="category-card" tabindex="0" aria-label="Fahrräder & E-Bikes mieten">
       <div class="category-image-wrapper">
-        <img src="https://images.unsplash.com/photo-1463107971871-fbac9ddb920f?auto=format&fit=crop&w=600&q=80" alt="Fahrräder in einer Reihe im Sonnenlicht" class="category-image" loading="lazy" />
+        <img src="https://images.unsplash.com/photo-1463107971871-fbac9ddb920f?auto=format&fit=crop&w=600&q=80" alt="Person auf einem Fahrrad in der Natur" class="category-image" loading="lazy" />
         <div class="image-overlay"></div>
       </div>
       <h3>Fahrräder & E-Bikes</h3>
@@ -429,7 +424,7 @@
 
     <a href="search_results.html?category=werkzeuge" class="category-card" tabindex="0" aria-label="Werkzeuge mieten">
       <div class="category-image-wrapper">
-        <img src="https://images.unsplash.com/photo-1581093588401-78d2a439d04e?auto=format&fit=crop&w=600&q=80" alt="Werkzeuge auf einem Holztisch" class="category-image" loading="lazy" />
+        <img src="https://images.unsplash.com/photo-1581093588401-78d2a439d04e?auto=format&fit=crop&w=600&q=80" alt="Werkzeuge auf einem Werkbank" class="category-image" loading="lazy" />
         <div class="image-overlay"></div>
       </div>
       <h3>Werkzeuge</h3>
