@@ -10,24 +10,27 @@
     --primary: #2e7d32;
     --primary-light: #66bb6a;
     --primary-dark: #1b5e20;
-    --background: #f9fcf8;
+    --background-gradient-start: #dcedc8;
+    --background-gradient-end: #a5d6a7;
     --text-dark: #133214;
     --text-muted: #4f6d42;
     --white: #fff;
     --radius: 20px;
-    --shadow-light: rgba(46, 125, 50, 0.12);
+    --shadow-light: rgba(46, 125, 50, 0.1);
     --shadow-strong: rgba(46, 125, 50, 0.3);
     --transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-    --max-width: 1240px;
+    --max-width: 1200px;
     --gap: 2.8rem;
     --font-primary: 'Poppins', sans-serif;
   }
+
   *, *::before, *::after {
     box-sizing: border-box;
   }
+
   body {
     margin: 0; padding: 0;
-    background: var(--background);
+    background: var(--background-gradient-start);
     font-family: var(--font-primary);
     color: var(--text-dark);
     min-height: 100vh;
@@ -35,36 +38,40 @@
     flex-direction: column;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    line-height: 1.62;
+    line-height: 1.6;
   }
+
   header {
-    background: var(--primary);
-    color: var(--white);
-    padding: 1.75rem 3rem;
+    background: linear-gradient(135deg, var(--background-gradient-start), var(--background-gradient-end));
+    box-shadow: 0 6px 15px var(--shadow-light);
+    padding: 1rem 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-weight: 700;
     letter-spacing: 0.06em;
-    box-shadow: 0 6px 18px var(--shadow-strong);
     position: sticky;
     top: 0;
     z-index: 1000;
   }
+
   header h1 {
-    font-size: 2rem;
+    font-size: 1.8rem;
+    color: var(--primary-dark);
     user-select: none;
   }
+
   header nav a {
-    color: var(--white);
+    color: var(--primary-dark);
     text-decoration: none;
     margin-left: 2rem;
-    font-weight: 500;
+    font-weight: 600;
+    font-size: 1rem;
     position: relative;
-    padding-bottom: 4px;
-    font-size: 1.05rem;
+    padding-bottom: 3px;
     transition: color var(--transition);
   }
+
   header nav a::after {
     content: '';
     position: absolute;
@@ -75,11 +82,13 @@
     border-radius: 3px;
     transition: width var(--transition);
   }
+
   header nav a:hover,
   header nav a:focus-visible {
     color: var(--primary-light);
     outline: none;
   }
+
   header nav a:hover::after,
   header nav a:focus-visible::after {
     width: 100%;
@@ -87,42 +96,30 @@
 
   main {
     max-width: var(--max-width);
-    margin: 3rem auto 6rem;
-    padding: 0 3rem;
+    margin: 2rem auto 5rem;
+    padding: 0 2rem;
     text-align: center;
   }
+
   main > h2 {
     font-weight: 800;
-    font-size: 3.25rem;
+    font-size: 2.8rem;
     color: var(--primary-dark);
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     letter-spacing: 0.08em;
-    user-select: none;
-    opacity: 0;
-    transform: translateY(15px);
-    animation: fadeUp 0.9s ease forwards;
-    animation-delay: 0.25s;
   }
+
   .intro {
-    max-width: 700px;
+    max-width: 720px;
     margin: 0 auto 3.5rem;
     font-weight: 400;
-    font-size: 1.18rem;
+    font-size: 1.12rem;
     color: var(--text-muted);
-    line-height: 1.6;
-    opacity: 0;
-    transform: translateY(15px);
-    animation: fadeUp 0.9s ease forwards;
-    animation-delay: 0.5s;
+    line-height: 1.58;
   }
+
   .intro p + p {
     margin-top: 1.2rem;
-  }
-  @keyframes fadeUp {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
   }
 
   .category-grid {
@@ -130,14 +127,14 @@
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: var(--gap);
     justify-items: center;
-    user-select: none;
   }
+
   .category-card {
     position: relative;
-    background: white;
+    background: var(--white);
     border-radius: var(--radius);
     padding: 1.4rem 1.4rem 3.6rem;
-    box-shadow: 0 14px 28px var(--shadow-light);
+    box-shadow: 0 12px 28px var(--shadow-light);
     cursor: pointer;
     text-decoration: none;
     color: inherit;
@@ -148,6 +145,7 @@
     will-change: transform;
     overflow: hidden;
   }
+
   .category-card:hover,
   .category-card:focus-visible {
     box-shadow: 0 28px 60px var(--shadow-strong);
@@ -155,26 +153,29 @@
     outline: none;
   }
 
-  /* Image wrapper & overlay */
   .category-image-wrapper {
     position: relative;
     width: 100%;
-    height: 160px;
+    height: 180px;
     border-radius: var(--radius);
     overflow: hidden;
     margin-bottom: 1.8rem;
-    box-shadow: 0 10px 20px rgba(46, 125, 50, 0.12);
+    box-shadow: 0 10px 22px rgba(46, 125, 50, 0.1);
   }
+
   .category-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: transform 0.5s ease;
+    will-change: transform;
   }
+
   .category-card:hover .category-image,
   .category-card:focus-visible .category-image {
-    transform: scale(1.05);
+    transform: scale(1.08);
   }
+
   .image-overlay {
     position: absolute;
     inset: 0;
@@ -183,28 +184,29 @@
     pointer-events: none;
     transition: background 0.5s ease;
   }
+
   .category-card:hover .image-overlay,
   .category-card:focus-visible .image-overlay {
-    background: rgba(46, 125, 50, 0.36);
+    background: rgba(46, 125, 50, 0.38);
   }
 
   .category-card h3 {
     font-weight: 800;
-    font-size: 1.95rem;
+    font-size: 2rem;
     color: var(--primary-dark);
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.7rem;
     line-height: 1.1;
   }
+
   .category-card p {
     font-weight: 400;
     color: var(--text-muted);
     font-size: 1.06rem;
     line-height: 1.55;
-    margin-bottom: 2.8rem;
+    margin-bottom: 3rem;
     min-height: 70px;
   }
 
-  /* CTA Button Overlay */
   .category-cta {
     position: absolute;
     bottom: 28px;
@@ -212,36 +214,37 @@
     transform: translateX(-50%) translateY(10px);
     background: var(--primary-light);
     color: var(--white);
-    padding: 0.75rem 1.9rem;
+    padding: 0.75rem 2.2rem;
     font-weight: 600;
-    font-size: 1.1rem;
+    font-size: 1.15rem;
     border-radius: 40px;
-    box-shadow: 0 6px 12px rgba(102, 187, 106, 0.45);
+    box-shadow: 0 7px 18px rgba(102, 187, 106, 0.48);
     opacity: 0;
     pointer-events: none;
     transition: opacity var(--transition), transform var(--transition);
-    user-select: none;
     display: flex;
     align-items: center;
     gap: 0.65rem;
+    user-select: none;
     font-family: 'Poppins', sans-serif;
   }
+
   .category-card:hover .category-cta,
   .category-card:focus-visible .category-cta {
     opacity: 1;
     pointer-events: auto;
     transform: translateX(-50%) translateY(0);
   }
+
   .category-cta svg {
-    width: 24px;
-    height: 24px;
+    width: 26px;
+    height: 26px;
     stroke: var(--white);
     stroke-width: 3;
     stroke-linecap: round;
     stroke-linejoin: round;
   }
 
-  /* Footer */
   footer {
     background: var(--primary);
     color: var(--white);
@@ -255,31 +258,34 @@
     font-size: 0.92rem;
     letter-spacing: 0.02em;
   }
+
   footer h4 {
-    margin: 1.8rem 0 1rem 0;
+    margin: 2rem 0 1rem 0;
     font-weight: 700;
     font-size: 1.1rem;
     letter-spacing: 0.04em;
   }
+
   footer ul {
     list-style: none;
     padding: 0;
     margin: 0 auto;
-    max-width: 320px;
-    line-height: 2;
+    max-width: 360px;
+    line-height: 1.8;
   }
+
   footer ul li a {
     color: var(--white);
     text-decoration: underline;
     transition: color 0.3s ease;
   }
+
   footer ul li a:hover,
   footer ul li a:focus-visible {
     color: var(--primary-light);
     outline: none;
   }
 
-  /* Responsive */
   @media (max-width: 900px) {
     main {
       padding: 0 1.25rem;
@@ -305,11 +311,12 @@
       bottom: 20px;
     }
   }
+
   @media (max-width: 480px) {
     header {
       flex-direction: column;
       gap: 1rem;
-      padding: 1.5rem 1.5rem;
+      padding: 1rem 1rem;
     }
     header nav a {
       margin-left: 0;
@@ -317,7 +324,7 @@
       font-size: 1rem;
     }
     main > h2 {
-      font-size: 2.2rem;
+      font-size: 2rem;
     }
     .intro {
       font-size: 1rem;
@@ -357,9 +364,10 @@
   </section>
 
   <nav class="category-grid" aria-label="Beliebte Kategorien">
+
     <a href="search_results.html?category=fahrzeuge" class="category-card" tabindex="0" aria-label="Fahrzeuge mieten">
       <div class="category-image-wrapper">
-        <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=400&q=80" alt="" class="category-image" />
+        <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=600&q=80" alt="" class="category-image" loading="lazy" />
         <div class="image-overlay"></div>
       </div>
       <h3>Fahrzeuge</h3>
@@ -373,7 +381,7 @@
 
     <a href="search_results.html?category=transporter" class="category-card" tabindex="0" aria-label="Transporter mieten">
       <div class="category-image-wrapper">
-        <img src="https://images.unsplash.com/photo-1561149738-923dd08a9b3a?auto=format&fit=crop&w=400&q=80" alt="" class="category-image" />
+        <img src="https://images.unsplash.com/photo-1561149738-923dd08a9b3a?auto=format&fit=crop&w=600&q=80" alt="" class="category-image" loading="lazy" />
         <div class="image-overlay"></div>
       </div>
       <h3>Transporter</h3>
@@ -387,7 +395,7 @@
 
     <a href="search_results.html?category=boote" class="category-card" tabindex="0" aria-label="Boote mieten">
       <div class="category-image-wrapper">
-        <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80" alt="" class="category-image" />
+        <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80" alt="" class="category-image" loading="lazy" />
         <div class="image-overlay"></div>
       </div>
       <h3>Boote</h3>
@@ -401,7 +409,7 @@
 
     <a href="search_results.html?category=fahrrad" class="category-card" tabindex="0" aria-label="Fahrräder & E-Bikes mieten">
       <div class="category-image-wrapper">
-        <img src="https://images.unsplash.com/photo-1517959105826-b8c7b68b9dd2?auto=format&fit=crop&w=400&q=80" alt="" class="category-image" />
+        <img src="https://images.unsplash.com/photo-1474631245212-32dc3c8310c6?auto=format&fit=crop&w=600&q=80" alt="" class="category-image" loading="lazy" />
         <div class="image-overlay"></div>
       </div>
       <h3>Fahrräder & E-Bikes</h3>
@@ -415,7 +423,7 @@
 
     <a href="search_results.html?category=werkzeuge" class="category-card" tabindex="0" aria-label="Werkzeuge mieten">
       <div class="category-image-wrapper">
-        <img src="https://images.unsplash.com/photo-1581092334336-151a9d97aeb1?auto=format&fit=crop&w=400&q=80" alt="" class="category-image" />
+        <img src="https://images.unsplash.com/photo-1581092334336-151a9d97aeb1?auto=format&fit=crop&w=600&q=80" alt="" class="category-image" loading="lazy" />
         <div class="image-overlay"></div>
       </div>
       <h3>Werkzeuge</h3>
@@ -429,7 +437,7 @@
 
     <a href="search_results.html?category=maschinen" class="category-card" tabindex="0" aria-label="Maschinen & Baugeräte mieten">
       <div class="category-image-wrapper">
-        <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=400&q=80" alt="" class="category-image" />
+        <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=600&q=80" alt="" class="category-image" loading="lazy" />
         <div class="image-overlay"></div>
       </div>
       <h3>Maschinen & Baugeräte</h3>
@@ -443,7 +451,7 @@
 
     <a href="search_results.html?category=party" class="category-card" tabindex="0" aria-label="Party & Event mieten">
       <div class="category-image-wrapper">
-        <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=400&q=80" alt="" class="category-image" />
+        <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=600&q=80" alt="" class="category-image" loading="lazy" />
         <div class="image-overlay"></div>
       </div>
       <h3>Party & Event</h3>
@@ -457,7 +465,7 @@
 
     <a href="search_results.html?category=technik" class="category-card" tabindex="0" aria-label="Technik mieten">
       <div class="category-image-wrapper">
-        <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=400&q=80" alt="" class="category-image" />
+        <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=600&q=80" alt="" class="category-image" loading="lazy" />
         <div class="image-overlay"></div>
       </div>
       <h3>Technik</h3>
@@ -471,7 +479,7 @@
 
     <a href="search_results.html?category=haushalt" class="category-card" tabindex="0" aria-label="Haushalt & Möbel mieten">
       <div class="category-image-wrapper">
-        <img src="https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=400&q=80" alt="" class="category-image" />
+        <img src="https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=600&q=80" alt="" class="category-image" loading="lazy" />
         <div class="image-overlay"></div>
       </div>
       <h3>Haushalt & Möbel</h3>
@@ -485,7 +493,7 @@
 
     <a href="search_results.html?category=garten" class="category-card" tabindex="0" aria-label="Garten mieten">
       <div class="category-image-wrapper">
-        <img src="https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=400&q=80" alt="" class="category-image" />
+        <img src="https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=600&q=80" alt="" class="category-image" loading="lazy" />
         <div class="image-overlay"></div>
       </div>
       <h3>Garten</h3>
@@ -499,7 +507,7 @@
 
     <a href="search_results.html?category=freizeit" class="category-card" tabindex="0" aria-label="Freizeit & Sport mieten">
       <div class="category-image-wrapper">
-        <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80" alt="" class="category-image" />
+        <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80" alt="" class="category-image" loading="lazy" />
         <div class="image-overlay"></div>
       </div>
       <h3>Freizeit & Sport</h3>
@@ -513,7 +521,7 @@
 
     <a href="search_results.html?category=baby" class="category-card" tabindex="0" aria-label="Baby & Kind mieten">
       <div class="category-image-wrapper">
-        <img src="https://images.unsplash.com/photo-1523983308821-9335a6a92d47?auto=format&fit=crop&w=400&q=80" alt="" class="category-image" />
+        <img src="https://images.unsplash.com/photo-1523983308821-9335a6a92d47?auto=format&fit=crop&w=600&q=80" alt="" class="category-image" loading="lazy" />
         <div class="image-overlay"></div>
       </div>
       <h3>Baby & Kind</h3>
@@ -524,6 +532,7 @@
         </svg>
       </span>
     </a>
+
   </nav>
 </main>
 
