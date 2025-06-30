@@ -2,152 +2,197 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Locorent – Social Media</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Folge uns – Locorent</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <style>
-    body {
+    * {
       margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
       font-family: 'Poppins', sans-serif;
-      background-color: #f1f8e9;
+      background: linear-gradient(to right, #e8f5e9, #c8e6c9);
       color: #1b5e20;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
     header {
       background-color: #2e7d32;
       color: white;
-      padding: 1.5rem;
-      text-align: center;
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
 
-    h1 {
-      margin: 0;
-      font-size: 2rem;
+    header a {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: opacity 0.3s;
+    }
+
+    header a:hover {
+      opacity: 0.8;
     }
 
     main {
-      padding: 2rem;
-      max-width: 1100px;
-      margin: auto;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 3rem 2rem;
+    }
+
+    h1 {
+      font-size: 2.8rem;
+      color: #1b5e20;
+      margin-bottom: 1rem;
+    }
+
+    p.subtext {
+      font-size: 1.2rem;
+      margin-bottom: 2.5rem;
+      color: #388e3c;
     }
 
     .social-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
       gap: 2rem;
-      margin-top: 2rem;
+      max-width: 900px;
+      width: 100%;
     }
 
     .social-card {
-      background-color: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      padding: 1.5rem;
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
       text-align: center;
-      transition: transform 0.2s ease;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+      position: relative;
     }
 
     .social-card:hover {
-      transform: translateY(-5px);
+      transform: translateY(-8px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.15);
     }
 
     .social-icon {
-      width: 64px;
-      height: 64px;
-      margin: auto;
-      background-color: #2e7d32;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      width: 60px;
+      height: 60px;
       margin-bottom: 1rem;
+      border-radius: 50%;
+      padding: 0.8rem;
+      display: inline-block;
+      background-color: #c8e6c9;
     }
 
     .social-icon img {
-      width: 32px;
-      height: 32px;
-      filter: brightness(0) invert(1);
+      width: 100%;
+      height: auto;
     }
 
     .social-card h3 {
-      margin: 0.5rem 0;
+      font-size: 1.4rem;
+      margin-bottom: 0.6rem;
+      color: #2e7d32;
     }
 
     .social-card p {
-      color: #444;
-      font-size: 0.95rem;
+      font-size: 1rem;
       margin-bottom: 1rem;
+      color: #4e944f;
     }
 
     .social-card a {
+      text-decoration: none;
       display: inline-block;
       padding: 0.6rem 1.2rem;
-      background-color: #2e7d32;
+      background: #2e7d32;
       color: white;
-      border-radius: 8px;
-      text-decoration: none;
+      border-radius: 30px;
       font-weight: 600;
-      transition: background-color 0.3s ease;
+      transition: background 0.3s;
     }
 
     .social-card a:hover {
-      background-color: #1b5e20;
+      background: #66bb6a;
     }
 
     footer {
-      margin-top: 4rem;
-      padding: 1rem;
       background-color: #2e7d32;
       color: white;
+      padding: 1.2rem;
       text-align: center;
-      border-radius: 0 0 12px 12px;
+      font-size: 0.9rem;
     }
   </style>
 </head>
 <body>
 
 <header>
-  <h1>Folge uns auf Social Media</h1>
+  <h2>Locorent</h2>
+  <a href="index.html">Zurück zur Startseite</a>
 </header>
 
 <main>
-  <p style="text-align: center;">Bleib immer auf dem Laufenden über neue Mietangebote, Community-Aktionen und Tipps rund ums Vermieten und Mieten!</p>
+  <h1>Folge uns!</h1>
+  <p class="subtext">Bleib auf dem Laufenden & werde Teil der Community 🚀</p>
 
   <div class="social-grid">
-    <!-- TikTok -->
+
     <div class="social-card">
-      <div class="social-icon" style="background:#000000;">
-        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/tiktok.svg" alt="TikTok">
+      <div class="social-icon" style="background:#E1306C;">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/instagram.svg" alt="Instagram">
+      </div>
+      <h3>Instagram</h3>
+      <p>Fotos, Storys & Highlights rund ums Mieten.</p>
+      <a href="https://www.instagram.com/locorent" target="_blank">Jetzt folgen</a>
+    </div>
+
+    <div class="social-card">
+      <div class="social-icon" style="background:#1877F2;">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/facebook.svg" alt="Facebook">
+      </div>
+      <h3>Facebook</h3>
+      <p>News, Events & Gruppen rund um Locorent.</p>
+      <a href="https://www.facebook.com/locorent" target="_blank">Fan werden</a>
+    </div>
+
+    <div class="social-card">
+      <div class="social-icon" style="background:#000;">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/TikTok_logo.svg" alt="TikTok">
       </div>
       <h3>TikTok</h3>
-      <p>Coole Kurzvideos & virale Miet-Momente.</p>
-      <a href="#" target="_blank">Bald verfügbar</a>
+      <p>Kreative Videos, Trends & lustige Momente.</p>
+      <a href="https://www.tiktok.com/@locorent" target="_blank">Ansehen</a>
     </div>
 
-    <!-- YouTube -->
     <div class="social-card">
-      <div class="social-icon" style="background:#FF0000;">
-        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/youtube.svg" alt="YouTube">
+      <div class="social-icon" style="background:#43a047;">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/maildotru.svg" alt="E-Mail">
       </div>
-      <h3>YouTube</h3>
-      <p>Tutorials, Reviews & Kundenstories im Videoformat.</p>
-      <a href="#" target="_blank">Bald verfügbar</a>
+      <h3>Kontakt</h3>
+      <p>Du hast Fragen oder Feedback?</p>
+      <a href="mailto:info@locorent.de">Schreib uns</a>
     </div>
 
-    <!-- LinkedIn -->
-    <div class="social-card">
-      <div class="social-icon" style="background:#0077B5;">
-        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/linkedin.svg" alt="LinkedIn">
-      </div>
-      <h3>LinkedIn</h3>
-      <p>Für Geschäftspartner & Plattform-News.</p>
-      <a href="#" target="_blank">Bald verfügbar</a>
-    </div>
   </div>
 </main>
 
 <footer>
-  © 2025 Locorent – Gemeinsam nachhaltig mieten & vermieten.
+  © 2025 Locorent – Gemeinsam mieten statt kaufen.
 </footer>
 
 </body>
