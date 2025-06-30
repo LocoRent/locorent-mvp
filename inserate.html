@@ -201,9 +201,7 @@
 
 <header>
   <h1>Locorent – Meine Inserate</h1>
-  <nav>
-    <a href="index.html">Zurück zur Übersicht</a>
-  </nav>
+  <nav><a href="index.html">Zurück zur Übersicht</a></nav>
 </header>
 
 <main>
@@ -237,7 +235,7 @@
         <input type="number" id="price-input" />
       </div>
       <div class="field">
-        <label>Ort (nur Städte in Deutschland)</label>
+        <label>Ort</label>
         <input type="text" id="location-input" placeholder="z. B. 10115 Berlin" autocomplete="off" />
         <div id="suggestions"></div>
       </div>
@@ -260,9 +258,9 @@
 
 <script>
 const supabase = window.supabase.createClient(
-'https://flnjalgqtkqycsaymmbd.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-  );
+  'https://flnjalgqtkqycsaymmbd.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+);
 
 let uploadedImageUrls = [];
 const locationInput = document.getElementById('location-input');
@@ -275,7 +273,7 @@ locationInput.addEventListener('input', async () => {
     return;
   }
 
-  const res = await fetch(`https://nominatim.openstreetmap.org/search?countrycodes=de&format=json&limit=5&city=${encodeURIComponent(value)}`);
+  const res = await fetch(`https://nominatim.openstreetmap.org/search?countrycodes=de&format=json&limit=5&q=${encodeURIComponent(value)}`);
   const results = await res.json();
   suggestionBox.innerHTML = '';
   results.forEach(r => {
@@ -446,4 +444,3 @@ loadGallery();
 </script>
 </body>
 </html>
-
