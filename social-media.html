@@ -3,86 +3,139 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Social Media – Locorent</title>
+  <title>Folge uns – Locorent</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      background-color: #f1f8e9;
-      color: #1b5e20;
+    * {
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #e8f5e9, #c8e6c9);
+      color: #1b5e20;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
     header {
       background-color: #2e7d32;
       color: white;
-      padding: 1.2rem 2rem;
+      padding: 1.5rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
 
     header a {
       color: white;
       text-decoration: none;
       font-weight: 600;
+      font-size: 1rem;
+      transition: opacity 0.3s;
+    }
+
+    header a:hover {
+      opacity: 0.8;
     }
 
     main {
-      max-width: 700px;
-      margin: 2rem auto;
-      background: white;
-      padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       text-align: center;
+      padding: 3rem 2rem;
     }
 
     h1 {
+      font-size: 2.8rem;
+      color: #1b5e20;
       margin-bottom: 1rem;
     }
 
-    p {
-      margin-bottom: 2rem;
+    p.subtext {
+      font-size: 1.2rem;
+      margin-bottom: 2.5rem;
+      color: #388e3c;
     }
 
-    .social-links {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      align-items: center;
+    .social-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 2rem;
+      max-width: 900px;
+      width: 100%;
     }
 
-    .social-links a {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      text-decoration: none;
-      color: #1b5e20;
-      font-size: 1.1rem;
-      padding: 0.8rem 1.2rem;
-      border: 2px solid #2e7d32;
-      border-radius: 8px;
-      transition: all 0.2s ease;
-      width: 250px;
-      justify-content: center;
+    .social-card {
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
+      text-align: center;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+      position: relative;
     }
 
-    .social-links a:hover {
+    .social-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+    }
+
+    .social-icon {
+      width: 60px;
+      height: 60px;
+      margin-bottom: 1rem;
+      border-radius: 50%;
+      padding: 0.8rem;
+      display: inline-block;
       background-color: #c8e6c9;
     }
 
-    .social-links img {
-      width: 24px;
-      height: 24px;
+    .social-icon img {
+      width: 100%;
+      height: auto;
+    }
+
+    .social-card h3 {
+      font-size: 1.4rem;
+      margin-bottom: 0.6rem;
+      color: #2e7d32;
+    }
+
+    .social-card p {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      color: #4e944f;
+    }
+
+    .social-card a {
+      text-decoration: none;
+      display: inline-block;
+      padding: 0.6rem 1.2rem;
+      background: #2e7d32;
+      color: white;
+      border-radius: 30px;
+      font-weight: 600;
+      transition: background 0.3s;
+    }
+
+    .social-card a:hover {
+      background: #66bb6a;
     }
 
     footer {
-      margin-top: 3rem;
+      background-color: #2e7d32;
+      color: white;
+      padding: 1.2rem;
       text-align: center;
       font-size: 0.9rem;
-      color: #4e944f;
     }
   </style>
 </head>
@@ -94,26 +147,47 @@
 </header>
 
 <main>
-  <h1>Folge uns auf Social Media</h1>
-  <p>Bleibe auf dem Laufenden über neue Mietangebote, Tipps & Aktionen!</p>
+  <h1>Folge uns!</h1>
+  <p class="subtext">Bleib auf dem Laufenden & werde Teil der Community 🚀</p>
 
-  <div class="social-links">
-    <a href="https://www.instagram.com/locorent" target="_blank">
-      <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/instagram.svg" alt="Instagram" />
-      Instagram
-    </a>
-    <a href="https://www.facebook.com/locorent" target="_blank">
-      <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/facebook.svg" alt="Facebook" />
-      Facebook
-    </a>
-    <a href="https://www.tiktok.com/@locorent" target="_blank">
-      <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/tiktok.svg" alt="TikTok" />
-      TikTok
-    </a>
-    <a href="mailto:info@locorent.de">
-      <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/maildotru.svg" alt="E-Mail" />
-      Kontakt per Mail
-    </a>
+  <div class="social-grid">
+
+    <div class="social-card">
+      <div class="social-icon" style="background:#E1306C;">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/instagram.svg" alt="Instagram">
+      </div>
+      <h3>Instagram</h3>
+      <p>Fotos, Storys & Highlights rund ums Mieten.</p>
+      <a href="https://www.instagram.com/locorent" target="_blank">Jetzt folgen</a>
+    </div>
+
+    <div class="social-card">
+      <div class="social-icon" style="background:#1877F2;">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/facebook.svg" alt="Facebook">
+      </div>
+      <h3>Facebook</h3>
+      <p>News, Events & Gruppen rund um Locorent.</p>
+      <a href="https://www.facebook.com/locorent" target="_blank">Fan werden</a>
+    </div>
+
+    <div class="social-card">
+      <div class="social-icon" style="background:#000000;">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/tiktok.svg" alt="TikTok">
+      </div>
+      <h3>TikTok</h3>
+      <p>Kreative Videos, Trends & lustige Momente.</p>
+      <a href="https://www.tiktok.com/@locorent" target="_blank">Ansehen</a>
+    </div>
+
+    <div class="social-card">
+      <div class="social-icon" style="background:#43a047;">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/maildotru.svg" alt="E-Mail">
+      </div>
+      <h3>Kontakt</h3>
+      <p>Du hast Fragen oder Feedback?</p>
+      <a href="mailto:info@locorent.de">Schreib uns</a>
+    </div>
+
   </div>
 </main>
 
