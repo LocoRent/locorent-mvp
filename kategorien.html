@@ -13,11 +13,10 @@
       --white: #fff;
       --gray: #333;
       --radius: 12px;
+      --shadow: rgba(0,0,0,0.12);
     }
     * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+      margin: 0; padding: 0; box-sizing: border-box;
     }
     body {
       font-family: 'Poppins', sans-serif;
@@ -28,7 +27,7 @@
       flex-direction: column;
     }
     header {
-      background-color: var(--primary);
+      background: var(--primary);
       color: white;
       padding: 1.5rem 2rem;
       display: flex;
@@ -45,70 +44,91 @@
       text-decoration: none;
       font-weight: 600;
     }
+    header nav a:hover,
+    header nav a:focus {
+      text-decoration: underline;
+      outline: none;
+    }
     main {
       max-width: 1100px;
-      margin: 2rem auto;
-      padding: 0 1rem 3rem;
+      margin: 2rem auto 4rem;
+      padding: 0 1rem;
       flex-grow: 1;
     }
     h2 {
       text-align: center;
-      margin-bottom: 2rem;
-      font-size: 2rem;
       color: var(--primary);
+      font-size: 2rem;
+      margin-bottom: 2rem;
     }
     .category-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 1.8rem;
     }
     .category-card {
-      background-color: var(--white);
+      background: var(--white);
       border-radius: var(--radius);
-      box-shadow: 0 3px 14px rgba(0, 0, 0, 0.08);
-      overflow: hidden;
-      text-align: center;
+      box-shadow: 0 4px 14px var(--shadow);
       cursor: pointer;
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
       display: flex;
       flex-direction: column;
-      justify-content: flex-start;
+      align-items: center;
+      padding: 1.6rem 1rem 2rem;
+      text-align: center;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      user-select: none;
+      text-decoration: none;
+      color: inherit;
     }
     .category-card:hover,
     .category-card:focus {
       transform: translateY(-6px);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.18);
       outline: none;
     }
     .category-icon {
-      width: 100%;
-      height: 150px;
-      object-fit: contain;
-      background-color: #e8f5e9;
-      padding: 1.5rem;
+      width: 72px;
+      height: 72px;
+      margin-bottom: 1.25rem;
+      filter: var(--primary-filter, none);
     }
     .category-card h3 {
-      margin: 1rem 0 0.5rem;
-      font-size: 1.25rem;
+      font-size: 1.3rem;
+      margin-bottom: 0.6rem;
       color: var(--primary);
     }
     .category-card p {
-      padding: 0 1.5rem 1.5rem;
       font-size: 1rem;
       color: #555;
+      line-height: 1.3;
       flex-grow: 1;
     }
     footer {
-      background-color: var(--primary);
+      background: var(--primary);
       color: white;
       text-align: center;
-      padding: 2rem;
+      padding: 2rem 1rem;
       flex-shrink: 0;
+      font-size: 0.9rem;
     }
-    /* Accessibility */
-    .category-card:focus {
+    /* Focus visible for accessibility */
+    .category-card:focus-visible {
       outline: 3px solid var(--highlight);
       outline-offset: 3px;
+    }
+    @media (max-width: 600px) {
+      main {
+        margin: 1rem;
+      }
+      .category-card {
+        padding: 1.4rem 1rem 1.6rem;
+      }
+      .category-icon {
+        width: 56px;
+        height: 56px;
+        margin-bottom: 1rem;
+      }
     }
   </style>
 </head>
@@ -124,79 +144,79 @@
 
 <main>
   <h2>Beliebte Kategorien</h2>
-  <div class="category-grid">
-    <a href="kategorie.html?cat=fahrzeuge" class="category-card" tabindex="0" aria-label="Fahrzeuge mieten">
-      <img src="https://cdn-icons-png.flaticon.com/512/743/743922.png" alt="Fahrzeuge Icon" class="category-icon" />
+  <nav class="category-grid" aria-label="Beliebte Kategorien">
+    <a href="search_results.html?category=fahrzeuge" class="category-card" tabindex="0" aria-label="Fahrzeuge">
+      <img src="https://cdn-icons-png.flaticon.com/512/743/743922.png" alt="" class="category-icon" aria-hidden="true" />
       <h3>Fahrzeuge</h3>
       <p>PKWs, Motorräder und mehr – mobil bleiben leicht gemacht.</p>
     </a>
 
-    <a href="kategorie.html?cat=transporter" class="category-card" tabindex="0" aria-label="Transporter mieten">
-      <img src="https://cdn-icons-png.flaticon.com/512/1995/1995566.png" alt="Transporter Icon" class="category-icon" />
+    <a href="search_results.html?category=transporter" class="category-card" tabindex="0" aria-label="Transporter">
+      <img src="https://cdn-icons-png.flaticon.com/512/1995/1995566.png" alt="" class="category-icon" aria-hidden="true" />
       <h3>Transporter</h3>
       <p>Für den großen Umzug oder den Wocheneinkauf.</p>
     </a>
 
-    <a href="kategorie.html?cat=boote" class="category-card" tabindex="0" aria-label="Boote mieten">
-      <img src="https://cdn-icons-png.flaticon.com/512/3617/3617442.png" alt="Boote Icon" class="category-icon" />
+    <a href="search_results.html?category=boote" class="category-card" tabindex="0" aria-label="Boote">
+      <img src="https://cdn-icons-png.flaticon.com/512/3617/3617442.png" alt="" class="category-icon" aria-hidden="true" />
       <h3>Boote</h3>
       <p>Für entspannte Tage auf dem Wasser.</p>
     </a>
 
-    <a href="kategorie.html?cat=fahrrad" class="category-card" tabindex="0" aria-label="Fahrräder & E-Bikes mieten">
-      <img src="https://cdn-icons-png.flaticon.com/512/272/272282.png" alt="Fahrrad Icon" class="category-icon" />
+    <a href="search_results.html?category=fahrrad" class="category-card" tabindex="0" aria-label="Fahrräder & E-Bikes">
+      <img src="https://cdn-icons-png.flaticon.com/512/272/272282.png" alt="" class="category-icon" aria-hidden="true" />
       <h3>Fahrräder & E-Bikes</h3>
       <p>Aktiv und nachhaltig unterwegs.</p>
     </a>
 
-    <a href="kategorie.html?cat=werkzeuge" class="category-card" tabindex="0" aria-label="Werkzeuge mieten">
-      <img src="https://cdn-icons-png.flaticon.com/512/564/564619.png" alt="Werkzeuge Icon" class="category-icon" />
+    <a href="search_results.html?category=werkzeuge" class="category-card" tabindex="0" aria-label="Werkzeuge">
+      <img src="https://cdn-icons-png.flaticon.com/512/564/564619.png" alt="" class="category-icon" aria-hidden="true" />
       <h3>Werkzeuge</h3>
       <p>Vom Bohrer bis zur Säge – alles für dein Projekt.</p>
     </a>
 
-    <a href="kategorie.html?cat=maschinen" class="category-card" tabindex="0" aria-label="Maschinen & Baugeräte mieten">
-      <img src="https://cdn-icons-png.flaticon.com/512/3063/3063915.png" alt="Maschinen Icon" class="category-icon" />
+    <a href="search_results.html?category=maschinen" class="category-card" tabindex="0" aria-label="Maschinen & Baugeräte">
+      <img src="https://cdn-icons-png.flaticon.com/512/3063/3063915.png" alt="" class="category-icon" aria-hidden="true" />
       <h3>Maschinen & Baugeräte</h3>
       <p>Professionelle Geräte für den Bau.</p>
     </a>
 
-    <a href="kategorie.html?cat=party" class="category-card" tabindex="0" aria-label="Party & Event mieten">
-      <img src="https://cdn-icons-png.flaticon.com/512/2589/2589175.png" alt="Party & Event Icon" class="category-icon" />
+    <a href="search_results.html?category=party" class="category-card" tabindex="0" aria-label="Party & Event">
+      <img src="https://cdn-icons-png.flaticon.com/512/2589/2589175.png" alt="" class="category-icon" aria-hidden="true" />
       <h3>Party & Event</h3>
       <p>Alles für die perfekte Feier.</p>
     </a>
 
-    <a href="kategorie.html?cat=technik" class="category-card" tabindex="0" aria-label="Technik mieten">
-      <img src="https://cdn-icons-png.flaticon.com/512/3106/3106722.png" alt="Technik Icon" class="category-icon" />
+    <a href="search_results.html?category=technik" class="category-card" tabindex="0" aria-label="Technik">
+      <img src="https://cdn-icons-png.flaticon.com/512/3106/3106722.png" alt="" class="category-icon" aria-hidden="true" />
       <h3>Technik</h3>
       <p>Beamer, Kameras, Soundsysteme und mehr.</p>
     </a>
 
-    <a href="kategorie.html?cat=haushalt" class="category-card" tabindex="0" aria-label="Haushalt & Möbel mieten">
-      <img src="https://cdn-icons-png.flaticon.com/512/857/857681.png" alt="Haushalt & Möbel Icon" class="category-icon" />
+    <a href="search_results.html?category=haushalt" class="category-card" tabindex="0" aria-label="Haushalt & Möbel">
+      <img src="https://cdn-icons-png.flaticon.com/512/857/857681.png" alt="" class="category-icon" aria-hidden="true" />
       <h3>Haushalt & Möbel</h3>
       <p>Alles, was dein Zuhause braucht.</p>
     </a>
 
-    <a href="kategorie.html?cat=garten" class="category-card" tabindex="0" aria-label="Garten mieten">
-      <img src="https://cdn-icons-png.flaticon.com/512/1146/1146869.png" alt="Garten Icon" class="category-icon" />
+    <a href="search_results.html?category=garten" class="category-card" tabindex="0" aria-label="Garten">
+      <img src="https://cdn-icons-png.flaticon.com/512/1146/1146869.png" alt="" class="category-icon" aria-hidden="true" />
       <h3>Garten</h3>
       <p>Geräte und Möbel für draußen.</p>
     </a>
 
-    <a href="kategorie.html?cat=freizeit" class="category-card" tabindex="0" aria-label="Freizeit & Sport mieten">
-      <img src="https://cdn-icons-png.flaticon.com/512/181/181549.png" alt="Freizeit & Sport Icon" class="category-icon" />
+    <a href="search_results.html?category=freizeit" class="category-card" tabindex="0" aria-label="Freizeit & Sport">
+      <img src="https://cdn-icons-png.flaticon.com/512/181/181549.png" alt="" class="category-icon" aria-hidden="true" />
       <h3>Freizeit & Sport</h3>
       <p>Für Spaß und Bewegung in der Freizeit.</p>
     </a>
 
-    <a href="kategorie.html?cat=baby" class="category-card" tabindex="0" aria-label="Baby & Kind mieten">
-      <img src="https://cdn-icons-png.flaticon.com/512/747/747378.png" alt="Baby & Kind Icon" class="category-icon" />
+    <a href="search_results.html?category=baby" class="category-card" tabindex="0" aria-label="Baby & Kind">
+      <img src="https://cdn-icons-png.flaticon.com/512/747/747378.png" alt="" class="category-icon" aria-hidden="true" />
       <h3>Baby & Kind</h3>
       <p>Alles für die Kleinsten – flexibel und günstig.</p>
     </a>
-  </div>
+  </nav>
 </main>
 
 <footer>
