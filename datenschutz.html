@@ -2,153 +2,159 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Datenschutzerklärung – Locorent</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Locorent – Alles Mieten</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
-      --primary: #2e7d32;
-      --light: #e8f5e9;
-      --white: #ffffff;
-      --dark: #1b5e20;
-      --accent: #81c784;
-      --radius: 18px;
-      --shadow: 0 15px 45px rgba(0,0,0,0.08);
+      --primary-color: #2e7d32;
+      --secondary-color: #a5d6a7;
+      --background-color: #f1f8e9;
+      --dark-color: #1b5e20;
+      --highlight-color: #66bb6a;
+      --white: #fff;
+      --gray-light: #f7f7f7;
+      --gray-dark: #333;
+      --border-radius: 12px;
+      --shadow-color: rgba(0, 0, 0, 0.1);
     }
 
-    *, *::before, *::after {
+    * {
+      margin: 0;
+      padding: 0;
       box-sizing: border-box;
     }
 
     body {
-      margin: 0;
       font-family: 'Poppins', sans-serif;
-      background: linear-gradient(180deg, var(--light), var(--white));
-      color: #222;
-      line-height: 1.7;
+      background-color: var(--background-color);
+      color: var(--gray-dark);
+      line-height: 1.6;
     }
 
     header {
-      background: var(--primary);
-      padding: 2rem;
+      background-color: var(--primary-color);
       color: var(--white);
+      padding: 1.5rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
       position: sticky;
       top: 0;
-      z-index: 100;
-      box-shadow: var(--shadow);
-    }
-
-    header h1 {
-      font-size: 2rem;
-      font-weight: 700;
+      z-index: 1000;
     }
 
     nav a {
       color: var(--white);
+      margin-left: 1.5rem;
       text-decoration: none;
-      margin-left: 2rem;
-      font-weight: 500;
-      position: relative;
+      font-weight: 600;
     }
 
-    nav a::after {
-      content: "";
-      position: absolute;
-      width: 0%;
-      height: 2px;
-      left: 0;
-      bottom: -5px;
-      background: var(--accent);
-      transition: 0.3s;
+    nav a:hover {
+      border-bottom: 2px solid var(--highlight-color);
     }
 
-    nav a:hover::after {
-      width: 100%;
-    }
-
-    .container {
-      max-width: 1100px;
-      margin: 4rem auto;
-      padding: 0 2rem;
-    }
-
-    .section-card {
-      background: var(--white);
-      border-radius: var(--radius);
+    .hero {
+      background-color: var(--white);
       padding: 3rem 2rem;
-      margin-bottom: 2rem;
-      box-shadow: var(--shadow);
-      transition: 0.3s ease;
+      border-radius: var(--border-radius);
+      box-shadow: 0 2px 12px var(--shadow-color);
+      margin-top: 2rem;
+      text-align: center;
     }
 
-    .section-card:hover {
-      transform: translateY(-6px);
-    }
-
-    .section-card h2 {
-      font-size: 2.2rem;
-      color: var(--primary);
+    .hero h2 {
+      font-size: 2rem;
+      font-weight: 600;
       margin-bottom: 1rem;
     }
 
-    .section-card h3 {
-      color: var(--dark);
-      margin-top: 2rem;
-      font-size: 1.4rem;
+    .search-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin-bottom: 2rem;
     }
 
-    .section-card p, .section-card ul {
-      color: #444;
-      font-size: 1.05rem;
+    .search-row input,
+    .search-row select,
+    .search-row button {
+      padding: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+      flex: 1;
+      min-width: 200px;
     }
 
-    .section-card ul {
-      padding-left: 1.2rem;
-    }
-
-    .badge {
-      display: inline-block;
-      background: var(--accent);
-      color: var(--dark);
+    .search-row button {
+      background-color: var(--highlight-color);
+      color: var(--white);
       font-weight: 600;
-      padding: 0.3rem 0.7rem;
-      border-radius: 999px;
-      font-size: 0.85rem;
-      margin-bottom: 1.2rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .search-row button:hover {
+      background-color: var(--secondary-color);
+    }
+
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .result-card {
+      background-color: var(--white);
+      border-radius: 10px;
+      padding: 1rem;
+      box-shadow: 0 2px 8px var(--shadow-color);
+      margin-bottom: 1.5rem;
+      transition: transform 0.2s ease;
+    }
+
+    .result-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 16px var(--shadow-color);
+    }
+
+    .result-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+
+    .result-card button {
+      margin-top: 0.5rem;
+      padding: 0.6rem;
+      width: 100%;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background-color 0.3s ease;
+    }
+
+    .result-card button:hover {
+      background-color: var(--highlight-color);
     }
 
     footer {
-      background: var(--primary);
-      color: var(--white);
+      padding: 2rem;
       text-align: center;
-      padding: 4rem 2rem;
-      margin: 3rem 2rem 0;
-      border-radius: var(--radius);
-    }
-
-    footer h4 {
-      font-size: 1.2rem;
-      margin-top: 1rem;
-      font-weight: 600;
-    }
-
-    footer ul {
-      list-style: none;
-      padding: 0;
-      margin: 1rem auto 0;
-      max-width: 320px;
-    }
-
-    footer ul li {
-      margin: 0.4rem 0;
-    }
-
-    footer ul li a {
+      background-color: var(--primary-color);
       color: var(--white);
-      text-decoration: underline;
+      border-radius: var(--border-radius);
+      margin-top: 2rem;
     }
 
     @media (max-width: 768px) {
@@ -157,80 +163,232 @@
         align-items: flex-start;
       }
 
+      .search-row {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .category-grid {
+        grid-template-columns: 1fr;
+      }
+
       nav a {
         margin-left: 0;
-        margin-top: 0.8rem;
+        margin-top: 0.5rem;
       }
     }
   </style>
 </head>
 <body>
-
   <header>
     <h1>Locorent</h1>
-    <nav>
-      <a href="index.html">Start</a>
-      <a href="login.html">Einloggen</a>
-    </nav>
+    <nav id="nav-links"></nav>
   </header>
 
-  <div class="container">
-    <div class="section-card">
-      <div class="badge">Datenschutz</div>
-      <h2>Datenschutzerklärung</h2>
-
-      <p>Diese Datenschutzerklärung informiert dich über die Art, den Umfang und Zweck der Verarbeitung personenbezogener Daten auf der Website <strong>www.locorent.de</strong>.</p>
-
-      <h3>1. Verantwortliche Stelle</h3>
-      <p>Pascal Merten<br>
-      Wilhelmsbader Straße 15<br>
-      63477 Maintal<br>
-      info@locorent.de</p>
-
-      <h3>2. Erhebung und Speicherung personenbezogener Daten</h3>
-      <p>Beim Besuch unserer Website werden automatisch technische Daten (z. B. IP-Adresse, Browsertyp) durch deinen Browser übermittelt und gespeichert.</p>
-
-      <h3>3. Registrierung auf Locorent</h3>
-      <p>Wenn du dich registrierst, speichern wir deine E-Mail-Adresse und alle freiwillig eingegebenen Daten (Name, Ort, Profilinformationen). Diese dienen ausschließlich der Nutzerverwaltung und Kontaktaufnahme.</p>
-
-      <h3>4. Verwendung von Supabase</h3>
-      <p>Locorent nutzt Supabase als Backend-Dienstleister zur Speicherung und Authentifizierung. Supabase speichert deine Daten DSGVO-konform in europäischen Rechenzentren.</p>
-
-      <h3>5. Cookies und Analyse</h3>
-      <p>Diese Website nutzt keine Tracking- oder Analyse-Tools und setzt nur technisch notwendige Cookies für Login und Navigation.</p>
-
-      <h3>6. Weitergabe von Daten</h3>
-      <p>Es erfolgt keine Weitergabe personenbezogener Daten an Dritte, außer wenn gesetzlich erforderlich oder zur Vertragserfüllung notwendig.</p>
-
-      <h3>7. Deine Rechte</h3>
-      <ul>
-        <li>Auskunft über gespeicherte Daten</li>
-        <li>Berichtigung unrichtiger Daten</li>
-        <li>Löschung oder Einschränkung der Verarbeitung</li>
-        <li>Widerspruch gegen die Verarbeitung</li>
-      </ul>
-
-      <h3>8. Speicherdauer</h3>
-      <p>Deine Daten werden nur so lange gespeichert, wie dies zur Erfüllung des Zwecks erforderlich ist. Bei Löschung deines Kontos werden personenbezogene Daten unverzüglich gelöscht.</p>
-
-      <h3>9. Änderung der Datenschutzerklärung</h3>
-      <p>Wir behalten uns vor, diese Erklärung bei Bedarf zu ändern. Die jeweils aktuelle Version ist immer unter <strong>www.locorent.de/datenschutz.html</strong> einsehbar.</p>
+  <section class="hero">
+    <h2>Finde das perfekte Mietobjekt</h2>
+    <div class="search-row">
+      <input type="text" placeholder="Was suchst du?" id="search-input" />
+      <select id="category-select">
+        <option value="">Alle Kategorien</option>
+        <option value="fahrzeuge">Fahrzeuge</option>
+        <option value="transporter">Transporter</option>
+        <option value="boote">Boote</option>
+        <option value="fahrrad">Fahrräder & E-Bikes</option>
+        <option value="werkzeuge">Werkzeuge</option>
+        <option value="maschinen">Maschinen & Baugeräte</option>
+        <option value="party">Party & Event</option>
+        <option value="technik">Technik</option>
+        <option value="haushalt">Haushalt & Möbel</option>
+        <option value="garten">Garten</option>
+        <option value="freizeit">Freizeit & Sport</option>
+        <option value="baby">Baby & Kind</option>
+      </select>
+      <input type="text" placeholder="Ort" id="location-input" />
+      <input type="number" placeholder="Umkreis (km)" id="radius-select" list="radius-options" min="1" max="500" />
+      <datalist id="radius-options">
+        <option value="5">
+        <option value="10">
+        <option value="15">
+        <option value="25">
+        <option value="50">
+        <option value="75">
+        <option value="100">
+        <option value="150">
+        <option value="200">
+      </datalist>
+      <button onclick="search()">Suchen</button>
     </div>
+  </section>
+
+  <section>
+    <h2>Neueste Angebote</h2>
+    <div id="newest-offers" class="category-grid"><p>⏳ Lade Angebote…</p></div>
+  </section>
+
+  <section>
+    <h2>Beliebte Angebote</h2>
+    <div id="popular-offers" class="category-grid"><p>⏳ Lade Angebote…</p></div>
+  </section>
+
+<footer>
+  © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
+  <div style="margin-top: 1.5rem;">
+    <h4 style="margin-bottom: 0.5rem;">Mieten & Vermieten</h4>
+    <ul style="list-style: none; padding: 0; line-height: 1.8;">
+      <li><a href="so-funktionierts.html" style="color: white; text-decoration: underline;">So funktioniert's</a></li>
+      <li><a href="vermieter-werden.html" style="color: white; text-decoration: underline;">Werde zum Vermieter</a></li>
+      <li><a href="kategorien.html" style="color: white; text-decoration: underline;">Beliebte Kategorien</a></li>
+      <li><a href="vermieter-tipps.html" style="color: white; text-decoration: underline;">Tipps & Tricks für Vermieter</a></li>
+      <li><a href="hilfe-faq.html" style="color: white; text-decoration: underline;">Hilfe und FAQ</a></li>
+    </ul>
   </div>
+  <div style="margin-top: 2rem;">
+    <h4 style="margin-bottom: 0.5rem;">Wissenswertes</h4>
+    <ul style="list-style: none; padding: 0; line-height: 1.8;">
+      <li><a href="agb.html" style="color: white; text-decoration: underline;">AGB & Impressum</a></li>
+      <li><a href="datenschutz.html" style="color: white; text-decoration: underline;">Datenschutz</a></li>
+    </ul>
+  </div>
+</footer>
 
-  <footer>
-    © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
-    <div>
-      <h4>Mieten & Vermieten</h4>
-      <ul>
-        <li><a href="so-funktionierts.html">So funktioniert's</a></li>
-        <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
-        <li><a href="kategorien.html">Beliebte Kategorien</a></li>
-        <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
-        <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
-      </ul>
-    </div>
-  </footer>
+  <!-- Nur die renderOffers-Funktion wurde angepasst -->
+<script>
+  const supabase = window.supabase.createClient(
+    'https://flnjalgqtkqycsaymmbd.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+  );
+
+  let userSession = null;
+
+  async function init() {
+    const { data: { session } } = await supabase.auth.getSession();
+    userSession = session;
+    updateNav();
+    loadNewestOffers();
+    loadPopularOffers();
+  }
+
+  function updateNav() {
+    const nav = document.getElementById('nav-links');
+    nav.innerHTML = userSession?.user ? `
+      <a href="index.html">Start</a>
+      <a href="profil.html">Mein Profil</a>
+      <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+      <a href="favoriten.html">Meine Favoriten</a>
+      <a href="inserate.html">Meine Inserate</a>
+      <a href="#" onclick="logout(event)">Logout</a>
+    ` : `
+      <a href="index.html">Start</a>
+      <a href="login.html">Einloggen</a>
+    `;
+  }
+
+  async function logout(event) {
+    event.preventDefault();
+    await supabase.auth.signOut();
+    window.location.href = "login.html";
+  }
+
+  async function loadNewestOffers() {
+    const { data } = await supabase
+      .from('listings')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(5);
+    renderOffers(data, 'newest-offers');
+  }
+
+  async function loadPopularOffers() {
+    const { data } = await supabase
+      .from('listings')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(5);
+    renderOffers(data, 'popular-offers');
+  }
+
+  function capitalize(str) {
+    return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
+  }
+
+  async function renderOffers(items, containerId) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = '';
+
+    for (const item of items) {
+      const card = document.createElement('div');
+      card.className = 'result-card';
+
+      const isFav = userSession?.user ? await checkIfFavorite(item.id) : false;
+
+      card.innerHTML = `
+        <img src="${item.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" alt="${item.title}" />
+        <h3>${item.title}</h3>
+        <p><strong>Kategorie:</strong> ${capitalize(item.category) || 'Unbekannt'}</p>
+        <p><strong>Preis pro Tag:</strong> ${item.price_per_day || 'k. A.'} €</p>
+        <button onclick="window.location.href='mietobjekt.html?id=${item.id}'">Details ansehen</button>
+        <button class="fav-btn">${isFav ? 'Favorit entfernen' : 'Zu Favoriten'}</button>
+      `;
+
+      const favBtn = card.querySelector('.fav-btn');
+      if (userSession?.user) {
+        favBtn.addEventListener('click', async (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const nowFav = await toggleFavorite(item.id);
+          favBtn.innerText = nowFav ? 'Favorit entfernen' : 'Zu Favoriten';
+        });
+      } else {
+        favBtn.disabled = true;
+        favBtn.innerText = "Login erforderlich";
+      }
+
+      container.appendChild(card);
+    }
+  }
+
+  async function checkIfFavorite(listingId) {
+    if (!userSession?.user) return false;
+    const { data } = await supabase
+      .from('favorites')
+      .select('*')
+      .eq('user_id', userSession.user.id)
+      .eq('listing_id', listingId)
+      .maybeSingle();
+    return !!data;
+  }
+
+  async function toggleFavorite(listingId) {
+    if (!userSession?.user) return false;
+    const { data } = await supabase
+      .from('favorites')
+      .select('*')
+      .eq('user_id', userSession.user.id)
+      .eq('listing_id', listingId)
+      .maybeSingle();
+
+    if (data) {
+      await supabase.from('favorites').delete().eq('id', data.id);
+      return false;
+    } else {
+      await supabase.from('favorites').insert({ user_id: userSession.user.id, listing_id: listingId });
+      return true;
+    }
+  }
+
+  function search() {
+    const keyword = document.getElementById("search-input").value.trim();
+    const category = document.getElementById("category-select").value.trim();
+    const location = document.getElementById("location-input").value.trim();
+    const radius = document.getElementById("radius-select").value.trim();
+
+    const params = new URLSearchParams({ keyword, category, location, radius });
+    window.location.href = `search_results.html?${params.toString()}`;
+  }
+
+  init();
+</script>
 
 </body>
 </html>
