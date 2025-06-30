@@ -129,23 +129,20 @@
       margin-top: 0.3rem;
     }
 
-    .delete-btn {
-      background: transparent;
-      border: none;
-      color: #888;
-      font-size: 0.9rem;
+    .delete-chat {
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      color: #d32f2f;
+      font-size: 1.4rem;
       cursor: pointer;
-      transition: color 0.3s ease;
-      display: none;
-      margin-top: 0.6rem;
+      transition: transform 0.2s, color 0.2s;
+      z-index: 10;
     }
 
-    .chat-card:hover .delete-btn {
-      display: inline-block;
-    }
-
-    .delete-btn:hover {
-      color: #c62828;
+    .delete-chat:hover {
+      transform: scale(1.25);
+      color: #b71c1c;
     }
 
     @media (max-width: 600px) {
@@ -238,13 +235,12 @@
 
       const card = document.createElement('div');
       card.className = 'chat-card';
-
-      card.addEventListener('click', (e) => {
-        if (e.target.closest('.delete-btn')) return;
+      card.onclick = () => {
         window.location.href = `nachrichten.html?listing_id=${msg.listing_id}&with=${otherId}`;
-      });
+      };
 
       card.innerHTML = `
+        <div class="delete-chat" title="Chat löschen" onclick="event.stopPropagation(); confirmDelete('${msg.listing_id}', '${otherId}', this)">🗑️</div>
         <div class="chat-avatar">
           ${avatar ? `<img src="${avatar}" alt="${name}" />` : `<span>${name.charAt(0).toUpperCase()}</span>`}
         </div>
@@ -258,7 +254,6 @@
           </div>
           <div class="chat-preview">💬 ${msg.content.slice(0, 90)}${msg.content.length > 90 ? '…' : ''}</div>
           <div class="chat-time">⏱️ ${timeAgo(msg.created_at)}</div>
-          <button class="delete-btn" onclick="deleteChat(event, '${msg.listing_id}', '${otherId}')">🗑️ Chat löschen</button>
         </div>
       `;
 
@@ -266,24 +261,20 @@
     }
   }
 
-  async function deleteChat(event, listingId, otherId) {
-    event.stopPropagation();
-
-    if (!confirm("Möchtest du diesen Chat wirklich löschen? Alle Nachrichten werden dauerhaft entfernt.")) return;
+  async function confirmDelete(listingId, otherId, el) {
+    if (!confirm("Möchtest du diesen Chatverlauf wirklich löschen?")) return;
 
     const { data: { user } } = await supabase.auth.getUser();
 
     const { error } = await supabase
       .from('messages')
       .delete()
-      .or(`and(sender_id.eq.${user.id},receiver_id.eq.${otherId},listing_id.eq.${listingId}),and(sender_id.eq.${otherId},receiver_id.eq.${user.id},listing_id.eq.${listingId})`);
+      .or(`and(sender_id.eq.${user.id},receiver_id.eq.${otherId},listing_id.eq.${listingId}),and(receiver_id.eq.${user.id},sender_id.eq.${otherId},listing_id.eq.${listingId})`);
 
-    if (error) {
-      alert("Fehler beim Löschen: " + error.message);
+    if (!error) {
+      el.closest('.chat-card').remove();
     } else {
-      const card = event.target.closest('.chat-card');
-      card.style.opacity = '0';
-      setTimeout(() => card.remove(), 300);
+      alert("Fehler beim Löschen des Chats.");
     }
   }
 
