@@ -6,102 +6,184 @@
   <title>So funktioniert's – Locorent</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      background-color: #f1f8e9;
-      color: #333;
+    :root {
+      --primary: #2e7d32;
+      --secondary: #a5d6a7;
+      --light-bg: #f1f8e9;
+      --white: #fff;
+      --gray: #333;
+      --radius: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--light-bg);
+      color: var(--gray);
       line-height: 1.6;
     }
 
-    header, footer {
-      background-color: #2e7d32;
-      color: white;
+    header {
+      background-color: var(--primary);
+      color: var(--white);
       padding: 1.5rem 2rem;
-      text-align: center;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    header nav a {
+      color: var(--white);
+      text-decoration: none;
+      margin-left: 1.5rem;
+      font-weight: 600;
     }
 
     main {
-      max-width: 800px;
+      max-width: 1200px;
       margin: 2rem auto;
       padding: 0 1rem;
     }
 
-    h1, h2 {
-      color: #1b5e20;
+    .columns {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+
+    .column {
+      background-color: var(--white);
+      padding: 1.5rem;
+      border-radius: var(--radius);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .column h2 {
+      color: var(--primary);
+      margin-bottom: 1rem;
     }
 
     .step {
-      background-color: white;
-      padding: 1.5rem;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
     }
 
     .step h3 {
-      margin-top: 0;
+      margin-bottom: 0.3rem;
       color: #2e7d32;
+      font-size: 1.05rem;
+    }
+
+    footer {
+      background-color: var(--primary);
+      color: var(--white);
+      padding: 2rem;
+      text-align: center;
+      margin-top: 3rem;
+    }
+
+    footer h4 {
+      margin-top: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    footer ul {
+      list-style: none;
+      padding: 0;
+      line-height: 1.8;
+    }
+
+    footer a {
+      color: var(--white);
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      header nav a {
+        margin: 0.5rem 0 0 0;
+      }
     }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>So funktioniert's</h1>
-    <p>Der einfache und sichere Weg zum Mieten und Vermieten.</p>
+    <h1>Locorent</h1>
+    <nav>
+      <a href="index.html">Start</a>
+      <a href="login.html">Einloggen</a>
+    </nav>
   </header>
 
   <main>
-    <h2>Für Mieter</h2>
+    <h1 style="text-align: center; margin-bottom: 2rem;">So funktioniert’s</h1>
+    <div class="columns">
+      <!-- Mieter -->
+      <div class="column">
+        <h2>Für Mieter</h2>
+        <div class="step">
+          <h3>🔍 Artikel finden</h3>
+          <p>Stöbern Sie gezielt oder lassen Sie sich inspirieren – finden Sie genau den Mietartikel, den Sie benötigen.</p>
+        </div>
+        <div class="step">
+          <h3>✉️ Mietanfrage stellen</h3>
+          <p>Kontaktieren Sie den Vermieter über unsere Chatfunktion und besprechen Sie alle relevanten Details individuell.</p>
+        </div>
+        <div class="step">
+          <h3>🤝 Übergabe organisieren</h3>
+          <p>Vereinbaren Sie die Abholung direkt im Chat – klar, transparent und nachvollziehbar.</p>
+        </div>
+        <div class="step">
+          <h3>🔄 Rückgabe & Bewertung</h3>
+          <p>Bringen Sie den Artikel im vereinbarten Zustand zurück und hinterlassen Sie eine Bewertung – für mehr Vertrauen in der Community.</p>
+        </div>
+      </div>
 
-    <div class="step">
-      <h3>🔍 Artikel finden</h3>
-      <p>Nutzen Sie unsere Suchfunktion oder stöbern Sie durch die Kategorien, um genau den Artikel zu finden, den Sie aktuell benötigen. Egal ob Werkzeug, Technik oder Freizeitartikel – entdecken Sie praktische Alternativen zum Kauf.</p>
+      <!-- Vermieter -->
+      <div class="column">
+        <h2>Für Vermieter</h2>
+        <div class="step">
+          <h3>📦 Ungenutztes Potenzial nutzen</h3>
+          <p>Vermieten Sie selten genutzte Artikel und machen Sie daraus eine Einnahmequelle – ressourcenschonend und effizient.</p>
+        </div>
+        <div class="step">
+          <h3>📸 Artikel inserieren</h3>
+          <p>Fügen Sie Fotos hinzu, beschreiben Sie Ihr Angebot präzise und legen Sie einen fairen Preis fest. Kleine Optimierungen können große Wirkung zeigen.</p>
+        </div>
+        <div class="step">
+          <h3>💬 Mietanfragen verwalten</h3>
+          <p>Kommunizieren Sie direkt mit potenziellen Mietern. Sie entscheiden, ob und wann vermietet wird – flexibel und sicher.</p>
+        </div>
+        <div class="step">
+          <h3>👤 Vertrauenswürdiges Profil</h3>
+          <p>Ein vollständiges, professionelles Profil steigert Ihre Sichtbarkeit und Erfolgschancen erheblich.</p>
+        </div>
+      </div>
     </div>
-
-    <div class="step">
-      <h3>✉️ Mietanfrage stellen</h3>
-      <p>Kontaktieren Sie den Vermieter direkt über die integrierte Chatfunktion. Klären Sie alle Details wie Mietzeitraum, Preis und Übergabe individuell ab.</p>
-    </div>
-
-    <div class="step">
-      <h3>🤝 Übergabe organisieren</h3>
-      <p>Die Abholung erfolgt in persönlicher Absprache mit dem Vermieter. Nutzen Sie dazu unsere Nachrichtenfunktion, um alle Informationen schriftlich festzuhalten.</p>
-    </div>
-
-    <div class="step">
-      <h3>🔄 Rückgabe & Bewertung</h3>
-      <p>Geben Sie den Artikel im vereinbarten Zustand und zum festgelegten Zeitpunkt zurück. Schäden oder starke Verschmutzungen können zu zusätzlichen Kosten führen. Abschließend bitten wir um eine Bewertung Ihres Mieterlebnisses – so stärken Sie die Community.</p>
-    </div>
-
-    <h2>Für Vermieter</h2>
-
-    <div class="step">
-      <h3>📦 Ungenutzte Artikel identifizieren</h3>
-      <p>Viele Gegenstände werden nur selten gebraucht – bieten Sie diese zur Miete an. So schaffen Sie Platz, schonen Ressourcen und erzielen nebenbei ein passives Einkommen.</p>
-    </div>
-
-    <div class="step">
-      <h3>📸 Artikel inserieren</h3>
-      <p>Erstellen Sie in wenigen Minuten ein aussagekräftiges Inserat: Laden Sie ansprechende Fotos hoch, verfassen Sie eine präzise Beschreibung und legen Sie einen angemessenen Mietpreis fest. Keine Anfragen? Überarbeiten Sie Titel, Text oder Preis, um attraktiver zu wirken.</p>
-    </div>
-
-    <div class="step">
-      <h3>💬 Mietanfragen professionell bearbeiten</h3>
-      <p>Erhalten Sie Anfragen direkt über unsere Plattform. Sie entscheiden, ob und wann eine Vermietung stattfindet. Bei Interesse können alle Details zur Übergabe bequem im Chat besprochen werden. Denken Sie auch daran, den Mieter nach Rückgabe zu bewerten.</p>
-    </div>
-
-    <div class="step">
-      <h3>👤 Profil pflegen</h3>
-      <p>Ein vollständiges und vertrauenswürdiges Profil erhöht Ihre Erfolgschancen erheblich. Zeigen Sie, wer Sie sind, und bieten Sie Mietern eine klare, professionelle Präsentation Ihrer Angebote.</p>
-    </div>
-
   </main>
 
   <footer>
-    © 2025 Locorent – Gemeinsam nachhaltig mieten.
+    © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
+    <h4>Mieten & Vermieten</h4>
+    <ul>
+      <li><a href="so-funktionierts.html">So funktioniert's</a></li>
+      <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
+      <li><a href="kategorien.html">Beliebte Kategorien</a></li>
+      <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
+      <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
+    </ul>
   </footer>
 
 </body>
