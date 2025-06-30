@@ -284,7 +284,7 @@ locationInput.addEventListener('input', async () => {
     const results = await res.json();
 
     // Nur Orte (Stadt, Dorf etc.) erlauben
-    const allowedTypes = ['city', 'town', 'village', 'hamlet', 'municipality'];
+    const allowedTypes = ['city', 'town', 'village', 'hamlet', 'municipality', 'locality', 'suburb', 'neighbourhood'];
     const filtered = results.filter(r => allowedTypes.includes(r.type));
 
     suggestionBox.innerHTML = '';
