@@ -155,7 +155,7 @@
       <h2>Werde Vermieter:in auf Locorent</h2>
       <p>Verdiene Geld mit Dingen, die du nicht täglich brauchst – einfach, sicher und nachhaltig.</p>
       <div style="max-width: 100%; margin: 2rem auto;">
-        <img src="/mnt/data/A_promotional_webpage_screenshot_in_German_for_bec.png" 
+        <img src="https://i.imgur.com/fkOWgFy.png" 
              alt="Introbild Vermietung Locorent" 
              style="width: 100%; max-width: 600px; border-radius: 16px; box-shadow: 0 4px 16px rgba(0,0,0,0.1);" />
       </div>
@@ -246,21 +246,16 @@
     }
 
     async function loadPlatformStats() {
-      const mieterRes = await supabase
-        .from('users')
-        .select('id', { count: 'exact', head: true });
+      const { count: userCount } = await supabase
+        .from('profiles')
+        .select('*', { count: 'exact' });
 
-      const listingsRes = await supabase
+      const { count: listingCount } = await supabase
         .from('listings')
-        .select('id', { count: 'exact', head: true });
+        .select('*', { count: 'exact' });
 
-      if (mieterRes && typeof mieterRes.count === "number") {
-        document.querySelector("#stats-mieter h3").textContent = `${mieterRes.count}+`;
-      }
-
-      if (listingsRes && typeof listingsRes.count === "number") {
-        document.querySelector("#stats-inserate h3").textContent = `${listingsRes.count}+`;
-      }
+      document.querySelector("#stats-mieter h3").textContent = userCount ? `${userCount}+` : "0+";
+      document.querySelector("#stats-inserate h3").textContent = listingCount ? `${listingCount}+` : "0+";
     }
 
     loadCommunityListings();
