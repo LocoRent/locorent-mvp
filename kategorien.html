@@ -101,25 +101,33 @@
     text-align: center;
   }
 
-  main > h2 {
+  /* Neuer schöner Header-Bereich mit Hintergrundbild und Farbverlauf */
+  .hero-section {
+    position: relative;
+    background: linear-gradient(rgba(46, 125, 50, 0.65), rgba(46, 125, 50, 0.65)), 
+                url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1200&q=80') no-repeat center/cover;
+    border-radius: var(--radius);
+    padding: 3rem 2rem 4rem;
+    color: var(--white);
+    max-width: 900px;
+    margin: 0 auto 3rem;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.22);
+  }
+
+  .hero-section h2 {
     font-weight: 800;
     font-size: 2.8rem;
-    color: var(--primary-dark);
-    margin-bottom: 1rem;
-    letter-spacing: 0.08em;
+    margin-bottom: 1.2rem;
+    text-shadow: 0 3px 10px rgba(0,0,0,0.5);
   }
 
-  .intro {
-    max-width: 720px;
-    margin: 0 auto 3.5rem;
+  .hero-section p {
     font-weight: 400;
-    font-size: 1.12rem;
-    color: var(--text-muted);
-    line-height: 1.58;
-  }
-
-  .intro p + p {
-    margin-top: 1.2rem;
+    font-size: 1.15rem;
+    max-width: 650px;
+    margin: 0.9rem auto;
+    line-height: 1.55;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.3);
   }
 
   .category-grid {
@@ -270,7 +278,7 @@
     list-style: none;
     padding: 0;
     margin: 0 auto;
-    max-width: 360px;
+    max-width: 320px;
     line-height: 1.8;
   }
 
@@ -326,9 +334,8 @@
     main > h2 {
       font-size: 2rem;
     }
-    .intro {
+    .hero-section p {
       font-size: 1rem;
-      margin-bottom: 2.5rem;
     }
     .category-grid {
       grid-template-columns: 1fr;
@@ -355,9 +362,9 @@
 </header>
 
 <main>
-  <h2>Unsere beliebtesten Mietartikel und alles, was du darüber wissen musst</h2>
 
-  <section class="intro" aria-label="Einleitung zu beliebten Kategorien">
+  <section class="hero-section" aria-label="Introtext zu beliebten Kategorien">
+    <h2>Unsere beliebtesten Mietartikel und alles, was du darüber wissen musst</h2>
     <p>Locorent ist die nachhaltige Mietplattform für Alltagsgegenstände und besondere Artikel aus deiner Region. Unsere Mission: Weniger besitzen, mehr erleben. Du musst Dinge nicht besitzen, um sie zu nutzen und Neues zu entdecken.</p>
     <p>Mit Locorent kannst du einfach und schnell Mieter:in oder Vermieter:in werden und dir unzählige spannende Aktivitäten ermöglichen. So handelst du nachhaltig, senkst deinen Konsum und CO₂-Verbrauch und sparst Geld – oder verdienst sogar welches.</p>
     <p>Damit du ganz leicht einsteigen kannst, findest du hier eine Auswahl der beliebtesten Produktkategorien auf Locorent – sowie die häufigsten Fragen rund ums Mieten.</p>
@@ -381,7 +388,7 @@
 
     <a href="search_results.html?category=transporter" class="category-card" tabindex="0" aria-label="Transporter mieten">
       <div class="category-image-wrapper">
-        <img src="https://images.unsplash.com/photo-1561149738-923dd08a9b3a?auto=format&fit=crop&w=600&q=80" alt="" class="category-image" loading="lazy" />
+        <img src="https://images.unsplash.com/photo-1549924231-f129b911e442?auto=format&fit=crop&w=600&q=80" alt="" class="category-image" loading="lazy" />
         <div class="image-overlay"></div>
       </div>
       <h3>Transporter</h3>
@@ -395,7 +402,7 @@
 
     <a href="search_results.html?category=boote" class="category-card" tabindex="0" aria-label="Boote mieten">
       <div class="category-image-wrapper">
-        <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80" alt="" class="category-image" loading="lazy" />
+        <img src="https://images.unsplash.com/photo-1465146344425-f00d5f5c8f1a?auto=format&fit=crop&w=600&q=80" alt="" class="category-image" loading="lazy" />
         <div class="image-overlay"></div>
       </div>
       <h3>Boote</h3>
@@ -409,7 +416,7 @@
 
     <a href="search_results.html?category=fahrrad" class="category-card" tabindex="0" aria-label="Fahrräder & E-Bikes mieten">
       <div class="category-image-wrapper">
-        <img src="https://images.unsplash.com/photo-1474631245212-32dc3c8310c6?auto=format&fit=crop&w=600&q=80" alt="" class="category-image" loading="lazy" />
+        <img src="https://images.unsplash.com/photo-1463107971871-fbac9ddb920f?auto=format&fit=crop&w=600&q=80" alt="" class="category-image" loading="lazy" />
         <div class="image-overlay"></div>
       </div>
       <h3>Fahrräder & E-Bikes</h3>
@@ -423,7 +430,7 @@
 
     <a href="search_results.html?category=werkzeuge" class="category-card" tabindex="0" aria-label="Werkzeuge mieten">
       <div class="category-image-wrapper">
-        <img src="https://images.unsplash.com/photo-1581092334336-151a9d97aeb1?auto=format&fit=crop&w=600&q=80" alt="" class="category-image" loading="lazy" />
+        <img src="https://images.unsplash.com/photo-1581093588401-78d2a439d04e?auto=format&fit=crop&w=600&q=80" alt="" class="category-image" loading="lazy" />
         <div class="image-overlay"></div>
       </div>
       <h3>Werkzeuge</h3>
@@ -534,6 +541,7 @@
     </a>
 
   </nav>
+
 </main>
 
 <footer>
