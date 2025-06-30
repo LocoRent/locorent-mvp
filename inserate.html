@@ -272,30 +272,35 @@ function capitalize(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-locationInput.addEventListener('input', async () => {
-  const value = locationInput.value.trim();
+locationInput.addEventListener('input', async (e) => {
+  const value = e.target.value.trim();
+  const suggestionsBox = document.getElementById('suggestions');
   if (value.length < 2) {
-    suggestionBox.innerHTML = '';
+    suggestionsBox.innerHTML = '';
     return;
   }
 
   try {
-    const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=10&countrycodes=de&accept-language=de&q=${encodeURIComponent(value)}`);
+    const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=10&accept-language=de&countrycodes=de&q=${encodeURIComponent(value)}`);
     const results = await res.json();
 
-    // Nur Orte (Stadt, Dorf etc.) erlauben
-    const allowedTypes = ['city', 'town', 'village', 'hamlet', 'municipality', 'locality', 'suburb', 'neighbourhood'];
-    const filtered = results.filter(r => allowedTypes.includes(r.type));
+    // Nur Städte, Dörfer etc. – keine Straßen, Gebäude usw.
+    const allowedClasses = ['place'];
+    const allowedTypes = ['city', 'town', 'village', 'hamlet', 'municipality'];
 
-    suggestionBox.innerHTML = '';
+    const filtered = results.filter(r =>
+      allowedClasses.includes(r.class) && allowedTypes.includes(r.type)
+    );
+
+    suggestionsBox.innerHTML = '';
     filtered.forEach(r => {
       const div = document.createElement('div');
       div.textContent = r.display_name;
       div.onclick = () => {
         locationInput.value = r.display_name;
-        suggestionBox.innerHTML = '';
+        suggestionsBox.innerHTML = '';
       };
-      suggestionBox.appendChild(div);
+      suggestionsBox.appendChild(div);
     });
   } catch (err) {
     console.error("Fehler bei der Ortssuche:", err);
