@@ -139,140 +139,225 @@
       color: white;
       text-decoration: underline;
     }
+
+    .faq {
+      max-width: 800px;
+      margin: 2rem auto;
+    }
+    .faq-item {
+      border-bottom: 1px solid #ddd;
+    }
+    .faq-question {
+      width: 100%;
+      padding: 1rem;
+      font-size: 1rem;
+      font-weight: 600;
+      text-align: left;
+      background: none;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      color: var(--gray);
+      position: relative;
+    }
+    .faq-question::after {
+      content: "›";
+      position: absolute;
+      right: 1rem;
+      transform: rotate(0deg);
+      transition: transform 0.3s;
+    }
+    .faq-item.open .faq-question::after {
+      transform: rotate(90deg);
+    }
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease;
+      background-color: #f9f9f9;
+      padding: 0 1rem;
+    }
+    .faq-item.open .faq-answer {
+      max-height: 400px;
+      padding: 1rem;
+    }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>Locorent</h1>
-    <nav>
-      <a href="index.html">Start</a>
-      <a href="login.html">Einloggen</a>
-    </nav>
-  </header>
+<header>
+  <h1>Locorent</h1>
+  <nav>
+    <a href="index.html">Start</a>
+    <a href="login.html">Einloggen</a>
+  </nav>
+</header>
 
-  <main>
-    <section class="section" style="text-align:center;">
-      <h2>Werde Vermieter:in auf Locorent</h2>
-      <p>Verdiene Geld mit Dingen, die du nicht täglich brauchst – einfach, sicher und nachhaltig.</p>
-      <div style="max-width: 400px; margin: 2rem auto;">
-       <div style="max-width: 400px; margin: 2rem auto;">
-  <lottie-player
-    src="https://assets10.lottiefiles.com/packages/lf20_jcikwtux.json"
-    background="transparent"
-    speed="1"
-    style="width: 100%; height: 250px;"
-    loop
-    autoplay>
-  </lottie-player>
-</div>
-      <a href="register.html" class="cta-btn">Jetzt kostenlos starten</a>
-    </section>
+<main>
+  <section class="section" style="text-align:center;">
+    <h2>Werde Vermieter:in auf Locorent</h2>
+    <p>Verdiene Geld mit Dingen, die du nicht täglich brauchst – einfach, sicher und nachhaltig.</p>
+    <div style="max-width: 400px; margin: 2rem auto;">
+      <lottie-player
+        src="https://assets10.lottiefiles.com/packages/lf20_jcikwtux.json"
+        background="transparent"
+        speed="1"
+        style="width: 100%; height: 250px;"
+        loop
+        autoplay>
+      </lottie-player>
+    </div>
+    <a href="register.html" class="cta-btn">Jetzt kostenlos starten</a>
+  </section>
 
-    <section class="section">
-      <h2>So wirst du Vermieter:in – in 3 Schritten</h2>
-      <div class="features">
-        <div class="feature">
-          <img src="https://cdn-icons-png.flaticon.com/512/706/706797.png" alt="Konto erstellen" />
-          <h3>Konto erstellen</h3>
-          <p>Registriere dich kostenlos in unter 2 Minuten.</p>
-        </div>
-        <div class="feature">
-          <img src="https://cdn-icons-png.flaticon.com/512/753/753318.png" alt="Artikel hinzufügen" />
-          <h3>Artikel hochladen</h3>
-          <p>Fotos, Beschreibung, Preis – alles ganz einfach.</p>
-        </div>
-        <div class="feature">
-          <img src="https://cdn-icons-png.flaticon.com/512/1256/1256650.png" alt="Vermieten" />
-          <h3>Vermieten & verdienen</h3>
-          <p>Erhalte Anfragen und teile, was du besitzt.</p>
+  <section class="section">
+    <h2>So wirst du Vermieter:in – in 3 Schritten</h2>
+    <div class="features">
+      <div class="feature">
+        <img src="https://cdn-icons-png.flaticon.com/512/706/706797.png" alt="Konto erstellen" />
+        <h3>Konto erstellen</h3>
+        <p>Registriere dich kostenlos in unter 2 Minuten.</p>
+      </div>
+      <div class="feature">
+        <img src="https://cdn-icons-png.flaticon.com/512/753/753318.png" alt="Artikel hinzufügen" />
+        <h3>Artikel hochladen</h3>
+        <p>Fotos, Beschreibung, Preis – alles ganz einfach.</p>
+      </div>
+      <div class="feature">
+        <img src="https://cdn-icons-png.flaticon.com/512/1256/1256650.png" alt="Vermieten" />
+        <h3>Vermieten & verdienen</h3>
+        <p>Erhalte Anfragen und teile, was du besitzt.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Beispiele aus der Community</h2>
+    <div id="community-gallery" class="gallery">
+      <p>⏳ Lade Inserate…</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Locorent in Zahlen</h2>
+    <div class="stats">
+      <div id="stats-mieter" class="stat"><h3>–</h3><p>aktive Mieter:innen</p></div>
+      <div id="stats-inserate" class="stat"><h3>–</h3><p>verfügbare Artikel</p></div>
+      <div class="stat"><h3>0 €</h3><p>Fixkosten für Vermieter:innen</p></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 style="text-align:center;">Das Wichtigste auf einen Blick</h2>
+    <div class="faq">
+      <div class="faq-item">
+        <button class="faq-question">Welche Kosten entstehen für mich?</button>
+        <div class="faq-answer">
+          <p>Locorent ist für Vermieter:innen komplett kostenlos. Es gibt keine Anmeldegebühr, keine Fixkosten – du zahlst nur, wenn du etwas vermietest.</p>
         </div>
       </div>
-    </section>
-
-    <section class="section">
-      <h2>Beispiele aus der Community</h2>
-      <div id="community-gallery" class="gallery">
-        <p>⏳ Lade Inserate…</p>
+      <div class="faq-item">
+        <button class="faq-question">Wie funktioniert die Absprache zur Übergabe?</button>
+        <div class="faq-answer">
+          <p>Du kannst über den integrierten Locorent-Chat direkt mit Mieter:innen kommunizieren und individuell einen Abholzeitpunkt sowie -ort vereinbaren.</p>
+        </div>
       </div>
-    </section>
-
-    <section class="section">
-      <h2>Locorent in Zahlen</h2>
-      <div class="stats">
-        <div id="stats-mieter" class="stat"><h3>–</h3><p>aktive Mieter:innen</p></div>
-        <div id="stats-inserate" class="stat"><h3>–</h3><p>verfügbare Artikel</p></div>
-        <div class="stat"><h3>0 €</h3><p>Fixkosten für Vermieter:innen</p></div>
+      <div class="faq-item">
+        <button class="faq-question">Wie sind meine Artikel geschützt?</button>
+        <div class="faq-answer">
+          <p>Aktuell liegt die Verantwortung für Kaution oder Absicherung bei den Nutzenden. Eine integrierte Versicherungslösung ist bereits in Planung.</p>
+        </div>
       </div>
-    </section>
-  </main>
+      <div class="faq-item">
+        <button class="faq-question">Was kann ich für die Vermietung verlangen?</button>
+        <div class="faq-answer">
+          <p>Den Mietpreis bestimmst du selbst. Orientiere dich gern an ähnlichen Inseraten in deiner Umgebung – du kannst Preise jederzeit anpassen.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">Welche Vorteile habe ich als Anbieter?</button>
+        <div class="faq-answer">
+          <p>Du profitierst von nachhaltigem Einkommen, erreichst neue Kund:innen aus deiner Region und nutzt ein wachsendes Netzwerk mit fairen Bedingungen.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  <footer>
-    © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
-    <h4 style="margin-top: 1.5rem;">Mieten & Vermieten</h4>
-    <ul>
-      <li><a href="so-funktionierts.html">So funktioniert's</a></li>
-      <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
-      <li><a href="kategorien.html">Beliebte Kategorien</a></li>
-      <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
-      <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
-    </ul>
-  </footer>
+</main>
 
-  <script>
-    const supabase = window.supabase.createClient(
-      'https://flnjalgqtkqycsaymmbd.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-    );
+<footer>
+  © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
+  <h4 style="margin-top: 1.5rem;">Mieten & Vermieten</h4>
+  <ul>
+    <li><a href="so-funktionierts.html">So funktioniert's</a></li>
+    <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
+    <li><a href="kategorien.html">Beliebte Kategorien</a></li>
+    <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
+    <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
+  </ul>
+</footer>
 
-    async function loadCommunityListings() {
-      const container = document.getElementById("community-gallery");
-      container.innerHTML = "";
+<script>
+  const supabase = window.supabase.createClient(
+    'https://flnjalgqtkqycsaymmbd.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+  );
 
-      const { data, error } = await supabase
-        .from('listings')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(4);
+  async function loadCommunityListings() {
+    const container = document.getElementById("community-gallery");
+    container.innerHTML = "";
 
-      if (error || !data.length) {
-        container.innerHTML = "<p>Keine Inserate verfügbar.</p>";
-        return;
-      }
+    const { data, error } = await supabase
+      .from('listings')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(4);
 
-      for (const item of data) {
-        const img = item.image_urls?.[0] || "https://via.placeholder.com/300x150?text=Kein+Bild";
-        const card = document.createElement("div");
-        card.className = "gallery-item";
-        card.innerHTML = `
-          <img src="${img}" alt="${item.title}" />
-          <p><strong>${item.title}</strong><br>${item.price_per_day || "k. A."} €/Tag</p>
-        `;
-        container.appendChild(card);
-      }
+    if (error || !data.length) {
+      container.innerHTML = "<p>Keine Inserate verfügbar.</p>";
+      return;
     }
 
-    async function loadPlatformStats() {
-      const mieterRes = await supabase
-        .from('profiles')
-        .select('id', { count: 'exact', head: true });
+    for (const item of data) {
+      const img = item.image_urls?.[0] || "https://via.placeholder.com/300x150?text=Kein+Bild";
+      const card = document.createElement("div");
+      card.className = "gallery-item";
+      card.innerHTML = `
+        <img src="${img}" alt="${item.title}" />
+        <p><strong>${item.title}</strong><br>${item.price_per_day || "k. A."} €/Tag</p>
+      `;
+      container.appendChild(card);
+    }
+  }
 
-      const listingsRes = await supabase
-        .from('listings')
-        .select('id', { count: 'exact', head: true });
+  async function loadPlatformStats() {
+    const mieterRes = await supabase
+      .from('profiles')
+      .select('id', { count: 'exact', head: true });
 
-      if (mieterRes?.count >= 0) {
-        document.querySelector("#stats-mieter h3").textContent = `${mieterRes.count}+`;
-      }
+    const listingsRes = await supabase
+      .from('listings')
+      .select('id', { count: 'exact', head: true });
 
-      if (listingsRes?.count >= 0) {
-        document.querySelector("#stats-inserate h3").textContent = `${listingsRes.count}+`;
-      }
+    if (mieterRes?.count >= 0) {
+      document.querySelector("#stats-mieter h3").textContent = `${mieterRes.count}+`;
     }
 
-    loadCommunityListings();
-    loadPlatformStats();
-  </script>
+    if (listingsRes?.count >= 0) {
+      document.querySelector("#stats-inserate h3").textContent = `${listingsRes.count}+`;
+    }
+  }
+
+  loadCommunityListings();
+  loadPlatformStats();
+
+  document.querySelectorAll('.faq-question').forEach(button => {
+    button.addEventListener('click', () => {
+      const item = button.parentElement;
+      item.classList.toggle('open');
+    });
+  });
+</script>
 
 </body>
 </html>
