@@ -7,213 +7,52 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: #f1f8e9;
-      margin: 0;
-      padding: 0;
-      color: #1b5e20;
-    }
-    header {
-      background-color: #2e7d32;
-      color: white;
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    nav a {
-      color: white;
-      margin-left: 1rem;
-      text-decoration: none;
-      font-weight: 600;
-    }
-    main {
-      max-width: 900px;
-      margin: 2rem auto;
-      padding: 1rem;
-    }
-    .form-container {
-      background: white;
-      padding: 1.5rem;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      margin-bottom: 2rem;
-    }
-    .form-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-    .field {
-      flex: 1 1 200px;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-    }
-    label {
-      font-weight: 600;
-      margin-bottom: 0.4rem;
-    }
-    input, textarea, select {
-      padding: 0.6rem;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-    }
-    #suggestions {
-      border: 1px solid #ccc;
-      border-top: none;
-      max-height: 150px;
-      overflow-y: auto;
-      background: white;
-      position: absolute;
-      z-index: 10;
-      top: 100%;
-      left: 0;
-      right: 0;
-    }
-    #suggestions div {
-      padding: 0.5rem;
-      cursor: pointer;
-    }
-    #suggestions div:hover {
-      background: #e0f2f1;
-    }
-    .dropzone {
-      margin-top: 1rem;
-      padding: 1rem;
-      border: 2px dashed #2e7d32;
-      text-align: center;
-      border-radius: 10px;
-      background: #fafafa;
-      cursor: pointer;
-    }
-    .preview-gallery {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      margin-top: 1rem;
-    }
-    .preview-box {
-      position: relative;
-    }
-    .img-wrapper {
-      width: 120px;
-      height: 100px;
-      background: #e8f5e9;
-      border-radius: 6px;
-      overflow: hidden;
-    }
-    .preview-box img {
-      width: 120px;
-      height: 100px;
-      object-fit: cover;
-    }
-    .remove-btn {
-      position: absolute;
-      top: 4px;
-      right: 4px;
-      background: #c62828;
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 22px;
-      height: 22px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    .form-actions {
-      text-align: right;
-      margin-top: 1rem;
-    }
-    .form-actions button {
-      background: #2e7d32;
-      color: white;
-      padding: 0.7rem 1.5rem;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-    }
-    .gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 1rem;
-      margin-top: 2rem;
-    }
-    .card {
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      overflow: hidden;
-    }
-    .card img {
-      width: 100%;
-      height: 150px;
-      object-fit: cover;
-    }
-    .card-content {
-      padding: 0.8rem;
-    }
-    .card-content h3 {
-      margin: 0.2rem 0;
-      font-size: 1.1rem;
-    }
-    .card-content .price {
-      font-weight: 600;
-      color: #2e7d32;
-    }
-    .card-content .category {
-      font-size: 0.9rem;
-      margin-bottom: 0.5rem;
-    }
-    .card .actions {
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-      padding: 0.8rem;
-    }
-    .card .actions button {
-      background: #2e7d32;
-      color: white;
-      padding: 0.4rem 0.8rem;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    .card .actions button.delete {
-      background: #c62828;
-    }
-    .loader {
-      width: 24px;
-      height: 24px;
-      border: 3px solid #c8e6c9;
-      border-top-color: #2e7d32;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
+    body { font-family: 'Poppins', sans-serif; background: #f1f8e9; margin: 0; padding: 0; color: #1b5e20; }
+    header { background-color: #2e7d32; color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+    nav a { color: white; margin-left: 1rem; text-decoration: none; font-weight: 600; }
+    main { max-width: 900px; margin: 2rem auto; padding: 1rem; }
+    .form-container { background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+    .form-group { display: flex; flex-wrap: wrap; gap: 1rem; }
+    .field { flex: 1 1 200px; display: flex; flex-direction: column; position: relative; }
+    label { font-weight: 600; margin-bottom: 0.4rem; }
+    input, textarea, select { padding: 0.6rem; border: 1px solid #ccc; border-radius: 6px; }
+    #suggestions { border: 1px solid #ccc; border-top: none; max-height: 150px; overflow-y: auto; background: white; position: absolute; z-index: 10; top: 100%; left: 0; right: 0; }
+    #suggestions div { padding: 0.5rem; cursor: pointer; }
+    #suggestions div:hover { background: #e0f2f1; }
+    .dropzone { margin-top: 1rem; padding: 1rem; border: 2px dashed #2e7d32; text-align: center; border-radius: 10px; background: #fafafa; cursor: pointer; }
+    .preview-gallery { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem; }
+    .preview-box { position: relative; }
+    .img-wrapper { width: 120px; height: 100px; background: #e8f5e9; border-radius: 6px; overflow: hidden; }
+    .preview-box img { width: 120px; height: 100px; object-fit: cover; }
+    .remove-btn { position: absolute; top: 4px; right: 4px; background: #c62828; color: white; border: none; border-radius: 50%; width: 22px; height: 22px; font-weight: bold; cursor: pointer; }
+    .form-actions { text-align: right; margin-top: 1rem; }
+    .form-actions button { background: #2e7d32; color: white; padding: 0.7rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; }
+    .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; margin-top: 2rem; }
+    .card { background: white; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); overflow: hidden; }
+    .card img { width: 100%; height: 150px; object-fit: cover; }
+    .card-content { padding: 0.8rem; }
+    .card-content h3 { margin: 0.2rem 0; font-size: 1.1rem; }
+    .card-content .price { font-weight: 600; color: #2e7d32; }
+    .card-content .category { font-size: 0.9rem; margin-bottom: 0.5rem; }
+    .card .actions { display: flex; flex-direction: column; gap: 0.4rem; padding: 0.8rem; }
+    .card .actions button { background: #2e7d32; color: white; padding: 0.4rem 0.8rem; border: none; border-radius: 6px; cursor: pointer; }
+    .card .actions button.delete { background: #c62828; }
+    .loader { width: 24px; height: 24px; border: 3px solid #c8e6c9; border-top-color: #2e7d32; border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
 
 <header>
   <h1>Locorent – Meine Inserate</h1>
-  <nav>
-    <a href="index.html">Zurück zur Übersicht</a>
-  </nav>
+  <nav><a href="index.html">Zurück zur Übersicht</a></nav>
 </header>
 
 <main>
   <section class="form-container">
     <h2>Neues Inserat erstellen</h2>
     <div class="form-group">
-      <div class="field">
-        <label>Titel</label>
-        <input type="text" id="title-input" />
-      </div>
+      <div class="field"><label>Titel</label><input type="text" id="title-input" /></div>
       <div class="field">
         <label>Kategorie</label>
         <select id="category-input">
@@ -232,41 +71,32 @@
           <option value="Baby">Baby & Kind</option>
         </select>
       </div>
-      <div class="field">
-        <label>Preis €/Tag</label>
-        <input type="number" id="price-input" />
-      </div>
+      <div class="field"><label>Preis €/Tag</label><input type="number" id="price-input" /></div>
       <div class="field">
         <label>Ort</label>
         <input type="text" id="location-input" placeholder="Nur Städte in Deutschland" autocomplete="off" />
         <div id="suggestions"></div>
       </div>
-      <div class="field" style="flex: 1 1 100%;">
-        <label>Beschreibung</label>
-        <textarea id="desc-input" rows="3"></textarea>
-      </div>
+      <div class="field" style="flex: 1 1 100%;"><label>Beschreibung</label><textarea id="desc-input" rows="3"></textarea></div>
     </div>
 
     <div class="dropzone" id="dropzone">Bilder hier ablegen oder klicken (max. 2)</div>
     <div class="preview-gallery" id="preview-gallery"></div>
 
-    <div class="form-actions">
-      <button id="save-btn">Inserat speichern</button>
-    </div>
+    <div class="form-actions"><button id="save-btn">Inserat speichern</button></div>
   </section>
 
   <section class="gallery" id="gallery">Galerie lädt…</section>
 </main>
 
 <script>
-// Supabase-Setup bleibt wie gehabt
 const supabase = window.supabase.createClient(
   'https://flnjalgqtkqycsaymmbd.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
 );
 
 let uploadedImageUrls = [];
-let lastSelectedCoordinates = null; // Für späteres Caching
+let lastSelectedCoordinates = null;
 const locationInput = document.getElementById('location-input');
 const suggestionBox = document.getElementById('suggestions');
 
@@ -274,12 +104,11 @@ function capitalize(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-// 📦 Bild verkleinern & komprimieren
 function resizeImage(file, maxSize = 1024, quality = 0.8) {
   return new Promise((resolve, reject) => {
     const img = new Image();
     const reader = new FileReader();
-    reader.onload = e => { img.src = e.target.result; };
+    reader.onload = e => img.src = e.target.result;
     reader.onerror = reject;
     img.onload = () => {
       let { width, height } = img;
@@ -295,36 +124,20 @@ function resizeImage(file, maxSize = 1024, quality = 0.8) {
       canvas.height = height;
       const ctx = canvas.getContext('2d');
       ctx.drawImage(img, 0, 0, width, height);
-      canvas.toBlob(blob => {
-        if (blob) resolve(blob);
-        else reject(new Error("Bild konnte nicht konvertiert werden."));
-      }, 'image/jpeg', quality);
+      canvas.toBlob(blob => blob ? resolve(blob) : reject("Fehler beim Konvertieren"), 'image/jpeg', quality);
     };
   });
 }
 
-// 🏙️ Ortssuche mit Vorschlag & Koordinaten speichern
 locationInput.addEventListener('input', async (e) => {
   const value = e.target.value.trim();
-  if (value.length < 2) {
-    suggestionBox.innerHTML = '';
-    return;
-  }
+  if (value.length < 2) return suggestionBox.innerHTML = '';
 
   try {
-const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&accept-language=de&addressdetails=1&countrycodes=de&limit=8&q=${encodeURIComponent(value)}`, {
-  headers: {
-    'User-Agent': 'locorent.de (kontakt@locorent.de)',
-    'Referer': window.location.origin
-  }
-});
+    const res = await fetch(`https://corsproxy.io/?https://nominatim.openstreetmap.org/search?format=json&accept-language=de&addressdetails=1&countrycodes=de&limit=8&q=${encodeURIComponent(value)}`);
     const results = await res.json();
 
-    const filtered = results.filter(r => {
-      const hasCityInfo = r.address.city || r.address.town || r.address.village || r.address.hamlet;
-      return r.class === 'place' && hasCityInfo;
-    });
-
+    const filtered = results.filter(r => r.class === 'place' && (r.address.city || r.address.town || r.address.village || r.address.hamlet));
     suggestionBox.innerHTML = '';
 
     filtered.forEach(r => {
@@ -337,10 +150,7 @@ const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&
       div.textContent = display;
       div.onclick = () => {
         locationInput.value = display;
-        lastSelectedCoordinates = {
-          lat: parseFloat(r.lat),
-          lon: parseFloat(r.lon)
-        };
+        lastSelectedCoordinates = { lat: parseFloat(r.lat), lon: parseFloat(r.lon) };
         suggestionBox.innerHTML = '';
       };
       suggestionBox.appendChild(div);
@@ -350,20 +160,14 @@ const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&
       suggestionBox.innerHTML = '<div style="padding:0.5rem;">Kein Ort gefunden</div>';
     }
   } catch (err) {
-    console.error("Fehler bei der Ortssuche:", err);
+    console.error("Fehler bei Ortssuche:", err);
   }
 });
 
-// 📤 Datei-Upload + Resize
 document.getElementById("dropzone").addEventListener("click", () => {
-  if (uploadedImageUrls.length >= 2) {
-    alert("Maximal 2 Bilder erlaubt.");
-    return;
-  }
+  if (uploadedImageUrls.length >= 2) return alert("Maximal 2 Bilder erlaubt.");
   const input = document.createElement("input");
-  input.type = "file";
-  input.accept = "image/*";
-  input.multiple = true;
+  input.type = "file"; input.accept = "image/*"; input.multiple = true;
   input.onchange = () => handleFiles(input.files);
   input.click();
 });
@@ -380,20 +184,17 @@ async function handleFiles(files) {
     container.appendChild(tempBox);
 
     try {
-      const compressedBlob = await resizeImage(file, 1024, 0.8);
+      const compressedBlob = await resizeImage(file);
       const path = `listing-images/${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
-      const { error } = await supabase.storage.from('listing-images').upload(path, compressedBlob, {
-        contentType: 'image/jpeg'
-      });
-
+      const { error } = await supabase.storage.from('listing-images').upload(path, compressedBlob, { contentType: 'image/jpeg' });
       if (!error) {
         const { data } = supabase.storage.from('listing-images').getPublicUrl(path);
         uploadedImageUrls.push(data.publicUrl);
       } else {
-        alert("Fehler beim Upload: " + error.message);
+        alert("Upload-Fehler: " + error.message);
       }
     } catch (err) {
-      alert("Fehler beim Verarbeiten des Bildes: " + err.message);
+      alert("Bildverarbeitung fehlgeschlagen: " + err.message);
     }
   }
   renderPreviews();
@@ -410,19 +211,17 @@ function renderPreviews() {
   });
 }
 
-function removeImage(idx) {
-  uploadedImageUrls.splice(idx, 1);
+function removeImage(i) {
+  uploadedImageUrls.splice(i, 1);
   renderPreviews();
 }
 
-// 💾 Inserat speichern
 document.getElementById("save-btn").addEventListener("click", async () => {
   const { data: sd } = await supabase.auth.getSession();
   const user = sd?.session?.user;
   if (!user) return alert("Nicht eingeloggt!");
-
   const { data: existing } = await supabase.from('listings').select('id').eq('user_id', user.id);
-  if (existing.length >= 15) return alert("Du kannst maximal 15 Inserate erstellen.");
+  if (existing.length >= 15) return alert("Max. 15 Inserate erlaubt.");
 
   const title = document.getElementById('title-input').value.trim();
   const category = document.getElementById('category-input').value;
@@ -430,47 +229,20 @@ document.getElementById("save-btn").addEventListener("click", async () => {
   const description = document.getElementById('desc-input').value.trim();
   const location = locationInput.value.trim();
 
-  if (!title || !price || !category || !location) {
-    alert("Titel, Kategorie, Preis und Ort sind Pflichtfelder.");
-    return;
-  }
+  if (!title || !price || !category || !location) return alert("Pflichtfelder fehlen!");
 
-  let latitude = null;
-  let longitude = null;
-
+  let latitude = null, longitude = null;
   if (lastSelectedCoordinates) {
     latitude = lastSelectedCoordinates.lat;
     longitude = lastSelectedCoordinates.lon;
-  } else {
-    try {
-      const r = await fetch(`https://nominatim.openstreetmap.org/search?format=json&countrycodes=de&q=${encodeURIComponent(location)}&limit=1`);
-      const arr = await r.json();
-      if (arr.length > 0) {
-        latitude = parseFloat(arr[0].lat);
-        longitude = parseFloat(arr[0].lon);
-      } else {
-        alert("Ort nicht gefunden.");
-        return;
-      }
-    } catch (err) {
-      alert("Geocoding fehlgeschlagen.");
-      return;
-    }
   }
 
   const { error: ie } = await supabase.from('listings').insert({
-    title,
-    category,
-    price_per_day: price,
-    description,
-    user_id: user.id,
-    image_urls: uploadedImageUrls,
-    latitude,
-    longitude,
-    location
+    title, category, price_per_day: price, description, user_id: user.id,
+    image_urls: uploadedImageUrls, latitude, longitude, location
   });
 
-  if (ie) return alert("Fehler beim Speichern: " + ie.message);
+  if (ie) return alert("Speicherfehler: " + ie.message);
 
   alert("Inserat gespeichert!");
   document.querySelectorAll('input, textarea, select').forEach(el => el.value = '');
@@ -480,7 +252,6 @@ document.getElementById("save-btn").addEventListener("click", async () => {
   loadGallery();
 });
 
-// Galerie laden
 async function loadGallery() {
   const { data: sd } = await supabase.auth.getSession();
   const user = sd?.session?.user;
@@ -508,8 +279,7 @@ async function loadGallery() {
       <div class="actions">
         <button onclick="window.location.href='bearbeiten.html?id=${i.id}'">Bearbeiten</button>
         <button class="delete" onclick="deleteListing('${i.id}')">Löschen</button>
-      </div>
-    `;
+      </div>`;
     gallery.appendChild(div);
   });
 }
@@ -518,7 +288,7 @@ async function deleteListing(id) {
   if (!confirm("Wirklich löschen?")) return;
   const { error } = await supabase.from('listings').delete().eq('id', id);
   if (!error) loadGallery();
-  else alert("Löschen fehlgeschlagen.");
+  else alert("Fehler beim Löschen.");
 }
 
 loadGallery();
