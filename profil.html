@@ -1,325 +1,547 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Mein Profil – Locorent</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <style>
-    :root {
-      --primary-color: #2e7d32;
-      --primary-dark: #1b5e20;
-      --background-color: #f1f8e9;
-      --white: #fff;
-      --light-gray: #f5f5f5;
-      --border-radius: 12px;
-      --shadow-color: rgba(0, 0, 0, 0.1);
-      --max-width: 600px;
-    }
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      font-family: 'Poppins', sans-serif;
-      background-color: var(--background-color);
-      color: #333;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mein Profil – Locorent</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --primary: #2e7d32;
+    --primary-dark: #1b5e20;
+    --light-bg: #f1f8e9;
+    --white: #fff;
+    --border-radius: 12px;
+    --shadow: rgba(0, 0, 0, 0.15);
+    --max-width: 650px;
+    --transition-speed: 0.3s;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--light-bg);
+    color: #333;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  header {
+    position: sticky;
+    top: 0;
+    background: var(--primary);
+    color: var(--white);
+    width: 100%;
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 3px 10px var(--shadow);
+    z-index: 9999;
+  }
+
+  header h1 {
+    margin: 0;
+    font-weight: 700;
+    font-size: 1.9rem;
+    cursor: pointer;
+    user-select: none;
+    transition: transform var(--transition-speed);
+  }
+  header h1:focus,
+  header h1:hover {
+    outline: none;
+    transform: scale(1.05);
+  }
+
+  nav#nav-links a {
+    color: var(--white);
+    margin-left: 1.7rem;
+    font-weight: 600;
+    text-decoration: none;
+    position: relative;
+    padding-bottom: 4px;
+    transition: color var(--transition-speed);
+  }
+  nav#nav-links a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0%;
+    height: 3px;
+    background-color: var(--white);
+    transition: width var(--transition-speed);
+    border-radius: 2px;
+  }
+  nav#nav-links a:hover,
+  nav#nav-links a:focus-visible {
+    color: #a5d6a7;
+    outline: none;
+  }
+  nav#nav-links a:hover::after,
+  nav#nav-links a:focus-visible::after {
+    width: 100%;
+  }
+
+  main.container {
+    max-width: var(--max-width);
+    width: 100%;
+    margin: 4rem 1rem 3rem;
+    background: var(--white);
+    padding: 2.5rem 3rem;
+    border-radius: var(--border-radius);
+    box-shadow: 0 10px 20px var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    user-select: none;
+  }
+
+  h2 {
+    color: var(--primary);
+    font-weight: 800;
+    font-size: 2.3rem;
+    margin-bottom: 1.2rem;
+    user-select: none;
+  }
+
+  label {
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    display: block;
+  }
+
+  input, textarea {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    padding: 0.75rem 1rem;
+    border: 2px solid #ddd;
+    border-radius: var(--border-radius);
+    width: 100%;
+    transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
+  }
+  input:focus, textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 8px var(--primary);
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+
+  .input-group {
+    margin-bottom: 1rem;
+  }
+
+  .btn {
+    background-color: var(--primary);
+    color: var(--white);
+    border: none;
+    border-radius: var(--border-radius);
+    padding: 1rem 1.8rem;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color var(--transition-speed), box-shadow var(--transition-speed);
+    user-select: none;
+    align-self: flex-start;
+  }
+  .btn:hover,
+  .btn:focus-visible {
+    background-color: var(--primary-dark);
+    box-shadow: 0 0 15px var(--primary-dark);
+    outline: none;
+  }
+
+  .btn.delete {
+    background-color: #d32f2f;
+    margin-top: 2rem;
+  }
+  .btn.delete:hover,
+  .btn.delete:focus-visible {
+    background-color: #a52727;
+    box-shadow: 0 0 15px #a52727;
+  }
+
+  /* Password strength meter */
+  #pw-strength {
+    height: 8px;
+    border-radius: 6px;
+    background-color: #eee;
+    margin-top: 6px;
+    overflow: hidden;
+  }
+  #pw-strength > div {
+    height: 100%;
+    width: 0%;
+    transition: width 0.4s ease;
+  }
+  #pw-strength.weak > div {
+    background-color: #d32f2f;
+    width: 25%;
+  }
+  #pw-strength.fair > div {
+    background-color: #fbc02d;
+    width: 50%;
+  }
+  #pw-strength.good > div {
+    background-color: #388e3c;
+    width: 75%;
+  }
+  #pw-strength.strong > div {
+    background-color: #2e7d32;
+    width: 100%;
+  }
+
+  /* Modal for profile delete confirmation */
+  #modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+  }
+  #modal {
+    background: var(--white);
+    border-radius: var(--border-radius);
+    padding: 2rem 2.5rem;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 10px 20px var(--shadow);
+    text-align: center;
+  }
+  #modal h3 {
+    margin-bottom: 1.2rem;
+    font-weight: 700;
+    color: var(--primary);
+  }
+  #modal p {
+    margin-bottom: 2rem;
+    color: #555;
+    line-height: 1.4;
+  }
+  #modal button {
+    margin: 0 0.5rem;
+  }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    main.container {
+      padding: 2rem 1.5rem;
+      margin: 3rem 1rem 2rem;
     }
     header {
-      background-color: var(--primary-color);
-      color: var(--white);
-      width: 100%;
-      padding: 1.5rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      box-shadow: 0 2px 8px var(--shadow-color);
-      user-select: none;
-    }
-    header h1 {
-      font-weight: 600;
-      font-size: 1.8rem;
-      cursor: pointer;
+      flex-wrap: wrap;
+      gap: 0.5rem;
     }
     nav#nav-links a {
-      color: var(--white);
-      margin-left: 1.5rem;
-      text-decoration: none;
-      font-weight: 600;
-      transition: border-bottom 0.3s ease;
-    }
-    nav#nav-links a:hover,
-    nav#nav-links a:focus {
-      border-bottom: 2px solid var(--primary-dark);
-      outline: none;
-    }
-    main.container {
-      max-width: var(--max-width);
-      background: var(--white);
-      border-radius: var(--border-radius);
-      box-shadow: 0 6px 18px var(--shadow-color);
-      padding: 2rem 2.5rem;
-      margin: 3rem 1rem 4rem;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-    h2 {
-      color: var(--primary-color);
-      font-weight: 700;
-      margin-bottom: 1rem;
-      user-select: none;
-    }
-    label {
-      display: block;
-      margin-top: 1rem;
-      font-weight: 600;
-      user-select: none;
-    }
-    input, textarea {
-      width: 100%;
-      padding: 0.7rem;
-      margin-top: 0.3rem;
-      border: 1px solid #ccc;
-      border-radius: var(--border-radius);
-      font-size: 1rem;
-      font-family: 'Poppins', sans-serif;
-      transition: border-color 0.3s ease;
-    }
-    input:focus, textarea:focus {
-      outline: none;
-      border-color: var(--primary-color);
-      box-shadow: 0 0 5px var(--primary-color);
-    }
-    button {
-      margin-top: 1.5rem;
-      padding: 0.9rem 1.5rem;
-      background-color: var(--primary-color);
-      color: var(--white);
-      border: none;
-      border-radius: var(--border-radius);
-      font-weight: 700;
-      font-size: 1.1rem;
-      cursor: pointer;
-      user-select: none;
-      transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    }
-    button:hover, button:focus-visible {
-      background-color: var(--primary-dark);
-      box-shadow: 0 0 12px var(--primary-dark);
-      outline: none;
-    }
-    button.delete {
-      background-color: #b00020;
-      margin-top: 2rem;
-    }
-    button.delete:hover, button.delete:focus-visible {
-      background-color: #7a0013;
-      box-shadow: 0 0 12px #7a0013;
-    }
-    footer {
-      width: 100%;
-      background-color: var(--primary-color);
-      color: var(--white);
-      padding: 2rem 0;
-      box-shadow: 0 -2px 12px var(--shadow-color);
-      user-select: none;
-      text-align: center;
+      margin-left: 1rem;
       font-size: 0.9rem;
     }
-    @media (max-width: 600px) {
-      main.container {
-        padding: 1.5rem 1.5rem;
-        margin: 2rem 1rem 3rem;
-      }
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
-  <header>
-    <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
-    <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
-  </header>
+<header>
+  <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
+  <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
+</header>
 
-  <main class="container" role="main" aria-label="Mein Profil">
-    <h2>Mein Profil</h2>
+<main class="container" role="main" aria-label="Mein Profil">
+  <h2>Mein Profil</h2>
+
+  <div class="input-group">
     <label for="name">Name</label>
-    <input type="text" id="name" placeholder="Dein Name" autocomplete="name" />
-
-    <label for="email">E-Mail</label>
-    <input type="email" id="email" disabled autocomplete="email" />
-
+    <input id="name" type="text" autocomplete="name" placeholder="Dein Name" />
+  </div>
+  <div class="input-group">
+    <label for="email">E-Mail (nicht änderbar)</label>
+    <input id="email" type="email" disabled autocomplete="email" />
+  </div>
+  <div class="input-group">
     <label for="phone">Telefon</label>
-    <input type="text" id="phone" placeholder="Telefonnummer" autocomplete="tel" />
-
+    <input id="phone" type="tel" autocomplete="tel" placeholder="Telefonnummer" />
+  </div>
+  <div class="input-group">
     <label for="city">Wohnort</label>
-    <input type="text" id="city" placeholder="Wohnort" autocomplete="address-level2" />
-
+    <input id="city" type="text" autocomplete="address-level2" placeholder="Wohnort" />
+  </div>
+  <div class="input-group">
     <label for="bio">Über mich</label>
-    <textarea id="bio" rows="4" placeholder="Erzähle etwas über dich..."></textarea>
+    <textarea id="bio" placeholder="Erzähle etwas über dich..." rows="5"></textarea>
+  </div>
 
-    <button id="save-btn" onclick="saveProfile()">Profil speichern</button>
+  <button class="btn" id="save-btn" aria-live="polite" aria-label="Profil speichern" onclick="saveProfile()">Profil speichern</button>
 
+  <div class="input-group" style="margin-top: 2rem;">
     <label for="password">Neues Passwort</label>
-    <input type="password" id="password" placeholder="Neues Passwort eingeben" autocomplete="new-password" />
-    <button id="change-pw-btn" onclick="changePassword()">Passwort ändern</button>
+    <input id="password" type="password" autocomplete="new-password" placeholder="Neues Passwort eingeben" aria-describedby="pw-strength-text" />
+    <div id="pw-strength" aria-hidden="true"><div></div></div>
+    <div id="pw-strength-text" style="margin-top: 0.3rem; font-size: 0.9rem; color: #555;">Passwortstärke: <span id="strength-label">–</span></div>
+    <button class="btn" id="change-pw-btn" aria-live="polite" aria-label="Passwort ändern" onclick="changePassword()">Passwort ändern</button>
+  </div>
 
-    <button id="delete-profile-btn" class="delete" onclick="deleteProfile()" aria-label="Profil dauerhaft löschen">Profil löschen</button>
-  </main>
+  <button class="btn delete" id="delete-profile-btn" aria-label="Profil dauerhaft löschen" onclick="openDeleteModal()">Profil löschen</button>
+</main>
 
-  <footer role="contentinfo">
-    © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
-  </footer>
+<!-- Modal -->
+<div id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-desc">
+  <div id="modal" tabindex="-1">
+    <h3 id="modal-title">Profil dauerhaft löschen?</h3>
+    <p id="modal-desc">Willst du dein Profil wirklich dauerhaft löschen? Alle Inserate, Nachrichten und Daten gehen verloren!</p>
+    <button class="btn delete" onclick="confirmDelete()">Ja, Profil löschen</button>
+    <button class="btn" onclick="closeDeleteModal()">Abbrechen</button>
+  </div>
+</div>
 
-  <script>
-    const supabase = window.supabase.createClient(
-      'https://flnjalgqtkqycsaymmbd.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-    );
+<footer role="contentinfo">
+  © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
+</footer>
 
-    async function updateNav() {
-      const { data: { session } } = await supabase.auth.getSession();
-      const nav = document.getElementById('nav-links');
+<script src="https://cdn.jsdelivr.net/npm/zxcvbn@4.4.2/dist/zxcvbn.js"></script>
+<script>
+  const supabase = window.supabase.createClient(
+    'https://flnjalgqtkqycsaymmbd.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+  );
 
-      if (session?.user) {
-        nav.innerHTML = `
-          <a href="index.html">Start</a>
-          <a href="profil.html" aria-current="page">Mein Profil</a>
-          <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-          <a href="favoriten.html">Meine Favoriten</a>
-          <a href="inserate.html">Meine Inserate</a>
-          <a href="javascript:void(0);" onclick="logout()">Logout</a>
-        `;
-      } else {
-        nav.innerHTML = `
-          <a href="login.html">Einloggen</a>
-          <a href="register.html">Registrieren</a>
-        `;
-      }
+  // Navigation dynamisch laden
+  async function updateNav() {
+    const { data: { session } } = await supabase.auth.getSession();
+    const nav = document.getElementById('nav-links');
+
+    if (session?.user) {
+      nav.innerHTML = `
+        <a href="index.html">Start</a>
+        <a href="profil.html" aria-current="page">Mein Profil</a>
+        <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+        <a href="favoriten.html">Meine Favoriten</a>
+        <a href="inserate.html">Meine Inserate</a>
+        <a href="javascript:void(0);" onclick="logout()">Logout</a>
+      `;
+    } else {
+      nav.innerHTML = `
+        <a href="login.html">Einloggen</a>
+        <a href="register.html">Registrieren</a>
+      `;
     }
+  }
 
-    async function logout() {
-      await supabase.auth.signOut();
+  async function logout() {
+    await supabase.auth.signOut();
+    window.location.href = "login.html";
+  }
+
+  // Profil laden
+  async function loadProfile() {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) {
       window.location.href = "login.html";
+      return;
     }
+    const user = session.user;
+    document.getElementById('email').value = user.email;
 
-    async function loadProfile() {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.user) {
-        window.location.href = "login.html";
-        return;
-      }
-      const user = session.user;
-      document.getElementById('email').value = user.email;
-
-      const { data, error } = await supabase.from('profiles').select('*').eq('id', user.id).single();
-      if (error) {
-        alert("Fehler beim Laden des Profils.");
-        return;
-      }
-      if (data) {
-        document.getElementById('name').value = data.name || '';
-        document.getElementById('phone').value = data.phone || '';
-        document.getElementById('city').value = data.city || '';
-        document.getElementById('bio').value = data.bio || '';
-      }
+    const { data, error } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+    if (error) {
+      alert("Fehler beim Laden des Profils.");
+      return;
     }
+    if (data) {
+      document.getElementById('name').value = data.name || '';
+      document.getElementById('phone').value = data.phone || '';
+      document.getElementById('city').value = data.city || '';
+      document.getElementById('bio').value = data.bio || '';
+    }
+  }
 
-    async function saveProfile() {
-      const { data: { user } } = await supabase.auth.getSession();
-      if (!user) {
-        alert("Nicht eingeloggt!");
-        return;
-      }
-      const updates = {
-        id: user.id,
-        name: document.getElementById('name').value.trim(),
-        phone: document.getElementById('phone').value.trim(),
-        city: document.getElementById('city').value.trim(),
-        bio: document.getElementById('bio').value.trim()
-      };
+  // Profil speichern
+  async function saveProfile() {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) {
+      alert("Nicht eingeloggt!");
+      return;
+    }
+    const userId = session.user.id;
+    const updates = {
+      id: userId,
+      name: document.getElementById('name').value.trim(),
+      phone: document.getElementById('phone').value.trim(),
+      city: document.getElementById('city').value.trim(),
+      bio: document.getElementById('bio').value.trim()
+    };
+
+    // einfache Validierung
+    if (updates.name.length < 2) return alert("Bitte gib mindestens 2 Zeichen für den Namen ein.");
+
+    document.getElementById('save-btn').disabled = true;
+    try {
       const { error } = await supabase.from('profiles').upsert(updates);
-      if (error) {
-        alert("Fehler beim Speichern: " + error.message);
-      } else {
-        alert("Profil gespeichert!");
-      }
+      if (error) throw error;
+      alert("Profil erfolgreich gespeichert!");
+    } catch (err) {
+      alert("Fehler beim Speichern: " + err.message);
+    } finally {
+      document.getElementById('save-btn').disabled = false;
     }
+  }
 
-    async function changePassword() {
-      const password = document.getElementById('password').value.trim();
-      if (!password) return alert("Bitte ein Passwort eingeben.");
+  // Passwortstärke messen und visualisieren
+  const pwInput = document.getElementById('password');
+  const pwStrengthBar = document.getElementById('pw-strength');
+  const pwStrengthLabel = document.getElementById('strength-label');
+
+  pwInput.addEventListener('input', () => {
+    const val = pwInput.value;
+    if (!val) {
+      pwStrengthBar.className = '';
+      pwStrengthLabel.textContent = '–';
+      pwStrengthBar.querySelector('div').style.width = '0';
+      return;
+    }
+    const result = zxcvbn(val);
+    let strength = 'weak';
+    let label = 'Schwach';
+    switch(result.score) {
+      case 0:
+      case 1:
+        strength = 'weak';
+        label = 'Schwach';
+        break;
+      case 2:
+        strength = 'fair';
+        label = 'Fair';
+        break;
+      case 3:
+        strength = 'good';
+        label = 'Gut';
+        break;
+      case 4:
+        strength = 'strong';
+        label = 'Stark';
+        break;
+    }
+    pwStrengthBar.className = strength;
+    pwStrengthLabel.textContent = label;
+  });
+
+  // Passwort ändern
+  async function changePassword() {
+    const password = pwInput.value.trim();
+    if (!password) {
+      alert("Bitte gib ein neues Passwort ein.");
+      return;
+    }
+    document.getElementById('change-pw-btn').disabled = true;
+    try {
       const { data, error } = await supabase.auth.updateUser({ password });
-      if (error) {
-        alert("Fehler beim Ändern des Passworts: " + error.message);
-      } else {
-        alert("Passwort erfolgreich geändert.");
-        document.getElementById('password').value = '';
-      }
+      if (error) throw error;
+      alert("Passwort erfolgreich geändert!");
+      pwInput.value = '';
+      pwStrengthBar.className = '';
+      pwStrengthLabel.textContent = '–';
+    } catch (err) {
+      alert("Fehler beim Ändern des Passworts: " + err.message);
+    } finally {
+      document.getElementById('change-pw-btn').disabled = false;
     }
+  }
 
-    async function deleteProfile() {
-      if (!confirm("Willst du dein Profil wirklich dauerhaft löschen? Alle Inserate, Nachrichten und Daten gehen verloren!")) return;
+  // Modal öffnen/schließen
+  const modalOverlay = document.getElementById('modal-overlay');
+  const modal = document.getElementById('modal');
 
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.user) {
-        alert("Nicht eingeloggt.");
-        window.location.href = "login.html";
-        return;
-      }
-      const userId = session.user.id;
+  function openDeleteModal() {
+    modalOverlay.style.display = 'flex';
+    modal.focus();
+  }
 
-      try {
-        // Alle Inserate löschen
-        let { error: delListingsError } = await supabase.from('listings').delete().eq('user_id', userId);
-        if (delListingsError) throw delListingsError;
+  function closeDeleteModal() {
+    modalOverlay.style.display = 'none';
+  }
 
-        // Alle Nachrichten löschen (angenommen Tabelle heißt 'messages' mit Spalte sender_id oder recipient_id)
-        let { error: delMessagesError } = await supabase
-          .from('messages')
-          .delete()
-          .or(`sender_id.eq.${userId},recipient_id.eq.${userId}`);
-        if (delMessagesError) throw delMessagesError;
+  modalOverlay.addEventListener('click', e => {
+    if (e.target === modalOverlay) closeDeleteModal();
+  });
 
-        // Alle Favoriten löschen
-        let { error: delFavError } = await supabase.from('favorites').delete().eq('user_id', userId);
-        if (delFavError) throw delFavError;
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && modalOverlay.style.display === 'flex') closeDeleteModal();
+  });
 
-        // Alle Bewertungen gesendet UND empfangen löschen (optional)
-        let { error: delReviewsError } = await supabase
-          .from('reviews')
-          .delete()
-          .or(`from_user_id.eq.${userId},to_user_id.eq.${userId}`);
-        if (delReviewsError) throw delReviewsError;
+  // Profil löschen mit Rückfrage und Feedback
+  async function confirmDelete() {
+    document.querySelector('#modal button.delete').disabled = true;
+    document.querySelector('#modal button:not(.delete)').disabled = true;
 
-        // Profil löschen
-        let { error: delProfileError } = await supabase.from('profiles').delete().eq('id', userId);
-        if (delProfileError) throw delProfileError;
-
-        // Userkonto löschen
-        const { error: delUserError } = await supabase.auth.admin.deleteUser(userId);
-        if (delUserError) throw delUserError;
-
-        alert("Profil und alle zugehörigen Daten wurden gelöscht.");
-        window.location.href = "index.html";
-
-      } catch (error) {
-        alert("Fehler beim Löschen: " + error.message);
-      }
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) {
+      alert("Nicht eingeloggt.");
+      closeDeleteModal();
+      window.location.href = "login.html";
+      return;
     }
+    const userId = session.user.id;
 
-    updateNav();
-    loadProfile();
-  </script>
+    try {
+      // Inserate löschen
+      let { error: delListingsError } = await supabase.from('listings').delete().eq('user_id', userId);
+      if (delListingsError) throw delListingsError;
+
+      // Nachrichten löschen (Annahme Tabellenname und Spalten)
+      let { error: delMessagesError } = await supabase
+        .from('messages')
+        .delete()
+        .or(`sender_id.eq.${userId},recipient_id.eq.${userId}`);
+      if (delMessagesError) throw delMessagesError;
+
+      // Favoriten löschen
+      let { error: delFavError } = await supabase.from('favorites').delete().eq('user_id', userId);
+      if (delFavError) throw delFavError;
+
+      // Bewertungen löschen (gesendet & empfangen)
+      let { error: delReviewsError } = await supabase
+        .from('reviews')
+        .delete()
+        .or(`from_user_id.eq.${userId},to_user_id.eq.${userId}`);
+      if (delReviewsError) throw delReviewsError;
+
+      // Profil löschen
+      let { error: delProfileError } = await supabase.from('profiles').delete().eq('id', userId);
+      if (delProfileError) throw delProfileError;
+
+      // Userkonto löschen über Backend (Frontend-SDK unterstützt das nicht)
+      const res = await fetch('/api/delete-user', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId })
+      });
+      if (!res.ok) throw new Error("Fehler beim Löschen des Benutzerkontos.");
+
+      alert("Dein Profil und alle zugehörigen Daten wurden gelöscht.");
+      window.location.href = "index.html";
+    } catch (error) {
+      alert("Fehler beim Löschen: " + error.message);
+    } finally {
+      document.querySelector('#modal button.delete').disabled = false;
+      document.querySelector('#modal button:not(.delete)').disabled = false;
+      closeDeleteModal();
+    }
+  }
+
+  // Initial
+  updateNav();
+  loadProfile();
+</script>
 </body>
 </html>
