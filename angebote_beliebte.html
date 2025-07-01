@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Beliebte Angebote – Locorent</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root {
+      --primary-color: #2e7d32;
+      --secondary-color: #a5d6a7;
+      --background-color: #f1f8e9;
+      --dark-color: #1b5e20;
+      --highlight-color: #66bb6a;
+      --white: #fff;
+      --gray-light: #f7f7f7;
+      --gray-dark: #333;
+      --border-radius: 12px;
+      --shadow-color: rgba(0, 0, 0, 0.1);
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--background-color);
+      color: var(--gray-dark);
+      line-height: 1.6;
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    header {
+      background-color: var(--primary-color);
+      color: var(--white);
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-radius: var(--border-radius);
+    }
+    nav a {
+      color: var(--white);
+      margin-left: 1.5rem;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    nav a:hover {
+      border-bottom: 2px solid var(--highlight-color);
+    }
+    h1 {
+      font-weight: 600;
+    }
+    h2 {
+      margin-top: 1rem;
+      font-weight: 600;
+      color: var(--primary-color);
+    }
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    .result-card {
+      background-color: var(--white);
+      border-radius: var(--border-radius);
+      padding: 1rem;
+      box-shadow: 0 2px 8px var(--shadow-color);
+      margin-bottom: 1.5rem;
+      transition: transform 0.2s ease;
+    }
+    .result-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 16px var(--shadow-color);
+    }
+    .result-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+    .result-card button {
+      margin-top: 0.5rem;
+      padding: 0.6rem;
+      width: 100%;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background-color 0.3s ease;
+    }
+    .result-card button:hover {
+      background-color: var(--highlight-color);
+    }
+    footer {
+      padding: 2rem;
+      text-align: center;
+      background-color: var(--primary-color);
+      color: var(--white);
+      border-radius: var(--border-radius);
+      margin-top: 2rem;
+    }
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      nav a {
+        margin-left: 0;
+        margin-top: 0.5rem;
+      }
+      .category-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Locorent</h1>
+    <nav>
+      <a href="index.html">Start</a>
+      <a href="angebote_neueste.html">Neueste Angebote</a>
+      <a href="angebote_beliebte.html">Beliebte Angebote</a>
+    </nav>
+  </header>
+
+  <h2>Beliebte Angebote</h2>
+  <div id="popular-offers" class="category-grid">
+    <p>⏳ Lade Angebote…</p>
+  </div>
+
+  <footer>
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2rem;">
+      <div style="flex: 1; min-width: 200px;">
+        <h4 style="margin-bottom: 0.5rem;">Mieten & Vermieten</h4>
+        <ul style="list-style: none; padding: 0; line-height: 1.8;">
+          <li><a href="so-funktionierts.html" style="color: white; text-decoration: underline;">So funktioniert's</a></li>
+          <li><a href="vermieter-werden.html" style="color: white; text-decoration: underline;">Werde zum Vermieter</a></li>
+          <li><a href="kategorien.html" style="color: white; text-decoration: underline;">Beliebte Kategorien</a></li>
+          <li><a href="vermieter-tipps.html" style="color: white; text-decoration: underline;">Tipps & Tricks für Vermieter</a></li>
+          <li><a href="hilfe-faq.html" style="color: white; text-decoration: underline;">Hilfe und FAQ</a></li>
+        </ul>
+      </div>
+      <div style="flex: 1; min-width: 200px;">
+        <h4 style="margin-bottom: 0.5rem;">Wissenswertes</h4>
+        <ul style="list-style: none; padding: 0; line-height: 1.8;">
+          <li><a href="agb.html" style="color: white; text-decoration: underline;">AGB & Impressum</a></li>
+          <li><a href="datenschutz.html" style="color: white; text-decoration: underline;">Datenschutz</a></li>
+        </ul>
+      </div>
+      <div style="flex: 1; min-width: 200px;">
+        <h4 style="margin-bottom: 0.5rem;">Über uns</h4>
+        <ul style="list-style: none; padding: 0; line-height: 1.8;">
+          <li><a href="kontakt.html" style="color: white; text-decoration: underline;">Kontaktieren Sie uns</a></li>
+          <li><a href="social-media.html" style="color: white; text-decoration: underline;">Folgen Sie uns</a></li>
+        </ul>
+      </div>
+    </div>
+    <div style="margin-top: 2rem; text-align: center; font-size: 0.9rem;">
+      © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
+    </div>
+  </footer>
+
+  <script>
+    const supabase = window.supabase.createClient(
+      'https://flnjalgqtkqycsaymmbd.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+    );
+
+    async function loadPopularOffers() {
+      const { data, error } = await supabase
+        .from('listings')
+        .select('*')
+        .order('views', { ascending: false })
+        .limit(20);
+
+      const container = document.getElementById('popular-offers');
+
+      if(error) {
+        container.innerHTML = '<p>Fehler beim Laden der beliebten Angebote.</p>';
+        console.error('Fehler bei loadPopularOffers:', error);
+        return;
+      }
+
+      if(data.length === 0) {
+        container.innerHTML = '<p>Keine Angebote gefunden.</p>';
+        return;
+      }
+
+      container.innerHTML = '';
+      data.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'result-card';
+        card.innerHTML = `
+          <img src="${item.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" alt="${item.title}" />
+          <h3>${item.title}</h3>
+          <p><strong>Kategorie:</strong> ${capitalize(item.category)}</p>
+          <p><strong>Preis pro Tag:</strong> ${item.price_per_day || 'k. A.'} €</p>
+          <button onclick="window.location.href='mietobjekt.html?id=${item.id}'">Details ansehen</button>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function capitalize(str) {
+      return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
+    }
+
+    loadPopularOffers();
+  </script>
+</body>
+</html>
