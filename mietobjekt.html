@@ -212,6 +212,26 @@
       window.location.href = "login.html";
     }
 
+    function capitalize(str) {
+      return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
+    }
+
+    function formatDate(dateStr) {
+      if (!dateStr) return 'Unbekannt';
+      const d = new Date(dateStr);
+      return d.toLocaleDateString('de-DE', { year: 'numeric', month: 'long', day: 'numeric' });
+    }
+
+    async function incrementViews(listingId) {
+      const { error } = await supabase
+        .from('listings')
+        .update({ views: supabase.raw('views + 1') })
+        .eq('id', listingId);
+      if (error) {
+        console.error('Fehler beim Erhöhen der Views:', error.message);
+      }
+    }
+
     async function loadListing() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return alert("Bitte einloggen."), location.href = "login.html";
@@ -239,21 +259,31 @@
         .eq('id', listing.user_id)
         .single();
 
-      const images = listing.image_urls || [listing.image_url];
+      // Views erhöhen
+      await incrementViews(listingId);
+
+      // Kategorie groß schreiben
+      const categoryCapitalized = capitalize(listing.category);
+
+      // Datum formatieren
+      const createdAtFormatted = formatDate(listing.created_at);
+
+      const images = listing.image_urls || (listing.image_url ? [listing.image_url] : []);
       const thumbs = images.map((url, i) =>
         `<img src="${url}" class="${i === 0 ? 'active' : ''}" onclick="switchImage('${url}', this)">`
       ).join('');
 
       document.getElementById('listing-details').innerHTML = `
         <div class="gallery">
-          <img src="${images[0]}" class="main-image" id="mainImage">
+          <img src="${images[0] || 'https://via.placeholder.com/600x400?text=Kein+Bild'}" class="main-image" id="mainImage">
           ${images.length > 1 ? `<div class="thumbnails">${thumbs}</div>` : ''}
         </div>
         <div class="content">
           <h2>${listing.title}</h2>
-          <p><strong>Kategorie:</strong> ${listing.category}</p>
+          <p><strong>Kategorie:</strong> ${categoryCapitalized}</p>
           <p><strong>Preis pro Tag:</strong> ${listing.price_per_day} €</p>
           <p><strong>Ort:</strong> ${listing.location || '–'}</p>
+          <p><strong>Online seit:</strong> ${createdAtFormatted}</p>
           <p><strong>Beschreibung:</strong><br>${listing.description}</p>
           <button onclick="goToChat()">Nachricht an Vermieter</button>
           <button id="add-to-favorites" onclick="toggleFavorite('${listing.id}')">Lade Favoritenstatus...</button>
