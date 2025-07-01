@@ -157,6 +157,16 @@
       margin-top: 2rem;
     }
 
+    #suggestions {
+      position: absolute;
+      background: white;
+      border: 1px solid #ccc;
+      z-index: 999;
+      width: 100%;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
     @media (max-width: 768px) {
       header {
         flex-direction: column;
@@ -204,23 +214,23 @@
         <option value="freizeit">Freizeit & Sport</option>
         <option value="baby">Baby & Kind</option>
       </select>
-      <input type="text" placeholder="Ort" id="location-input" />
-      <input type="number" placeholder="Umkreis (km)" id="radius-select" list="radius-options" min="1" max="500" />
-      <datalist id="radius-options">
-        <option value="5">
-        <option value="10">
-        <option value="15">
-        <option value="25">
-        <option value="50">
-        <option value="75">
-        <option value="100">
-        <option value="150">
-        <option value="200">
-      </datalist>
+      <div style="position: relative; flex: 1; min-width: 200px;">
+        <input type="text" placeholder="Ort" id="location-input" autocomplete="off" />
+        <div id="suggestions"></div>
+      </div>
+      <select id="radius-select">
+        <option value="0">Nur im Ort</option>
+        <option value="5">5 km</option>
+        <option value="10">10 km</option>
+        <option value="20">20 km</option>
+        <option value="30">30 km</option>
+        <option value="50">50 km</option>
+        <option value="100">100 km</option>
+        <option value="200">200 km</option>
+      </select>
       <button onclick="search()">Suchen</button>
     </div>
   </section>
-
   <section>
     <h2>Neueste Angebote</h2>
     <div id="newest-offers" class="category-grid"><p>⏳ Lade Angebote…</p></div>
@@ -231,183 +241,159 @@
     <div id="popular-offers" class="category-grid"><p>⏳ Lade Angebote…</p></div>
   </section>
 
-<footer style="background-color: #2e7d32; color: white; padding: 2rem;">
-  <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2rem;">
-    
-    <!-- Spalte: Mieten & Vermieten -->
-    <div style="flex: 1; min-width: 200px;">
-      <h4 style="margin-bottom: 0.5rem;">Mieten & Vermieten</h4>
-      <ul style="list-style: none; padding: 0; line-height: 1.8;">
-        <li><a href="so-funktionierts.html" style="color: white; text-decoration: underline;">So funktioniert's</a></li>
-        <li><a href="vermieter-werden.html" style="color: white; text-decoration: underline;">Werde zum Vermieter</a></li>
-        <li><a href="kategorien.html" style="color: white; text-decoration: underline;">Beliebte Kategorien</a></li>
-        <li><a href="vermieter-tipps.html" style="color: white; text-decoration: underline;">Tipps & Tricks für Vermieter</a></li>
-        <li><a href="hilfe-faq.html" style="color: white; text-decoration: underline;">Hilfe und FAQ</a></li>
-      </ul>
-    </div>
+  <footer style="background-color: #2e7d32; color: white; padding: 2rem;">
+    <!-- ... (Footer bleibt unverändert, kannst du oben einfügen) -->
+  </footer>
 
-    <!-- Spalte: Wissenswertes -->
-    <div style="flex: 1; min-width: 200px;">
-      <h4 style="margin-bottom: 0.5rem;">Wissenswertes</h4>
-      <ul style="list-style: none; padding: 0; line-height: 1.8;">
-        <li><a href="agb.html" style="color: white; text-decoration: underline;">AGB & Impressum</a></li>
-        <li><a href="datenschutz.html" style="color: white; text-decoration: underline;">Datenschutz</a></li>
-      </ul>
-    </div>
+  <script>
+    const supabase = window.supabase.createClient(
+      'https://flnjalgqtkqycsaymmbd.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+    );
 
-    <!-- Spalte: Über uns -->
-    <div style="flex: 1; min-width: 200px;">
-      <h4 style="margin-bottom: 0.5rem;">Über uns</h4>
-      <ul style="list-style: none; padding: 0; line-height: 1.8;">
-        <li><a href="kontakt.html" style="color: white; text-decoration: underline;">Kontaktieren Sie uns</a></li>
-        <li><a href="social-media.html" style="color: white; text-decoration: underline;">Folgen Sie uns</a></li>
-      </ul>
-    </div>
-    
-  </div>
+    let userSession = null;
 
-  <div style="margin-top: 2rem; text-align: center; font-size: 0.9rem;">
-    © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
-  </div>
-</footer>
+    async function init() {
+      const { data: { session } } = await supabase.auth.getSession();
+      userSession = session;
+      updateNav();
+      loadNewestOffers();
+      loadPopularOffers();
+    }
 
-  <!-- Nur die renderOffers-Funktion wurde angepasst -->
-<script>
-  const supabase = window.supabase.createClient(
-    'https://flnjalgqtkqycsaymmbd.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-  );
-
-  let userSession = null;
-
-  async function init() {
-    const { data: { session } } = await supabase.auth.getSession();
-    userSession = session;
-    updateNav();
-    loadNewestOffers();
-    loadPopularOffers();
-  }
-
-  function updateNav() {
-    const nav = document.getElementById('nav-links');
-    nav.innerHTML = userSession?.user ? `
-      <a href="index.html">Start</a>
-      <a href="profil.html">Mein Profil</a>
-      <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-      <a href="favoriten.html">Meine Favoriten</a>
-      <a href="inserate.html">Meine Inserate</a>
-      <a href="#" onclick="logout(event)">Logout</a>
-    ` : `
-      <a href="index.html">Start</a>
-      <a href="login.html">Einloggen</a>
-    `;
-  }
-
-  async function logout(event) {
-    event.preventDefault();
-    await supabase.auth.signOut();
-    window.location.href = "login.html";
-  }
-
-  async function loadNewestOffers() {
-    const { data } = await supabase
-      .from('listings')
-      .select('*')
-      .order('created_at', { ascending: false })
-      .limit(5);
-    renderOffers(data, 'newest-offers');
-  }
-
-  async function loadPopularOffers() {
-    const { data } = await supabase
-      .from('listings')
-      .select('*')
-      .order('created_at', { ascending: false })
-      .limit(5);
-    renderOffers(data, 'popular-offers');
-  }
-
-  function capitalize(str) {
-    return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
-  }
-
-  async function renderOffers(items, containerId) {
-    const container = document.getElementById(containerId);
-    container.innerHTML = '';
-
-    for (const item of items) {
-      const card = document.createElement('div');
-      card.className = 'result-card';
-
-      const isFav = userSession?.user ? await checkIfFavorite(item.id) : false;
-
-      card.innerHTML = `
-        <img src="${item.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" alt="${item.title}" />
-        <h3>${item.title}</h3>
-        <p><strong>Kategorie:</strong> ${capitalize(item.category) || 'Unbekannt'}</p>
-        <p><strong>Preis pro Tag:</strong> ${item.price_per_day || 'k. A.'} €</p>
-        <button onclick="window.location.href='mietobjekt.html?id=${item.id}'">Details ansehen</button>
-        <button class="fav-btn">${isFav ? 'Favorit entfernen' : 'Zu Favoriten'}</button>
+    function updateNav() {
+      const nav = document.getElementById('nav-links');
+      nav.innerHTML = userSession?.user ? `
+        <a href="index.html">Start</a>
+        <a href="profil.html">Mein Profil</a>
+        <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+        <a href="favoriten.html">Meine Favoriten</a>
+        <a href="inserate.html">Meine Inserate</a>
+        <a href="#" onclick="logout(event)">Logout</a>
+      ` : `
+        <a href="index.html">Start</a>
+        <a href="login.html">Einloggen</a>
       `;
+    }
 
-      const favBtn = card.querySelector('.fav-btn');
-      if (userSession?.user) {
-        favBtn.addEventListener('click', async (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          const nowFav = await toggleFavorite(item.id);
-          favBtn.innerText = nowFav ? 'Favorit entfernen' : 'Zu Favoriten';
-        });
-      } else {
-        favBtn.disabled = true;
-        favBtn.innerText = "Login erforderlich";
+    async function logout(event) {
+      event.preventDefault();
+      await supabase.auth.signOut();
+      window.location.href = "login.html";
+    }
+
+    async function loadNewestOffers() {
+      const { data } = await supabase.from('listings').select('*').order('created_at', { ascending: false }).limit(5);
+      renderOffers(data, 'newest-offers');
+    }
+
+    async function loadPopularOffers() {
+      const { data } = await supabase.from('listings').select('*').order('created_at', { ascending: false }).limit(5);
+      renderOffers(data, 'popular-offers');
+    }
+
+    function capitalize(str) {
+      return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
+    }
+
+    async function renderOffers(items, containerId) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
+      for (const item of items) {
+        const card = document.createElement('div');
+        card.className = 'result-card';
+        const isFav = userSession?.user ? await checkIfFavorite(item.id) : false;
+
+        card.innerHTML = `
+          <img src="${item.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" alt="${item.title}" />
+          <h3>${item.title}</h3>
+          <p><strong>Kategorie:</strong> ${capitalize(item.category) || 'Unbekannt'}</p>
+          <p><strong>Preis pro Tag:</strong> ${item.price_per_day || 'k. A.'} €</p>
+          <button onclick="window.location.href='mietobjekt.html?id=${item.id}'">Details ansehen</button>
+          <button class="fav-btn">${isFav ? 'Favorit entfernen' : 'Zu Favoriten'}</button>
+        `;
+
+        const favBtn = card.querySelector('.fav-btn');
+        if (userSession?.user) {
+          favBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const nowFav = await toggleFavorite(item.id);
+            favBtn.innerText = nowFav ? 'Favorit entfernen' : 'Zu Favoriten';
+          });
+        } else {
+          favBtn.disabled = true;
+          favBtn.innerText = "Login erforderlich";
+        }
+
+        container.appendChild(card);
       }
-
-      container.appendChild(card);
     }
-  }
 
-  async function checkIfFavorite(listingId) {
-    if (!userSession?.user) return false;
-    const { data } = await supabase
-      .from('favorites')
-      .select('*')
-      .eq('user_id', userSession.user.id)
-      .eq('listing_id', listingId)
-      .maybeSingle();
-    return !!data;
-  }
-
-  async function toggleFavorite(listingId) {
-    if (!userSession?.user) return false;
-    const { data } = await supabase
-      .from('favorites')
-      .select('*')
-      .eq('user_id', userSession.user.id)
-      .eq('listing_id', listingId)
-      .maybeSingle();
-
-    if (data) {
-      await supabase.from('favorites').delete().eq('id', data.id);
-      return false;
-    } else {
-      await supabase.from('favorites').insert({ user_id: userSession.user.id, listing_id: listingId });
-      return true;
+    async function checkIfFavorite(listingId) {
+      if (!userSession?.user) return false;
+      const { data } = await supabase
+        .from('favorites')
+        .select('*')
+        .eq('user_id', userSession.user.id)
+        .eq('listing_id', listingId)
+        .maybeSingle();
+      return !!data;
     }
-  }
 
-  function search() {
-    const keyword = document.getElementById("search-input").value.trim();
-    const category = document.getElementById("category-select").value.trim();
-    const location = document.getElementById("location-input").value.trim();
-    const radius = document.getElementById("radius-select").value.trim();
+    async function toggleFavorite(listingId) {
+      if (!userSession?.user) return false;
+      const { data } = await supabase
+        .from('favorites')
+        .select('*')
+        .eq('user_id', userSession.user.id)
+        .eq('listing_id', listingId)
+        .maybeSingle();
 
-    const params = new URLSearchParams({ keyword, category, location, radius });
-    window.location.href = `search_results.html?${params.toString()}`;
-  }
+      if (data) {
+        await supabase.from('favorites').delete().eq('id', data.id);
+        return false;
+      } else {
+        await supabase.from('favorites').insert({ user_id: userSession.user.id, listing_id: listingId });
+        return true;
+      }
+    }
 
-  init();
-</script>
+    function search() {
+      const keyword = document.getElementById("search-input").value.trim();
+      const category = document.getElementById("category-select").value.trim();
+      const location = document.getElementById("location-input").value.trim();
+      const radius = document.getElementById("radius-select").value.trim();
 
+      const params = new URLSearchParams({ keyword, category, location, radius });
+      window.location.href = `search_results.html?${params.toString()}`;
+    }
+
+    // 📍 Auto-Suggest für Ort
+    document.getElementById("location-input").addEventListener("input", async function () {
+      const query = this.value.trim();
+      const suggestions = document.getElementById("suggestions");
+      suggestions.innerHTML = "";
+
+      if (query.length < 2) return;
+
+      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&accept-language=de&addressdetails=1`);
+      const data = await res.json();
+
+      data.slice(0, 5).forEach(item => {
+        const div = document.createElement("div");
+        div.style.padding = "0.5rem";
+        div.style.cursor = "pointer";
+        div.innerText = item.display_name;
+        div.addEventListener("click", () => {
+          document.getElementById("location-input").value = item.address.city || item.address.town || item.address.village || item.display_name;
+          suggestions.innerHTML = "";
+        });
+        suggestions.appendChild(div);
+      });
+    });
+
+    init();
+  </script>
 </body>
 </html>
