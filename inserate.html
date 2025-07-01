@@ -7,54 +7,249 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    body { font-family: 'Poppins', sans-serif; background: #f1f8e9; margin: 0; padding: 0; color: #1b5e20; }
-    header { background-color: #2e7d32; color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
-    nav a { color: white; margin-left: 1rem; text-decoration: none; font-weight: 600; }
-    main { max-width: 900px; margin: 2rem auto; padding: 1rem; }
-    .form-container { background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 2rem; }
-    .form-group { display: flex; flex-wrap: wrap; gap: 1rem; }
-    .field { flex: 1 1 200px; display: flex; flex-direction: column; position: relative; }
-    label { font-weight: 600; margin-bottom: 0.4rem; }
-    input, textarea, select { padding: 0.6rem; border: 1px solid #ccc; border-radius: 6px; }
-    #suggestions { border: 1px solid #ccc; border-top: none; max-height: 150px; overflow-y: auto; background: white; position: absolute; z-index: 10; top: 100%; left: 0; right: 0; }
-    #suggestions div { padding: 0.5rem; cursor: pointer; }
-    #suggestions div:hover { background: #e0f2f1; }
-    .dropzone { margin-top: 1rem; padding: 1rem; border: 2px dashed #2e7d32; text-align: center; border-radius: 10px; background: #fafafa; cursor: pointer; }
-    .preview-gallery { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem; }
-    .preview-box { position: relative; }
-    .img-wrapper { width: 120px; height: 100px; background: #e8f5e9; border-radius: 6px; overflow: hidden; }
-    .preview-box img { width: 120px; height: 100px; object-fit: cover; }
-    .remove-btn { position: absolute; top: 4px; right: 4px; background: #c62828; color: white; border: none; border-radius: 50%; width: 22px; height: 22px; font-weight: bold; cursor: pointer; }
-    .form-actions { text-align: right; margin-top: 1rem; }
-    .form-actions button { background: #2e7d32; color: white; padding: 0.7rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; }
-    .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; margin-top: 2rem; }
-    .card { background: white; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); overflow: hidden; }
-    .card img { width: 100%; height: 150px; object-fit: cover; }
-    .card-content { padding: 0.8rem; }
-    .card-content h3 { margin: 0.2rem 0; font-size: 1.1rem; }
-    .card-content .price { font-weight: 600; color: #2e7d32; }
-    .card-content .category { font-size: 0.9rem; margin-bottom: 0.5rem; }
-    .card .actions { display: flex; flex-direction: column; gap: 0.4rem; padding: 0.8rem; }
-    .card .actions button { background: #2e7d32; color: white; padding: 0.4rem 0.8rem; border: none; border-radius: 6px; cursor: pointer; }
-    .card .actions button.delete { background: #c62828; }
-    .loader { width: 24px; height: 24px; border: 3px solid #c8e6c9; border-top-color: #2e7d32; border-radius: 50%; animation: spin 0.8s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    :root {
+      --primary-color: #2e7d32;
+      --secondary-color: #a5d6a7;
+      --background-color: #f1f8e9;
+      --dark-color: #1b5e20;
+      --highlight-color: #66bb6a;
+      --white: #fff;
+      --gray-light: #f7f7f7;
+      --gray-dark: #333;
+      --border-radius: 12px;
+      --shadow-color: rgba(0, 0, 0, 0.1);
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--background-color);
+      margin: 0;
+      padding: 0;
+      color: var(--dark-color);
+      line-height: 1.5;
+    }
+    header {
+      background-color: var(--primary-color);
+      color: var(--white);
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    nav a {
+      color: var(--white);
+      margin-left: 1.5rem;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    nav a:hover {
+      border-bottom: 2px solid var(--highlight-color);
+    }
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background: var(--white);
+      border-radius: var(--border-radius);
+      box-shadow: 0 2px 12px var(--shadow-color);
+    }
+    .form-container {
+      margin-bottom: 2rem;
+    }
+    .form-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .field {
+      flex: 1 1 200px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    label {
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+    }
+    input, textarea, select {
+      padding: 0.6rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 1rem;
+    }
+    #suggestions {
+      border: 1px solid #ccc;
+      border-top: none;
+      max-height: 150px;
+      overflow-y: auto;
+      background: white;
+      position: absolute;
+      z-index: 10;
+      top: 100%;
+      left: 0;
+      right: 0;
+    }
+    #suggestions div {
+      padding: 0.5rem;
+      cursor: pointer;
+    }
+    #suggestions div:hover {
+      background: #e0f2f1;
+    }
+    .dropzone {
+      margin-top: 1rem;
+      padding: 1rem;
+      border: 2px dashed var(--primary-color);
+      text-align: center;
+      border-radius: var(--border-radius);
+      background: #fafafa;
+      cursor: pointer;
+    }
+    .preview-gallery {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+    .preview-box {
+      position: relative;
+    }
+    .img-wrapper {
+      width: 120px;
+      height: 100px;
+      background: #e8f5e9;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .preview-box img {
+      width: 120px;
+      height: 100px;
+      object-fit: cover;
+    }
+    .remove-btn {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      background: #c62828;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .form-actions {
+      text-align: right;
+      margin-top: 1rem;
+    }
+    .form-actions button {
+      background: var(--primary-color);
+      color: var(--white);
+      padding: 0.7rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1rem;
+    }
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .card {
+      background: var(--white);
+      border-radius: var(--border-radius);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .card img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    .card-content {
+      padding: 0.8rem;
+      flex-grow: 1;
+    }
+    .card-content h3 {
+      margin: 0.2rem 0;
+      font-size: 1.1rem;
+      color: var(--dark-color);
+    }
+    .card-content .price {
+      font-weight: 600;
+      color: var(--primary-color);
+      margin-bottom: 0.3rem;
+    }
+    .card-content .category {
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+      color: var(--secondary-color);
+    }
+    .card .actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      padding: 0.8rem;
+    }
+    .card .actions button {
+      background: var(--primary-color);
+      color: var(--white);
+      padding: 0.4rem 0.8rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: background-color 0.3s ease;
+    }
+    .card .actions button:hover {
+      background: var(--highlight-color);
+      color: var(--dark-color);
+    }
+    .card .actions button.delete {
+      background: #c62828;
+    }
+    .card .actions button.delete:hover {
+      background: #e53935;
+    }
+    .loader {
+      width: 24px;
+      height: 24px;
+      border: 3px solid #c8e6c9;
+      border-top-color: var(--primary-color);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: auto;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
 
 <header>
   <h1>Locorent – Meine Inserate</h1>
-  <nav><a href="index.html">Zurück zur Übersicht</a></nav>
+  <nav id="nav-links"></nav>
 </header>
 
 <main>
   <section class="form-container">
     <h2>Neues Inserat erstellen</h2>
     <div class="form-group">
-      <div class="field"><label>Titel</label><input type="text" id="title-input" /></div>
+      <div class="field"><label for="title-input">Titel</label><input type="text" id="title-input" /></div>
       <div class="field">
-        <label>Kategorie</label>
+        <label for="category-input">Kategorie</label>
         <select id="category-input">
           <option value="">Bitte wählen</option>
           <option value="Fahrzeuge">Fahrzeuge</option>
@@ -71,23 +266,62 @@
           <option value="Baby">Baby & Kind</option>
         </select>
       </div>
-      <div class="field"><label>Preis €/Tag</label><input type="number" id="price-input" /></div>
+      <div class="field"><label for="price-input">Preis €/Tag</label><input type="number" id="price-input" /></div>
       <div class="field">
-        <label>Ort</label>
+        <label for="location-input">Ort</label>
         <input type="text" id="location-input" placeholder="Nur Städte in Deutschland" autocomplete="off" />
         <div id="suggestions"></div>
       </div>
-      <div class="field" style="flex: 1 1 100%;"><label>Beschreibung</label><textarea id="desc-input" rows="3"></textarea></div>
+      <div class="field" style="flex: 1 1 100%;">
+        <label for="desc-input">Beschreibung</label>
+        <textarea id="desc-input" rows="3"></textarea>
+      </div>
     </div>
 
     <div class="dropzone" id="dropzone">Bilder hier ablegen oder klicken (max. 2, max. 2 MB pro Bild)</div>
     <div class="preview-gallery" id="preview-gallery"></div>
 
-    <div class="form-actions"><button id="save-btn">Inserat speichern</button></div>
+    <div class="form-actions">
+      <button id="save-btn">Inserat speichern</button>
+    </div>
   </section>
 
-  <section class="gallery" id="gallery">Galerie lädt…</section>
+  <section class="gallery" id="gallery">
+    <p>Galerie lädt…</p>
+  </section>
 </main>
+
+<footer style="background-color: var(--primary-color); color: var(--white); padding: 2rem; border-radius: var(--border-radius); margin: 2rem auto 0; max-width: 900px; text-align: center;">
+  <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2rem;">
+    <div style="flex: 1; min-width: 200px;">
+      <h4 style="margin-bottom: 0.5rem;">Mieten & Vermieten</h4>
+      <ul style="list-style: none; padding: 0; line-height: 1.8;">
+        <li><a href="so-funktionierts.html" style="color: var(--white); text-decoration: underline;">So funktioniert's</a></li>
+        <li><a href="vermieter-werden.html" style="color: var(--white); text-decoration: underline;">Werde zum Vermieter</a></li>
+        <li><a href="kategorien.html" style="color: var(--white); text-decoration: underline;">Beliebte Kategorien</a></li>
+        <li><a href="vermieter-tipps.html" style="color: var(--white); text-decoration: underline;">Tipps & Tricks für Vermieter</a></li>
+        <li><a href="hilfe-faq.html" style="color: var(--white); text-decoration: underline;">Hilfe und FAQ</a></li>
+      </ul>
+    </div>
+    <div style="flex: 1; min-width: 200px;">
+      <h4 style="margin-bottom: 0.5rem;">Wissenswertes</h4>
+      <ul style="list-style: none; padding: 0; line-height: 1.8;">
+        <li><a href="agb.html" style="color: var(--white); text-decoration: underline;">AGB & Impressum</a></li>
+        <li><a href="datenschutz.html" style="color: var(--white); text-decoration: underline;">Datenschutz</a></li>
+      </ul>
+    </div>
+    <div style="flex: 1; min-width: 200px;">
+      <h4 style="margin-bottom: 0.5rem;">Über uns</h4>
+      <ul style="list-style: none; padding: 0; line-height: 1.8;">
+        <li><a href="kontakt.html" style="color: var(--white); text-decoration: underline;">Kontaktieren Sie uns</a></li>
+        <li><a href="social-media.html" style="color: var(--white); text-decoration: underline;">Folgen Sie uns</a></li>
+      </ul>
+    </div>
+  </div>
+  <div style="margin-top: 2rem; font-size: 0.9rem;">
+    © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
+  </div>
+</footer>
 
 <script>
 const supabase = window.supabase.createClient(
@@ -97,6 +331,27 @@ const supabase = window.supabase.createClient(
 
 let uploadedImageUrls = [];
 let selectedAddressData = null;
+let userSession = null;
+
+async function updateNav() {
+  const nav = document.getElementById('nav-links');
+  nav.innerHTML = userSession?.user ?
+    `<a href="index.html">Start</a>
+     <a href="profil.html">Mein Profil</a>
+     <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+     <a href="favoriten.html">Meine Favoriten</a>
+     <a href="inserate.html">Meine Inserate</a>
+     <a href="#" onclick="logout(event)">Logout</a>`
+    :
+    `<a href="index.html">Start</a>
+     <a href="login.html">Einloggen</a>`;
+}
+
+async function logout(event) {
+  event.preventDefault();
+  await supabase.auth.signOut();
+  window.location.href = "login.html";
+}
 
 document.getElementById("dropzone").addEventListener("click", () => {
   if (uploadedImageUrls.length >= 2) return alert("Maximal 2 Bilder erlaubt.");
@@ -235,26 +490,36 @@ locationInput.addEventListener('input', async (e) => {
 
 async function loadGallery() {
   const { data: sd } = await supabase.auth.getSession();
-  const user = sd?.session?.user;
+  userSession = sd?.session;
+  updateNav();
+
+  const user = userSession?.user;
   const gallery = document.getElementById('gallery');
   if (!user) return gallery.innerHTML = 'Nicht eingeloggt.';
 
-  const { data: listings } = await supabase
+  const { data: listings, error } = await supabase
     .from('listings')
     .select('*')
     .eq('user_id', user.id)
     .order('created_at', { ascending: false });
 
+  if (error) {
+    gallery.innerHTML = '<p>Fehler beim Laden der Inserate.</p>';
+    return;
+  }
+
   gallery.innerHTML = '';
   listings.forEach(i => {
     const img = i.image_urls?.[0] || 'https://via.placeholder.com/300x150?text=Kein+Bild';
+    const categoryFormatted = i.category ? (i.category.charAt(0).toUpperCase() + i.category.slice(1).toLowerCase()) : 'Unbekannt';
+
     const div = document.createElement('div');
     div.className = 'card';
     div.innerHTML = `
       <img src="${img}" alt="${i.title}">
       <div class="card-content">
         <h3>${i.title}</h3>
-        <p class="category"><strong>Kategorie:</strong> ${i.category}</p>
+        <p class="category"><strong>Kategorie:</strong> ${categoryFormatted}</p>
         <p class="price">${i.price_per_day} € / Tag</p>
       </div>
       <div class="actions">
