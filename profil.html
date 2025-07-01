@@ -8,137 +8,176 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
-      --primary: #2e7d32;
-      --light: #f1f8e9;
-      --dark: #1b5e20;
+      --primary-color: #2e7d32;
+      --primary-dark: #1b5e20;
+      --background-color: #f1f8e9;
       --white: #fff;
-      --max-width: 1200px;
-      --button-radius: 8px;
+      --light-gray: #f5f5f5;
+      --border-radius: 12px;
+      --shadow-color: rgba(0, 0, 0, 0.1);
+      --max-width: 600px;
     }
-
     * {
-      box-sizing: border-box;
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
     }
-
     body {
       font-family: 'Poppins', sans-serif;
-      background-color: var(--light);
-      color: var(--dark);
+      background-color: var(--background-color);
+      color: #333;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
+      align-items: center;
     }
-
     header {
-      background-color: var(--primary);
-      color: white;
-      padding: 1rem 2rem;
+      background-color: var(--primary-color);
+      color: var(--white);
+      width: 100%;
+      padding: 1.5rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 8px var(--shadow-color);
+      user-select: none;
     }
-
-    nav a {
-      color: white;
-      text-decoration: none;
-      margin-left: 1rem;
+    header h1 {
       font-weight: 600;
+      font-size: 1.8rem;
+      cursor: pointer;
     }
-
-    nav a:hover {
-      border-bottom: 2px solid var(--white);
+    nav#nav-links a {
+      color: var(--white);
+      margin-left: 1.5rem;
+      text-decoration: none;
+      font-weight: 600;
+      transition: border-bottom 0.3s ease;
     }
-
-    .container {
-      max-width: 600px;
-      margin: 3rem auto 2rem auto;
-      background: white;
-      padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    nav#nav-links a:hover,
+    nav#nav-links a:focus {
+      border-bottom: 2px solid var(--primary-dark);
+      outline: none;
     }
-
+    main.container {
+      max-width: var(--max-width);
+      background: var(--white);
+      border-radius: var(--border-radius);
+      box-shadow: 0 6px 18px var(--shadow-color);
+      padding: 2rem 2.5rem;
+      margin: 3rem 1rem 4rem;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
     h2 {
+      color: var(--primary-color);
+      font-weight: 700;
       margin-bottom: 1rem;
+      user-select: none;
     }
-
     label {
       display: block;
       margin-top: 1rem;
       font-weight: 600;
+      user-select: none;
     }
-
     input, textarea {
       width: 100%;
       padding: 0.7rem;
       margin-top: 0.3rem;
       border: 1px solid #ccc;
-      border-radius: 8px;
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+      font-family: 'Poppins', sans-serif;
+      transition: border-color 0.3s ease;
     }
-
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 5px var(--primary-color);
+    }
     button {
       margin-top: 1.5rem;
-      padding: 0.7rem 1.5rem;
-      background-color: var(--primary);
+      padding: 0.9rem 1.5rem;
+      background-color: var(--primary-color);
       color: var(--white);
       border: none;
-      border-radius: var(--button-radius);
-      font-weight: 600;
+      border-radius: var(--border-radius);
+      font-weight: 700;
+      font-size: 1.1rem;
       cursor: pointer;
+      user-select: none;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
     }
-
-    button:hover {
-      background-color: #1b5e20;
+    button:hover, button:focus-visible {
+      background-color: var(--primary-dark);
+      box-shadow: 0 0 12px var(--primary-dark);
+      outline: none;
     }
-
+    button.delete {
+      background-color: #b00020;
+      margin-top: 2rem;
+    }
+    button.delete:hover, button.delete:focus-visible {
+      background-color: #7a0013;
+      box-shadow: 0 0 12px #7a0013;
+    }
     footer {
-      margin-top: auto;
-      padding: 1.5rem;
-      background-color: var(--primary);
+      width: 100%;
+      background-color: var(--primary-color);
       color: var(--white);
+      padding: 2rem 0;
+      box-shadow: 0 -2px 12px var(--shadow-color);
+      user-select: none;
       text-align: center;
+      font-size: 0.9rem;
     }
-
-    @media (max-width: 768px) {
-      .container {
-        padding: 1rem;
+    @media (max-width: 600px) {
+      main.container {
+        padding: 1.5rem 1.5rem;
+        margin: 2rem 1rem 3rem;
       }
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>Locorent</h1>
-    <nav id="nav-links"></nav>
+    <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
+    <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
   </header>
 
-  <section class="container">
+  <main class="container" role="main" aria-label="Mein Profil">
     <h2>Mein Profil</h2>
     <label for="name">Name</label>
-    <input type="text" id="name" placeholder="Dein Name" />
+    <input type="text" id="name" placeholder="Dein Name" autocomplete="name" />
 
     <label for="email">E-Mail</label>
-    <input type="email" id="email" disabled />
+    <input type="email" id="email" disabled autocomplete="email" />
 
     <label for="phone">Telefon</label>
-    <input type="text" id="phone" />
+    <input type="text" id="phone" placeholder="Telefonnummer" autocomplete="tel" />
 
     <label for="city">Wohnort</label>
-    <input type="text" id="city" />
+    <input type="text" id="city" placeholder="Wohnort" autocomplete="address-level2" />
 
     <label for="bio">Über mich</label>
-    <textarea id="bio" rows="3"></textarea>
+    <textarea id="bio" rows="4" placeholder="Erzähle etwas über dich..."></textarea>
 
-    <button onclick="saveProfile()">Profil speichern</button>
+    <button id="save-btn" onclick="saveProfile()">Profil speichern</button>
 
     <label for="password">Neues Passwort</label>
-    <input type="password" id="password" />
-    <button onclick="changePassword()">Passwort ändern</button>
-  </section>
+    <input type="password" id="password" placeholder="Neues Passwort eingeben" autocomplete="new-password" />
+    <button id="change-pw-btn" onclick="changePassword()">Passwort ändern</button>
 
-  <footer>
+    <button id="delete-profile-btn" class="delete" onclick="deleteProfile()" aria-label="Profil dauerhaft löschen">Profil löschen</button>
+  </main>
+
+  <footer role="contentinfo">
     © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
   </footer>
 
@@ -155,8 +194,10 @@
       if (session?.user) {
         nav.innerHTML = `
           <a href="index.html">Start</a>
-          <a href="profil.html">Mein Profil</a>
+          <a href="profil.html" aria-current="page">Mein Profil</a>
           <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+          <a href="favoriten.html">Meine Favoriten</a>
+          <a href="inserate.html">Meine Inserate</a>
           <a href="javascript:void(0);" onclick="logout()">Logout</a>
         `;
       } else {
@@ -167,8 +208,7 @@
       }
     }
 
-    async function logout(event) {
-      event.preventDefault();
+    async function logout() {
       await supabase.auth.signOut();
       window.location.href = "login.html";
     }
@@ -179,11 +219,14 @@
         window.location.href = "login.html";
         return;
       }
-
       const user = session.user;
       document.getElementById('email').value = user.email;
 
-      const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+      const { data, error } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+      if (error) {
+        alert("Fehler beim Laden des Profils.");
+        return;
+      }
       if (data) {
         document.getElementById('name').value = data.name || '';
         document.getElementById('phone').value = data.phone || '';
@@ -193,31 +236,90 @@
     }
 
     async function saveProfile() {
-      const { data: { user } } = await supabase.auth.getUser();
+      const { data: { user } } = await supabase.auth.getSession();
+      if (!user) {
+        alert("Nicht eingeloggt!");
+        return;
+      }
       const updates = {
         id: user.id,
-        name: document.getElementById('name').value,
-        phone: document.getElementById('phone').value,
-        city: document.getElementById('city').value,
-        bio: document.getElementById('bio').value
+        name: document.getElementById('name').value.trim(),
+        phone: document.getElementById('phone').value.trim(),
+        city: document.getElementById('city').value.trim(),
+        bio: document.getElementById('bio').value.trim()
       };
-      await supabase.from('profiles').upsert(updates);
-      alert("Profil gespeichert!");
+      const { error } = await supabase.from('profiles').upsert(updates);
+      if (error) {
+        alert("Fehler beim Speichern: " + error.message);
+      } else {
+        alert("Profil gespeichert!");
+      }
     }
 
     async function changePassword() {
-      const password = document.getElementById('password').value;
-      if (!password) return alert("Bitte Passwort eingeben.");
-      const { error } = await supabase.auth.updateUser({ password });
-      if (error) alert("Fehler: " + error.message);
-      else {
-        alert("Passwort geändert.");
+      const password = document.getElementById('password').value.trim();
+      if (!password) return alert("Bitte ein Passwort eingeben.");
+      const { data, error } = await supabase.auth.updateUser({ password });
+      if (error) {
+        alert("Fehler beim Ändern des Passworts: " + error.message);
+      } else {
+        alert("Passwort erfolgreich geändert.");
         document.getElementById('password').value = '';
       }
     }
 
-    loadProfile();
+    async function deleteProfile() {
+      if (!confirm("Willst du dein Profil wirklich dauerhaft löschen? Alle Inserate, Nachrichten und Daten gehen verloren!")) return;
+
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user) {
+        alert("Nicht eingeloggt.");
+        window.location.href = "login.html";
+        return;
+      }
+      const userId = session.user.id;
+
+      try {
+        // Alle Inserate löschen
+        let { error: delListingsError } = await supabase.from('listings').delete().eq('user_id', userId);
+        if (delListingsError) throw delListingsError;
+
+        // Alle Nachrichten löschen (angenommen Tabelle heißt 'messages' mit Spalte sender_id oder recipient_id)
+        let { error: delMessagesError } = await supabase
+          .from('messages')
+          .delete()
+          .or(`sender_id.eq.${userId},recipient_id.eq.${userId}`);
+        if (delMessagesError) throw delMessagesError;
+
+        // Alle Favoriten löschen
+        let { error: delFavError } = await supabase.from('favorites').delete().eq('user_id', userId);
+        if (delFavError) throw delFavError;
+
+        // Alle Bewertungen gesendet UND empfangen löschen (optional)
+        let { error: delReviewsError } = await supabase
+          .from('reviews')
+          .delete()
+          .or(`from_user_id.eq.${userId},to_user_id.eq.${userId}`);
+        if (delReviewsError) throw delReviewsError;
+
+        // Profil löschen
+        let { error: delProfileError } = await supabase.from('profiles').delete().eq('id', userId);
+        if (delProfileError) throw delProfileError;
+
+        // Userkonto löschen
+        const { error: delUserError } = await supabase.auth.admin.deleteUser(userId);
+        if (delUserError) throw delUserError;
+
+        alert("Profil und alle zugehörigen Daten wurden gelöscht.");
+        window.location.href = "index.html";
+
+      } catch (error) {
+        alert("Fehler beim Löschen: " + error.message);
+      }
+    }
+
     updateNav();
+    loadProfile();
   </script>
 </body>
 </html>
