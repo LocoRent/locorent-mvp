@@ -259,12 +259,14 @@
 </main>
 
 <script>
+// Supabase-Setup bleibt wie gehabt
 const supabase = window.supabase.createClient(
   'https://flnjalgqtkqycsaymmbd.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
 );
 
 let uploadedImageUrls = [];
+let lastSelectedCoordinates = null; // Für späteres Caching
 const locationInput = document.getElementById('location-input');
 const suggestionBox = document.getElementById('suggestions');
 
@@ -272,15 +274,13 @@ function capitalize(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-// NEU: Hilfsfunktion zum Verkleinern und Komprimieren
+// 📦 Bild verkleinern & komprimieren
 function resizeImage(file, maxSize = 1024, quality = 0.8) {
   return new Promise((resolve, reject) => {
     const img = new Image();
     const reader = new FileReader();
-
     reader.onload = e => { img.src = e.target.result; };
     reader.onerror = reject;
-
     img.onload = () => {
       let { width, height } = img;
       if (width > height && width > maxSize) {
@@ -290,13 +290,11 @@ function resizeImage(file, maxSize = 1024, quality = 0.8) {
         width *= maxSize / height;
         height = maxSize;
       }
-
       const canvas = document.createElement('canvas');
       canvas.width = width;
       canvas.height = height;
       const ctx = canvas.getContext('2d');
       ctx.drawImage(img, 0, 0, width, height);
-
       canvas.toBlob(blob => {
         if (blob) resolve(blob);
         else reject(new Error("Bild konnte nicht konvertiert werden."));
@@ -305,6 +303,7 @@ function resizeImage(file, maxSize = 1024, quality = 0.8) {
   });
 }
 
+// 🏙️ Ortssuche mit Vorschlag & Koordinaten speichern
 locationInput.addEventListener('input', async (e) => {
   const value = e.target.value.trim();
   if (value.length < 2) {
@@ -333,6 +332,10 @@ locationInput.addEventListener('input', async (e) => {
       div.textContent = display;
       div.onclick = () => {
         locationInput.value = display;
+        lastSelectedCoordinates = {
+          lat: parseFloat(r.lat),
+          lon: parseFloat(r.lon)
+        };
         suggestionBox.innerHTML = '';
       };
       suggestionBox.appendChild(div);
@@ -346,6 +349,7 @@ locationInput.addEventListener('input', async (e) => {
   }
 });
 
+// 📤 Datei-Upload + Resize
 document.getElementById("dropzone").addEventListener("click", () => {
   if (uploadedImageUrls.length >= 2) {
     alert("Maximal 2 Bilder erlaubt.");
@@ -359,7 +363,6 @@ document.getElementById("dropzone").addEventListener("click", () => {
   input.click();
 });
 
-// NEU: handleFiles mit Resize/Komprimierung
 async function handleFiles(files) {
   const container = document.getElementById("preview-gallery");
   for (let file of files) {
@@ -407,6 +410,7 @@ function removeImage(idx) {
   renderPreviews();
 }
 
+// 💾 Inserat speichern
 document.getElementById("save-btn").addEventListener("click", async () => {
   const { data: sd } = await supabase.auth.getSession();
   const user = sd?.session?.user;
@@ -429,19 +433,24 @@ document.getElementById("save-btn").addEventListener("click", async () => {
   let latitude = null;
   let longitude = null;
 
-  try {
-    const r = await fetch(`https://nominatim.openstreetmap.org/search?format=json&countrycodes=de&q=${encodeURIComponent(location)}&limit=1`);
-    const arr = await r.json();
-    if (arr.length > 0) {
-      latitude = parseFloat(arr[0].lat);
-      longitude = parseFloat(arr[0].lon);
-    } else {
-      alert("Ort nicht gefunden.");
+  if (lastSelectedCoordinates) {
+    latitude = lastSelectedCoordinates.lat;
+    longitude = lastSelectedCoordinates.lon;
+  } else {
+    try {
+      const r = await fetch(`https://nominatim.openstreetmap.org/search?format=json&countrycodes=de&q=${encodeURIComponent(location)}&limit=1`);
+      const arr = await r.json();
+      if (arr.length > 0) {
+        latitude = parseFloat(arr[0].lat);
+        longitude = parseFloat(arr[0].lon);
+      } else {
+        alert("Ort nicht gefunden.");
+        return;
+      }
+    } catch (err) {
+      alert("Geocoding fehlgeschlagen.");
       return;
     }
-  } catch (err) {
-    alert("Geocoding fehlgeschlagen.");
-    return;
   }
 
   const { error: ie } = await supabase.from('listings').insert({
@@ -461,10 +470,12 @@ document.getElementById("save-btn").addEventListener("click", async () => {
   alert("Inserat gespeichert!");
   document.querySelectorAll('input, textarea, select').forEach(el => el.value = '');
   uploadedImageUrls = [];
+  lastSelectedCoordinates = null;
   renderPreviews();
   loadGallery();
 });
 
+// Galerie laden
 async function loadGallery() {
   const { data: sd } = await supabase.auth.getSession();
   const user = sd?.session?.user;
