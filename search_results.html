@@ -192,6 +192,8 @@
         <option value="freizeit">Freizeit & Sport</option>
         <option value="baby">Baby & Kind</option>
       </select>
+      <input type="number" id="min-price" placeholder="Min. Preis" min="0" />
+      <input type="number" id="max-price" placeholder="Max. Preis" min="0" />
       <div style="position: relative; flex: 1; min-width: 200px;">
         <input type="text" placeholder="Ort" id="location-input" autocomplete="off" />
         <div id="suggestions"></div>
@@ -263,12 +265,16 @@
       const filters = {
         title: params.get('title') || '',
         category: params.get('category') || '',
+        minPrice: params.get('minPrice') || '',
+        maxPrice: params.get('maxPrice') || '',
         location: params.get('location') || '',
         radius: params.get('radius') || ''
       };
 
       document.getElementById("search-input").value = filters.title;
       document.getElementById("category-select").value = filters.category.toLowerCase();
+      document.getElementById("min-price").value = filters.minPrice;
+      document.getElementById("max-price").value = filters.maxPrice;
       document.getElementById("location-input").value = filters.location;
       document.getElementById("radius-select").value = filters.radius;
 
@@ -334,10 +340,12 @@
     document.getElementById('search-btn').addEventListener('click', () => {
       const title = document.getElementById("search-input").value.trim();
       const category = document.getElementById("category-select").value.trim();
+      const minPrice = document.getElementById("min-price").value.trim();
+      const maxPrice = document.getElementById("max-price").value.trim();
       const location = document.getElementById("location-input").value.trim();
       const radius = document.getElementById("radius-select").value.trim();
-      const params = new URLSearchParams({ title, category, location, radius });
-      window.location.href = `search-results.html?${params.toString()}`;
+      const params = new URLSearchParams({ title, category, minPrice, maxPrice, location, radius });
+      window.location.href = `search_results.html?${params.toString()}`;
     });
 
     function capitalize(str) {
@@ -386,7 +394,7 @@
     }
 
     function getDistance(lat1, lon1, lat2, lon2) {
-      const R = 6371; // Erdradius in km
+      const R = 6371;
       const toRad = deg => deg * (Math.PI / 180);
       const dLat = toRad(lat2 - lat1);
       const dLon = toRad(lon2 - lon1);
@@ -402,6 +410,14 @@
 
       if (filters.title) query = query.ilike('title', `%${filters.title}%`);
       if (filters.category) query = query.eq('category', filters.category.toLowerCase());
+
+      const min = filters.minPrice ? parseFloat(filters.minPrice) : 0;
+      const max = filters.maxPrice ? parseFloat(filters.maxPrice) : null;
+      if (max !== null && !isNaN(max)) {
+        query = query.gte('price_per_day', min).lte('price_per_day', max);
+      } else {
+        query = query.gte('price_per_day', min);
+      }
 
       const { data, error } = await query;
       if (error) {
