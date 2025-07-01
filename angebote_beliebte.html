@@ -11,12 +11,13 @@
       --primary-color: #2e7d32;
       --secondary-color: #a5d6a7;
       --background-color: #f1f8e9;
-      --text-color: #333;
+      --dark-color: #1b5e20;
+      --highlight-color: #66bb6a;
       --white: #fff;
+      --gray-light: #f7f7f7;
+      --gray-dark: #333;
       --border-radius: 12px;
-      --shadow-light: rgba(0, 0, 0, 0.05);
-      --shadow-strong: rgba(0, 0, 0, 0.15);
-      --gap: 1.5rem;
+      --shadow-color: rgba(0, 0, 0, 0.1);
     }
     * {
       margin: 0;
@@ -25,12 +26,9 @@
     }
     body {
       font-family: 'Poppins', sans-serif;
-      background: var(--background-color);
-      color: var(--text-color);
-      max-width: 1200px;
-      margin: 2rem auto;
-      padding: 0 1rem;
-      line-height: 1.5;
+      background-color: var(--background-color);
+      color: var(--gray-dark);
+      line-height: 1.6;
     }
     header {
       background-color: var(--primary-color);
@@ -48,89 +46,73 @@
       margin-left: 1.5rem;
       text-decoration: none;
       font-weight: 600;
+      cursor: pointer;
     }
     nav a:hover {
-      border-bottom: 2px solid var(--secondary-color);
+      border-bottom: 2px solid var(--highlight-color);
+    }
+    main {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
     }
     h1 {
       font-weight: 600;
     }
     h2 {
-      margin-top: 2rem;
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
       color: var(--primary-color);
-      font-weight: 700;
-      font-size: 2rem;
-      border-left: 6px solid var(--primary-color);
-      padding-left: 0.5rem;
+      font-weight: 600;
     }
     .category-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill,minmax(280px,1fr));
-      gap: var(--gap);
-      margin-bottom: 3rem;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 2rem;
     }
     .result-card {
       background-color: var(--white);
       border-radius: var(--border-radius);
-      box-shadow: 0 4px 8px var(--shadow-light);
-      overflow: hidden;
+      padding: 1rem;
+      box-shadow: 0 2px 8px var(--shadow-color);
+      transition: transform 0.2s ease;
       display: flex;
       flex-direction: column;
-      transition: box-shadow 0.3s ease, transform 0.3s ease;
     }
     .result-card:hover {
-      box-shadow: 0 10px 20px var(--shadow-strong);
-      transform: translateY(-5px);
+      transform: translateY(-3px);
+      box-shadow: 0 4px 16px var(--shadow-color);
     }
     .result-card img {
       width: 100%;
-      height: 180px;
+      height: 160px;
       object-fit: cover;
-      border-bottom: 1px solid #ddd;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      flex-shrink: 0;
     }
-    .result-content {
-      padding: 1rem 1.2rem 1.5rem;
+    .result-card h3 {
+      margin-bottom: 0.5rem;
+      font-size: 1.2rem;
       flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
     }
-    .result-content h3 {
-      font-weight: 600;
+    .result-card p {
       margin-bottom: 0.3rem;
-      font-size: 1.1rem;
-      color: var(--primary-color);
-    }
-    .result-content h4 {
-      margin-bottom: 0.6rem;
-      font-weight: 700;
-      font-size: 1.3rem;
-      color: #222;
-    }
-    .result-content p {
-      margin-bottom: 0.6rem;
       font-size: 0.95rem;
-      color: #555;
     }
-    .btn-details {
+    .result-card button {
       margin-top: auto;
       padding: 0.6rem;
       background-color: var(--primary-color);
       color: var(--white);
       border: none;
       border-radius: 8px;
-      font-weight: 600;
       cursor: pointer;
-      font-size: 1rem;
+      font-weight: 600;
       transition: background-color 0.3s ease;
-      text-align: center;
-      text-decoration: none;
-      display: inline-block;
+      width: 100%;
     }
-    .btn-details:hover {
-      background-color: var(--secondary-color);
-      color: var(--primary-color);
+    .result-card button:hover {
+      background-color: var(--highlight-color);
     }
     footer {
       padding: 2rem;
@@ -138,7 +120,7 @@
       background-color: var(--primary-color);
       color: var(--white);
       border-radius: var(--border-radius);
-      margin-top: 2rem;
+      margin-top: 3rem;
     }
     @media (max-width: 768px) {
       header {
@@ -158,18 +140,15 @@
 <body>
   <header>
     <h1>Locorent</h1>
-    <nav id="nav-links">
-      <a href="index.html">Start</a>
-      <a href="angebote_neueste.html">Neueste Angebote</a>
-      <a href="angebote_beliebte.html">Beliebte Angebote</a>
-    </nav>
+    <nav id="nav-links"></nav>
   </header>
 
-  <h2>Beliebte Angebote</h2>
-
-  <div id="popular-offers" class="category-grid">
-    <p>⏳ Lade Angebote…</p>
-  </div>
+  <main>
+    <h2>Beliebte Angebote</h2>
+    <div id="popular-offers" class="category-grid">
+      <p>⏳ Lade Angebote…</p>
+    </div>
+  </main>
 
   <footer>
     <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2rem;">
@@ -209,6 +188,36 @@
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
     );
 
+    let userSession = null;
+
+    async function init() {
+      const { data: { session } } = await supabase.auth.getSession();
+      userSession = session;
+      updateNav();
+      loadPopularOffers();
+    }
+
+    function updateNav() {
+      const nav = document.getElementById('nav-links');
+      nav.innerHTML = userSession?.user ? `
+        <a href="index.html">Start</a>
+        <a href="profil.html">Mein Profil</a>
+        <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+        <a href="favoriten.html">Meine Favoriten</a>
+        <a href="inserate.html">Meine Inserate</a>
+        <a href="#" onclick="logout(event)">Logout</a>
+      ` : `
+        <a href="index.html">Start</a>
+        <a href="login.html">Einloggen</a>
+      `;
+    }
+
+    async function logout(event) {
+      event.preventDefault();
+      await supabase.auth.signOut();
+      window.location.href = "login.html";
+    }
+
     async function loadPopularOffers() {
       const { data, error } = await supabase
         .from('listings')
@@ -235,12 +244,10 @@
         card.className = 'result-card';
         card.innerHTML = `
           <img src="${item.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" alt="${item.title}" />
-          <div class="result-content">
-            <h3>${capitalize(item.category)}</h3>
-            <h4>${item.title}</h4>
-            <p><strong>Preis pro Tag:</strong> ${item.price_per_day ?? 'k. A.'} €</p>
-            <a href="mietobjekt.html?id=${item.id}" class="btn-details" aria-label="Details zu ${item.title} ansehen">Details ansehen</a>
-          </div>
+          <h3>${item.title}</h3>
+          <p><strong>Kategorie:</strong> ${capitalize(item.category)}</p>
+          <p><strong>Preis pro Tag:</strong> ${item.price_per_day ?? 'k. A.'} €</p>
+          <button onclick="window.location.href='mietobjekt.html?id=${item.id}'">Details ansehen</button>
         `;
         container.appendChild(card);
       });
@@ -250,7 +257,7 @@
       return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
     }
 
-    loadPopularOffers();
+    init();
   </script>
 </body>
 </html>
