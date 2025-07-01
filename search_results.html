@@ -76,7 +76,7 @@
       border-radius: 8px;
       font-size: 1rem;
       flex: 1;
-      min-width: 220px;
+      min-width: 200px;
     }
     .search-row button {
       background-color: var(--highlight-color);
@@ -88,13 +88,35 @@
     .search-row button:hover {
       background-color: var(--secondary-color);
     }
+    #suggestions {
+      position: absolute;
+      top: calc(100% + 5px);
+      left: 0;
+      right: 0;
+      max-height: 140px;
+      overflow-y: auto;
+      background: white;
+      z-index: 10;
+      border: 1px solid #ccc;
+      border-top: none;
+      border-radius: 0 0 8px 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+    #suggestions div {
+      padding: 0.5rem;
+      cursor: pointer;
+    }
+    #suggestions div:hover {
+      background-color: #e0f2f1;
+    }
     .category-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
       gap: 2rem;
       margin-top: 2rem;
       max-width: var(--max-width);
-      margin: auto;
+      margin-left: auto;
+      margin-right: auto;
     }
     .result-card {
       background-color: var(--white);
@@ -126,9 +148,6 @@
       cursor: pointer;
       font-weight: 600;
     }
-    #radius-custom-input {
-      display: none;
-    }
     footer {
       padding: 2rem;
       text-align: center;
@@ -157,7 +176,7 @@
     <h2>Suchergebnisse</h2>
     <div id="current-category" style="margin-top: 1rem; font-weight: 600; color: var(--primary-color);"></div>
     <div class="search-row">
-      <input type="text" id="search-input" placeholder="Was suchst du?" />
+      <input type="text" placeholder="Was suchst du?" id="search-input" />
       <select id="category-select">
         <option value="">Alle Kategorien</option>
         <option value="fahrzeuge">Fahrzeuge</option>
@@ -173,25 +192,58 @@
         <option value="freizeit">Freizeit & Sport</option>
         <option value="baby">Baby & Kind</option>
       </select>
-      <input type="number" id="min-price" placeholder="Min. Preis" />
-      <input type="number" id="max-price" placeholder="Max. Preis" />
-      <input type="text" id="location-input" placeholder="Ort (z. B. Berlin)" />
-      <input list="radius-options" id="radius-select" placeholder="Umkreis in km" type="number" min="1" />
-      <datalist id="radius-options">
-        <option value="5">
-        <option value="10">
-        <option value="20">
-        <option value="50">
-      </datalist>
-      <input type="number" id="radius-custom-input" placeholder="Radius in km" min="1" />
+      <div style="position: relative; flex: 1; min-width: 200px;">
+        <input type="text" placeholder="Ort" id="location-input" autocomplete="off" />
+        <div id="suggestions"></div>
+      </div>
+      <select id="radius-select">
+        <option value="">Ganzer Ort</option>
+        <option value="5">5 km</option>
+        <option value="10">10 km</option>
+        <option value="20">20 km</option>
+        <option value="30">30 km</option>
+        <option value="50">50 km</option>
+        <option value="100">100 km</option>
+        <option value="200">200 km</option>
+      </select>
       <button id="search-btn">Suchen</button>
     </div>
   </section>
 
-  <div class="category-grid" id="results"></div>
+  <div class="category-grid" id="results">
+    <p>⏳ Lade Ergebnisse…</p>
+  </div>
 
-  <footer>
-    © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
+  <footer style="background-color: #2e7d32; color: white; padding: 2rem;">
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2rem;">
+      <div style="flex: 1; min-width: 200px;">
+        <h4 style="margin-bottom: 0.5rem;">Mieten & Vermieten</h4>
+        <ul style="list-style: none; padding: 0; line-height: 1.8;">
+          <li><a href="so-funktionierts.html" style="color: white; text-decoration: underline;">So funktioniert's</a></li>
+          <li><a href="vermieter-werden.html" style="color: white; text-decoration: underline;">Werde zum Vermieter</a></li>
+          <li><a href="kategorien.html" style="color: white; text-decoration: underline;">Beliebte Kategorien</a></li>
+          <li><a href="vermieter-tipps.html" style="color: white; text-decoration: underline;">Tipps & Tricks für Vermieter</a></li>
+          <li><a href="hilfe-faq.html" style="color: white; text-decoration: underline;">Hilfe und FAQ</a></li>
+        </ul>
+      </div>
+      <div style="flex: 1; min-width: 200px;">
+        <h4 style="margin-bottom: 0.5rem;">Wissenswertes</h4>
+        <ul style="list-style: none; padding: 0; line-height: 1.8;">
+          <li><a href="agb.html" style="color: white; text-decoration: underline;">AGB & Impressum</a></li>
+          <li><a href="datenschutz.html" style="color: white; text-decoration: underline;">Datenschutz</a></li>
+        </ul>
+      </div>
+      <div style="flex: 1; min-width: 200px;">
+        <h4 style="margin-bottom: 0.5rem;">Über uns</h4>
+        <ul style="list-style: none; padding: 0; line-height: 1.8;">
+          <li><a href="kontakt.html" style="color: white; text-decoration: underline;">Kontaktieren Sie uns</a></li>
+          <li><a href="social-media.html" style="color: white; text-decoration: underline;">Folgen Sie uns</a></li>
+        </ul>
+      </div>
+    </div>
+    <div style="margin-top: 2rem; text-align: center; font-size: 0.9rem;">
+      © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
+    </div>
   </footer>
 
   <script>
@@ -200,44 +252,192 @@
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
     );
 
-    document.getElementById("radius-select").addEventListener("change", (e) => {
-      const customInput = document.getElementById("radius-custom-input");
-      if (e.target.value === "custom") {
-        customInput.style.display = "block";
+    let userSession = null;
+
+    async function init() {
+      const { data: { session } } = await supabase.auth.getSession();
+      userSession = session;
+      updateNav();
+
+      const params = new URLSearchParams(window.location.search);
+      const filters = {
+        title: params.get('title') || '',
+        category: params.get('category') || '',
+        location: params.get('location') || '',
+        radius: params.get('radius') || ''
+      };
+
+      document.getElementById("search-input").value = filters.title;
+      document.getElementById("category-select").value = filters.category.toLowerCase();
+      document.getElementById("location-input").value = filters.location;
+      document.getElementById("radius-select").value = filters.radius;
+
+      const currentCategoryDiv = document.getElementById("current-category");
+      if (filters.category) {
+        const prettyCategory = filters.category.charAt(0).toUpperCase() + filters.category.slice(1);
+        currentCategoryDiv.textContent = `Suchergebnisse für Kategorie: ${prettyCategory}`;
       } else {
-        customInput.style.display = "none";
-        customInput.value = "";
+        currentCategoryDiv.textContent = "";
+      }
+
+      loadListings(filters);
+    }
+
+    function updateNav() {
+      const nav = document.getElementById('nav-links');
+      nav.innerHTML = userSession?.user ? 
+        `<a href="index.html">Start</a>
+         <a href="profil.html">Mein Profil</a>
+         <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+         <a href="favoriten.html">Meine Favoriten</a>
+         <a href="inserate.html">Meine Inserate</a>
+         <a href="#" onclick="logout(event)">Logout</a>`
+       : 
+        `<a href="index.html">Start</a>
+         <a href="login.html">Einloggen</a>`;
+    }
+
+    async function logout(event) {
+      event.preventDefault();
+      await supabase.auth.signOut();
+      window.location.href = "login.html";
+    }
+
+    document.getElementById('location-input').addEventListener('input', async (e) => {
+      const value = e.target.value.trim();
+      const suggestionsBox = document.getElementById('suggestions');
+      if (value.length < 2) {
+        suggestionsBox.innerHTML = '';
+        return;
+      }
+      try {
+        const res = await fetch(`https://corsproxy.io/?https://nominatim.openstreetmap.org/search?format=json&accept-language=de&countrycodes=de&addressdetails=1&limit=6&q=${encodeURIComponent(value)}`);
+        const results = await res.json();
+        suggestionsBox.innerHTML = '';
+        results.forEach(r => {
+          const ort = r.address.city || r.address.town || r.address.village || r.display_name.split(',')[0];
+          const bundesland = r.address.state || '';
+          const display = [ort, bundesland].filter(Boolean).join(', ');
+          const div = document.createElement('div');
+          div.textContent = display;
+          div.onclick = () => {
+            document.getElementById('location-input').value = display;
+            suggestionsBox.innerHTML = '';
+          };
+          suggestionsBox.appendChild(div);
+        });
+      } catch (error) {
+        console.error('Fehler bei der Ortssuche:', error);
       }
     });
 
-    document.getElementById("search-btn").addEventListener("click", () => {
+    document.getElementById('search-btn').addEventListener('click', () => {
       const title = document.getElementById("search-input").value.trim();
       const category = document.getElementById("category-select").value.trim();
-      const minPrice = document.getElementById("min-price").value.trim();
-      const maxPrice = document.getElementById("max-price").value.trim();
       const location = document.getElementById("location-input").value.trim();
-      let radius = document.getElementById("radius-select").value;
-      if (radius === "custom") {
-        radius = document.getElementById("radius-custom-input").value.trim();
-      }
-      const searchParams = new URLSearchParams({ title, category, minPrice, maxPrice, location, radius });
-      window.location.href = `search_results.html?${searchParams.toString()}`;
+      const radius = document.getElementById("radius-select").value.trim();
+      const params = new URLSearchParams({ title, category, location, radius });
+      window.location.href = `search-results.html?${params.toString()}`;
     });
 
     function capitalize(str) {
       return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
     }
 
-    function renderResults(items) {
+    async function checkIfFavorite(listingId) {
+      if (!userSession?.user) return false;
+      const { data } = await supabase
+        .from('favorites')
+        .select('*')
+        .eq('user_id', userSession.user.id)
+        .eq('listing_id', listingId)
+        .maybeSingle();
+      return !!data;
+    }
+
+    async function toggleFavorite(listingId) {
+      if (!userSession?.user) return false;
+      const { data } = await supabase
+        .from('favorites')
+        .select('*')
+        .eq('user_id', userSession.user.id)
+        .eq('listing_id', listingId)
+        .maybeSingle();
+      if (data) {
+        await supabase.from('favorites').delete().eq('id', data.id);
+        return false;
+      } else {
+        await supabase.from('favorites').insert({ user_id: userSession.user.id, listing_id: listingId });
+        return true;
+      }
+    }
+
+    async function geocodeLocation(query) {
+      try {
+        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`);
+        const json = await res.json();
+        if (json.length > 0) {
+          return { lat: parseFloat(json[0].lat), lon: parseFloat(json[0].lon) };
+        }
+      } catch (error) {
+        console.error('Geocode-Fehler:', error);
+      }
+      return null;
+    }
+
+    function getDistance(lat1, lon1, lat2, lon2) {
+      const R = 6371; // Erdradius in km
+      const toRad = deg => deg * (Math.PI / 180);
+      const dLat = toRad(lat2 - lat1);
+      const dLon = toRad(lon2 - lon1);
+      const a = Math.sin(dLat / 2) ** 2 +
+                Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+                Math.sin(dLon / 2) ** 2;
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return R * c;
+    }
+
+    async function loadListings(filters = {}) {
+      let query = supabase.from('listings').select('*').order('created_at', { ascending: false });
+
+      if (filters.title) query = query.ilike('title', `%${filters.title}%`);
+      if (filters.category) query = query.eq('category', filters.category.toLowerCase());
+
+      const { data, error } = await query;
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      if (filters.location && filters.radius) {
+        const geo = await geocodeLocation(filters.location);
+        if (!geo) {
+          renderResults([]);
+          return;
+        }
+        const radius = parseFloat(filters.radius);
+        const filtered = data.filter(item => {
+          if (item.latitude && item.longitude) {
+            return getDistance(geo.lat, geo.lon, item.latitude, item.longitude) <= radius;
+          }
+          return false;
+        });
+        renderResults(filtered);
+      } else {
+        renderResults(data);
+      }
+    }
+
+    async function renderResults(items) {
       const container = document.getElementById("results");
       container.innerHTML = "";
 
-      if(items.length === 0) {
+      if (items.length === 0) {
         container.innerHTML = "<p style='grid-column: 1/-1; text-align:center; color:#666;'>Keine Ergebnisse gefunden.</p>";
         return;
       }
 
-      items.forEach(async (item) => {
+      for (const item of items) {
         const card = document.createElement("div");
         card.className = "result-card";
 
@@ -253,154 +453,23 @@
         `;
 
         const favBtn = card.querySelector(".fav-btn");
-        favBtn.addEventListener("click", async (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          const toggled = await toggleFavorite(item.id);
-          favBtn.innerText = toggled ? "Favorit entfernen" : "Zu Favoriten";
-        });
+        if (userSession?.user) {
+          favBtn.addEventListener("click", async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const toggled = await toggleFavorite(item.id);
+            favBtn.innerText = toggled ? "Favorit entfernen" : "Zu Favoriten";
+          });
+        } else {
+          favBtn.disabled = true;
+          favBtn.innerText = "Login erforderlich";
+        }
 
         container.appendChild(card);
-      });
-    }
-
-    async function checkIfFavorite(listingId) {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.user) return false;
-      const { data } = await supabase
-        .from('favorites')
-        .select('*')
-        .eq('user_id', session.user.id)
-        .eq('listing_id', listingId)
-        .maybeSingle();
-      return !!data;
-    }
-
-    async function toggleFavorite(listingId) {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.user) return false;
-      const { data } = await supabase
-        .from('favorites')
-        .select('*')
-        .eq('user_id', session.user.id)
-        .eq('listing_id', listingId)
-        .maybeSingle();
-      if (data) {
-        await supabase.from('favorites').delete().eq('id', data.id);
-        return false;
-      } else {
-        await supabase.from('favorites').insert({ user_id: session.user.id, listing_id: listingId });
-        return true;
       }
     }
 
-    async function geocodeLocation(query) {
-      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`);
-      const json = await res.json();
-      if (json.length > 0) {
-        return { lat: parseFloat(json[0].lat), lon: parseFloat(json[0].lon) };
-      }
-      return null;
-    }
-
-    function getDistance(lat1, lon1, lat2, lon2) {
-      const R = 6371;
-      const toRad = deg => deg * (Math.PI / 180);
-      const dLat = toRad(lat2 - lat1);
-      const dLon = toRad(lon2 - lon1);
-      const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-      return R * c;
-    }
-
-    async function loadListings(filters = {}) {
-      let query = supabase.from('listings').select('*').order('created_at', { ascending: false });
-
-      if (filters.title) query = query.ilike('title', `%${filters.title}%`);
-      if (filters.category) query = query.eq('category', filters.category.toLowerCase());
-      const min = filters.minPrice || 0;
-      const max = filters.maxPrice;
-      if (max) query = query.gte('price_per_day', min).lte('price_per_day', max);
-      else query = query.gte('price_per_day', min);
-
-      const { data, error } = await query;
-      if (error) return;
-
-      if (filters.location && filters.radius) {
-        const geo = await geocodeLocation(filters.location);
-        if (!geo) return renderResults([]);
-        const radius = parseFloat(filters.radius);
-        const filtered = data.filter(item => {
-          if (item.latitude && item.longitude) {
-            return getDistance(geo.lat, geo.lon, item.latitude, item.longitude) <= radius;
-          }
-          return false;
-        });
-        renderResults(filtered);
-      } else {
-        renderResults(data);
-      }
-    }
-
-    async function updateNav() {
-      const { data: { session } } = await supabase.auth.getSession();
-      const nav = document.getElementById('nav-links');
-      nav.innerHTML = session?.user ? `
-        <a href="index.html">Start</a>
-        <a href="profil.html">Mein Profil</a>
-        <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-        <a href="favoriten.html">Meine Favoriten</a>
-        <a href="inserate.html">Meine Inserate</a>
-        <a href="login.html" onclick="logout(event)">Logout</a>
-      ` : `
-        <a href="login.html">Einloggen</a>
-        <a href="register.html">Registrieren</a>
-      `;
-    }
-
-    async function logout(event) {
-      event.preventDefault();
-      await supabase.auth.signOut();
-      window.location.href = "login.html";
-    }
-
-    const params = new URLSearchParams(location.search);
-    const filters = {
-      title: params.get('title') || '',
-      category: params.get('category') || '',
-      minPrice: params.get('minPrice') || 0,
-      maxPrice: params.get('maxPrice') || '',
-      location: params.get('location') || '',
-      radius: params.get('radius') || ''
-    };
-
-    document.getElementById("search-input").value = filters.title;
-    // Korrigiere Kategorie-Setzung (klein schreiben, da deine option values kleingeschrieben sind)
-    document.getElementById("category-select").value = filters.category.toLowerCase();
-
-    document.getElementById("min-price").value = filters.minPrice;
-    document.getElementById("max-price").value = filters.maxPrice;
-    document.getElementById("location-input").value = filters.location;
-
-    if (filters.radius && !["5", "10", "20", "50"].includes(filters.radius)) {
-      document.getElementById("radius-select").value = "custom";
-      document.getElementById("radius-custom-input").style.display = "block";
-      document.getElementById("radius-custom-input").value = filters.radius;
-    } else {
-      document.getElementById("radius-select").value = filters.radius;
-    }
-
-    // Neue Kategorie-Anzeige unter Überschrift
-    const currentCategoryDiv = document.getElementById("current-category");
-    if (filters.category) {
-      const prettyCategory = filters.category.charAt(0).toUpperCase() + filters.category.slice(1);
-      currentCategoryDiv.textContent = `Suchergebnisse für Kategorie: ${prettyCategory}`;
-    } else {
-      currentCategoryDiv.textContent = "";
-    }
-
-    updateNav();
-    loadListings(filters);
+    init();
   </script>
 </body>
 </html>
