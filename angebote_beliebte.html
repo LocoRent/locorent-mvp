@@ -11,13 +11,12 @@
       --primary-color: #2e7d32;
       --secondary-color: #a5d6a7;
       --background-color: #f1f8e9;
-      --dark-color: #1b5e20;
-      --highlight-color: #66bb6a;
+      --text-color: #333;
       --white: #fff;
-      --gray-light: #f7f7f7;
-      --gray-dark: #333;
       --border-radius: 12px;
-      --shadow-color: rgba(0, 0, 0, 0.1);
+      --shadow-light: rgba(0, 0, 0, 0.05);
+      --shadow-strong: rgba(0, 0, 0, 0.15);
+      --gap: 1.5rem;
     }
     * {
       margin: 0;
@@ -26,12 +25,12 @@
     }
     body {
       font-family: 'Poppins', sans-serif;
-      background-color: var(--background-color);
-      color: var(--gray-dark);
-      line-height: 1.6;
+      background: var(--background-color);
+      color: var(--text-color);
       max-width: 1200px;
       margin: 2rem auto;
       padding: 0 1rem;
+      line-height: 1.5;
     }
     header {
       background-color: var(--primary-color);
@@ -43,7 +42,6 @@
       position: sticky;
       top: 0;
       z-index: 1000;
-      border-radius: var(--border-radius);
     }
     nav a {
       color: var(--white);
@@ -52,55 +50,87 @@
       font-weight: 600;
     }
     nav a:hover {
-      border-bottom: 2px solid var(--highlight-color);
+      border-bottom: 2px solid var(--secondary-color);
     }
     h1 {
       font-weight: 600;
     }
     h2 {
-      margin-top: 1rem;
-      font-weight: 600;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
       color: var(--primary-color);
+      font-weight: 700;
+      font-size: 2rem;
+      border-left: 6px solid var(--primary-color);
+      padding-left: 0.5rem;
     }
     .category-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 2rem;
-      margin-top: 2rem;
+      grid-template-columns: repeat(auto-fill,minmax(280px,1fr));
+      gap: var(--gap);
+      margin-bottom: 3rem;
     }
     .result-card {
       background-color: var(--white);
       border-radius: var(--border-radius);
-      padding: 1rem;
-      box-shadow: 0 2px 8px var(--shadow-color);
-      margin-bottom: 1.5rem;
-      transition: transform 0.2s ease;
+      box-shadow: 0 4px 8px var(--shadow-light);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: box-shadow 0.3s ease, transform 0.3s ease;
     }
     .result-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 4px 16px var(--shadow-color);
+      box-shadow: 0 10px 20px var(--shadow-strong);
+      transform: translateY(-5px);
     }
     .result-card img {
       width: 100%;
-      height: 200px;
+      height: 180px;
       object-fit: cover;
-      border-radius: 8px;
-      margin-bottom: 1rem;
+      border-bottom: 1px solid #ddd;
     }
-    .result-card button {
-      margin-top: 0.5rem;
+    .result-content {
+      padding: 1rem 1.2rem 1.5rem;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .result-content h3 {
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+      font-size: 1.1rem;
+      color: var(--primary-color);
+    }
+    .result-content h4 {
+      margin-bottom: 0.6rem;
+      font-weight: 700;
+      font-size: 1.3rem;
+      color: #222;
+    }
+    .result-content p {
+      margin-bottom: 0.6rem;
+      font-size: 0.95rem;
+      color: #555;
+    }
+    .btn-details {
+      margin-top: auto;
       padding: 0.6rem;
-      width: 100%;
       background-color: var(--primary-color);
-      color: white;
+      color: var(--white);
       border: none;
       border-radius: 8px;
-      cursor: pointer;
       font-weight: 600;
+      cursor: pointer;
+      font-size: 1rem;
       transition: background-color 0.3s ease;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
     }
-    .result-card button:hover {
-      background-color: var(--highlight-color);
+    .btn-details:hover {
+      background-color: var(--secondary-color);
+      color: var(--primary-color);
     }
     footer {
       padding: 2rem;
@@ -128,7 +158,7 @@
 <body>
   <header>
     <h1>Locorent</h1>
-    <nav>
+    <nav id="nav-links">
       <a href="index.html">Start</a>
       <a href="angebote_neueste.html">Neueste Angebote</a>
       <a href="angebote_beliebte.html">Beliebte Angebote</a>
@@ -136,6 +166,7 @@
   </header>
 
   <h2>Beliebte Angebote</h2>
+
   <div id="popular-offers" class="category-grid">
     <p>⏳ Lade Angebote…</p>
   </div>
@@ -187,13 +218,13 @@
 
       const container = document.getElementById('popular-offers');
 
-      if(error) {
+      if (error) {
         container.innerHTML = '<p>Fehler beim Laden der beliebten Angebote.</p>';
         console.error('Fehler bei loadPopularOffers:', error);
         return;
       }
 
-      if(data.length === 0) {
+      if (!data || data.length === 0) {
         container.innerHTML = '<p>Keine Angebote gefunden.</p>';
         return;
       }
@@ -204,10 +235,12 @@
         card.className = 'result-card';
         card.innerHTML = `
           <img src="${item.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" alt="${item.title}" />
-          <h3>${item.title}</h3>
-          <p><strong>Kategorie:</strong> ${capitalize(item.category)}</p>
-          <p><strong>Preis pro Tag:</strong> ${item.price_per_day || 'k. A.'} €</p>
-          <button onclick="window.location.href='mietobjekt.html?id=${item.id}'">Details ansehen</button>
+          <div class="result-content">
+            <h3>${capitalize(item.category)}</h3>
+            <h4>${item.title}</h4>
+            <p><strong>Preis pro Tag:</strong> ${item.price_per_day ?? 'k. A.'} €</p>
+            <a href="mietobjekt.html?id=${item.id}" class="btn-details" aria-label="Details zu ${item.title} ansehen">Details ansehen</a>
+          </div>
         `;
         container.appendChild(card);
       });
