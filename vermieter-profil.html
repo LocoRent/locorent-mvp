@@ -337,14 +337,12 @@
       <p><strong>Über mich:</strong> ${profile.bio || '–'}</p>
     `;
 
-    // Bewertungen laden
+    // Bewertungen laden inkl. Name des Bewerters
     const { data: reviews, error: reviewError } = await supabase
       .from("reviews")
-      .select("rating, comment, from_user_id, created_at")
+      .select("rating, comment, from_user_id, created_at, from_user:from_user_id(name)")
       .eq("to_user_id", userId)
       .order("created_at", { ascending: false });
-
-    console.log('Bewertungen geladen:', reviews, 'Fehler:', reviewError);
 
     const reviewList = document.getElementById("reviews-list");
 
@@ -358,14 +356,26 @@
         <div class="review-item">
           <strong>⭐ ${r.rating}/5</strong>
           <p>${r.comment}</p>
-          <small>${new Date(r.created_at).toLocaleDateString()}</small>
+          <small>Von <strong>${r.from_user?.name || 'Unbekannt'}</strong> am ${new Date(r.created_at).toLocaleDateString()}</small>
         </div>
       `).join('');
       reviewList.innerHTML = summary + list;
     }
 
-    // Bewertungsbutton nur zeigen wenn angemeldeter User nicht das eigene Profil ist
-    if (currentUser && currentUser.id !== userId) {
+    // Prüfen, ob aktueller User schon bewertet hat
+    let hasReviewed = false;
+    if (currentUser) {
+      const { data: existingReview } = await supabase
+        .from("reviews")
+        .select("id")
+        .eq("to_user_id", userId)
+        .eq("from_user_id", currentUser.id)
+        .single();
+      hasReviewed = !!existingReview;
+    }
+
+    // Bewertungsbutton nur zeigen wenn User angemeldet, nicht eigenes Profil und noch nicht bewertet hat
+    if (currentUser && currentUser.id !== userId && !hasReviewed) {
       document.getElementById("review-button-container").innerHTML = `
         <button class="review-btn" onclick="location.href='bewertung-schreiben.html?id=${userId}'">
           Bewertung abgeben
