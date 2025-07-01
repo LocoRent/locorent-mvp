@@ -250,6 +250,50 @@
       font-size: 0.9rem;
     }
   }
+
+  /* Footer styling like your index */
+  footer {
+    width: 100%;
+    background-color: var(--primary);
+    color: var(--white);
+    padding: 2rem 0;
+    box-shadow: 0 -2px 12px var(--shadow);
+    user-select: none;
+  }
+  footer > div {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 0 1.5rem;
+  }
+  footer h4 {
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+  }
+  footer ul {
+    list-style: none;
+    line-height: 1.7;
+    padding-left: 0;
+  }
+  footer ul li a {
+    color: var(--white);
+    text-decoration: underline;
+    font-weight: 400;
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+  footer ul li a:hover {
+    color: var(--primary-dark);
+  }
+  footer .copyright {
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--white);
+  }
 </style>
 </head>
 <body>
@@ -306,7 +350,35 @@
 </div>
 
 <footer role="contentinfo">
-  © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
+  <div>
+    <section aria-labelledby="footer-rent-title">
+      <h4 id="footer-rent-title">Mieten &amp; Vermieten</h4>
+      <ul>
+        <li><a href="so-funktionierts.html">So funktioniert's</a></li>
+        <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
+        <li><a href="kategorien.html">Beliebte Kategorien</a></li>
+        <li><a href="vermieter-tipps.html">Tipps &amp; Tricks für Vermieter</a></li>
+        <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
+      </ul>
+    </section>
+    <section aria-labelledby="footer-info-title">
+      <h4 id="footer-info-title">Wissenswertes</h4>
+      <ul>
+        <li><a href="agb.html">AGB &amp; Impressum</a></li>
+        <li><a href="datenschutz.html">Datenschutz</a></li>
+      </ul>
+    </section>
+    <section aria-labelledby="footer-about-title">
+      <h4 id="footer-about-title">Über uns</h4>
+      <ul>
+        <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
+        <li><a href="social-media.html">Folgen Sie uns</a></li>
+      </ul>
+    </section>
+  </div>
+  <div class="copyright" aria-label="Copyright">
+    © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
+  </div>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/zxcvbn@4.4.2/dist/zxcvbn.js"></script>
@@ -543,5 +615,6 @@
   updateNav();
   loadProfile();
 </script>
+<script src="https://cdn.jsdelivr.net/npm/zxcvbn@4.4.2/dist/zxcvbn.js"></script>
 </body>
 </html>
