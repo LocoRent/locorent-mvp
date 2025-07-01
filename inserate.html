@@ -312,7 +312,12 @@ locationInput.addEventListener('input', async (e) => {
   }
 
   try {
-    const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&accept-language=de&addressdetails=1&countrycodes=de&limit=8&q=${encodeURIComponent(value)}`);
+const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&accept-language=de&addressdetails=1&countrycodes=de&limit=8&q=${encodeURIComponent(value)}`, {
+  headers: {
+    'User-Agent': 'locorent.de (kontakt@locorent.de)',
+    'Referer': window.location.origin
+  }
+});
     const results = await res.json();
 
     const filtered = results.filter(r => {
