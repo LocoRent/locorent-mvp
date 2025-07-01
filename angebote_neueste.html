@@ -33,7 +33,7 @@
     header {
       background-color: var(--primary-color);
       color: var(--white);
-      padding: 1.2rem 2rem;
+      padding: 1.5rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -41,24 +41,32 @@
       top: 0;
       z-index: 1000;
     }
-    header nav a {
-      color: white;
-      margin-left: 1rem;
+    nav a {
+      color: var(--white);
+      margin-left: 1.5rem;
       text-decoration: none;
       font-weight: 600;
+      cursor: pointer;
     }
-    header nav a:hover {
-      border-bottom: 2px solid var(--dark-color);
+    nav a:hover {
+      border-bottom: 2px solid var(--highlight-color);
     }
     main {
       max-width: 1200px;
       margin: 2rem auto;
-      background: var(--white);
-      border-radius: var(--border-radius);
-      box-shadow: 0 4px 12px var(--shadow-color);
-      padding: 2rem;
+      padding: 0 1rem;
+    }
+    h1 {
+      font-weight: 600;
+    }
+    h2 {
+      margin-bottom: 1.5rem;
+      color: var(--primary-color);
+      font-weight: 600;
+    }
+    .category-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
       gap: 2rem;
     }
     .result-card {
@@ -76,52 +84,70 @@
     }
     .result-card img {
       width: 100%;
-      height: 200px;
+      height: 160px;
       object-fit: cover;
       border-radius: 8px;
       margin-bottom: 1rem;
+      flex-shrink: 0;
     }
     .result-card h3 {
-      margin-bottom: 0.25rem;
-      font-weight: 600;
-    }
-    .result-card p {
-      margin: 0.1rem 0;
+      margin-bottom: 0.5rem;
+      font-size: 1.2rem;
       flex-grow: 1;
     }
+    .result-card p {
+      margin-bottom: 0.3rem;
+      font-size: 0.95rem;
+    }
     .result-card button {
-      margin-top: auto;
+      margin-top: 0.5rem;
       padding: 0.6rem;
       background-color: var(--primary-color);
-      color: white;
+      color: var(--white);
       border: none;
       border-radius: 8px;
       cursor: pointer;
       font-weight: 600;
       transition: background-color 0.3s ease;
+      width: 100%;
     }
     .result-card button:hover {
       background-color: var(--highlight-color);
     }
-    footer {
-      text-align: center;
-      padding: 1.5rem 2rem;
-      background: var(--primary-color);
+    .fav-btn {
+      margin-top: 0.5rem;
+      padding: 0.6rem;
+      background-color: var(--secondary-color);
+      color: var(--dark-color);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background-color 0.3s ease;
+      width: 100%;
+    }
+    .fav-btn:hover {
+      background-color: #8bc34a;
       color: var(--white);
-      margin-top: 3rem;
-      font-size: 0.9rem;
+    }
+    footer {
+      padding: 2rem;
+      text-align: center;
+      background-color: var(--primary-color);
+      color: var(--white);
       border-radius: var(--border-radius);
+      margin-top: 3rem;
     }
     @media (max-width: 768px) {
       header {
         flex-direction: column;
         align-items: flex-start;
       }
-      header nav a {
+      nav a {
         margin-left: 0;
         margin-top: 0.5rem;
       }
-      main {
+      .category-grid {
         grid-template-columns: 1fr;
       }
     }
@@ -133,12 +159,43 @@
     <nav id="nav-links"></nav>
   </header>
 
-  <main id="newest-offers">
-    <p>⏳ Lade Angebote…</p>
+  <main>
+    <h2>Neueste Angebote</h2>
+    <div id="newest-offers" class="category-grid">
+      <p>⏳ Lade Angebote…</p>
+    </div>
   </main>
 
   <footer>
-    © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2rem;">
+      <div style="flex: 1; min-width: 200px;">
+        <h4 style="margin-bottom: 0.5rem;">Mieten & Vermieten</h4>
+        <ul style="list-style: none; padding: 0; line-height: 1.8;">
+          <li><a href="so-funktionierts.html" style="color: white; text-decoration: underline;">So funktioniert's</a></li>
+          <li><a href="vermieter-werden.html" style="color: white; text-decoration: underline;">Werde zum Vermieter</a></li>
+          <li><a href="kategorien.html" style="color: white; text-decoration: underline;">Beliebte Kategorien</a></li>
+          <li><a href="vermieter-tipps.html" style="color: white; text-decoration: underline;">Tipps & Tricks für Vermieter</a></li>
+          <li><a href="hilfe-faq.html" style="color: white; text-decoration: underline;">Hilfe und FAQ</a></li>
+        </ul>
+      </div>
+      <div style="flex: 1; min-width: 200px;">
+        <h4 style="margin-bottom: 0.5rem;">Wissenswertes</h4>
+        <ul style="list-style: none; padding: 0; line-height: 1.8;">
+          <li><a href="agb.html" style="color: white; text-decoration: underline;">AGB & Impressum</a></li>
+          <li><a href="datenschutz.html" style="color: white; text-decoration: underline;">Datenschutz</a></li>
+        </ul>
+      </div>
+      <div style="flex: 1; min-width: 200px;">
+        <h4 style="margin-bottom: 0.5rem;">Über uns</h4>
+        <ul style="list-style: none; padding: 0; line-height: 1.8;">
+          <li><a href="kontakt.html" style="color: white; text-decoration: underline;">Kontaktieren Sie uns</a></li>
+          <li><a href="social-media.html" style="color: white; text-decoration: underline;">Folgen Sie uns</a></li>
+        </ul>
+      </div>
+    </div>
+    <div style="margin-top: 2rem; text-align: center; font-size: 0.9rem;">
+      © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
+    </div>
   </footer>
 
   <script>
@@ -158,22 +215,17 @@
 
     function updateNav() {
       const nav = document.getElementById('nav-links');
-      if (userSession?.user) {
-        nav.innerHTML = `
-          <a href="index.html">Start</a>
-          <a href="profil.html">Mein Profil</a>
-          <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-          <a href="favoriten.html">Meine Favoriten</a>
-          <a href="inserate.html">Meine Inserate</a>
-          <a href="#" id="logout-link">Logout</a>
-        `;
-        document.getElementById('logout-link').addEventListener('click', logout);
-      } else {
-        nav.innerHTML = `
-          <a href="index.html">Start</a>
-          <a href="login.html">Einloggen</a>
-        `;
-      }
+      nav.innerHTML = userSession?.user ? `
+        <a href="index.html">Start</a>
+        <a href="profil.html">Mein Profil</a>
+        <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+        <a href="favoriten.html">Meine Favoriten</a>
+        <a href="inserate.html">Meine Inserate</a>
+        <a href="#" onclick="logout(event)">Logout</a>
+      ` : `
+        <a href="index.html">Start</a>
+        <a href="login.html">Einloggen</a>
+      `;
     }
 
     async function logout(event) {
@@ -193,11 +245,11 @@
 
       if (error) {
         container.innerHTML = '<p>Fehler beim Laden der neuesten Angebote.</p>';
-        console.error('Fehler bei loadNewestOffers:', error);
+        console.error(error);
         return;
       }
 
-      if (data.length === 0) {
+      if (!data || data.length === 0) {
         container.innerHTML = '<p>Keine Angebote gefunden.</p>';
         return;
       }
@@ -213,7 +265,7 @@
           <img src="${item.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" alt="${item.title}" />
           <h3>${item.title}</h3>
           <p><strong>Kategorie:</strong> ${capitalize(item.category) || 'Unbekannt'}</p>
-          <p><strong>Preis pro Tag:</strong> ${item.price_per_day || 'k. A.'} €</p>
+          <p><strong>Preis pro Tag:</strong> ${item.price_per_day ?? 'k. A.'} €</p>
           <button onclick="window.location.href='mietobjekt.html?id=${item.id}'">Details ansehen</button>
           <button class="fav-btn">${isFav ? 'Favorit entfernen' : 'Zu Favoriten'}</button>
         `;
