@@ -376,7 +376,7 @@
         .order('created_at', { ascending: false })
         .limit(5);
       if(error) {
-        document.getElementById('newest-offers').innerHTML = '<p>Fehler beim Laden der Angebote.</p>';
+        document.getElementById('newest-offers').innerHTML = '<p>Fehler beim Laden der neuesten Angebote.</p>';
         return;
       }
       renderOffers(data, 'newest-offers');
@@ -389,7 +389,7 @@
         .order('views', { ascending: false })
         .limit(5);
       if(error) {
-        document.getElementById('popular-offers').innerHTML = '<p>Fehler beim Laden der Angebote.</p>';
+        document.getElementById('popular-offers').innerHTML = '<p>Fehler beim Laden der beliebtesten Angebote.</p>';
         return;
       }
       renderOffers(data, 'popular-offers');
