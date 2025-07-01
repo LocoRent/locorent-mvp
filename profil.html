@@ -437,37 +437,6 @@
     }
   }
 
-  // Profil speichern
-  async function saveProfile() {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session?.user) {
-      alert("Nicht eingeloggt!");
-      return;
-    }
-    const userId = session.user.id;
-    const updates = {
-      id: userId,
-      name: document.getElementById('name').value.trim(),
-      phone: document.getElementById('phone').value.trim(),
-      city: document.getElementById('city').value.trim(),
-      bio: document.getElementById('bio').value.trim()
-    };
-
-    if (updates.name.length < 2) return alert("Bitte gib mindestens 2 Zeichen für den Namen ein.");
-
-    const btn = document.getElementById('save-btn');
-    btn.disabled = true;
-    try {
-      const { error } = await supabase.from('profiles').upsert(updates);
-      if (error) throw error;
-      alert("Profil erfolgreich gespeichert!");
-    } catch (err) {
-      alert("Fehler beim Speichern: " + err.message);
-    } finally {
-      btn.disabled = false;
-    }
-  }
-
   // Passwortstärke messen und visualisieren
   const pwInput = document.getElementById('password');
   const pwStrengthBar = document.getElementById('pw-strength');
