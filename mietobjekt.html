@@ -12,21 +12,20 @@
       --primary-dark: #1b5e20;
       --background-color: #f1f8e9;
       --white: #fff;
-      --light-bg: #f5f5f5;
+      --light-gray: #f5f5f5;
       --border-radius: 12px;
-      --shadow: rgba(0, 0, 0, 0.1);
+      --shadow-color: rgba(0, 0, 0, 0.1);
       --max-width: 1200px;
     }
     * {
-      box-sizing: border-box;
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
     }
     body {
       font-family: 'Poppins', sans-serif;
       background-color: var(--background-color);
       color: #333;
-      line-height: 1.5;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -43,157 +42,156 @@
       position: sticky;
       top: 0;
       z-index: 1000;
-      user-select: none;
+      box-shadow: 0 2px 8px var(--shadow-color);
     }
     header h1 {
       font-weight: 600;
+      font-size: 1.8rem;
       cursor: pointer;
     }
     nav#nav-links a {
       color: var(--white);
       margin-left: 1.5rem;
-      font-weight: 600;
       text-decoration: none;
-      user-select: none;
+      font-weight: 600;
       transition: border-bottom 0.3s ease;
-      padding-bottom: 2px;
     }
-    nav#nav-links a:hover,
-    nav#nav-links a:focus {
+    nav#nav-links a:hover {
       border-bottom: 2px solid var(--primary-dark);
-      outline: none;
     }
     main {
       max-width: var(--max-width);
       background: var(--white);
       border-radius: var(--border-radius);
-      box-shadow: 0 4px 12px var(--shadow);
-      margin: 2rem 1rem 4rem;
+      box-shadow: 0 6px 18px var(--shadow-color);
+      padding: 2rem 3rem;
+      margin: 3rem 1rem 4rem;
       display: flex;
       gap: 2rem;
-      padding: 2rem;
-      flex-wrap: wrap;
       width: 100%;
+      flex-wrap: wrap;
+      align-items: flex-start;
     }
     .gallery {
-      flex: 2 1 60%;
+      flex: 2 1 600px;
       min-width: 320px;
     }
     .main-image {
       width: 100%;
-      height: 400px;
-      border-radius: var(--border-radius);
+      height: 420px;
       object-fit: cover;
-      box-shadow: 0 4px 10px var(--shadow);
-      cursor: pointer;
+      border-radius: var(--border-radius);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
       transition: transform 0.3s ease;
     }
     .main-image:hover {
       transform: scale(1.03);
     }
     .thumbnails {
-      margin-top: 1rem;
       display: flex;
-      gap: 0.5rem;
+      gap: 0.75rem;
+      margin-top: 1rem;
       overflow-x: auto;
+      padding-bottom: 6px;
     }
     .thumbnails img {
-      width: 100px;
-      height: 70px;
+      width: 110px;
+      height: 80px;
       object-fit: cover;
       border-radius: 8px;
+      border: 3px solid transparent;
       cursor: pointer;
-      border: 2px solid transparent;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
       transition: border-color 0.3s ease;
       flex-shrink: 0;
     }
     .thumbnails img.active {
       border-color: var(--primary-color);
+      box-shadow: 0 0 10px var(--primary-color);
     }
     .content {
-      flex: 1 1 35%;
+      flex: 1 1 320px;
       min-width: 280px;
       display: flex;
       flex-direction: column;
+      gap: 1rem;
     }
     .content h2 {
-      font-weight: 600;
-      font-size: 2rem;
-      margin-bottom: 1rem;
+      font-size: 2.2rem;
       color: var(--primary-color);
+      font-weight: 700;
+      margin-bottom: 0.5rem;
     }
     .content p {
-      margin-bottom: 0.8rem;
-      font-size: 1rem;
-    }
-    .content p strong {
-      font-weight: 600;
-      color: var(--primary-dark);
-    }
-    .content .description {
-      background-color: var(--light-bg);
-      padding: 1rem;
-      border-radius: var(--border-radius);
-      box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
-      max-height: 180px;
-      overflow-y: auto;
-      white-space: pre-line;
-      margin-bottom: 1rem;
+      line-height: 1.5;
       font-size: 1rem;
       color: #444;
     }
+    .content p strong {
+      color: var(--primary-dark);
+    }
+    .content .description {
+      white-space: pre-wrap;
+      background: var(--light-gray);
+      padding: 1rem;
+      border-radius: var(--border-radius);
+      box-shadow: inset 0 0 8px rgba(0,0,0,0.05);
+      max-height: 220px;
+      overflow-y: auto;
+      font-size: 1rem;
+      color: #555;
+    }
     button {
+      padding: 1rem;
       background-color: var(--primary-color);
       color: var(--white);
       border: none;
       border-radius: var(--border-radius);
-      padding: 0.8rem;
-      font-weight: 600;
-      font-size: 1rem;
+      font-weight: 700;
+      font-size: 1.1rem;
       cursor: pointer;
-      box-shadow: 0 6px 14px rgba(46,125,50,0.6);
-      transition: background-color 0.3s ease, transform 0.3s ease;
+      box-shadow: 0 4px 10px rgba(46,125,50,0.6);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      margin-top: 0.5rem;
       user-select: none;
     }
-    button:hover:not(:disabled),
-    button:focus-visible {
+    button:hover {
       background-color: var(--primary-dark);
-      outline: none;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(27,94,32,0.8);
-    }
-    button:disabled {
-      background-color: #a5d6a7;
-      cursor: not-allowed;
-      box-shadow: none;
-      color: #4a7a4a;
+      box-shadow: 0 6px 14px rgba(27,94,32,0.8);
     }
     .vendor-info {
-      background-color: var(--light-bg);
-      padding: 1.5rem;
+      background: var(--light-gray);
+      padding: 1.5rem 1.75rem;
       border-radius: var(--border-radius);
-      box-shadow: 0 2px 8px var(--shadow);
-      margin-top: 2rem;
-      max-width: 600px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
       font-size: 1rem;
       color: #444;
+      line-height: 1.5;
+      margin-top: 2rem;
+      flex: 1 1 100%;
+      max-width: 600px;
     }
     .vendor-info h3 {
-      margin-bottom: 1rem;
-      font-weight: 600;
       color: var(--primary-color);
+      font-weight: 700;
+      margin-bottom: 0.75rem;
     }
     .vendor-info a {
       color: var(--primary-color);
       text-decoration: underline;
+      font-weight: 600;
       cursor: pointer;
+      transition: color 0.3s ease;
+    }
+    .vendor-info a:hover {
+      color: var(--primary-dark);
     }
     footer {
+      width: 100%;
       background-color: var(--primary-color);
       color: var(--white);
-      width: 100%;
       padding: 2rem 0;
-      box-shadow: 0 -4px 12px var(--shadow);
+      box-shadow: 0 -2px 12px var(--shadow-color);
       user-select: none;
     }
     footer > div {
@@ -203,35 +201,33 @@
       flex-wrap: wrap;
       justify-content: space-between;
       gap: 2rem;
-      padding: 0 1.5rem;
+      padding: 0 1rem;
     }
     footer h4 {
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.75rem;
       font-weight: 600;
     }
     footer ul {
       list-style: none;
+      line-height: 1.7;
       padding-left: 0;
-      line-height: 1.8;
-      font-size: 0.9rem;
     }
     footer ul li a {
       color: var(--white);
       text-decoration: underline;
+      font-weight: 400;
       cursor: pointer;
       transition: color 0.3s ease;
     }
-    footer ul li a:hover,
-    footer ul li a:focus-visible {
+    footer ul li a:hover {
       color: var(--primary-dark);
-      outline: none;
     }
-    .copyright {
-      max-width: var(--max-width);
-      margin: 2rem auto 0;
-      font-size: 0.9rem;
+    footer .copyright {
+      margin-top: 2rem;
       text-align: center;
+      font-size: 0.9rem;
       color: var(--white);
+      user-select: none;
     }
     @media (max-width: 900px) {
       main {
@@ -240,25 +236,28 @@
       }
       .gallery, .content {
         max-width: 100%;
-        flex: none;
+        flex: 1 1 auto;
       }
       .vendor-info {
         max-width: 100%;
-        margin-top: 1.5rem;
       }
     }
     @media (max-width: 480px) {
       header {
         flex-direction: column;
         align-items: flex-start;
+        padding: 1rem 1rem;
       }
       nav#nav-links a {
         margin-left: 0;
-        margin-top: 0.5rem;
-        font-size: 1.1rem;
+        margin-top: 0.6rem;
+        font-size: 1rem;
+      }
+      main {
+        padding: 1rem 1rem 2rem;
       }
       .main-image {
-        height: 260px;
+        height: 280px;
       }
       .thumbnails img {
         width: 70px;
@@ -266,52 +265,47 @@
       }
       button {
         font-size: 1rem;
-        padding: 0.7rem;
-      }
-      .content h2 {
-        font-size: 1.6rem;
+        padding: 0.8rem;
       }
     }
   </style>
 </head>
 <body>
   <header>
-    <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
-    <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
+    <h1>Locorent</h1>
+    <nav id="nav-links"></nav>
   </header>
 
-  <main id="listing-details" aria-live="polite" aria-busy="true">Lade Inserat…</main>
+  <main id="listing-details">Lade Daten...</main>
 
-  <footer role="contentinfo">
+  <footer>
     <div>
-      <section aria-labelledby="footer-rent-title">
-        <h4 id="footer-rent-title">Mieten &amp; Vermieten</h4>
+      <div style="flex: 1; min-width: 200px;">
+        <h4>Mieten & Vermieten</h4>
         <ul>
           <li><a href="so-funktionierts.html">So funktioniert's</a></li>
           <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
           <li><a href="kategorien.html">Beliebte Kategorien</a></li>
-          <li><a href="vermieter-tipps.html">Tipps &amp; Tricks für Vermieter</a></li>
+          <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
           <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
         </ul>
-      </section>
-      <section aria-labelledby="footer-info-title">
-        <h4 id="footer-info-title">Wissenswertes</h4>
+      </div>
+      <div style="flex: 1; min-width: 200px;">
+        <h4>Wissenswertes</h4>
         <ul>
-          <li><a href="agb.html">AGB &amp; Impressum</a></li>
+          <li><a href="agb.html">AGB & Impressum</a></li>
           <li><a href="datenschutz.html">Datenschutz</a></li>
         </ul>
-      </section>
-      <section aria-labelledby="footer-about-title">
-        <h4 id="footer-about-title">Über uns</h4>
+      </div>
+      <div style="flex: 1; min-width: 200px;">
+        <h4>Über uns</h4>
         <ul>
           <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
           <li><a href="social-media.html">Folgen Sie uns</a></li>
         </ul>
-      </section>
+      </div>
     </div>
-    <div class="copyright" aria-label="Copyright">
-      © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
-    </div>
+    <div class="copyright">© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</div>
   </footer>
 
   <script>
@@ -330,18 +324,18 @@
 
       if (session?.user) {
         nav.innerHTML = `
-          <a href="index.html" tabindex="0">Start</a>
-          <a href="profil.html" tabindex="0">Mein Profil</a>
-          <a href="nachrichten-inbox.html" tabindex="0">📨 Nachrichten</a>
-          <a href="favoriten.html" tabindex="0">Meine Favoriten</a>
-          <a href="inserate.html" tabindex="0">Meine Inserate</a>
-          <a href="javascript:void(0);" tabindex="0" onclick="logout()">Logout</a>
+          <a href="index.html">Start</a>
+          <a href="profil.html">Mein Profil</a>
+          <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+          <a href="favoriten.html">Meine Favoriten</a>
+          <a href="inserate.html">Meine Inserate</a>
+          <a href="javascript:void(0);" onclick="logout()">Logout</a>
         `;
         currentUser = session.user;
       } else {
         nav.innerHTML = `
-          <a href="login.html" tabindex="0">Einloggen</a>
-          <a href="register.html" tabindex="0">Registrieren</a>
+          <a href="login.html">Einloggen</a>
+          <a href="register.html">Registrieren</a>
         `;
         currentUser = null;
       }
@@ -420,12 +414,12 @@
 
       const images = listing.image_urls || (listing.image_url ? [listing.image_url] : []);
       const thumbs = images.map((url, i) =>
-        `<img src="${url}" class="${i === 0 ? 'active' : ''}" alt="Vorschaubild ${i + 1}" tabindex="0" onclick="switchImage('${url}', this)" onkeydown="if(event.key==='Enter'||event.key===' ') {switchImage('${url}', this);}">`
+        `<img src="${url}" class="${i === 0 ? 'active' : ''}" onclick="switchImage('${url}', this)">`
       ).join('');
 
       document.getElementById('listing-details').innerHTML = `
         <div class="gallery">
-          <img src="${images[0] || 'https://via.placeholder.com/600x400?text=Kein+Bild'}" class="main-image" id="mainImage" alt="Hauptbild des Mietobjekts" tabindex="0" />
+          <img src="${images[0] || 'https://via.placeholder.com/600x400?text=Kein+Bild'}" class="main-image" id="mainImage" alt="Bild des Mietobjekts" />
           ${images.length > 1 ? `<div class="thumbnails">${thumbs}</div>` : ''}
         </div>
         <div class="content">
@@ -434,13 +428,14 @@
           <p><strong>Preis pro Tag:</strong> ${listing.price_per_day} €</p>
           <p><strong>Ort:</strong> ${listing.location || '–'}</p>
           <p><strong>Online seit:</strong> ${createdAtFormatted}</p>
-          <p><strong>Beschreibung:</strong><br>${listing.description}</p>
+          <p><strong>Beschreibung:</strong></p>
+          <p class="description">${listing.description || 'Keine Beschreibung vorhanden.'}</p>
           <button onclick="goToChat()">Nachricht an Vermieter</button>
           <button id="add-to-favorites" onclick="toggleFavorite('${listing.id}')">Lade Favoritenstatus...</button>
         </div>
-        <div class="content vendor-info">
+        <div class="vendor-info">
           <h3>Vermieter</h3>
-          <p><strong>Name:</strong> <a href="vermieter-profil.html?id=${listing.user_id}" style="color: var(--primary-color); text-decoration: underline;">${profile?.name || '–'}</a></p>
+          <p><strong>Name:</strong> <a href="vermieter-profil.html?id=${listing.user_id}">${profile?.name || '–'}</a></p>
           <p><strong>Ort:</strong> ${profile?.city || '–'}</p>
           <p><strong>Über mich:</strong> ${profile?.bio || '–'}</p>
         </div>
@@ -456,7 +451,6 @@
     }
 
     async function updateFavoriteButton(listingId) {
-      if (!currentUser) return;
       const { data } = await supabase
         .from('favorites')
         .select('*')
@@ -506,6 +500,7 @@
       const params = new URLSearchParams(location.search);
       const listingId = params.get('id');
       const chatWith = listingOwnerId;
+
       window.location.href = `nachrichten.html?listing_id=${listingId}&with=${chatWith}`;
     }
 
