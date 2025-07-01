@@ -173,6 +173,21 @@
       background-color: var(--highlight-color);
     }
 
+    .more-link {
+      text-align: right;
+      margin-top: 0.5rem;
+    }
+
+    .more-link a {
+      font-weight: 600;
+      color: var(--primary-color);
+      text-decoration: none;
+    }
+
+    .more-link a:hover {
+      text-decoration: underline;
+    }
+
     footer {
       padding: 2rem;
       text-align: center;
@@ -246,14 +261,17 @@
       <button onclick="search()">Suchen</button>
     </div>
   </section>
+
   <section>
     <h2>Neueste Angebote</h2>
     <div id="newest-offers" class="category-grid"><p>⏳ Lade Angebote…</p></div>
+    <div class="more-link"><a href="angebote.html?filter=neueste">MEHR →</a></div>
   </section>
 
   <section>
     <h2>Beliebte Angebote</h2>
     <div id="popular-offers" class="category-grid"><p>⏳ Lade Angebote…</p></div>
+    <div class="more-link"><a href="angebote.html?filter=beliebte">MEHR →</a></div>
   </section>
 
   <footer style="background-color: #2e7d32; color: white; padding: 2rem;">
@@ -289,11 +307,10 @@
   </footer>
 
   <script>
-const supabase = window.supabase.createClient(
-  'https://flnjalgqtkqycsaymmbd.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-);
-
+    const supabase = window.supabase.createClient(
+      'https://flnjalgqtkqycsaymmbd.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+    );
 
     let userSession = null;
     let selectedAddressData = null;
@@ -328,20 +345,28 @@ const supabase = window.supabase.createClient(
     }
 
     async function loadNewestOffers() {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from('listings')
         .select('*')
         .order('created_at', { ascending: false })
         .limit(5);
+      if(error) {
+        document.getElementById('newest-offers').innerHTML = '<p>Fehler beim Laden der Angebote.</p>';
+        return;
+      }
       renderOffers(data, 'newest-offers');
     }
 
     async function loadPopularOffers() {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from('listings')
         .select('*')
         .order('created_at', { ascending: false })
         .limit(5);
+      if(error) {
+        document.getElementById('popular-offers').innerHTML = '<p>Fehler beim Laden der Angebote.</p>';
+        return;
+      }
       renderOffers(data, 'popular-offers');
     }
 
@@ -357,7 +382,7 @@ const supabase = window.supabase.createClient(
         card.className = 'result-card';
         const isFav = userSession?.user ? await checkIfFavorite(item.id) : false;
         card.innerHTML = `
-          <img src="${item.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" />
+          <img src="${item.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" alt="${item.title}" />
           <h3>${item.title}</h3>
           <p><strong>Kategorie:</strong> ${capitalize(item.category) || 'Unbekannt'}</p>
           <p><strong>Preis pro Tag:</strong> ${item.price_per_day || 'k. A.'} €</p>
