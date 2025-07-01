@@ -307,33 +307,44 @@ function resizeImage(file, maxSize = 1024, quality = 0.8) {
 
 locationInput.addEventListener('input', async (e) => {
   const value = e.target.value.trim();
-  if (value.length < 2) return suggestionBox.innerHTML = '';
+  if (value.length < 2) {
+    suggestionBox.innerHTML = '';
+    return;
+  }
 
   try {
-    const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=10&accept-language=de&countrycodes=de&q=${encodeURIComponent(value)}`);
+    const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&accept-language=de&addressdetails=1&countrycodes=de&limit=8&q=${encodeURIComponent(value)}`);
     const results = await res.json();
 
     const filtered = results.filter(r => {
-      const isGerman = r.display_name.toLowerCase().includes('deutschland');
-      const isPlace = r.type === 'city' || r.type === 'town' || r.type === 'village';
-      return isGerman && isPlace;
+      const hasCityInfo = r.address.city || r.address.town || r.address.village || r.address.hamlet;
+      return r.class === 'place' && hasCityInfo;
     });
 
     suggestionBox.innerHTML = '';
+
     filtered.forEach(r => {
+      const ort = r.address.city || r.address.town || r.address.village || r.address.hamlet || r.display_name.split(',')[0];
+      const bundesland = r.address.state || '';
+      const land = r.address.country || 'Deutschland';
+      const display = [ort, bundesland, land].filter(Boolean).join(', ');
+
       const div = document.createElement('div');
-      div.textContent = r.display_name;
+      div.textContent = display;
       div.onclick = () => {
-        locationInput.value = r.display_name;
+        locationInput.value = display;
         suggestionBox.innerHTML = '';
       };
       suggestionBox.appendChild(div);
     });
+
+    if (filtered.length === 0) {
+      suggestionBox.innerHTML = '<div style="padding:0.5rem;">Kein Ort gefunden</div>';
+    }
   } catch (err) {
     console.error("Fehler bei der Ortssuche:", err);
   }
 });
-
 
 document.getElementById("dropzone").addEventListener("click", () => {
   if (uploadedImageUrls.length >= 2) {
