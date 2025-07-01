@@ -177,21 +177,7 @@
 
     const listingId = new URLSearchParams(location.search).get("id");
     let imageUrls = [];
-    let lat = null;
-    let lon = null;
-
-    async function geocodeLocation(query) {
-      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`);
-      const data = await res.json();
-      if (data.length > 0) {
-        return {
-          lat: parseFloat(data[0].lat),
-          lon: parseFloat(data[0].lon),
-          display_name: data[0].display_name
-        };
-      }
-      return null;
-    }
+    let selectedAddressData = null;
 
     async function loadData() {
       const { data, error } = await supabase.from('listings').select('*').eq('id', listingId).single();
@@ -201,9 +187,14 @@
       document.getElementById('price').value = data.price_per_day || '';
       document.getElementById('desc').value = data.description || '';
       document.getElementById('location').value = data.location || '';
-      lat = data.latitude || null;
-      lon = data.longitude || null;
       imageUrls = data.image_urls || [];
+      selectedAddressData = {
+        postal_code: data.postal_code || '',
+        city: data.city || '',
+        location: data.location || '',
+        lat: data.latitude || null,
+        lon: data.longitude || null
+      };
       renderGallery();
     }
 
@@ -213,10 +204,7 @@
       imageUrls.forEach((url, index) => {
         const box = document.createElement('div');
         box.className = 'preview-box';
-        box.innerHTML = `
-          <img src="${url}" alt="Bild ${index}" />
-          <button class="remove-btn" onclick="removeImage(${index})">×</button>
-        `;
+        box.innerHTML = `<img src="${url}" /><button class="remove-btn" onclick="removeImage(${index})">×</button>`;
         gallery.appendChild(box);
       });
     }
@@ -231,27 +219,30 @@
       const category = document.getElementById('category').value;
       const price = parseFloat(document.getElementById('price').value);
       const description = document.getElementById('desc').value.trim();
-      const locationInput = document.getElementById('location').value.trim();
+      const location = document.getElementById('location').value.trim();
 
-      if (!title || !category || !price || !locationInput) {
+      if (!title || !category || !price || !location) {
         alert("Alle Pflichtfelder ausfüllen.");
         return;
       }
 
-      const coords = await geocodeLocation(locationInput);
-      if (!coords) {
-        alert("Ort konnte nicht gefunden werden.");
+      if (!selectedAddressData) {
+        alert("Bitte Ort aus Vorschlagsliste wählen.");
         return;
       }
+
+      const { postal_code, city, lat, lon } = selectedAddressData;
 
       const updates = {
         title,
         category,
         price_per_day: price,
         description,
-        location: coords.display_name,
-        latitude: coords.lat,
-        longitude: coords.lon,
+        location,
+        postal_code,
+        city,
+        latitude: lat,
+        longitude: lon,
         image_urls: imageUrls
       };
 
@@ -295,20 +286,34 @@
     document.getElementById('location').addEventListener('input', async (e) => {
       const value = e.target.value.trim();
       const suggestionsBox = document.getElementById('suggestions');
-      if (value.length < 3) {
+      if (value.length < 2) {
         suggestionsBox.innerHTML = '';
         return;
       }
 
-      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=5&q=${encodeURIComponent(value)}`);
+      const res = await fetch(`https://corsproxy.io/?https://nominatim.openstreetmap.org/search?format=json&accept-language=de&addressdetails=1&countrycodes=de&limit=8&q=${encodeURIComponent(value)}`);
       const results = await res.json();
-
+      const filtered = results.filter(r => r.lat && r.lon && r.address);
       suggestionsBox.innerHTML = '';
-      results.forEach(r => {
+
+      filtered.forEach(r => {
+        const ort = r.address.city || r.address.town || r.address.village || r.address.hamlet || r.address.municipality || r.display_name.split(',')[0];
+        const bundesland = r.address.state || '';
+        const land = r.address.country || 'Deutschland';
+        const plz = r.address.postcode || '';
+        const display = [ort, bundesland, land].filter(Boolean).join(', ');
+
         const div = document.createElement('div');
-        div.textContent = r.display_name;
+        div.textContent = display;
         div.onclick = () => {
-          document.getElementById('location').value = r.display_name;
+          document.getElementById('location').value = display;
+          selectedAddressData = {
+            postal_code: plz,
+            city: ort,
+            location: display,
+            lat: parseFloat(r.lat),
+            lon: parseFloat(r.lon)
+          };
           suggestionsBox.innerHTML = '';
         };
         suggestionsBox.appendChild(div);
