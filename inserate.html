@@ -313,12 +313,11 @@ locationInput.addEventListener('input', async (e) => {
     const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=10&accept-language=de&countrycodes=de&q=${encodeURIComponent(value)}`);
     const results = await res.json();
 
-    const allowedClasses = ['place'];
-    const allowedTypes = ['city', 'town', 'village', 'hamlet', 'municipality'];
-
-    const filtered = results.filter(r =>
-      allowedClasses.includes(r.class) && allowedTypes.includes(r.type)
-    );
+const filtered = results.filter(r => {
+  const isGerman = r.display_name.toLowerCase().includes('deutschland');
+  const isPlace = r.type === 'city' || r.type === 'town' || r.type === 'village';
+  return isGerman && isPlace;
+});
 
     suggestionBox.innerHTML = '';
     filtered.forEach(r => {
