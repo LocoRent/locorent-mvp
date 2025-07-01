@@ -356,14 +356,14 @@
         <li><a href="so-funktionierts.html">So funktioniert's</a></li>
         <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
         <li><a href="kategorien.html">Beliebte Kategorien</a></li>
-        <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
+        <li><a href="vermieter-tipps.html">Tipps &amp; Tricks für Vermieter</a></li>
         <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
       </ul>
     </div>
     <div>
       <h4>Wissenswertes</h4>
       <ul>
-        <li><a href="agb.html">AGB & Impressum</a></li>
+        <li><a href="agb.html">AGB &amp; Impressum</a></li>
         <li><a href="datenschutz.html">Datenschutz</a></li>
       </ul>
     </div>
@@ -572,12 +572,12 @@
       let { error: delListingsError } = await supabase.from('listings').delete().eq('user_id', userId);
       if (delListingsError) throw delListingsError;
 
-      // Nachrichten löschen (Annahme Tabellenname und Spalten)
-      let { error: delMessagesError } = await supabase
-        .from('messages')
-        .delete()
-        .or(`sender_id.eq.${userId},recipient_id.eq.${userId}`);
-      if (delMessagesError) throw delMessagesError;
+      // Nachrichten löschen - zwei getrennte Löschvorgänge statt or()
+      let { error: delMessagesError1 } = await supabase.from('messages').delete().eq('sender_id', userId);
+      if (delMessagesError1) throw delMessagesError1;
+
+      let { error: delMessagesError2 } = await supabase.from('messages').delete().eq('recipient_id', userId);
+      if (delMessagesError2) throw delMessagesError2;
 
       // Favoriten löschen
       let { error: delFavError } = await supabase.from('favorites').delete().eq('user_id', userId);
