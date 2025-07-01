@@ -113,32 +113,32 @@ locationInput.addEventListener('input', async (e) => {
   try {
     const res = await fetch(`https://corsproxy.io/?https://nominatim.openstreetmap.org/search?format=json&accept-language=de&addressdetails=1&countrycodes=de&limit=8&q=${encodeURIComponent(value)}`);
     const results = await res.json();
-    const filtered = results.filter(r => r.class === 'place' && (r.address.city || r.address.town || r.address.village || r.address.hamlet));
+const filtered = results.filter(r => r.lat && r.lon && r.address);
+suggestionBox.innerHTML = '';
+
+filtered.forEach(r => {
+  const ort = r.address.city || r.address.town || r.address.village || r.address.hamlet || r.address.municipality || r.display_name.split(',')[0];
+  const bundesland = r.address.state || '';
+  const land = r.address.country || 'Deutschland';
+  const plz = r.address.postcode || '';
+  const display = [ort, bundesland, land].filter(Boolean).join(', ');
+
+  const div = document.createElement('div');
+  div.textContent = display;
+  div.onclick = () => {
+    locationInput.value = display;
+    lastSelectedCoordinates = { lat: parseFloat(r.lat), lon: parseFloat(r.lon) };
+    selectedAddressData = {
+      postal_code: plz,
+      city: ort,
+      location: display,
+      lat: parseFloat(r.lat),
+      lon: parseFloat(r.lon)
+    };
     suggestionBox.innerHTML = '';
-
-    filtered.forEach(r => {
-      const ort = r.address.city || r.address.town || r.address.village || r.address.hamlet || r.display_name.split(',')[0];
-      const bundesland = r.address.state || '';
-      const land = r.address.country || 'Deutschland';
-      const plz = r.address.postcode || '';
-      const display = [ort, bundesland, land].filter(Boolean).join(', ');
-
-      const div = document.createElement('div');
-      div.textContent = display;
-      div.onclick = () => {
-        locationInput.value = display;
-        lastSelectedCoordinates = { lat: parseFloat(r.lat), lon: parseFloat(r.lon) };
-        selectedAddressData = {
-          postal_code: plz,
-          city: ort,
-          location: display,
-          lat: parseFloat(r.lat),
-          lon: parseFloat(r.lon)
-        };
-        suggestionBox.innerHTML = '';
-      };
-      suggestionBox.appendChild(div);
-    });
+  };
+  suggestionBox.appendChild(div);
+});
 
     if (filtered.length === 0) {
       suggestionBox.innerHTML = '<div style="padding:0.5rem;">Kein Ort gefunden</div>';
