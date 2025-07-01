@@ -8,79 +8,74 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
-      --green: #2e7d32;
-      --green-dark: #1b5e20;
-      --bg: #f1f8e9;
+      --primary-color: #2e7d32;
+      --primary-dark: #1b5e20;
+      --background-color: #f1f8e9;
       --white: #fff;
-      --light: #f5f5f5;
-      --radius: 12px;
-      --shadow: rgba(0, 0, 0, 0.1);
+      --light-gray: #f5f5f5;
+      --border-radius: 12px;
+      --shadow-color: rgba(0, 0, 0, 0.1);
     }
-
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
-
     body {
       font-family: 'Poppins', sans-serif;
-      background: var(--bg);
+      background-color: var(--background-color);
       color: #333;
+      line-height: 1.5;
     }
-
     header {
-      background: var(--green);
+      background-color: var(--primary-color);
       color: var(--white);
-      padding: 1.2rem 2rem;
+      padding: 1.5rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
     }
-
-    header nav a {
-      color: white;
-      margin-left: 1rem;
+    nav a {
+      color: var(--white);
+      margin-left: 1.5rem;
       text-decoration: none;
       font-weight: 600;
     }
-
-    header nav a:hover {
-      border-bottom: 2px solid var(--green-dark);
+    nav a:hover {
+      border-bottom: 2px solid var(--primary-dark);
     }
-
     main {
       max-width: 1200px;
       margin: 2rem auto;
-      background: var(--white);
-      border-radius: var(--radius);
-      box-shadow: 0 4px 12px var(--shadow);
+      background-color: var(--white);
+      border-radius: var(--border-radius);
+      box-shadow: 0 4px 12px var(--shadow-color);
       padding: 2rem;
       display: flex;
       flex-wrap: wrap;
       gap: 2rem;
     }
-
     .gallery {
       flex: 2;
       max-width: 65%;
     }
-
     .main-image {
       width: 100%;
       height: 400px;
       object-fit: cover;
-      border-radius: var(--radius);
+      border-radius: var(--border-radius);
       margin-bottom: 1rem;
+      box-shadow: 0 2px 8px var(--shadow-color);
     }
-
     .thumbnails {
       display: flex;
       gap: 0.5rem;
       margin-top: 1rem;
       overflow-x: auto;
     }
-
     .thumbnails img {
       width: 100px;
       height: 70px;
@@ -88,82 +83,79 @@
       border-radius: 6px;
       border: 2px solid transparent;
       cursor: pointer;
+      transition: border-color 0.3s ease;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
     }
-
     .thumbnails img.active {
-      border-color: var(--green);
+      border-color: var(--primary-color);
+      box-shadow: 0 0 8px var(--primary-color);
     }
-
     .content {
       flex: 1;
       max-width: 30%;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
     }
-
     .content h2 {
       font-size: 2rem;
-      margin-bottom: 1rem;
+      margin-bottom: 0.5rem;
+      color: var(--primary-color);
     }
-
     .content p {
-      margin-bottom: 1rem;
+      font-size: 1rem;
+      line-height: 1.4;
     }
-
+    .content strong {
+      color: var(--primary-dark);
+    }
     .box {
-      background: var(--light);
+      background-color: var(--light-gray);
       padding: 1.5rem;
-      border-radius: var(--radius);
-      box-shadow: 0 2px 8px var(--shadow);
-      margin-top: 1rem;
+      border-radius: var(--border-radius);
+      box-shadow: 0 2px 8px var(--shadow-color);
     }
-
-    .box h3 {
-      margin-bottom: 1rem;
-      font-size: 1.3rem;
-    }
-
-    .box p {
-      margin: 0.4rem 0;
-    }
-
     button {
-      margin-top: 1rem;
       padding: 0.8rem 1.5rem;
-      background: var(--green);
-      color: white;
+      background-color: var(--primary-color);
+      color: var(--white);
       border: none;
-      border-radius: var(--radius);
+      border-radius: var(--border-radius);
       font-weight: 600;
       cursor: pointer;
+      transition: background-color 0.3s ease;
       width: 100%;
+      box-shadow: 0 2px 6px rgba(46, 125, 50, 0.6);
     }
-
     button:hover {
-      background: var(--green-dark);
+      background-color: var(--primary-dark);
+      box-shadow: 0 4px 10px rgba(27, 94, 32, 0.8);
     }
-
     footer {
-      text-align: center;
-      padding: 1.5rem;
-      background: var(--green);
+      background-color: var(--primary-color);
       color: var(--white);
-      margin-top: 3rem;
+      padding: 2rem;
+      border-radius: var(--border-radius);
+      margin: 3rem auto 2rem;
+      max-width: 1200px;
+      text-align: center;
+      font-size: 0.9rem;
     }
-
     @media (max-width: 768px) {
       main {
         flex-direction: column;
         padding: 1rem;
       }
-
-      .gallery,
-      .content {
+      .gallery, .content {
         max-width: 100%;
-        margin-bottom: 1rem;
+      }
+      .thumbnails img {
+        width: 80px;
+        height: 60px;
       }
     }
   </style>
 </head>
-
 <body>
   <header>
     <h1>Locorent</h1>
@@ -173,7 +165,35 @@
   <main id="listing-details">Lade Daten...</main>
 
   <footer>
-    © 2025 Locorent – Mieten statt kaufen
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2rem; max-width: 1200px; margin: 0 auto;">
+      <div style="flex: 1; min-width: 200px;">
+        <h4 style="margin-bottom: 0.5rem;">Mieten & Vermieten</h4>
+        <ul style="list-style: none; padding: 0; line-height: 1.8;">
+          <li><a href="so-funktionierts.html" style="color: white; text-decoration: underline;">So funktioniert's</a></li>
+          <li><a href="vermieter-werden.html" style="color: white; text-decoration: underline;">Werde zum Vermieter</a></li>
+          <li><a href="kategorien.html" style="color: white; text-decoration: underline;">Beliebte Kategorien</a></li>
+          <li><a href="vermieter-tipps.html" style="color: white; text-decoration: underline;">Tipps & Tricks für Vermieter</a></li>
+          <li><a href="hilfe-faq.html" style="color: white; text-decoration: underline;">Hilfe und FAQ</a></li>
+        </ul>
+      </div>
+      <div style="flex: 1; min-width: 200px;">
+        <h4 style="margin-bottom: 0.5rem;">Wissenswertes</h4>
+        <ul style="list-style: none; padding: 0; line-height: 1.8;">
+          <li><a href="agb.html" style="color: white; text-decoration: underline;">AGB & Impressum</a></li>
+          <li><a href="datenschutz.html" style="color: white; text-decoration: underline;">Datenschutz</a></li>
+        </ul>
+      </div>
+      <div style="flex: 1; min-width: 200px;">
+        <h4 style="margin-bottom: 0.5rem;">Über uns</h4>
+        <ul style="list-style: none; padding: 0; line-height: 1.8;">
+          <li><a href="kontakt.html" style="color: white; text-decoration: underline;">Kontaktieren Sie uns</a></li>
+          <li><a href="social-media.html" style="color: white; text-decoration: underline;">Folgen Sie uns</a></li>
+        </ul>
+      </div>
+    </div>
+    <div style="margin-top: 2rem; font-size: 0.9rem;">
+      © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
+    </div>
   </footer>
 
   <script>
@@ -191,15 +211,19 @@
       const nav = document.getElementById('nav-links');
 
       if (session?.user) {
+        currentUser = session.user;
         nav.innerHTML = `
           <a href="index.html">Start</a>
           <a href="profil.html">Mein Profil</a>
           <a href="nachrichten-inbox.html">📨 Nachrichten</a>
           <a href="favoriten.html">Meine Favoriten</a>
-          <a href="javascript:void(0);" onclick="logout()">Logout</a>
+          <a href="inserate.html">Meine Inserate</a>
+          <a href="#" onclick="logout(event)">Logout</a>
         `;
       } else {
+        currentUser = null;
         nav.innerHTML = `
+          <a href="index.html">Start</a>
           <a href="login.html">Einloggen</a>
           <a href="register.html">Registrieren</a>
         `;
@@ -223,7 +247,6 @@
     }
 
     async function incrementViews(listingId) {
-      // Aktuellen Wert holen
       const { data, error } = await supabase
         .from('listings')
         .select('views')
@@ -248,10 +271,6 @@
     }
 
     async function loadListing() {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return alert("Bitte einloggen."), location.href = "login.html";
-      currentUser = user;
-
       const params = new URLSearchParams(location.search);
       const listingId = params.get('id');
 
@@ -274,13 +293,9 @@
         .eq('id', listing.user_id)
         .single();
 
-      // Views erhöhen
       await incrementViews(listingId);
 
-      // Kategorie groß schreiben
       const categoryCapitalized = capitalize(listing.category);
-
-      // Datum formatieren
       const createdAtFormatted = formatDate(listing.created_at);
 
       const images = listing.image_urls || (listing.image_url ? [listing.image_url] : []);
@@ -290,7 +305,7 @@
 
       document.getElementById('listing-details').innerHTML = `
         <div class="gallery">
-          <img src="${images[0] || 'https://via.placeholder.com/600x400?text=Kein+Bild'}" class="main-image" id="mainImage">
+          <img src="${images[0] || 'https://via.placeholder.com/600x400?text=Kein+Bild'}" class="main-image" id="mainImage" alt="Bild zum Mietobjekt">
           ${images.length > 1 ? `<div class="thumbnails">${thumbs}</div>` : ''}
         </div>
         <div class="content">
@@ -305,7 +320,7 @@
         </div>
         <div class="content">
           <h3>Vermieter</h3>
-          <p><strong>Name:</strong> <a href="vermieter-profil.html?id=${listing.user_id}" style="color:#2e7d32; text-decoration: underline;">${profile?.name || '–'}</a></p>
+          <p><strong>Name:</strong> <a href="vermieter-profil.html?id=${listing.user_id}" style="color: var(--primary-color); text-decoration: underline;">${profile?.name || '–'}</a></p>
           <p><strong>Ort:</strong> ${profile?.city || '–'}</p>
           <p><strong>Über mich:</strong> ${profile?.bio || '–'}</p>
         </div>
@@ -321,6 +336,10 @@
     }
 
     async function updateFavoriteButton(listingId) {
+      if (!currentUser) {
+        document.getElementById("add-to-favorites").textContent = "Bitte einloggen";
+        return;
+      }
       const { data } = await supabase
         .from('favorites')
         .select('*')
