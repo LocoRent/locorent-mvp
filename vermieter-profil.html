@@ -1,454 +1,406 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Vermieterprofil – Locorent</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <style>
-    :root {
-      --primary-color: #2e7d32;
-      --primary-dark: #1b5e20;
-      --background-color: #f1f8e9;
-      --white: #fff;
-      --light-gray: #f5f5f5;
-      --border-radius: 12px;
-      --shadow-color: rgba(0, 0, 0, 0.1);
-      --max-width: 1200px;
-    }
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      font-family: 'Poppins', sans-serif;
-      background-color: var(--background-color);
-      color: #333;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    header {
-      background-color: var(--primary-color);
-      color: var(--white);
-      width: 100%;
-      padding: 1.5rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      box-shadow: 0 2px 8px var(--shadow-color);
-      user-select: none;
-    }
-    header h1 {
-      font-weight: 600;
-      font-size: 1.8rem;
-      cursor: pointer;
-    }
-    nav#nav-links a {
-      color: var(--white);
-      margin-left: 1.5rem;
-      text-decoration: none;
-      font-weight: 600;
-      transition: border-bottom 0.3s ease;
-      user-select: none;
-    }
-    nav#nav-links a:hover,
-    nav#nav-links a:focus {
-      border-bottom: 2px solid var(--primary-dark);
-      outline: none;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Vermieterprofil – Locorent</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root {
+    --primary-color: #2e7d32;
+    --primary-dark: #1b5e20;
+    --background-color: #f1f8e9;
+    --white: #fff;
+    --light-gray: #f5f5f5;
+    --border-radius: 12px;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --max-width: 1200px;
+  }
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--background-color);
+    color: #333;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  header {
+    background-color: var(--primary-color);
+    color: var(--white);
+    width: 100%;
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 8px var(--shadow-color);
+  }
+  header h1 {
+    font-weight: 600;
+    font-size: 1.8rem;
+    cursor: pointer;
+  }
+  nav#nav-links a {
+    color: var(--white);
+    margin-left: 1.5rem;
+    text-decoration: none;
+    font-weight: 600;
+    transition: border-bottom 0.3s ease;
+  }
+  nav#nav-links a:hover {
+    border-bottom: 2px solid var(--primary-dark);
+  }
+  main {
+    max-width: var(--max-width);
+    background: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: 0 6px 18px var(--shadow-color);
+    padding: 2rem 3rem;
+    margin: 3rem 1rem 4rem;
+    width: 100%;
+  }
+  section {
+    margin-bottom: 2rem;
+  }
+  h2 {
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+    font-weight: 700;
+  }
+  .profile-box {
+    background-color: var(--light-gray);
+    padding: 1.5rem 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: inset 0 0 8px rgba(0,0,0,0.05);
+    font-size: 1rem;
+    color: #444;
+    line-height: 1.5;
+  }
+  .listing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(250px,1fr));
+    gap: 1.5rem;
+  }
+  .listing-card {
+    background-color: var(--white);
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  .listing-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+  }
+  .listing-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.3rem;
+  }
+  .listing-card p {
+    margin: 0.2rem 0;
+  }
+  .listing-card button {
+    margin-top: 0.5rem;
+    width: 100%;
+    padding: 0.6rem;
+    background-color: var(--primary-color);
+    color: var(--white);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+  }
+  .listing-card button:hover {
+    background-color: var(--primary-dark);
+  }
+  .review-box {
+    background-color: var(--light-gray);
+    padding: 1rem 1.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: inset 0 0 8px rgba(0,0,0,0.05);
+  }
+  .review-item {
+    background-color: #fff;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  }
+  .review-item strong {
+    display: block;
+    margin-bottom: 0.3rem;
+    color: var(--primary-dark);
+  }
+  .review-summary {
+    margin-bottom: 1rem;
+    font-weight: 700;
+    color: var(--primary-dark);
+  }
+  .review-btn {
+    margin-top: 1rem;
+    background-color: var(--primary-color);
+    color: var(--white);
+    border: none;
+    padding: 0.7rem 1.2rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: background-color 0.3s ease;
+  }
+  .review-btn:hover {
+    background-color: var(--primary-dark);
+  }
+  footer {
+    width: 100%;
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 2rem 0;
+    box-shadow: 0 -2px 12px var(--shadow-color);
+    user-select: none;
+  }
+  footer > div {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 0 1rem;
+  }
+  footer h4 {
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+  }
+  footer ul {
+    list-style: none;
+    line-height: 1.7;
+    padding-left: 0;
+  }
+  footer ul li a {
+    color: var(--white);
+    text-decoration: underline;
+    font-weight: 400;
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+  footer ul li a:hover {
+    color: var(--primary-dark);
+  }
+  footer .copyright {
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--white);
+    user-select: none;
+  }
+  @media (max-width: 900px) {
     main {
-      max-width: var(--max-width);
-      background: var(--white);
-      border-radius: var(--border-radius);
-      box-shadow: 0 6px 18px var(--shadow-color);
-      padding: 2rem 3rem;
-      margin: 3rem 1rem 4rem;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 2.5rem;
-    }
-    h2 {
-      color: var(--primary-color);
-      font-weight: 700;
-      margin-bottom: 1rem;
-      font-size: 2rem;
-    }
-    .profile-box {
-      background-color: var(--light-gray);
-      padding: 1.5rem 2rem;
-      border-radius: var(--border-radius);
-      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-      font-size: 1rem;
-      color: #444;
-      line-height: 1.6;
+      padding: 1.5rem 1rem;
     }
     .listing-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1.5rem;
+      grid-template-columns: 1fr 1fr;
     }
-    .listing-card {
-      background-color: var(--white);
-      padding: 1rem;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      display: flex;
+  }
+  @media (max-width: 600px) {
+    .listing-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 480px) {
+    header {
       flex-direction: column;
+      align-items: flex-start;
+      padding: 1rem 1rem;
     }
-    .listing-card img {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-      border-radius: 8px;
-      margin-bottom: 0.5rem;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-      transition: transform 0.3s ease;
-      cursor: pointer;
-    }
-    .listing-card img:hover {
-      transform: scale(1.05);
-    }
-    .listing-card h3 {
-      font-size: 1.25rem;
-      margin-bottom: 0.3rem;
-      color: var(--primary-color);
-      font-weight: 600;
-      flex-grow: 1;
-    }
-    .listing-card p {
-      margin: 0.2rem 0;
-      font-size: 0.95rem;
-      color: #555;
-    }
-    .listing-card button {
-      margin-top: 0.8rem;
-      padding: 0.7rem;
-      background-color: var(--primary-color);
-      color: var(--white);
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 700;
+    nav#nav-links a {
+      margin-left: 0;
+      margin-top: 0.6rem;
       font-size: 1rem;
-      user-select: none;
-      transition: background-color 0.3s ease;
     }
-    .listing-card button:hover {
-      background-color: var(--primary-dark);
-    }
-    .reviews-section {
-      background: var(--light-gray);
-      border-radius: var(--border-radius);
-      padding: 1.5rem 2rem;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-      color: #444;
-    }
-    .reviews-summary {
-      font-weight: 700;
-      font-size: 1.2rem;
-      margin-bottom: 1rem;
-      color: var(--primary-color);
-    }
-    .review-item {
-      background-color: white;
-      padding: 1rem;
-      border-radius: 8px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-      margin-bottom: 1rem;
-    }
-    .review-item strong {
-      display: block;
-      margin-bottom: 0.3rem;
-      color: var(--primary-dark);
-      font-weight: 700;
-    }
-    .review-item p {
-      margin-bottom: 0.5rem;
-      font-size: 1rem;
-      color: #333;
-    }
-    .review-item small {
-      font-size: 0.85rem;
-      color: #666;
-    }
-    .review-btn {
-      margin-top: 1rem;
-      background-color: var(--primary-color);
-      color: white;
-      border: none;
-      padding: 0.7rem 1.3rem;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 700;
-      font-size: 1rem;
-      user-select: none;
-      transition: background-color 0.3s ease;
-    }
-    .review-btn:hover {
-      background-color: var(--primary-dark);
-    }
-    footer {
-      width: 100%;
-      background-color: var(--primary-color);
-      color: var(--white);
-      padding: 2rem 0;
-      box-shadow: 0 -2px 12px var(--shadow-color);
-      user-select: none;
-    }
-    footer > div {
-      max-width: var(--max-width);
-      margin: 0 auto;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 2rem;
-      padding: 0 1rem;
-    }
-    footer h4 {
-      margin-bottom: 0.75rem;
-      font-weight: 600;
-    }
-    footer ul {
-      list-style: none;
-      line-height: 1.7;
-      padding-left: 0;
-    }
-    footer ul li a {
-      color: var(--white);
-      text-decoration: underline;
-      font-weight: 400;
-      cursor: pointer;
-      transition: color 0.3s ease;
-    }
-    footer ul li a:hover {
-      color: var(--primary-dark);
-    }
-    footer .copyright {
-      margin-top: 2rem;
-      text-align: center;
-      font-size: 0.9rem;
-      color: var(--white);
-      user-select: none;
-    }
-    @media (max-width: 900px) {
-      main {
-        padding: 1.5rem 1rem;
-      }
-      .listing-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
-    @media (max-width: 600px) {
-      .listing-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-    @media (max-width: 480px) {
-      header {
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 1rem 1rem;
-      }
-      nav#nav-links a {
-        margin-left: 0;
-        margin-top: 0.6rem;
-        font-size: 1rem;
-      }
-      main {
-        padding: 1rem 1rem 2rem;
-      }
-      h2 {
-        font-size: 1.5rem;
-      }
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
-  <header>
-    <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
-    <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
-  </header>
-
-  <main>
-    <section id="profile-section">
-      <h2>Vermieterprofil</h2>
-      <div id="profile-info" class="profile-box">Lade Profil...</div>
+<header>
+  <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
+  <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
+</header>
+<main>
+  <section id="profile-section">
+    <h2>Vermieterprofil</h2>
+    <div id="profile-info" class="profile-box">Lade Profil...</div>
+  </section>
+  <section id="reviews-section" class="review-box">
+    <h2>Bewertungen</h2>
+    <div id="reviews-list">⏳ Lade Bewertungen…</div>
+    <div id="review-button-container"></div>
+  </section>
+  <section id="listings-section">
+    <h2>Inserate dieses Vermieters</h2>
+    <div id="listing-grid" class="listing-grid"><p>⏳ Lade Inserate…</p></div>
+  </section>
+</main>
+<footer role="contentinfo">
+  <div>
+    <section aria-labelledby="footer-rent-title">
+      <h4 id="footer-rent-title">Mieten &amp; Vermieten</h4>
+      <ul>
+        <li><a href="so-funktionierts.html">So funktioniert's</a></li>
+        <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
+        <li><a href="kategorien.html">Beliebte Kategorien</a></li>
+        <li><a href="vermieter-tipps.html">Tipps &amp; Tricks für Vermieter</a></li>
+        <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
+      </ul>
     </section>
-
-    <section id="reviews-section" class="reviews-section" aria-live="polite" aria-atomic="true">
-      <h2>Bewertungen</h2>
-      <div id="reviews-summary" class="reviews-summary">Lade Bewertungen…</div>
-      <div id="reviews-list"></div>
-      <div id="review-button-container"></div>
+    <section aria-labelledby="footer-info-title">
+      <h4 id="footer-info-title">Wissenswertes</h4>
+      <ul>
+        <li><a href="agb.html">AGB &amp; Impressum</a></li>
+        <li><a href="datenschutz.html">Datenschutz</a></li>
+      </ul>
     </section>
-
-    <section id="listings-section">
-      <h2>Inserate dieses Vermieters</h2>
-      <div id="listing-grid" class="listing-grid"><p>⏳ Lade Inserate…</p></div>
+    <section aria-labelledby="footer-about-title">
+      <h4 id="footer-about-title">Über uns</h4>
+      <ul>
+        <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
+        <li><a href="social-media.html">Folgen Sie uns</a></li>
+      </ul>
     </section>
-  </main>
+  </div>
+  <div class="copyright" aria-label="Copyright">
+    © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
+  </div>
+</footer>
+<script>
+  const supabase = window.supabase.createClient(
+    'https://flnjalgqtkqycsaymmbd.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+  );
 
-  <footer role="contentinfo">
-    <div>
-      <section aria-labelledby="footer-rent-title">
-        <h4 id="footer-rent-title">Mieten &amp; Vermieten</h4>
-        <ul>
-          <li><a href="so-funktionierts.html">So funktioniert's</a></li>
-          <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
-          <li><a href="kategorien.html">Beliebte Kategorien</a></li>
-          <li><a href="vermieter-tipps.html">Tipps &amp; Tricks für Vermieter</a></li>
-          <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
-        </ul>
-      </section>
-      <section aria-labelledby="footer-info-title">
-        <h4 id="footer-info-title">Wissenswertes</h4>
-        <ul>
-          <li><a href="agb.html">AGB &amp; Impressum</a></li>
-          <li><a href="datenschutz.html">Datenschutz</a></li>
-        </ul>
-      </section>
-      <section aria-labelledby="footer-about-title">
-        <h4 id="footer-about-title">Über uns</h4>
-        <ul>
-          <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
-          <li><a href="social-media.html">Folgen Sie uns</a></li>
-        </ul>
-      </section>
-    </div>
-    <div class="copyright" aria-label="Copyright">
-      © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
-    </div>
-  </footer>
+  async function updateNav() {
+    const { data: { session } } = await supabase.auth.getSession();
+    const nav = document.getElementById("nav-links");
+    nav.innerHTML = session?.user ? `
+      <a href="index.html">Start</a>
+      <a href="profil.html">Mein Profil</a>
+      <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+      <a href="favoriten.html">Meine Favoriten</a>
+      <a href="inserate.html">Meine Inserate</a>
+      <a href="#" onclick="logout(event)">Logout</a>
+    ` : `
+      <a href="index.html">Start</a>
+      <a href="login.html">Einloggen</a>
+    `;
+  }
 
-  <script>
-    const supabase = window.supabase.createClient(
-      'https://flnjalgqtkqycsaymmbd.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-    );
+  async function logout(event) {
+    event.preventDefault();
+    await supabase.auth.signOut();
+    window.location.href = "login.html";
+  }
 
-    async function updateNav() {
-      const { data: { session } } = await supabase.auth.getSession();
-      const nav = document.getElementById("nav-links");
-      nav.innerHTML = session?.user ? `
-        <a href="index.html" tabindex="0">Start</a>
-        <a href="profil.html" tabindex="0">Mein Profil</a>
-        <a href="nachrichten-inbox.html" tabindex="0">📨 Nachrichten</a>
-        <a href="favoriten.html" tabindex="0">Meine Favoriten</a>
-        <a href="inserate.html" tabindex="0">Meine Inserate</a>
-        <a href="javascript:void(0);" tabindex="0" onclick="logout()">Logout</a>
-      ` : `
-        <a href="index.html" tabindex="0">Start</a>
-        <a href="login.html" tabindex="0">Einloggen</a>
+  async function loadVermieterProfil() {
+    const params = new URLSearchParams(location.search);
+    const userId = params.get("id");
+    if (!userId) {
+      document.getElementById("profile-info").innerText = "Keine Vermieter-ID übergeben.";
+      return;
+    }
+
+    const { data: { session } } = await supabase.auth.getSession();
+    const currentUser = session?.user;
+
+    // Profil laden
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles")
+      .select("name, city, bio")
+      .eq("id", userId)
+      .single();
+
+    document.getElementById("profile-info").innerHTML = profileError || !profile ? `
+      <p>Profil nicht gefunden.</p>
+    ` : `
+      <p><strong>Name:</strong> ${profile.name || 'Unbekannt'}</p>
+      <p><strong>Ort:</strong> ${profile.city || '–'}</p>
+      <p><strong>Über mich:</strong> ${profile.bio || '–'}</p>
+    `;
+
+    // Bewertungen laden
+    const { data: reviews, error: reviewError } = await supabase
+      .from("reviews")
+      .select("rating, comment, from_user_id, created_at")
+      .eq("to_user_id", userId)
+      .order("created_at", { ascending: false });
+
+    console.log('Bewertungen geladen:', reviews, 'Fehler:', reviewError);
+
+    const reviewList = document.getElementById("reviews-list");
+
+    if (reviewError || !Array.isArray(reviews) || reviews.length === 0) {
+      reviewList.innerHTML = "<p>Noch keine Bewertungen.</p>";
+    } else {
+      const average = (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1);
+      const summary = `<p class="review-summary">⭐ ${average} von 5 aus ${reviews.length} Bewertungen</p>`;
+      const latestReviews = reviews.slice(0, 2);
+      const list = latestReviews.map(r => `
+        <div class="review-item">
+          <strong>⭐ ${r.rating}/5</strong>
+          <p>${r.comment}</p>
+          <small>${new Date(r.created_at).toLocaleDateString()}</small>
+        </div>
+      `).join('');
+      reviewList.innerHTML = summary + list;
+    }
+
+    // Bewertungsbutton nur zeigen wenn angemeldeter User nicht das eigene Profil ist
+    if (currentUser && currentUser.id !== userId) {
+      document.getElementById("review-button-container").innerHTML = `
+        <button class="review-btn" onclick="location.href='bewertung-schreiben.html?id=${userId}'">
+          Bewertung abgeben
+        </button>
       `;
+    } else {
+      document.getElementById("review-button-container").innerHTML = '';
     }
 
-    async function logout() {
-      await supabase.auth.signOut();
-      window.location.href = "login.html";
+    // Inserate laden
+    const { data: listings, error: listingError } = await supabase
+      .from("listings")
+      .select("*")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false });
+
+    const container = document.getElementById("listing-grid");
+
+    if (listingError || !Array.isArray(listings) || listings.length === 0) {
+      container.innerHTML = "<p>Keine Inserate gefunden.</p>";
+    } else {
+      container.innerHTML = listings.map(item => `
+        <div class="listing-card">
+          <img src="${item.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" alt="${item.title}" />
+          <h3>${item.title}</h3>
+          <p><strong>Kategorie:</strong> ${item.category}</p>
+          <p><strong>Preis:</strong> ${item.price_per_day} € / Tag</p>
+          <button onclick="location.href='mietobjekt.html?id=${item.id}'">Details</button>
+        </div>
+      `).join('');
     }
+  }
 
-    async function loadVermieterProfil() {
-      const params = new URLSearchParams(location.search);
-      const userId = params.get("id");
-      if (!userId) {
-        document.getElementById("profile-info").innerText = "Keine Vermieter-ID übergeben.";
-        return;
-      }
-
-      const { data: { session } } = await supabase.auth.getSession();
-      const currentUser = session?.user;
-
-      // Profil laden
-      const { data: profile, error: profileError } = await supabase
-        .from("profiles")
-        .select("name, city, bio")
-        .eq("id", userId)
-        .single();
-
-      document.getElementById("profile-info").innerHTML = profileError || !profile ? 
-        `<p>Profil nicht gefunden.</p>` : 
-        `<p><strong>Name:</strong> ${profile.name || 'Unbekannt'}</p>
-         <p><strong>Ort:</strong> ${profile.city || '–'}</p>
-         <p><strong>Über mich:</strong> ${profile.bio || '–'}</p>`;
-
-      // Bewertungen laden (nur 2 neuste)
-      const { data: reviews, error: reviewError } = await supabase
-        .from("reviews")
-        .select("rating, comment, reviewer_id, created_at")
-        .eq("to_user_id", userId)
-        .order("created_at", { ascending: false })
-        .limit(2);
-
-      const reviewList = document.getElementById("reviews-list");
-      const reviewSummary = document.getElementById("reviews-summary");
-
-      if (reviewError || !Array.isArray(reviews) || reviews.length === 0) {
-        reviewList.innerHTML = "<p>Noch keine Bewertungen.</p>";
-        reviewSummary.innerHTML = "";
-      } else {
-        // Gesamt-Sterne Durchschnitt aller Bewertungen laden
-        const { data: allReviews } = await supabase
-          .from("reviews")
-          .select("rating")
-          .eq("to_user_id", userId);
-
-        let average = "–";
-        if (allReviews && allReviews.length > 0) {
-          average = (allReviews.reduce((sum, r) => sum + r.rating, 0) / allReviews.length).toFixed(1);
-        }
-        reviewSummary.innerHTML = `<p><strong>⭐ ${average} von 5</strong> aus ${allReviews?.length || 0} Bewertungen</p>`;
-
-        reviewList.innerHTML = reviews.map(r => `
-          <div class="review-item">
-            <strong>⭐ ${r.rating}/5</strong>
-            <p>${r.comment}</p>
-            <small>${new Date(r.created_at).toLocaleDateString()}</small>
-          </div>
-        `).join('');
-      }
-
-      // Bewertungsbutton (wenn eingeloggt und nicht eigenes Profil)
-      if (currentUser && currentUser.id !== userId) {
-        document.getElementById("review-button-container").innerHTML = `
-          <button class="review-btn" onclick="location.href='bewertung-schreiben.html?id=${userId}'">
-            Bewertung abgeben
-          </button>
-        `;
-      }
-
-      // Inserate laden
-      const { data: listings, error: listingError } = await supabase
-        .from("listings")
-        .select("*")
-        .eq("user_id", userId)
-        .order("created_at", { ascending: false });
-
-      const container = document.getElementById("listing-grid");
-      if (listingError || !Array.isArray(listings) || listings.length === 0) {
-        container.innerHTML = "<p>Keine Inserate gefunden.</p>";
-      } else {
-        container.innerHTML = listings.map(item => `
-          <div class="listing-card">
-            <img src="${item.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" alt="${item.title}" tabindex="0" />
-            <h3>${item.title}</h3>
-            <p><strong>Kategorie:</strong> ${item.category || '–'}</p>
-            <p><strong>Preis:</strong> ${item.price_per_day} € / Tag</p>
-            <button onclick="location.href='mietobjekt.html?id=${item.id}'" tabindex="0">Details</button>
-          </div>
-        `).join('');
-      }
-    }
-
-    updateNav();
-    loadVermieterProfil();
-  </script>
+  updateNav();
+  loadVermieterProfil();
+</script>
 </body>
 </html>
