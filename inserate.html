@@ -90,43 +90,20 @@
 </main>
 
 <script>
- const supabase = window.supabase.createClient(
-      'https://flnjalgqtkqycsaymmbd.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-    );
+const supabase = window.supabase.createClient(
+  'https://flnjalgqtkqycsaymmbd.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+);
 
 let uploadedImageUrls = [];
 let lastSelectedCoordinates = null;
+let selectedAddressData = null;
+
 const locationInput = document.getElementById('location-input');
 const suggestionBox = document.getElementById('suggestions');
 
 function capitalize(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
-function resizeImage(file, maxSize = 1024, quality = 0.8) {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    const reader = new FileReader();
-    reader.onload = e => img.src = e.target.result;
-    reader.onerror = reject;
-    img.onload = () => {
-      let { width, height } = img;
-      if (width > height && width > maxSize) {
-        height *= maxSize / width;
-        width = maxSize;
-      } else if (height > maxSize) {
-        width *= maxSize / height;
-        height = maxSize;
-      }
-      const canvas = document.createElement('canvas');
-      canvas.width = width;
-      canvas.height = height;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0, width, height);
-      canvas.toBlob(blob => blob ? resolve(blob) : reject("Fehler beim Konvertieren"), 'image/jpeg', quality);
-    };
-  });
 }
 
 locationInput.addEventListener('input', async (e) => {
@@ -136,7 +113,6 @@ locationInput.addEventListener('input', async (e) => {
   try {
     const res = await fetch(`https://corsproxy.io/?https://nominatim.openstreetmap.org/search?format=json&accept-language=de&addressdetails=1&countrycodes=de&limit=8&q=${encodeURIComponent(value)}`);
     const results = await res.json();
-
     const filtered = results.filter(r => r.class === 'place' && (r.address.city || r.address.town || r.address.village || r.address.hamlet));
     suggestionBox.innerHTML = '';
 
@@ -144,6 +120,7 @@ locationInput.addEventListener('input', async (e) => {
       const ort = r.address.city || r.address.town || r.address.village || r.address.hamlet || r.display_name.split(',')[0];
       const bundesland = r.address.state || '';
       const land = r.address.country || 'Deutschland';
+      const plz = r.address.postcode || '';
       const display = [ort, bundesland, land].filter(Boolean).join(', ');
 
       const div = document.createElement('div');
@@ -151,6 +128,13 @@ locationInput.addEventListener('input', async (e) => {
       div.onclick = () => {
         locationInput.value = display;
         lastSelectedCoordinates = { lat: parseFloat(r.lat), lon: parseFloat(r.lon) };
+        selectedAddressData = {
+          postal_code: plz,
+          city: ort,
+          location: display,
+          lat: parseFloat(r.lat),
+          lon: parseFloat(r.lon)
+        };
         suggestionBox.innerHTML = '';
       };
       suggestionBox.appendChild(div);
@@ -200,6 +184,31 @@ async function handleFiles(files) {
   renderPreviews();
 }
 
+function resizeImage(file, maxSize = 1024, quality = 0.8) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const reader = new FileReader();
+    reader.onload = e => img.src = e.target.result;
+    reader.onerror = reject;
+    img.onload = () => {
+      let { width, height } = img;
+      if (width > height && width > maxSize) {
+        height *= maxSize / width;
+        width = maxSize;
+      } else if (height > maxSize) {
+        width *= maxSize / height;
+        height = maxSize;
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+      canvas.toBlob(blob => blob ? resolve(blob) : reject("Fehler beim Konvertieren"), 'image/jpeg', quality);
+    };
+  });
+}
+
 function renderPreviews() {
   const container = document.getElementById("preview-gallery");
   container.innerHTML = '';
@@ -230,16 +239,22 @@ document.getElementById("save-btn").addEventListener("click", async () => {
   const location = locationInput.value.trim();
 
   if (!title || !price || !category || !location) return alert("Pflichtfelder fehlen!");
+  if (!selectedAddressData) return alert("Bitte wähle einen Ort aus der Vorschlagsliste.");
 
-  let latitude = null, longitude = null;
-  if (lastSelectedCoordinates) {
-    latitude = lastSelectedCoordinates.lat;
-    longitude = lastSelectedCoordinates.lon;
-  }
+  const { postal_code, city, lat, lon } = selectedAddressData;
 
   const { error: ie } = await supabase.from('listings').insert({
-    title, category, price_per_day: price, description, user_id: user.id,
-    image_urls: uploadedImageUrls, latitude, longitude, location
+    title,
+    category,
+    price_per_day: price,
+    description,
+    user_id: user.id,
+    image_urls: uploadedImageUrls,
+    latitude: lat,
+    longitude: lon,
+    location,
+    postal_code,
+    city
   });
 
   if (ie) return alert("Speicherfehler: " + ie.message);
@@ -248,6 +263,7 @@ document.getElementById("save-btn").addEventListener("click", async () => {
   document.querySelectorAll('input, textarea, select').forEach(el => el.value = '');
   uploadedImageUrls = [];
   lastSelectedCoordinates = null;
+  selectedAddressData = null;
   renderPreviews();
   loadGallery();
 });
