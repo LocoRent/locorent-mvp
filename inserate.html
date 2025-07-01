@@ -272,19 +272,47 @@ function capitalize(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
+// NEU: Hilfsfunktion zum Verkleinern und Komprimieren
+function resizeImage(file, maxSize = 1024, quality = 0.8) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const reader = new FileReader();
+
+    reader.onload = e => { img.src = e.target.result; };
+    reader.onerror = reject;
+
+    img.onload = () => {
+      let { width, height } = img;
+      if (width > height && width > maxSize) {
+        height *= maxSize / width;
+        width = maxSize;
+      } else if (height > maxSize) {
+        width *= maxSize / height;
+        height = maxSize;
+      }
+
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+
+      canvas.toBlob(blob => {
+        if (blob) resolve(blob);
+        else reject(new Error("Bild konnte nicht konvertiert werden."));
+      }, 'image/jpeg', quality);
+    };
+  });
+}
+
 locationInput.addEventListener('input', async (e) => {
   const value = e.target.value.trim();
-  const suggestionsBox = document.getElementById('suggestions');
-  if (value.length < 2) {
-    suggestionsBox.innerHTML = '';
-    return;
-  }
+  if (value.length < 2) return suggestionBox.innerHTML = '';
 
   try {
     const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=10&accept-language=de&countrycodes=de&q=${encodeURIComponent(value)}`);
     const results = await res.json();
 
-    // Nur Städte, Dörfer etc. – keine Straßen, Gebäude usw.
     const allowedClasses = ['place'];
     const allowedTypes = ['city', 'town', 'village', 'hamlet', 'municipality'];
 
@@ -292,15 +320,15 @@ locationInput.addEventListener('input', async (e) => {
       allowedClasses.includes(r.class) && allowedTypes.includes(r.type)
     );
 
-    suggestionsBox.innerHTML = '';
+    suggestionBox.innerHTML = '';
     filtered.forEach(r => {
       const div = document.createElement('div');
       div.textContent = r.display_name;
       div.onclick = () => {
         locationInput.value = r.display_name;
-        suggestionsBox.innerHTML = '';
+        suggestionBox.innerHTML = '';
       };
-      suggestionsBox.appendChild(div);
+      suggestionBox.appendChild(div);
     });
   } catch (err) {
     console.error("Fehler bei der Ortssuche:", err);
@@ -320,23 +348,33 @@ document.getElementById("dropzone").addEventListener("click", () => {
   input.click();
 });
 
+// NEU: handleFiles mit Resize/Komprimierung
 async function handleFiles(files) {
   const container = document.getElementById("preview-gallery");
   for (let file of files) {
     if (uploadedImageUrls.length >= 2) break;
+    if (!file.type.startsWith("image/")) continue;
 
     const tempBox = document.createElement("div");
     tempBox.className = "preview-box";
     tempBox.innerHTML = '<div class="img-wrapper"><div class="loader"></div></div>';
     container.appendChild(tempBox);
 
-    const path = `listing-images/${Date.now()}-${file.name}`;
-    const { error } = await supabase.storage.from('listing-images').upload(path, file);
-    if (!error) {
-      const { data } = supabase.storage.from('listing-images').getPublicUrl(path);
-      uploadedImageUrls.push(data.publicUrl);
-    } else {
-      alert("Fehler beim Upload: " + error.message);
+    try {
+      const compressedBlob = await resizeImage(file, 1024, 0.8);
+      const path = `listing-images/${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
+      const { error } = await supabase.storage.from('listing-images').upload(path, compressedBlob, {
+        contentType: 'image/jpeg'
+      });
+
+      if (!error) {
+        const { data } = supabase.storage.from('listing-images').getPublicUrl(path);
+        uploadedImageUrls.push(data.publicUrl);
+      } else {
+        alert("Fehler beim Upload: " + error.message);
+      }
+    } catch (err) {
+      alert("Fehler beim Verarbeiten des Bildes: " + err.message);
     }
   }
   renderPreviews();
@@ -363,11 +401,7 @@ document.getElementById("save-btn").addEventListener("click", async () => {
   const user = sd?.session?.user;
   if (!user) return alert("Nicht eingeloggt!");
 
-  const { data: existing } = await supabase
-    .from('listings')
-    .select('id')
-    .eq('user_id', user.id);
-
+  const { data: existing } = await supabase.from('listings').select('id').eq('user_id', user.id);
   if (existing.length >= 15) return alert("Du kannst maximal 15 Inserate erstellen.");
 
   const title = document.getElementById('title-input').value.trim();
