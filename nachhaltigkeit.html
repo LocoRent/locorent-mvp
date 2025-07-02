@@ -14,8 +14,9 @@
       --highlight-color: #66bb6a;
       --white: #fff;
       --gray-dark: #333;
-      --border-radius: 12px;
-      --shadow-color: rgba(0, 0, 0, 0.1);
+      --border-radius: 16px;
+      --shadow-color: rgba(0, 0, 0, 0.12);
+      --max-width: 900px;
     }
     * {
       margin: 0;
@@ -24,116 +25,202 @@
     }
     body {
       font-family: 'Poppins', sans-serif;
-      background-color: var(--background-color);
+      background: linear-gradient(135deg, #e6f1dc 0%, #f1f8e9 100%);
       color: var(--gray-dark);
-      line-height: 1.6;
+      line-height: 1.75;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
     header {
       background-color: var(--primary-color);
       color: var(--white);
-      padding: 1.5rem 2rem;
+      padding: 1.5rem 3rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
       position: sticky;
       top: 0;
-      z-index: 1000;
+      z-index: 10000;
+      box-shadow: 0 3px 10px var(--shadow-color);
       user-select: none;
     }
     header h1 {
       font-weight: 700;
-      font-size: 1.5rem;
+      font-size: 1.8rem;
       cursor: pointer;
+      letter-spacing: 1.2px;
+      transition: color 0.3s ease;
+    }
+    header h1:hover {
+      color: var(--highlight-color);
     }
     nav a {
       color: var(--white);
-      margin-left: 1.5rem;
+      margin-left: 2rem;
       text-decoration: none;
       font-weight: 600;
-      user-select: none;
-      transition: border-bottom 0.3s ease;
+      font-size: 1.1rem;
+      position: relative;
+      transition: color 0.3s ease;
+    }
+    nav a::after {
+      content: "";
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0%;
+      height: 3px;
+      background: var(--highlight-color);
+      transition: width 0.3s ease;
+      border-radius: 3px;
     }
     nav a:hover {
-      border-bottom: 2px solid var(--highlight-color);
+      color: var(--highlight-color);
+    }
+    nav a:hover::after {
+      width: 100%;
     }
     main {
       flex: 1;
-      max-width: 900px;
-      margin: 3rem auto;
-      padding: 0 1.5rem;
-    }
-    h2 {
-      color: var(--primary-color);
-      font-weight: 700;
-      font-size: 2.4rem;
-      margin-bottom: 1rem;
-      user-select: none;
+      max-width: var(--max-width);
+      margin: 4rem auto 6rem;
+      padding: 0 2rem;
     }
     section {
       background: var(--white);
-      padding: 2rem 2.5rem;
+      padding: 3rem 3.5rem;
       border-radius: var(--border-radius);
-      box-shadow: 0 6px 16px var(--shadow-color);
-      margin-bottom: 2.5rem;
+      box-shadow: 0 8px 28px var(--shadow-color);
+      transition: box-shadow 0.3s ease;
+    }
+    section:hover {
+      box-shadow: 0 12px 40px rgba(46, 125, 50, 0.3);
+    }
+    h2 {
+      color: var(--primary-color);
+      font-weight: 800;
+      font-size: 2.8rem;
+      margin-bottom: 1.5rem;
+      user-select: none;
+      letter-spacing: 0.04em;
+      line-height: 1.1;
     }
     p {
-      font-size: 1.1rem;
-      color: var(--gray-dark);
+      font-size: 1.2rem;
+      color: var(--dark-color);
       margin-top: 1rem;
-      line-height: 1.7;
+      line-height: 1.9;
+      max-width: 780px;
+    }
+    p.important {
+      font-weight: 700;
+      color: var(--highlight-color);
+      margin-top: 2.5rem;
+      font-size: 1.4rem;
+      user-select: none;
+      text-align: center;
     }
     footer {
       background-color: var(--primary-color);
       color: var(--white);
-      padding: 2rem;
+      padding: 3rem 2rem 2rem;
       border-radius: var(--border-radius);
-      margin-top: auto;
       user-select: none;
       text-align: center;
+      box-shadow: 0 -5px 15px var(--shadow-color);
     }
     footer > div {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 3rem;
-      margin-bottom: 1.5rem;
+      gap: 3.5rem;
+      margin-bottom: 2rem;
+      max-width: var(--max-width);
+      margin-left: auto;
+      margin-right: auto;
     }
     footer h4 {
-      font-weight: 600;
-      margin-bottom: 0.5rem;
+      font-weight: 700;
+      font-size: 1.2rem;
+      margin-bottom: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
     }
     footer ul {
       list-style: none;
       padding: 0;
-      line-height: 1.8;
+      line-height: 1.9;
+      font-size: 1rem;
     }
     footer ul li a {
       color: var(--white);
       text-decoration: underline;
       cursor: pointer;
       user-select: text;
+      transition: color 0.3s ease;
     }
     footer ul li a:hover {
       color: var(--highlight-color);
     }
     footer .copyright {
-      font-size: 0.9rem;
+      font-size: 0.95rem;
+      letter-spacing: 0.05em;
+      color: var(--secondary-color);
     }
-    @media (max-width: 768px) {
+    @media (max-width: 900px) {
+      main {
+        padding: 0 1.5rem;
+        margin: 3rem auto 5rem;
+      }
+      header {
+        padding: 1rem 2rem;
+      }
+      nav a {
+        margin-left: 1.3rem;
+        font-size: 1rem;
+      }
+      h2 {
+        font-size: 2.2rem;
+      }
+      p {
+        font-size: 1.1rem;
+      }
+      footer > div {
+        gap: 2.2rem;
+      }
+    }
+    @media (max-width: 480px) {
       header {
         flex-direction: column;
         align-items: flex-start;
       }
+      nav {
+        margin-top: 1rem;
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.2rem;
+      }
       nav a {
         margin-left: 0;
-        margin-top: 0.5rem;
+        font-size: 0.95rem;
+      }
+      main {
+        margin: 2rem 1rem 4rem;
+        padding: 0 1rem;
       }
       footer > div {
         flex-direction: column;
-        align-items: center;
+        gap: 1.5rem;
+      }
+      footer h4 {
+        font-size: 1.1rem;
+      }
+      footer ul {
+        font-size: 0.95rem;
       }
     }
   </style>
@@ -152,12 +239,29 @@
 
 <main>
   <section aria-label="Nachhaltigkeit">
-    <h2>Nachhaltigkeit</h2>
+    <h2>Nachhaltigkeit bei Locorent</h2>
     <p>
-      Nachhaltigkeit steht im Zentrum unseres Handelns. Durch das Vermieten und Teilen von Gegenständen reduzieren wir
-      die Produktion neuer Ressourcen und verringern Abfall. So leisten wir gemeinsam einen Beitrag zum Klimaschutz
-      und zur Erhaltung unserer Lebensgrundlagen für zukünftige Generationen.
+      Nachhaltigkeit steht im Kern all unseres Handelns. Indem wir Menschen befähigen, Gegenstände zu teilen und zu vermieten,
+      tragen wir dazu bei, Ressourcen zu schonen, die Umweltbelastung zu reduzieren und Abfall zu vermeiden. Jeder gemietete Artikel
+      ist ein Schritt weg von der Wegwerfgesellschaft hin zu einem bewussteren Umgang mit unseren wertvollen Gütern.
     </p>
+    <p>
+      Durch das gemeinsame Nutzen anstatt zu besitzen, minimieren wir die Herstellung neuer Produkte und reduzieren somit den Verbrauch von Rohstoffen,
+      Energie und Wasser. Das hilft, den CO₂-Ausstoß zu verringern und unsere natürlichen Lebensräume zu schützen.
+    </p>
+    <p>
+      Darüber hinaus fördern wir durch unser Netzwerk eine Kultur des Teilens und des gegenseitigen Respekts – Werte, die in einer nachhaltigen Zukunft unverzichtbar sind.
+    </p>
+    <p>
+      Unser Engagement geht über die Plattform hinaus: Wir arbeiten kontinuierlich daran, unsere Prozesse umweltfreundlicher zu gestalten
+      und informieren unsere Nutzer darüber, wie sie selbst einen aktiven Beitrag zum Umweltschutz leisten können.
+    </p>
+    <p>
+      <strong>Gemeinsam für eine grünere Zukunft:</strong><br>
+      Jeder einzelne Beitrag zählt – ob klein oder groß. Mit Locorent kannst du Teil einer Bewegung werden, die Verantwortung übernimmt
+      und aktiv an der Erhaltung unseres Planeten mitwirkt.
+    </p>
+    <p class="important">Teilen, Mieten, Schützen – Für eine nachhaltige Welt.</p>
   </section>
 </main>
 
@@ -169,14 +273,14 @@
         <li><a href="so-funktionierts.html">So funktioniert's</a></li>
         <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
         <li><a href="kategorien.html">Beliebte Kategorien</a></li>
-        <li><a href="vermieter-tipps.html">Tipps &amp; Tricks für Vermieter</a></li>
+        <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
         <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
       </ul>
     </div>
     <div>
       <h4>Wissenswertes</h4>
       <ul>
-        <li><a href="agb.html">AGB &amp; Impressum</a></li>
+        <li><a href="agb.html">AGB & Impressum</a></li>
         <li><a href="datenschutz.html">Datenschutz</a></li>
       </ul>
     </div>
