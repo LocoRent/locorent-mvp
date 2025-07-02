@@ -3,8 +3,6 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Login – LocoRent</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
   <title>Login – Locorent</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <style>
@@ -25,7 +23,6 @@
 
     body {
       font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #1e3c72, #2a5298);
       background-color: var(--light);
       color: var(--dark);
     }
@@ -54,25 +51,19 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      margin: 0;
       min-height: 80vh;
       padding: 2rem;
     }
 
     .container {
-      background: rgba(255, 255, 255, 0.1);
       background-color: white;
       padding: 2rem;
       border-radius: 15px;
-      width: 90%;
       width: 100%;
       max-width: 400px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.4);
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
 
-    label, input {
     h2 {
       text-align: center;
       margin-bottom: 1rem;
@@ -80,7 +71,6 @@
 
     label {
       display: block;
-      width: 100%;
       margin-top: 1rem;
       font-weight: 600;
     }
@@ -91,7 +81,6 @@
       margin-top: 0.5rem;
       border: 1px solid #ccc;
       border-radius: 8px;
-      border: none;
       font-size: 1rem;
     }
 
@@ -107,7 +96,6 @@
       cursor: pointer;
       color: #666;
       font-size: 0.9rem;
-      color: #ccc;
     }
 
     button {
@@ -117,8 +105,6 @@
       border: none;
       border-radius: 8px;
       font-weight: bold;
-      background-color: #00d084;
-      color: #000;
       background-color: var(--accent);
       color: white;
       font-size: 1rem;
@@ -127,7 +113,6 @@
     }
 
     button:hover {
-      background-color: #02c26b;
       background-color: var(--primary);
     }
 
@@ -138,10 +123,8 @@
     }
 
     .forgot a {
-      color: #fff;
       color: var(--primary);
       text-decoration: underline;
-      cursor: pointer;
     }
 
     .message {
@@ -151,12 +134,10 @@
     }
 
     .error {
-      color: #ff6b6b;
       color: #d32f2f;
     }
 
     .success {
-      color: #00ffae;
       color: var(--primary);
     }
 
@@ -171,26 +152,6 @@
 </head>
 <body>
 
-<div class="container">
-  <h2>Login</h2>
-  <form id="login-form">
-    <label for="email">E-Mail</label>
-    <input type="email" id="email" required autocomplete="email" />
-
-    <label for="password">Passwort</label>
-    <div class="password-wrapper">
-      <input type="password" id="password" required autocomplete="current-password" />
-      <span class="toggle-password" onclick="togglePassword()">👁</span>
-    </div>
-
-    <div class="forgot">
-      <a href="reset-password.html">Passwort vergessen?</a>
-    </div>
-
-    <button type="submit">Einloggen</button>
-    <div id="message" class="message"></div>
-  </form>
-</div>
 <header>
   <h1>Locorent</h1>
   <nav>
@@ -255,7 +216,6 @@
         messageDiv.textContent = '✅ Login erfolgreich!';
         messageDiv.classList.add('success');
         setTimeout(() => {
-          window.location.href = 'index.html'; // Weiterleitung zur Startseite
           window.location.href = 'index.html';
         }, 1000);
       }
@@ -266,7 +226,7 @@
   });
 
   function togglePassword() {
-    const pwField = document.getElementById('password');More actions
+    const pwField = document.getElementById('password');
     pwField.type = pwField.type === 'password' ? 'text' : 'password';
   }
 </script>
