@@ -9,50 +9,49 @@
     :root {
       --primary-color: #2e7d32;
       --secondary-color: #a5d6a7;
-      --background-color: #f1f8e9;
-      --dark-color: #1b5e20;
-      --highlight-color: #66bb6a;
+      --background-light: #f9fcf8;
+      --background-green: #d7e9d1;
       --white: #fff;
-      --gray-dark: #333;
+      --dark-gray: #2b2b2b;
+      --highlight-color: #66bb6a;
       --border-radius: 16px;
-      --shadow-color: rgba(0, 0, 0, 0.12);
-      --max-width: 900px;
+      --shadow-color: rgba(0,0,0,0.1);
+      --max-width: 1100px;
     }
     * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
     }
     body {
       font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #e6f1dc 0%, #f1f8e9 100%);
-      color: var(--gray-dark);
-      line-height: 1.75;
-      min-height: 100vh;
+      background-color: var(--background-light);
+      color: var(--dark-gray);
+      line-height: 1.7;
       display: flex;
       flex-direction: column;
+      min-height: 100vh;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
     header {
       background-color: var(--primary-color);
-      color: var(--white);
       padding: 1.5rem 3rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
       position: sticky;
       top: 0;
-      z-index: 10000;
-      box-shadow: 0 3px 10px var(--shadow-color);
+      z-index: 100;
+      box-shadow: 0 4px 8px var(--shadow-color);
       user-select: none;
     }
     header h1 {
       font-weight: 700;
       font-size: 1.8rem;
+      color: var(--white);
       cursor: pointer;
       letter-spacing: 1.2px;
-      transition: color 0.3s ease;
     }
     header h1:hover {
       color: var(--highlight-color);
@@ -60,9 +59,9 @@
     nav a {
       color: var(--white);
       margin-left: 2rem;
-      text-decoration: none;
       font-weight: 600;
       font-size: 1.1rem;
+      text-decoration: none;
       position: relative;
       transition: color 0.3s ease;
     }
@@ -74,8 +73,8 @@
       width: 0%;
       height: 3px;
       background: var(--highlight-color);
-      transition: width 0.3s ease;
       border-radius: 3px;
+      transition: width 0.3s ease;
     }
     nav a:hover {
       color: var(--highlight-color);
@@ -89,40 +88,99 @@
       margin: 4rem auto 6rem;
       padding: 0 2rem;
     }
-    section {
+
+    /* Hero Section */
+    .hero {
       background: var(--white);
-      padding: 3rem 3.5rem;
       border-radius: var(--border-radius);
-      box-shadow: 0 8px 28px var(--shadow-color);
-      transition: box-shadow 0.3s ease;
-    }
-    section:hover {
-      box-shadow: 0 12px 40px rgba(46, 125, 50, 0.3);
-    }
-    h2 {
-      color: var(--primary-color);
-      font-weight: 800;
-      font-size: 2.8rem;
-      margin-bottom: 1.5rem;
-      user-select: none;
-      letter-spacing: 0.04em;
-      line-height: 1.1;
-    }
-    p {
-      font-size: 1.2rem;
-      color: var(--dark-color);
-      margin-top: 1rem;
-      line-height: 1.9;
-      max-width: 780px;
-    }
-    p.important {
-      font-weight: 700;
-      color: var(--highlight-color);
-      margin-top: 2.5rem;
-      font-size: 1.4rem;
-      user-select: none;
+      box-shadow: 0 10px 28px var(--shadow-color);
+      padding: 4rem 3rem;
       text-align: center;
+      margin-bottom: 4rem;
     }
+    .hero h2 {
+      font-size: 3rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-bottom: 1rem;
+      letter-spacing: 0.05em;
+      line-height: 1.1;
+      user-select: none;
+    }
+    .hero p {
+      font-size: 1.3rem;
+      max-width: 700px;
+      margin: 0 auto;
+      color: #3a3a3a;
+      line-height: 1.8;
+    }
+    
+    /* Features Grid */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 3rem;
+      margin-bottom: 4rem;
+    }
+    .feature-card {
+      background: var(--background-green);
+      border-radius: var(--border-radius);
+      padding: 2.5rem 2rem;
+      box-shadow: 0 6px 20px rgba(102, 187, 106, 0.25);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      transition: transform 0.3s ease;
+      cursor: default;
+    }
+    .feature-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 10px 30px rgba(102, 187, 106, 0.4);
+    }
+    .feature-icon {
+      font-size: 4rem;
+      color: var(--primary-color);
+      margin-bottom: 1rem;
+      user-select: none;
+    }
+    .feature-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 0.8rem;
+      color: var(--dark-gray);
+    }
+    .feature-text {
+      font-size: 1.1rem;
+      color: #444;
+      line-height: 1.6;
+    }
+
+    /* Call to action */
+    .cta-box {
+      background: var(--primary-color);
+      color: var(--white);
+      padding: 3rem 2rem;
+      border-radius: var(--border-radius);
+      text-align: center;
+      box-shadow: 0 8px 24px rgba(46, 125, 50, 0.6);
+      max-width: 800px;
+      margin: 0 auto;
+      user-select: none;
+    }
+    .cta-box h3 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    .cta-box p {
+      font-size: 1.3rem;
+      max-width: 650px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+    
+    /* Footer */
     footer {
       background-color: var(--primary-color);
       color: var(--white);
@@ -131,12 +189,13 @@
       user-select: none;
       text-align: center;
       box-shadow: 0 -5px 15px var(--shadow-color);
+      margin-top: auto;
     }
     footer > div {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 3.5rem;
+      gap: 3rem;
       margin-bottom: 2rem;
       max-width: var(--max-width);
       margin-left: auto;
@@ -145,14 +204,14 @@
     footer h4 {
       font-weight: 700;
       font-size: 1.2rem;
-      margin-bottom: 0.8rem;
+      margin-bottom: 0.5rem;
       text-transform: uppercase;
       letter-spacing: 0.1em;
     }
     footer ul {
       list-style: none;
       padding: 0;
-      line-height: 1.9;
+      line-height: 1.8;
       font-size: 1rem;
     }
     footer ul li a {
@@ -166,10 +225,12 @@
       color: var(--highlight-color);
     }
     footer .copyright {
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       letter-spacing: 0.05em;
       color: var(--secondary-color);
     }
+
+    /* Responsive */
     @media (max-width: 900px) {
       main {
         padding: 0 1.5rem;
@@ -182,14 +243,11 @@
         margin-left: 1.3rem;
         font-size: 1rem;
       }
-      h2 {
-        font-size: 2.2rem;
+      .hero h2 {
+        font-size: 2.4rem;
       }
-      p {
-        font-size: 1.1rem;
-      }
-      footer > div {
-        gap: 2.2rem;
+      .feature-card {
+        padding: 2rem 1.5rem;
       }
     }
     @media (max-width: 480px) {
@@ -238,30 +296,40 @@
 </header>
 
 <main>
-  <section aria-label="Nachhaltigkeit">
-    <h2>Nachhaltigkeit bei Locorent</h2>
-    <p>
-      Nachhaltigkeit steht im Kern all unseres Handelns. Indem wir Menschen befähigen, Gegenstände zu teilen und zu vermieten,
-      tragen wir dazu bei, Ressourcen zu schonen, die Umweltbelastung zu reduzieren und Abfall zu vermeiden. Jeder gemietete Artikel
-      ist ein Schritt weg von der Wegwerfgesellschaft hin zu einem bewussteren Umgang mit unseren wertvollen Gütern.
-    </p>
-    <p>
-      Durch das gemeinsame Nutzen anstatt zu besitzen, minimieren wir die Herstellung neuer Produkte und reduzieren somit den Verbrauch von Rohstoffen,
-      Energie und Wasser. Das hilft, den CO₂-Ausstoß zu verringern und unsere natürlichen Lebensräume zu schützen.
-    </p>
-    <p>
-      Darüber hinaus fördern wir durch unser Netzwerk eine Kultur des Teilens und des gegenseitigen Respekts – Werte, die in einer nachhaltigen Zukunft unverzichtbar sind.
-    </p>
-    <p>
-      Unser Engagement geht über die Plattform hinaus: Wir arbeiten kontinuierlich daran, unsere Prozesse umweltfreundlicher zu gestalten
-      und informieren unsere Nutzer darüber, wie sie selbst einen aktiven Beitrag zum Umweltschutz leisten können.
-    </p>
-    <p>
-      <strong>Gemeinsam für eine grünere Zukunft:</strong><br>
-      Jeder einzelne Beitrag zählt – ob klein oder groß. Mit Locorent kannst du Teil einer Bewegung werden, die Verantwortung übernimmt
-      und aktiv an der Erhaltung unseres Planeten mitwirkt.
-    </p>
-    <p class="important">Teilen, Mieten, Schützen – Für eine nachhaltige Welt.</p>
+  <section class="hero" aria-label="Intro Nachhaltigkeit">
+    <h2>Nachhaltigkeit leben – gemeinsam die Zukunft gestalten</h2>
+    <p>Bei Locorent ermöglichen wir dir, mit jedem Mietvorgang aktiv Ressourcen zu schonen, Abfall zu vermeiden und die Umwelt zu schützen. Teilen statt Besitzen ist nicht nur praktisch, sondern ein wertvoller Beitrag für unseren Planeten.</p>
+  </section>
+
+  <section class="features" aria-label="Vorteile der Nachhaltigkeit mit Locorent">
+    <article class="feature-card" tabindex="0">
+      <div class="feature-icon" aria-hidden="true">🌍</div>
+      <h3 class="feature-title">Ressourcen sparen</h3>
+      <p class="feature-text">Weniger Neuanschaffungen bedeuten weniger Rohstoffabbau und Energieverbrauch. Gemeinsam reduzieren wir den ökologischen Fußabdruck.</p>
+    </article>
+
+    <article class="feature-card" tabindex="0">
+      <div class="feature-icon" aria-hidden="true">🔄</div>
+      <h3 class="feature-title">Produkte testen & erleben</h3>
+      <p class="feature-text">Teste Produkte ganz unkompliziert vor dem Kauf – so vermeidest du Fehlkäufe und sparst bares Geld und Ressourcen.</p>
+    </article>
+
+    <article class="feature-card" tabindex="0">
+      <div class="feature-icon" aria-hidden="true">🤝</div>
+      <h3 class="feature-title">Gemeinschaft fördern</h3>
+      <p class="feature-text">Durch Teilen entsteht Vertrauen und Zusammenhalt in der Nachbarschaft. Locorent bringt Menschen zusammen für eine nachhaltige Zukunft.</p>
+    </article>
+
+    <article class="feature-card" tabindex="0">
+      <div class="feature-icon" aria-hidden="true">🌱</div>
+      <h3 class="feature-title">Aktiver Klimaschutz</h3>
+      <p class="feature-text">Jeder gemietete Artikel vermindert den Bedarf an Neuproduktionen und reduziert damit CO₂-Emissionen signifikant.</p>
+    </article>
+  </section>
+
+  <section class="cta-box" aria-label="Aufruf zum nachhaltigen Handeln">
+    <h3>Werde Teil der Bewegung</h3>
+    <p>Nutze Locorent, um aktiv Verantwortung zu übernehmen. Miete statt kaufen und gestalte eine lebenswerte Welt für uns alle – heute und morgen.</p>
   </section>
 </main>
 
