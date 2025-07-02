@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Unsere Mission – Locorent</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary-color: #2e7d32;
+      --secondary-color: #a5d6a7;
+      --background-color: #f1f8e9;
+      --dark-color: #1b5e20;
+      --highlight-color: #66bb6a;
+      --white: #fff;
+      --gray-dark: #333;
+      --border-radius: 12px;
+      --shadow-color: rgba(0, 0, 0, 0.1);
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--background-color);
+      color: var(--gray-dark);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background-color: var(--primary-color);
+      color: var(--white);
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      user-select: none;
+    }
+    header h1 {
+      font-weight: 700;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    nav a {
+      color: var(--white);
+      margin-left: 1.5rem;
+      text-decoration: none;
+      font-weight: 600;
+      user-select: none;
+      transition: border-bottom 0.3s ease;
+    }
+    nav a:hover {
+      border-bottom: 2px solid var(--highlight-color);
+    }
+    main {
+      flex: 1;
+      max-width: 900px;
+      margin: 3rem auto;
+      padding: 0 1.5rem;
+    }
+    h2 {
+      color: var(--primary-color);
+      font-weight: 700;
+      font-size: 2.4rem;
+      margin-bottom: 1rem;
+      user-select: none;
+    }
+    section {
+      background: var(--white);
+      padding: 2rem 2.5rem;
+      border-radius: var(--border-radius);
+      box-shadow: 0 6px 16px var(--shadow-color);
+      margin-bottom: 2.5rem;
+    }
+    p {
+      font-size: 1.1rem;
+      color: var(--gray-dark);
+      margin-top: 1rem;
+      line-height: 1.7;
+    }
+    footer {
+      background-color: var(--primary-color);
+      color: var(--white);
+      padding: 2rem;
+      border-radius: var(--border-radius);
+      margin-top: auto;
+      user-select: none;
+      text-align: center;
+    }
+    footer > div {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 3rem;
+      margin-bottom: 1.5rem;
+    }
+    footer h4 {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    footer ul {
+      list-style: none;
+      padding: 0;
+      line-height: 1.8;
+    }
+    footer ul li a {
+      color: var(--white);
+      text-decoration: underline;
+      cursor: pointer;
+      user-select: text;
+    }
+    footer ul li a:hover {
+      color: var(--highlight-color);
+    }
+    footer .copyright {
+      font-size: 0.9rem;
+    }
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      nav a {
+        margin-left: 0;
+        margin-top: 0.5rem;
+      }
+      footer > div {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1 onclick="window.location.href='index.html'">Locorent</h1>
+  <nav>
+    <a href="index.html">Startseite</a>
+    <a href="so-funktionierts.html">So funktioniert's</a>
+    <a href="angebote_neueste.html">Angebote</a>
+    <a href="kontakt.html">Kontakt</a>
+  </nav>
+</header>
+
+<main>
+  <section aria-label="Unsere Mission">
+    <h2>Unsere Mission</h2>
+    <p>
+      Bei Locorent glauben wir an eine Welt, in der gemeinschaftliches Nutzen die Norm ist.
+      Unsere Mission ist es, Menschen dabei zu unterstützen, Ressourcen sinnvoll zu teilen,
+      Geld zu sparen und dabei die Umwelt zu schonen. Mieten statt kaufen – für mehr Nachhaltigkeit und ein besseres Miteinander.
+    </p>
+  </section>
+</main>
+
+<footer>
+  <div>
+    <div>
+      <h4>Mieten &amp; Vermieten</h4>
+      <ul>
+        <li><a href="so-funktionierts.html">So funktioniert's</a></li>
+        <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
+        <li><a href="kategorien.html">Beliebte Kategorien</a></li>
+        <li><a href="vermieter-tipps.html">Tipps &amp; Tricks für Vermieter</a></li>
+        <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Wissenswertes</h4>
+      <ul>
+        <li><a href="agb.html">AGB &amp; Impressum</a></li>
+        <li><a href="datenschutz.html">Datenschutz</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Über uns</h4>
+      <ul>
+        <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
+        <li><a href="social-media.html">Folgen Sie uns</a></li>
+        <li><a href="mission.html">Unsere Mission</a></li>
+        <li><a href="nachhaltigkeit.html">Nachhaltigkeit</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="copyright">
+    © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
+  </div>
+</footer>
+
+</body>
+</html>
