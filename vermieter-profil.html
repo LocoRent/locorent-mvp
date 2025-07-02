@@ -16,6 +16,7 @@
     --border-radius: 12px;
     --shadow-color: rgba(0, 0, 0, 0.1);
     --max-width: 1200px;
+    --star-color: #f5c518;
   }
   * {
     margin: 0;
@@ -48,6 +49,7 @@
     font-weight: 600;
     font-size: 1.8rem;
     cursor: pointer;
+    user-select: none;
   }
   nav#nav-links a {
     color: var(--white);
@@ -64,115 +66,176 @@
     background: var(--white);
     border-radius: var(--border-radius);
     box-shadow: 0 6px 18px var(--shadow-color);
-    padding: 2rem 3rem;
+    padding: 3rem 3rem 4rem;
     margin: 3rem 1rem 4rem;
     width: 100%;
   }
-  section {
-    margin-bottom: 2rem;
+  /* Vermieter Header */
+  #profile-section {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 3rem;
+    align-items: center;
   }
-  h2 {
-    margin-bottom: 1rem;
+  #profile-info {
+    flex: 1;
+    background-color: var(--light-gray);
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    box-shadow: inset 0 0 8px rgba(0,0,0,0.05);
+  }
+  #profile-info p {
+    margin-bottom: 0.8rem;
+    font-size: 1.1rem;
+    color: #444;
+  }
+  #profile-info p strong {
+    color: var(--primary-dark);
+  }
+  /* Star rating visual */
+  .star-rating {
+    font-size: 1.6rem;
+    color: var(--star-color);
+    user-select: none;
+    margin-top: 0.3rem;
+  }
+  /* Bewertungen Section */
+  #reviews-section {
+    margin-bottom: 3rem;
+  }
+  #reviews-section h2 {
     color: var(--primary-color);
     font-weight: 700;
+    margin-bottom: 1rem;
+    font-size: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
-  /* Link-Styling für Bewertungen Überschrift */
-  h2 a {
+  #all-reviews-link {
+    font-weight: 600;
+    font-size: 1rem;
     color: var(--primary-color);
     text-decoration: underline;
     cursor: pointer;
+    transition: color 0.3s ease;
   }
-  .profile-box {
+  #all-reviews-link:hover {
+    color: var(--primary-dark);
+  }
+  #reviews-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+    gap: 1.5rem;
+  }
+  .review-item {
     background-color: var(--light-gray);
-    padding: 1.5rem 2rem;
     border-radius: var(--border-radius);
+    padding: 1.5rem 1.8rem;
     box-shadow: inset 0 0 8px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+  }
+  .review-item:hover {
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+    transform: translateY(-3px);
+  }
+  .review-item strong {
+    font-size: 1.2rem;
+    color: var(--primary-dark);
+    margin-bottom: 0.5rem;
+    user-select: none;
+  }
+  .review-item p {
     font-size: 1rem;
-    color: #444;
+    margin-bottom: 0.8rem;
     line-height: 1.5;
+  }
+  .review-item small {
+    font-size: 0.85rem;
+    color: #666;
+    user-select: none;
+  }
+  /* Inserate Section */
+  #listings-section h2 {
+    color: var(--primary-color);
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
   }
   .listing-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill,minmax(250px,1fr));
+    grid-template-columns: repeat(auto-fill,minmax(280px,1fr));
     gap: 1.5rem;
   }
   .listing-card {
     background-color: var(--white);
-    padding: 1rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    padding: 1rem 1rem 1.2rem;
+    border-radius: 10px;
+    box-shadow: 0 3px 12px var(--shadow-color);
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+  }
+  .listing-card:hover {
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    transform: translateY(-4px);
   }
   .listing-card img {
     width: 100%;
     height: 180px;
     object-fit: cover;
-    border-radius: 6px;
-    margin-bottom: 0.5rem;
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
   }
   .listing-card h3 {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     margin-bottom: 0.3rem;
+    color: var(--primary-dark);
   }
   .listing-card p {
-    margin: 0.2rem 0;
+    margin: 0.3rem 0;
+    font-weight: 500;
   }
   .listing-card p.category {
-    /* Großschreibung nur Anfangsbuchstabe */
     text-transform: capitalize;
     font-weight: 600;
+    color: var(--primary-color);
   }
   .listing-card button {
-    margin-top: 0.5rem;
-    width: 100%;
-    padding: 0.6rem;
+    margin-top: auto;
+    padding: 0.7rem 1rem;
     background-color: var(--primary-color);
     color: var(--white);
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     cursor: pointer;
     font-weight: 600;
+    font-size: 1rem;
     transition: background-color 0.3s ease;
   }
   .listing-card button:hover {
     background-color: var(--primary-dark);
   }
-  .review-box {
-    background-color: var(--light-gray);
-    padding: 1rem 1.5rem;
-    border-radius: var(--border-radius);
-    box-shadow: inset 0 0 8px rgba(0,0,0,0.05);
-  }
-  .review-item {
-    background-color: #fff;
-    padding: 1rem;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-  }
-  .review-item strong {
-    display: block;
-    margin-bottom: 0.3rem;
-    color: var(--primary-dark);
-  }
-  .review-summary {
-    margin-bottom: 1rem;
-    font-weight: 700;
-    color: var(--primary-dark);
-  }
+  /* Review Button */
   .review-btn {
-    margin-top: 1rem;
+    margin-top: 1.5rem;
+    padding: 0.8rem 1.5rem;
     background-color: var(--primary-color);
     color: var(--white);
-    border: none;
-    padding: 0.7rem 1.2rem;
-    border-radius: 6px;
-    cursor: pointer;
     font-weight: 700;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.1rem;
     transition: background-color 0.3s ease;
   }
   .review-btn:hover {
     background-color: var(--primary-dark);
   }
+  /* Footer */
   footer {
     width: 100%;
     background-color: var(--primary-color);
@@ -216,9 +279,13 @@
     color: var(--white);
     user-select: none;
   }
+  /* Responsive */
   @media (max-width: 900px) {
     main {
-      padding: 1.5rem 1rem;
+      padding: 2rem 1.5rem 3rem;
+    }
+    #profile-section {
+      flex-direction: column;
     }
     .listing-grid {
       grid-template-columns: 1fr 1fr;
@@ -249,18 +316,28 @@
   <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
 </header>
 <main>
-  <section id="profile-section">
-    <h2>Vermieterprofil</h2>
-    <div id="profile-info" class="profile-box">Lade Profil...</div>
+  <section id="profile-section" aria-label="Profilinformationen des Vermieters">
+    <div id="profile-info">
+      Lade Profil...
+    </div>
   </section>
-  <section id="reviews-section" class="review-box">
-    <h2><a href="#" id="all-reviews-link">Bewertungen</a></h2>
-    <div id="reviews-list">⏳ Lade Bewertungen…</div>
+
+  <section id="reviews-section" aria-label="Bewertungen des Vermieters">
+    <h2>
+      Bewertungen
+      <a href="#" id="all-reviews-link" aria-label="Alle Bewertungen anzeigen">Alle anzeigen →</a>
+    </h2>
+    <div id="reviews-list">
+      ⏳ Lade Bewertungen…
+    </div>
     <div id="review-button-container"></div>
   </section>
-  <section id="listings-section">
+
+  <section id="listings-section" aria-label="Inserate des Vermieters">
     <h2>Inserate dieses Vermieters</h2>
-    <div id="listing-grid" class="listing-grid"><p>⏳ Lade Inserate…</p></div>
+    <div id="listing-grid" class="listing-grid">
+      <p>⏳ Lade Inserate…</p>
+    </div>
   </section>
 </main>
 <footer role="contentinfo">
@@ -374,9 +451,23 @@
       const allRatings = allReviewsData || [];
       const average = allRatings.length > 0 ? (allRatings.reduce((sum, r) => sum + r.rating, 0) / allRatings.length).toFixed(1) : "–";
 
-      const summary = `<p class="review-summary">⭐ ${average} von 5 aus ${allRatings.length} Bewertungen</p>`;
+      // Stern-Darstellung
+      const stars = () => {
+        const fullStars = Math.floor(average);
+        const halfStar = average - fullStars >= 0.5;
+        let starHtml = "";
+        for (let i = 1; i <= 5; i++) {
+          if(i <= fullStars) starHtml += "&#9733;"; // Voller Stern ★
+          else if(i === fullStars + 1 && halfStar) starHtml += "&#9733;"; // Halbstern als voller (für Simplizität)
+          else starHtml += "&#9734;"; // Leerer Stern ☆
+        }
+        return starHtml;
+      };
+
+      const summary = `<p class="review-summary"> <span class="star-rating" aria-label="Durchschnittliche Bewertung">${stars()} ${average} von 5 aus ${allRatings.length} Bewertungen</span></p>`;
+
       const list = reviews.map(r => `
-        <div class="review-item">
+        <div class="review-item" tabindex="0" aria-label="Bewertung ${r.rating} von 5 Sternen von ${r.from_user?.name || 'Unbekannt'}">
           <strong>⭐ ${r.rating}/5</strong>
           <p>${r.comment}</p>
           <small>Von <strong>${r.from_user?.name || 'Unbekannt'}</strong> am ${new Date(r.created_at).toLocaleDateString()}</small>
