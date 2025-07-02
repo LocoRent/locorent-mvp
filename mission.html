@@ -14,8 +14,9 @@
       --highlight-color: #66bb6a;
       --white: #fff;
       --gray-dark: #333;
-      --border-radius: 12px;
-      --shadow-color: rgba(0, 0, 0, 0.1);
+      --border-radius: 16px;
+      --shadow-color: rgba(0, 0, 0, 0.12);
+      --max-width: 900px;
     }
     * {
       margin: 0;
@@ -26,114 +27,192 @@
       font-family: 'Poppins', sans-serif;
       background-color: var(--background-color);
       color: var(--gray-dark);
-      line-height: 1.6;
+      line-height: 1.7;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
     header {
       background-color: var(--primary-color);
       color: var(--white);
-      padding: 1.5rem 2rem;
+      padding: 1.5rem 3rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
       position: sticky;
       top: 0;
-      z-index: 1000;
+      z-index: 10000;
+      box-shadow: 0 3px 10px var(--shadow-color);
       user-select: none;
     }
     header h1 {
       font-weight: 700;
-      font-size: 1.5rem;
+      font-size: 1.8rem;
       cursor: pointer;
+      letter-spacing: 1.2px;
+      transition: color 0.3s ease;
+    }
+    header h1:hover {
+      color: var(--highlight-color);
     }
     nav a {
       color: var(--white);
-      margin-left: 1.5rem;
+      margin-left: 2rem;
       text-decoration: none;
       font-weight: 600;
-      user-select: none;
-      transition: border-bottom 0.3s ease;
+      font-size: 1.1rem;
+      position: relative;
+      transition: color 0.3s ease;
+    }
+    nav a::after {
+      content: "";
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0%;
+      height: 3px;
+      background: var(--highlight-color);
+      transition: width 0.3s ease;
+      border-radius: 3px;
     }
     nav a:hover {
-      border-bottom: 2px solid var(--highlight-color);
+      color: var(--highlight-color);
+    }
+    nav a:hover::after {
+      width: 100%;
     }
     main {
       flex: 1;
-      max-width: 900px;
-      margin: 3rem auto;
-      padding: 0 1.5rem;
-    }
-    h2 {
-      color: var(--primary-color);
-      font-weight: 700;
-      font-size: 2.4rem;
-      margin-bottom: 1rem;
-      user-select: none;
+      max-width: var(--max-width);
+      margin: 4rem auto 6rem;
+      padding: 0 2rem;
     }
     section {
       background: var(--white);
-      padding: 2rem 2.5rem;
+      padding: 3rem 3.5rem;
       border-radius: var(--border-radius);
-      box-shadow: 0 6px 16px var(--shadow-color);
-      margin-bottom: 2.5rem;
+      box-shadow: 0 8px 28px var(--shadow-color);
+      transition: box-shadow 0.3s ease;
+    }
+    section:hover {
+      box-shadow: 0 12px 40px rgba(46, 125, 50, 0.3);
+    }
+    h2 {
+      color: var(--primary-color);
+      font-weight: 800;
+      font-size: 2.8rem;
+      margin-bottom: 1.5rem;
+      user-select: none;
+      letter-spacing: 0.04em;
+      line-height: 1.1;
     }
     p {
-      font-size: 1.1rem;
-      color: var(--gray-dark);
+      font-size: 1.2rem;
+      color: var(--dark-color);
       margin-top: 1rem;
-      line-height: 1.7;
+      line-height: 1.9;
+      max-width: 780px;
     }
     footer {
       background-color: var(--primary-color);
       color: var(--white);
-      padding: 2rem;
+      padding: 3rem 2rem 2rem;
       border-radius: var(--border-radius);
-      margin-top: auto;
       user-select: none;
       text-align: center;
+      box-shadow: 0 -5px 15px var(--shadow-color);
     }
     footer > div {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 3rem;
-      margin-bottom: 1.5rem;
+      gap: 3.5rem;
+      margin-bottom: 2rem;
+      max-width: var(--max-width);
+      margin-left: auto;
+      margin-right: auto;
     }
     footer h4 {
-      font-weight: 600;
-      margin-bottom: 0.5rem;
+      font-weight: 700;
+      font-size: 1.2rem;
+      margin-bottom: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
     }
     footer ul {
       list-style: none;
       padding: 0;
-      line-height: 1.8;
+      line-height: 1.9;
+      font-size: 1rem;
     }
     footer ul li a {
       color: var(--white);
       text-decoration: underline;
       cursor: pointer;
       user-select: text;
+      transition: color 0.3s ease;
     }
     footer ul li a:hover {
       color: var(--highlight-color);
     }
     footer .copyright {
-      font-size: 0.9rem;
+      font-size: 0.95rem;
+      letter-spacing: 0.05em;
+      color: var(--secondary-color);
     }
-    @media (max-width: 768px) {
+    @media (max-width: 900px) {
+      main {
+        padding: 0 1.5rem;
+        margin: 3rem auto 5rem;
+      }
+      header {
+        padding: 1rem 2rem;
+      }
+      nav a {
+        margin-left: 1.3rem;
+        font-size: 1rem;
+      }
+      h2 {
+        font-size: 2.2rem;
+      }
+      p {
+        font-size: 1.1rem;
+      }
+      footer > div {
+        gap: 2.2rem;
+      }
+    }
+    @media (max-width: 480px) {
       header {
         flex-direction: column;
         align-items: flex-start;
       }
+      nav {
+        margin-top: 1rem;
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.2rem;
+      }
       nav a {
         margin-left: 0;
-        margin-top: 0.5rem;
+        font-size: 0.95rem;
+      }
+      main {
+        margin: 2rem 1rem 4rem;
+        padding: 0 1rem;
       }
       footer > div {
         flex-direction: column;
-        align-items: center;
+        gap: 1.5rem;
+      }
+      footer h4 {
+        font-size: 1.1rem;
+      }
+      footer ul {
+        font-size: 0.95rem;
       }
     }
   </style>
@@ -154,9 +233,37 @@
   <section aria-label="Unsere Mission">
     <h2>Unsere Mission</h2>
     <p>
-      Bei Locorent glauben wir an eine Welt, in der gemeinschaftliches Nutzen die Norm ist.
-      Unsere Mission ist es, Menschen dabei zu unterstützen, Ressourcen sinnvoll zu teilen,
-      Geld zu sparen und dabei die Umwelt zu schonen. Mieten statt kaufen – für mehr Nachhaltigkeit und ein besseres Miteinander.
+      Bei Locorent glauben wir fest daran, dass die Zukunft des Konsums in Gemeinschaft und nachhaltigem Nutzen liegt. In einer Welt, in der Ressourcen knapper und Umweltschutz immer dringlicher werden, setzen wir auf ein einfaches, aber kraftvolles Prinzip: Mieten statt Kaufen.
+    </p>
+    <p>
+      Unsere Mission ist es, Menschen zu befähigen, bewusster und verantwortungsvoller mit den Dingen umzugehen, die sie im Alltag benötigen. Statt Dinge ungenutzt und staubig in Kellern zu lagern, fördern wir den Austausch und die gemeinschaftliche Nutzung von Produkten aller Art – von Werkzeugen über Fahrzeuge bis hin zu Sport- und Freizeitartikeln.
+    </p>
+    <p>
+      <strong>Testen, bevor man kauft:</strong><br>
+      Wir wissen, wie wichtig es ist, ein Produkt vor einer Anschaffung genau kennenzulernen. Deshalb ermöglicht Locorent nicht nur das Mieten als kurzfristige Lösung, sondern auch das Ausprobieren und Testen, bevor man sich für einen Kauf entscheidet. So helfen wir, Fehlkäufe zu vermeiden und unnötige Ausgaben zu reduzieren.
+    </p>
+    <p>
+      <strong>Nachhaltigkeit als Kern:</strong><br>
+      Durch das Teilen und Mehrfachnutzen von Produkten reduzieren wir die Nachfrage nach neuen Produkten und senken damit Produktion, Transport und Rohstoffverbrauch. Das schont die Umwelt, mindert Müllberge und trägt aktiv zum Klimaschutz bei. Jeder Mietvorgang ist ein kleiner Beitrag zu einer ressourcenschonenderen Zukunft.
+    </p>
+    <p>
+      <strong>Gemeinschaft und Vertrauen:</strong><br>
+      Locorent verbindet Menschen auf einer verlässlichen Plattform, die Transparenz, Fairness und Vertrauen in den Mittelpunkt stellt. Bewertungen, sichere Abwicklungen und eine aktive Community schaffen ein Umfeld, in dem sich Vermieter und Mieter gleichermaßen wohlfühlen.
+    </p>
+    <p>
+      <strong>Wirtschaftlicher Vorteil:</strong><br>
+      Mieten bedeutet nicht nur sparen, sondern auch neue Einnahmequellen erschließen. Wer ungenutzte Gegenstände besitzt, kann mit Locorent einfach und flexibel Geld verdienen. Das stärkt die lokale Wirtschaft und bietet finanzielle Entlastung in Zeiten steigender Lebenshaltungskosten.
+    </p>
+    <p>
+      <strong>Innovation und Zukunftsfähigkeit:</strong><br>
+      Wir sind stolz darauf, mit Locorent eine Plattform zu bieten, die innovative Technologien und moderne digitale Services nutzt, um das Teilen so einfach und sicher wie möglich zu gestalten. Wir arbeiten stetig daran, unser Angebot zu verbessern und die Nutzererfahrung zu optimieren.
+    </p>
+    <p>
+      <strong>Für ein besseres Miteinander:</strong><br>
+      Bei Locorent geht es nicht nur ums Mieten, sondern auch um den Aufbau von Gemeinschaften, das Fördern von Nachhaltigkeit und die Verantwortung für unsere gemeinsame Umwelt. Wir laden alle ein, Teil dieser Bewegung zu sein und gemeinsam mit uns eine lebenswerte Zukunft zu gestalten.
+    </p>
+    <p style="font-weight: 700; font-size: 1.3rem; margin-top: 2rem; color: var(--highlight-color); user-select: none;">
+      Mieten statt Kaufen – Weil Ressourcen teilen Zukunft schafft.
     </p>
   </section>
 </main>
@@ -169,14 +276,14 @@
         <li><a href="so-funktionierts.html">So funktioniert's</a></li>
         <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
         <li><a href="kategorien.html">Beliebte Kategorien</a></li>
-        <li><a href="vermieter-tipps.html">Tipps &amp; Tricks für Vermieter</a></li>
+        <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
         <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
       </ul>
     </div>
     <div>
       <h4>Wissenswertes</h4>
       <ul>
-        <li><a href="agb.html">AGB &amp; Impressum</a></li>
+        <li><a href="agb.html">AGB & Impressum</a></li>
         <li><a href="datenschutz.html">Datenschutz</a></li>
       </ul>
     </div>
