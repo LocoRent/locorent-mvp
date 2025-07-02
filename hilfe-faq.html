@@ -1,277 +1,321 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Hilfe & FAQ – Locorent</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
-  <style>
-    :root {
-      --primary-color: #2e7d32;
-      --secondary-color: #a5d6a7;
-      --background-color: #f1f8e9;
-      --dark-color: #1b5e20;
-      --highlight-color: #66bb6a;
-      --white: #fff;
-      --gray-dark: #333;
-      --border-radius: 12px;
-      --shadow-color: rgba(0, 0, 0, 0.1);
-      --max-width: 900px;
-    }
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      font-family: 'Poppins', sans-serif;
-      background-color: var(--background-color);
-      color: var(--gray-dark);
-      line-height: 1.6;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Hilfe & FAQ – Locorent</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --primary: #2e7d32;
+    --secondary: #a5d6a7;
+    --background: #f9faf7;
+    --white: #fff;
+    --text-dark: #222;
+    --text-muted: #555;
+    --border-radius: 14px;
+    --shadow: rgba(0,0,0,0.08);
+    --transition: 0.3s ease;
+    --max-width: 900px;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0; padding: 0;
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--background);
+    color: var(--text-dark);
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  header {
+    background: var(--primary);
+    padding: 1.8rem 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1100;
+    box-shadow: 0 4px 15px var(--shadow);
+  }
+
+  header h1 {
+    color: var(--white);
+    font-weight: 700;
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+    cursor: pointer;
+    user-select: none;
+    transition: color var(--transition);
+  }
+
+  header h1:hover {
+    color: var(--secondary);
+  }
+
+  nav a {
+    color: var(--white);
+    font-weight: 600;
+    margin-left: 2.5rem;
+    font-size: 1.1rem;
+    text-decoration: none;
+    position: relative;
+    padding-bottom: 4px;
+    user-select: none;
+    transition: color var(--transition);
+  }
+
+  nav a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0%;
+    height: 3px;
+    background: var(--secondary);
+    border-radius: 2px;
+    transition: width var(--transition);
+  }
+
+  nav a:hover, nav a:focus {
+    color: var(--secondary);
+  }
+
+  nav a:hover::after, nav a:focus::after {
+    width: 100%;
+  }
+
+  main {
+    flex: 1;
+    max-width: var(--max-width);
+    margin: 4rem auto 6rem;
+    padding: 0 2rem;
+  }
+
+  main h2 {
+    font-size: 2.8rem;
+    font-weight: 700;
+    text-align: center;
+    color: var(--primary);
+    margin-bottom: 1rem;
+    user-select: none;
+    letter-spacing: 0.05em;
+  }
+
+  main .intro {
+    max-width: 650px;
+    margin: 0 auto 3.5rem;
+    font-size: 1.25rem;
+    color: var(--text-muted);
+    text-align: center;
+    line-height: 1.8;
+    font-weight: 400;
+  }
+
+  .accordion {
+    max-width: 700px;
+    margin: 0 auto;
+    background: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: 0 10px 40px var(--shadow);
+    overflow: hidden;
+  }
+
+  .accordion-item {
+    border-bottom: 1px solid #e1e5e2;
+  }
+
+  .accordion-item:last-child {
+    border-bottom: none;
+  }
+
+  .accordion-header {
+    background: var(--secondary);
+    cursor: pointer;
+    padding: 1.3rem 2rem;
+    font-weight: 600;
+    font-size: 1.15rem;
+    color: var(--primary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+    transition: background-color var(--transition), color var(--transition);
+    border-radius: 0;
+  }
+
+  .accordion-header:hover, .accordion-header:focus {
+    background: var(--primary);
+    color: var(--white);
+    outline: none;
+  }
+
+  .accordion-header:focus-visible {
+    outline: 3px solid var(--secondary);
+    outline-offset: 3px;
+  }
+
+  .accordion-header::after {
+    content: '+';
+    font-weight: 900;
+    font-size: 1.6rem;
+    color: inherit;
+    transition: transform var(--transition);
+  }
+
+  .accordion-header.active::after {
+    content: '−';
+    transform: rotate(180deg);
+  }
+
+  .accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    padding: 0 2rem;
+    font-size: 1rem;
+    color: var(--text-muted);
+    background: var(--white);
+    transition: max-height 0.35s ease, padding 0.35s ease;
+  }
+
+  .accordion-content.open {
+    padding: 1.5rem 2rem 2rem;
+    max-height: 500px;
+  }
+
+  footer {
+    background: var(--primary);
+    color: var(--white);
+    padding: 3rem 2rem 2rem;
+    text-align: center;
+    border-radius: var(--border-radius);
+    box-shadow: 0 -8px 18px var(--shadow);
+    user-select: none;
+    margin-top: auto;
+  }
+
+  footer > div {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 3rem;
+    max-width: var(--max-width);
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 2rem;
+  }
+
+  footer h4 {
+    font-weight: 700;
+    font-size: 1.3rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.7rem;
+  }
+
+  footer ul {
+    list-style: none;
+    padding: 0;
+    line-height: 1.8;
+    font-size: 1rem;
+  }
+
+  footer ul li a {
+    color: var(--white);
+    text-decoration: underline;
+    cursor: pointer;
+    user-select: text;
+    transition: color var(--transition);
+  }
+
+  footer ul li a:hover,
+  footer ul li a:focus {
+    color: var(--secondary);
+    outline: none;
+  }
+
+  footer .copyright {
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+    color: var(--secondary);
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    main {
+      margin: 3rem 1.5rem 5rem;
+      padding: 0 1.5rem;
     }
     header {
-      background-color: var(--primary-color);
-      color: var(--white);
-      padding: 1.5rem 2.5rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      box-shadow: 0 4px 10px var(--shadow-color);
-      user-select: none;
-    }
-    header h1 {
-      font-weight: 700;
-      font-size: 1.8rem;
-      color: var(--white);
-      cursor: pointer;
-      letter-spacing: 1.2px;
-    }
-    header h1:hover {
-      color: var(--highlight-color);
+      padding: 1.2rem 2rem;
     }
     nav a {
-      color: var(--white);
-      margin-left: 2rem;
-      font-weight: 600;
-      font-size: 1.1rem;
-      text-decoration: none;
-      position: relative;
-      transition: color 0.3s ease;
-    }
-    nav a::after {
-      content: "";
-      position: absolute;
-      bottom: -5px;
-      left: 0;
-      width: 0%;
-      height: 3px;
-      background: var(--highlight-color);
-      border-radius: 3px;
-      transition: width 0.3s ease;
-    }
-    nav a:hover {
-      color: var(--highlight-color);
-    }
-    nav a:hover::after {
-      width: 100%;
-    }
-    main {
-      flex: 1;
-      max-width: var(--max-width);
-      margin: 4rem auto 6rem;
-      padding: 0 2rem;
-    }
-    h2 {
-      color: var(--primary-color);
-      font-weight: 700;
-      font-size: 2.4rem;
-      margin-bottom: 1.5rem;
-      user-select: none;
-      text-align: center;
-    }
-    .faq-intro {
-      max-width: 700px;
-      margin: 0 auto 3rem;
-      font-size: 1.2rem;
-      color: #444;
-      text-align: center;
-      line-height: 1.7;
-    }
-    .accordion {
-      max-width: 700px;
-      margin: 0 auto;
-      background: var(--white);
-      border-radius: var(--border-radius);
-      box-shadow: 0 6px 20px var(--shadow-color);
-      overflow: hidden;
-    }
-    .accordion-item {
-      border-bottom: 1px solid #ddd;
-    }
-    .accordion-item:last-child {
-      border-bottom: none;
-    }
-    .accordion-header {
-      background-color: var(--secondary-color);
-      cursor: pointer;
-      padding: 1.25rem 1.5rem;
-      font-weight: 600;
-      font-size: 1.1rem;
-      color: var(--dark-color);
-      user-select: none;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      transition: background-color 0.3s ease;
-    }
-    .accordion-header:hover {
-      background-color: var(--highlight-color);
-      color: var(--white);
-    }
-    .accordion-header:after {
-      content: "+";
-      font-weight: 700;
-      font-size: 1.5rem;
-      transition: transform 0.3s ease;
-    }
-    .accordion-header.active:after {
-      content: "−";
-      transform: rotate(180deg);
-    }
-    .accordion-content {
-      max-height: 0;
-      overflow: hidden;
-      padding: 0 1.5rem;
-      background: var(--white);
-      color: var(--gray-dark);
+      margin-left: 1.5rem;
       font-size: 1rem;
-      line-height: 1.6;
-      transition: max-height 0.35s ease;
     }
-    .accordion-content.open {
-      padding: 1rem 1.5rem 1.5rem;
-      max-height: 500px;
+    main h2 {
+      font-size: 2.2rem;
     }
-    footer {
-      background-color: var(--primary-color);
-      color: var(--white);
-      padding: 3rem 2rem 2rem;
-      border-radius: var(--border-radius);
-      user-select: none;
-      text-align: center;
-      box-shadow: 0 -5px 15px var(--shadow-color);
-      margin-top: auto;
+  }
+
+  @media (max-width: 480px) {
+    header {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 1rem 1.5rem;
     }
-    footer > div {
+    nav {
+      margin-top: 1rem;
+      width: 100%;
       display: flex;
       flex-wrap: wrap;
-      justify-content: center;
-      gap: 3rem;
-      margin-bottom: 2rem;
-      max-width: var(--max-width);
-      margin-left: auto;
-      margin-right: auto;
+      gap: 1.3rem;
+    }
+    nav a {
+      margin-left: 0;
+      font-size: 0.95rem;
+    }
+    main {
+      margin: 2rem 1rem 4rem;
+      padding: 0 1rem;
+    }
+    footer > div {
+      flex-direction: column;
+      gap: 1.5rem;
     }
     footer h4 {
-      font-weight: 700;
-      font-size: 1.2rem;
-      margin-bottom: 0.5rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
+      font-size: 1.1rem;
     }
     footer ul {
-      list-style: none;
-      padding: 0;
-      line-height: 1.8;
-      font-size: 1rem;
+      font-size: 0.95rem;
     }
-    footer ul li a {
-      color: var(--white);
-      text-decoration: underline;
-      cursor: pointer;
-      user-select: text;
-      transition: color 0.3s ease;
-    }
-    footer ul li a:hover {
-      color: var(--highlight-color);
-    }
-    footer .copyright {
-      font-size: 0.9rem;
-      letter-spacing: 0.05em;
-      color: var(--secondary-color);
-    }
-    @media (max-width: 900px) {
-      main {
-        padding: 0 1.5rem;
-        margin: 3rem auto 5rem;
-      }
-      header {
-        padding: 1rem 2rem;
-      }
-      nav a {
-        margin-left: 1.3rem;
-        font-size: 1rem;
-      }
-      h2 {
-        font-size: 2rem;
-      }
-    }
-    @media (max-width: 480px) {
-      header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      nav {
-        margin-top: 1rem;
-        width: 100%;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 1.2rem;
-      }
-      nav a {
-        margin-left: 0;
-        font-size: 0.95rem;
-      }
-      main {
-        margin: 2rem 1rem 4rem;
-        padding: 0 1rem;
-      }
-      footer > div {
-        flex-direction: column;
-        gap: 1.5rem;
-      }
-      footer h4 {
-        font-size: 1.1rem;
-      }
-      footer ul {
-        font-size: 0.95rem;
-      }
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
 
 <header>
-  <h1 onclick="window.location.href='index.html'">Locorent</h1>
-  <nav>
-    <a href="index.html">Startseite</a>
-    <a href="so-funktionierts.html">So funktioniert's</a>
-    <a href="angebote_neueste.html">Angebote</a>
-    <a href="kontakt.html">Kontakt</a>
+  <h1 tabindex="0" onclick="window.location.href='index.html'">Locorent</h1>
+  <nav aria-label="Hauptnavigation">
+    <a href="index.html" tabindex="0">Startseite</a>
+    <a href="so-funktionierts.html" tabindex="0">So funktioniert's</a>
+    <a href="angebote_neueste.html" tabindex="0">Angebote</a>
+    <a href="kontakt.html" tabindex="0">Kontakt</a>
   </nav>
 </header>
 
 <main>
   <h2>Hilfe & FAQ</h2>
-  <p class="faq-intro">
-    Hier findest du Antworten auf die häufigsten Fragen rund um Locorent – von der Anmeldung bis zur Rückgabe.
-    Solltest du weitere Fragen haben, kontaktiere uns gerne jederzeit.
+  <p class="intro" aria-live="polite" aria-atomic="true">
+    Hier findest du Antworten auf die häufigsten Fragen rund um Locorent – von der Registrierung, über die Nutzung bis zur Rückgabe.
+    Solltest du weitere Fragen haben, kontaktiere uns jederzeit gerne.
   </p>
 
   <section class="accordion" aria-label="Häufig gestellte Fragen">
@@ -280,7 +324,7 @@
         Wie funktioniert Locorent?
       </button>
       <div id="faq1" class="accordion-content" role="region" aria-labelledby="faq1-header">
-        <p>Locorent ist eine Plattform zum Mieten und Vermieten von Gegenständen. Nutzer können Artikel inserieren und andere diese mieten, um Ressourcen zu schonen und Geld zu sparen.</p>
+        <p>Locorent ist eine innovative Plattform, die Menschen ermöglicht, Gegenstände unkompliziert zu mieten und zu vermieten. So schonen wir gemeinsam Ressourcen und sparen Geld.</p>
       </div>
     </div>
 
@@ -289,16 +333,16 @@
         Wie kann ich einen Artikel mieten?
       </button>
       <div id="faq2" class="accordion-content" role="region" aria-labelledby="faq2-header">
-        <p>Du findest einen Artikel über die Suche oder Kategorien, sendest eine Mietanfrage über die Chatfunktion und vereinbarst dann die Abholung direkt mit dem Vermieter.</p>
+        <p>Suche einen Artikel über die Suchfunktion oder Kategorien, sende eine Mietanfrage direkt an den Vermieter über unsere sichere Chatfunktion und vereinbare die Details unkompliziert.</p>
       </div>
     </div>
 
     <div class="accordion-item">
       <button class="accordion-header" aria-expanded="false" aria-controls="faq3" id="faq3-header">
-        Wie funktioniert die Rückgabe?
+        Was muss ich bei der Rückgabe beachten?
       </button>
       <div id="faq3" class="accordion-content" role="region" aria-labelledby="faq3-header">
-        <p>Die Rückgabe erfolgt zum vereinbarten Termin und Ort. Du bringst den Artikel im vereinbarten Zustand zurück und kannst den Vermieter anschließend bewerten.</p>
+        <p>Der Artikel wird zum vereinbarten Termin und Ort zurückgegeben. Achte darauf, dass der Zustand dem bei der Übergabe entspricht, um eine faire Bewertung zu gewährleisten.</p>
       </div>
     </div>
 
@@ -307,16 +351,16 @@
         Was passiert, wenn ein Artikel beschädigt wird?
       </button>
       <div id="faq4" class="accordion-content" role="region" aria-labelledby="faq4-header">
-        <p>Schäden sollten direkt mit dem Vermieter kommuniziert werden. Wir empfehlen, im Vorfeld die Bedingungen zu klären. Für weitere Hilfe steht unser Support-Team bereit.</p>
+        <p>Informiere den Vermieter umgehend über Schäden. Wir empfehlen, vor Mietbeginn die Bedingungen zur Haftung zu klären. Unser Support steht bei Problemen beratend zur Seite.</p>
       </div>
     </div>
 
     <div class="accordion-item">
       <button class="accordion-header" aria-expanded="false" aria-controls="faq5" id="faq5-header">
-        Wie sicher sind Zahlungen bei Locorent?
+        Wie sicher sind die Zahlungen auf Locorent?
       </button>
       <div id="faq5" class="accordion-content" role="region" aria-labelledby="faq5-header">
-        <p>Alle Zahlungen laufen sicher und verschlüsselt über unsere Plattform. Wir verwenden bewährte Zahlungsdienstleister, um deine Daten zu schützen.</p>
+        <p>Alle Transaktionen laufen über sichere, verschlüsselte Zahlungsdienstleister. Deine Daten und Zahlungen sind bei uns geschützt und vertrauenswürdig.</p>
       </div>
     </div>
   </section>
@@ -357,16 +401,19 @@
 </footer>
 
 <script>
-  document.querySelectorAll('.accordion-header').forEach(button => {
-    button.addEventListener('click', () => {
-      const expanded = button.getAttribute('aria-expanded') === 'true';
-      button.setAttribute('aria-expanded', !expanded);
-      button.classList.toggle('active');
-      const content = document.getElementById(button.getAttribute('aria-controls'));
+  const headers = document.querySelectorAll('.accordion-header');
+  headers.forEach(header => {
+    header.addEventListener('click', () => {
+      const expanded = header.getAttribute('aria-expanded') === 'true';
+      headers.forEach(h => {
+        h.setAttribute('aria-expanded', 'false');
+        h.classList.remove('active');
+        document.getElementById(h.getAttribute('aria-controls')).classList.remove('open');
+      });
       if (!expanded) {
-        content.classList.add('open');
-      } else {
-        content.classList.remove('open');
+        header.setAttribute('aria-expanded', 'true');
+        header.classList.add('active');
+        document.getElementById(header.getAttribute('aria-controls')).classList.add('open');
       }
     });
   });
