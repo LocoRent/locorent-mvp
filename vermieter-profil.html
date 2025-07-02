@@ -359,7 +359,8 @@
           <small>Von <strong>${r.from_user?.name || 'Unbekannt'}</strong> am ${new Date(r.created_at).toLocaleDateString()}</small>
         </div>
       `).join('');
-      reviewList.innerHTML = summary + list;
+      const moreReviewsLink = reviews.length > 2 ? `<p style="text-align:right; margin-top:0.5rem;"><a href="bewertungen.html?id=${userId}" style="color: var(--primary-color); font-weight:600; text-decoration: underline;">Alle Bewertungen anzeigen</a></p>` : '';
+      reviewList.innerHTML = summary + list + moreReviewsLink;
     }
 
     // Prüfen, ob aktueller User schon bewertet hat
