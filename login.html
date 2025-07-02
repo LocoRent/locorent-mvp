@@ -4,90 +4,118 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Login – Locorent</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --primary: #2e7d32;
-      --secondary: #a5d6a7;
-      --light: #f1f8e9;
-      --dark: #1b5e20;
-      --accent: #66bb6a;
+      --primary-color: #2e7d32;
+      --secondary-color: #a5d6a7;
+      --background-color: #f1f8e9;
+      --dark-color: #1b5e20;
+      --highlight-color: #66bb6a;
       --white: #fff;
+      --gray-light: #f7f7f7;
+      --gray-dark: #333;
+      --border-radius: 12px;
+      --shadow-color: rgba(0, 0, 0, 0.1);
+      --accent: #66bb6a;
     }
-
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
-
     body {
       font-family: 'Poppins', sans-serif;
-      background-color: var(--light);
-      color: var(--dark);
+      background-color: var(--background-color);
+      color: var(--gray-dark);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
-
     header {
-      background-color: var(--primary);
-      color: white;
-      padding: 1rem 2rem;
+      background-color: var(--primary-color);
+      color: var(--white);
+      padding: 1.5rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
     }
-
     header h1 {
-      font-size: 1.8rem;
+      font-weight: 700;
+      font-size: 1.5rem;
+      user-select: none;
     }
-
     nav a {
+      color: var(--white);
       margin-left: 1.5rem;
       text-decoration: none;
-      color: white;
       font-weight: 600;
+      user-select: none;
     }
-
+    nav a:hover {
+      border-bottom: 2px solid var(--highlight-color);
+    }
     main {
+      flex: 1;
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 80vh;
-      padding: 2rem;
+      padding: 2rem 1rem;
     }
-
     .container {
-      background-color: white;
-      padding: 2rem;
-      border-radius: 15px;
-      width: 100%;
+      background: var(--white);
+      border-radius: var(--border-radius);
+      box-shadow: 0 8px 24px var(--shadow-color);
       max-width: 400px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    h2 {
+      width: 100%;
+      padding: 2.5rem 2rem 3rem;
       text-align: center;
-      margin-bottom: 1rem;
     }
-
+    h2 {
+      font-weight: 700;
+      font-size: 2.2rem;
+      margin-bottom: 1rem;
+      letter-spacing: 0.04em;
+      color: var(--primary-color);
+      user-select: none;
+    }
+    form {
+      margin-top: 1.5rem;
+      text-align: left;
+    }
     label {
       display: block;
       margin-top: 1rem;
       font-weight: 600;
+      font-size: 1rem;
+      color: var(--dark-color);
+      user-select: none;
     }
-
     input {
       width: 100%;
-      padding: 0.75rem;
+      padding: 0.75rem 1rem;
       margin-top: 0.5rem;
       border: 1px solid #ccc;
-      border-radius: 8px;
+      border-radius: var(--border-radius);
       font-size: 1rem;
+      outline: none;
+      color: var(--gray-dark);
+      background: var(--gray-light);
+      box-shadow: inset 0 0 6px var(--secondary-color);
+      transition: box-shadow 0.3s ease, border-color 0.3s ease;
     }
-
+    input:focus {
+      box-shadow: 0 0 10px var(--primary-color);
+      border-color: var(--primary-color);
+    }
     .password-wrapper {
       position: relative;
     }
-
     .toggle-password {
       position: absolute;
       right: 1rem;
@@ -95,58 +123,69 @@
       transform: translateY(-50%);
       cursor: pointer;
       color: #666;
-      font-size: 0.9rem;
+      font-size: 1rem;
+      user-select: none;
     }
-
     button {
       width: 100%;
-      padding: 0.75rem;
+      padding: 1rem;
       margin-top: 1.5rem;
       border: none;
-      border-radius: 8px;
-      font-weight: bold;
-      background-color: var(--accent);
-      color: white;
-      font-size: 1rem;
+      border-radius: var(--border-radius);
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--primary-color), var(--highlight-color));
+      color: var(--white);
+      font-size: 1.2rem;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      box-shadow: 0 4px 12px rgba(46, 125, 50, 0.7);
+      transition: background 0.3s ease, transform 0.2s ease;
+      user-select: none;
     }
-
     button:hover {
-      background-color: var(--primary);
+      background: linear-gradient(90deg, var(--highlight-color), var(--primary-color));
+      transform: scale(1.05);
+      box-shadow: 0 6px 16px rgba(102, 187, 106, 0.9);
     }
-
     .forgot {
       margin-top: 1rem;
       text-align: right;
       font-size: 0.9rem;
+      user-select: none;
     }
-
     .forgot a {
-      color: var(--primary);
+      color: var(--primary-color);
       text-decoration: underline;
     }
-
     .message {
       margin-top: 1rem;
       text-align: center;
       font-weight: 600;
+      min-height: 1.4em;
+      user-select: none;
     }
-
-    .error {
+    .message.error {
       color: #d32f2f;
     }
-
-    .success {
-      color: var(--primary);
+    .message.success {
+      color: var(--primary-color);
     }
-
     footer {
       margin-top: 3rem;
       padding: 2rem;
+      background-color: var(--primary-color);
+      color: var(--white);
+      border-radius: var(--border-radius);
       text-align: center;
-      background-color: var(--primary);
-      color: white;
+      user-select: none;
+    }
+    @media (max-width: 480px) {
+      header, footer {
+        padding: 1rem;
+      }
+      nav a {
+        margin-left: 1rem;
+        font-size: 0.9rem;
+      }
     }
   </style>
 </head>
@@ -155,7 +194,7 @@
 <header>
   <h1>Locorent</h1>
   <nav>
-    <a href="index.html">Start</a>
+    <a href="index.html">Startseite</a>
     <a href="login.html">Einloggen</a>
     <a href="register.html">Registrieren</a>
   </nav>
