@@ -1,187 +1,274 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Bewertungen – Locorent</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <style>
-    :root {
-      --primary-color: #2e7d32;
-      --primary-dark: #1b5e20;
-      --background-color: #f1f8e9;
-      --white: #fff;
-      --light-gray: #f5f5f5;
-      --border-radius: 12px;
-      --shadow-color: rgba(0, 0, 0, 0.1);
-      --max-width: 900px;
-    }
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      font-family: 'Poppins', sans-serif;
-      background-color: var(--background-color);
-      color: #333;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Bewertungen – Locorent</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root {
+    --primary-color: #2e7d32;
+    --primary-dark: #1b5e20;
+    --background-color: #f1f8e9;
+    --white: #fff;
+    --light-gray: #f5f5f5;
+    --border-radius: 12px;
+    --shadow-color: rgba(0, 0, 0, 0.12);
+    --max-width: 900px;
+    --star-yellow: #f5c518;
+  }
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--background-color);
+    color: #333;
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  header {
+    background-color: var(--primary-color);
+    color: var(--white);
+    width: 100%;
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 8px var(--shadow-color);
+  }
+  header h1 {
+    font-weight: 600;
+    font-size: 1.8rem;
+    cursor: pointer;
+    user-select: none;
+  }
+  nav#nav-links a {
+    color: var(--white);
+    margin-left: 1.5rem;
+    text-decoration: none;
+    font-weight: 600;
+    transition: border-bottom 0.3s ease;
+    user-select: none;
+  }
+  nav#nav-links a:hover, nav#nav-links a:focus {
+    border-bottom: 2px solid var(--primary-dark);
+    outline: none;
+  }
+  main {
+    max-width: var(--max-width);
+    background: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: 0 6px 20px var(--shadow-color);
+    padding: 2.5rem 3rem;
+    margin: 3rem 1rem 4rem;
+    width: 100%;
+    min-height: 60vh;
+  }
+  h2 {
+    margin-bottom: 2rem;
+    color: var(--primary-color);
+    font-weight: 700;
+    font-size: 2.4rem;
+    user-select: none;
+  }
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    align-items: center;
+  }
+  label {
+    font-weight: 600;
+    color: var(--primary-dark);
+  }
+  select {
+    padding: 0.4rem 0.8rem;
+    border-radius: var(--border-radius);
+    border: 1.5px solid #ccc;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+  }
+  select:focus {
+    border-color: var(--primary-color);
+    outline: none;
+  }
+  .review-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .review-item {
+    background-color: var(--light-gray);
+    padding: 1.5rem 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: inset 0 0 8px rgba(0,0,0,0.05);
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+    transition: transform 0.2s ease;
+  }
+  .review-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  }
+  .avatar {
+    flex-shrink: 0;
+    width: 60px;
+    height: 60px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 700;
+    font-size: 1.4rem;
+    color: var(--white);
+    user-select: none;
+  }
+  .review-content {
+    flex: 1;
+  }
+  .review-rating {
+    color: var(--star-yellow);
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+    user-select: none;
+    font-size: 1.3rem;
+  }
+  .stars {
+    display: inline-block;
+    font-size: 1.3rem;
+    color: var(--star-yellow);
+    user-select: none;
+  }
+  .review-text {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 0.4rem;
+  }
+  .review-meta {
+    font-size: 0.85rem;
+    color: #666;
+    user-select: none;
+  }
+  .back-btn {
+    margin-top: 3rem;
+    background-color: var(--primary-color);
+    color: var(--white);
+    border: none;
+    padding: 1rem 1.8rem;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 1.1rem;
+    transition: background-color 0.3s ease;
+    user-select: none;
+  }
+  .back-btn:hover, .back-btn:focus {
+    background-color: var(--primary-dark);
+    outline: none;
+  }
+  footer {
+    width: 100%;
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 2rem 0;
+    box-shadow: 0 -2px 12px var(--shadow-color);
+    user-select: none;
+  }
+  footer > div {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 0 1rem;
+  }
+  footer h4 {
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+  }
+  footer ul {
+    list-style: none;
+    line-height: 1.7;
+    padding-left: 0;
+  }
+  footer ul li a {
+    color: var(--white);
+    text-decoration: underline;
+    font-weight: 400;
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+  footer ul li a:hover {
+    color: var(--primary-dark);
+  }
+  footer .copyright {
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--white);
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
     header {
-      background-color: var(--primary-color);
-      color: var(--white);
-      width: 100%;
-      padding: 1.5rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      box-shadow: 0 2px 8px var(--shadow-color);
-    }
-    header h1 {
-      font-weight: 600;
-      font-size: 1.8rem;
-      cursor: pointer;
+      flex-direction: column;
+      align-items: flex-start;
     }
     nav#nav-links a {
-      color: var(--white);
-      margin-left: 1.5rem;
-      text-decoration: none;
-      font-weight: 600;
-      transition: border-bottom 0.3s ease;
-    }
-    nav#nav-links a:hover {
-      border-bottom: 2px solid var(--primary-dark);
-    }
-    main {
-      max-width: var(--max-width);
-      background: var(--white);
-      border-radius: var(--border-radius);
-      box-shadow: 0 6px 18px var(--shadow-color);
-      padding: 2rem 3rem;
-      margin: 3rem 1rem 4rem;
-      width: 100%;
-      min-height: 60vh;
-    }
-    h2 {
-      margin-bottom: 1.5rem;
-      color: var(--primary-color);
-      font-weight: 700;
-    }
-    .review-list {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
+      margin-left: 0;
+      margin-top: 0.5rem;
     }
     .review-item {
-      background-color: var(--light-gray);
-      padding: 1.2rem 1.5rem;
-      border-radius: var(--border-radius);
-      box-shadow: inset 0 0 8px rgba(0,0,0,0.05);
+      flex-direction: column;
+      align-items: stretch;
     }
-    .review-item strong {
-      display: block;
-      margin-bottom: 0.4rem;
-      color: var(--primary-dark);
-      font-weight: 600;
+    .avatar {
+      width: 50px;
+      height: 50px;
+      font-size: 1.1rem;
     }
-    .review-item p {
-      margin-bottom: 0.3rem;
-      font-size: 1rem;
-      line-height: 1.5;
-    }
-    .review-item small {
-      color: #666;
-    }
-    .back-btn {
-      margin-top: 2rem;
-      background-color: var(--primary-color);
-      color: var(--white);
-      border: none;
-      padding: 0.8rem 1.4rem;
-      border-radius: var(--border-radius);
-      cursor: pointer;
-      font-weight: 700;
-      transition: background-color 0.3s ease;
-    }
-    .back-btn:hover {
-      background-color: var(--primary-dark);
-    }
-    footer {
-      width: 100%;
-      background-color: var(--primary-color);
-      color: var(--white);
-      padding: 2rem 0;
-      box-shadow: 0 -2px 12px var(--shadow-color);
-      user-select: none;
-    }
-    footer > div {
-      max-width: var(--max-width);
-      margin: 0 auto;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 2rem;
-      padding: 0 1rem;
-    }
-    footer h4 {
-      margin-bottom: 0.75rem;
-      font-weight: 600;
-    }
-    footer ul {
-      list-style: none;
-      line-height: 1.7;
-      padding-left: 0;
-    }
-    footer ul li a {
-      color: var(--white);
-      text-decoration: underline;
-      font-weight: 400;
-      cursor: pointer;
-      transition: color 0.3s ease;
-    }
-    footer ul li a:hover {
-      color: var(--primary-dark);
-    }
-    footer .copyright {
-      margin-top: 2rem;
-      text-align: center;
-      font-size: 0.9rem;
-      color: var(--white);
-      user-select: none;
-    }
-    @media (max-width: 768px) {
-      header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      nav#nav-links a {
-        margin-left: 0;
-        margin-top: 0.5rem;
-      }
-      footer > div {
-        flex-direction: column;
-        align-items: center;
-      }
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
+
 <header>
   <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
   <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
 </header>
+
 <main>
   <h2>Bewertungen</h2>
-  <div id="review-list" class="review-list">⏳ Lade Bewertungen…</div>
-  <button class="back-btn" onclick="history.back()">← Zurück zum Vermieterprofil</button>
+
+  <div class="controls" aria-label="Filter Bewertungen">
+    <label for="sort-select">Sortieren nach:</label>
+    <select id="sort-select" aria-controls="review-list">
+      <option value="newest">Neueste zuerst</option>
+      <option value="highest">Beste Bewertung</option>
+      <option value="lowest">Schlechteste Bewertung</option>
+    </select>
+  </div>
+
+  <div id="review-list" class="review-list" aria-live="polite" aria-relevant="additions">
+    ⏳ Lade Bewertungen…
+  </div>
+
+  <button class="back-btn" onclick="history.back()" aria-label="Zurück zum Vermieterprofil">← Zurück zum Vermieterprofil</button>
 </main>
+
 <footer role="contentinfo">
   <div>
     <section aria-labelledby="footer-rent-title">
@@ -242,38 +329,76 @@
     window.location.href = "login.html";
   }
 
+  let reviews = [];
+  let userId;
+
+  function renderStars(rating) {
+    let stars = "";
+    for(let i = 1; i <= 5; i++) {
+      stars += i <= rating ? "★" : "☆";
+    }
+    return `<span class="stars" aria-label="${rating} von 5 Sternen">${stars}</span>`;
+  }
+
+  function renderReviews(list) {
+    if(list.length === 0) {
+      document.getElementById("review-list").innerHTML = "<p>Keine Bewertungen gefunden.</p>";
+      return;
+    }
+    document.getElementById("review-list").innerHTML = list.map(r => {
+      const userInitials = r.from_user?.name ? r.from_user.name.split(' ').map(n => n[0]).join('').toUpperCase() : "?";
+      const date = new Date(r.created_at).toLocaleDateString();
+      return `
+        <article class="review-item" tabindex="0" aria-label="Bewertung von ${r.from_user?.name || 'Unbekannt'}, ${r.rating} von 5 Sternen">
+          <div class="avatar" aria-hidden="true">${userInitials}</div>
+          <div class="review-content">
+            <strong class="review-rating">${renderStars(r.rating)}</strong>
+            <p class="review-text">${r.comment}</p>
+            <div class="review-meta">Von <strong>${r.from_user?.name || 'Unbekannt'}</strong> am ${date}</div>
+          </div>
+        </article>`;
+    }).join('');
+  }
+
   async function loadReviews() {
     const params = new URLSearchParams(window.location.search);
-    const userId = params.get("id");
+    userId = params.get("id");
     if (!userId) {
       document.getElementById("review-list").innerText = "Keine Vermieter-ID übergeben.";
       return;
     }
-
-    const { data: reviews, error } = await supabase
+    const { data, error } = await supabase
       .from("reviews")
       .select("rating, comment, from_user_id, created_at, from_user:from_user_id(name)")
       .eq("to_user_id", userId)
       .order("created_at", { ascending: false });
-
-    const container = document.getElementById("review-list");
-
-    if (error || !Array.isArray(reviews) || reviews.length === 0) {
-      container.innerHTML = "<p>Keine Bewertungen gefunden.</p>";
+    if(error || !Array.isArray(data)) {
+      document.getElementById("review-list").innerHTML = "<p>Keine Bewertungen gefunden.</p>";
       return;
     }
-
-    container.innerHTML = reviews.map(r => `
-      <div class="review-item">
-        <strong>⭐ ${r.rating}/5</strong>
-        <p>${r.comment}</p>
-        <small>Von <strong>${r.from_user?.name || 'Unbekannt'}</strong> am ${new Date(r.created_at).toLocaleDateString()}</small>
-      </div>
-    `).join('');
+    reviews = data;
+    renderReviews(reviews);
   }
+
+  function sortReviews(criteria) {
+    let sorted = [...reviews];
+    if(criteria === "highest") {
+      sorted.sort((a,b) => b.rating - a.rating);
+    } else if(criteria === "lowest") {
+      sorted.sort((a,b) => a.rating - b.rating);
+    } else {
+      sorted.sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+    }
+    renderReviews(sorted);
+  }
+
+  document.getElementById("sort-select").addEventListener("change", (e) => {
+    sortReviews(e.target.value);
+  });
 
   updateNav();
   loadReviews();
 </script>
+
 </body>
 </html>
