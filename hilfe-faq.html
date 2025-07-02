@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hilfe & FAQ – Locorent</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary-color: #2e7d32;
+      --secondary-color: #a5d6a7;
+      --background-color: #f1f8e9;
+      --dark-color: #1b5e20;
+      --highlight-color: #66bb6a;
+      --white: #fff;
+      --gray-dark: #333;
+      --border-radius: 12px;
+      --shadow-color: rgba(0, 0, 0, 0.1);
+      --max-width: 900px;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--background-color);
+      color: var(--gray-dark);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background-color: var(--primary-color);
+      color: var(--white);
+      padding: 1.5rem 2.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 4px 10px var(--shadow-color);
+      user-select: none;
+    }
+    header h1 {
+      font-weight: 700;
+      font-size: 1.8rem;
+      color: var(--white);
+      cursor: pointer;
+      letter-spacing: 1.2px;
+    }
+    header h1:hover {
+      color: var(--highlight-color);
+    }
+    nav a {
+      color: var(--white);
+      margin-left: 2rem;
+      font-weight: 600;
+      font-size: 1.1rem;
+      text-decoration: none;
+      position: relative;
+      transition: color 0.3s ease;
+    }
+    nav a::after {
+      content: "";
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0%;
+      height: 3px;
+      background: var(--highlight-color);
+      border-radius: 3px;
+      transition: width 0.3s ease;
+    }
+    nav a:hover {
+      color: var(--highlight-color);
+    }
+    nav a:hover::after {
+      width: 100%;
+    }
+    main {
+      flex: 1;
+      max-width: var(--max-width);
+      margin: 4rem auto 6rem;
+      padding: 0 2rem;
+    }
+    h2 {
+      color: var(--primary-color);
+      font-weight: 700;
+      font-size: 2.4rem;
+      margin-bottom: 1.5rem;
+      user-select: none;
+      text-align: center;
+    }
+    .faq-intro {
+      max-width: 700px;
+      margin: 0 auto 3rem;
+      font-size: 1.2rem;
+      color: #444;
+      text-align: center;
+      line-height: 1.7;
+    }
+    .accordion {
+      max-width: 700px;
+      margin: 0 auto;
+      background: var(--white);
+      border-radius: var(--border-radius);
+      box-shadow: 0 6px 20px var(--shadow-color);
+      overflow: hidden;
+    }
+    .accordion-item {
+      border-bottom: 1px solid #ddd;
+    }
+    .accordion-item:last-child {
+      border-bottom: none;
+    }
+    .accordion-header {
+      background-color: var(--secondary-color);
+      cursor: pointer;
+      padding: 1.25rem 1.5rem;
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: var(--dark-color);
+      user-select: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background-color 0.3s ease;
+    }
+    .accordion-header:hover {
+      background-color: var(--highlight-color);
+      color: var(--white);
+    }
+    .accordion-header:after {
+      content: "+";
+      font-weight: 700;
+      font-size: 1.5rem;
+      transition: transform 0.3s ease;
+    }
+    .accordion-header.active:after {
+      content: "−";
+      transform: rotate(180deg);
+    }
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      padding: 0 1.5rem;
+      background: var(--white);
+      color: var(--gray-dark);
+      font-size: 1rem;
+      line-height: 1.6;
+      transition: max-height 0.35s ease;
+    }
+    .accordion-content.open {
+      padding: 1rem 1.5rem 1.5rem;
+      max-height: 500px;
+    }
+    footer {
+      background-color: var(--primary-color);
+      color: var(--white);
+      padding: 3rem 2rem 2rem;
+      border-radius: var(--border-radius);
+      user-select: none;
+      text-align: center;
+      box-shadow: 0 -5px 15px var(--shadow-color);
+      margin-top: auto;
+    }
+    footer > div {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 3rem;
+      margin-bottom: 2rem;
+      max-width: var(--max-width);
+      margin-left: auto;
+      margin-right: auto;
+    }
+    footer h4 {
+      font-weight: 700;
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    footer ul {
+      list-style: none;
+      padding: 0;
+      line-height: 1.8;
+      font-size: 1rem;
+    }
+    footer ul li a {
+      color: var(--white);
+      text-decoration: underline;
+      cursor: pointer;
+      user-select: text;
+      transition: color 0.3s ease;
+    }
+    footer ul li a:hover {
+      color: var(--highlight-color);
+    }
+    footer .copyright {
+      font-size: 0.9rem;
+      letter-spacing: 0.05em;
+      color: var(--secondary-color);
+    }
+    @media (max-width: 900px) {
+      main {
+        padding: 0 1.5rem;
+        margin: 3rem auto 5rem;
+      }
+      header {
+        padding: 1rem 2rem;
+      }
+      nav a {
+        margin-left: 1.3rem;
+        font-size: 1rem;
+      }
+      h2 {
+        font-size: 2rem;
+      }
+    }
+    @media (max-width: 480px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      nav {
+        margin-top: 1rem;
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.2rem;
+      }
+      nav a {
+        margin-left: 0;
+        font-size: 0.95rem;
+      }
+      main {
+        margin: 2rem 1rem 4rem;
+        padding: 0 1rem;
+      }
+      footer > div {
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+      footer h4 {
+        font-size: 1.1rem;
+      }
+      footer ul {
+        font-size: 0.95rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1 onclick="window.location.href='index.html'">Locorent</h1>
+  <nav>
+    <a href="index.html">Startseite</a>
+    <a href="so-funktionierts.html">So funktioniert's</a>
+    <a href="angebote_neueste.html">Angebote</a>
+    <a href="kontakt.html">Kontakt</a>
+  </nav>
+</header>
+
+<main>
+  <h2>Hilfe & FAQ</h2>
+  <p class="faq-intro">
+    Hier findest du Antworten auf die häufigsten Fragen rund um Locorent – von der Anmeldung bis zur Rückgabe.
+    Solltest du weitere Fragen haben, kontaktiere uns gerne jederzeit.
+  </p>
+
+  <section class="accordion" aria-label="Häufig gestellte Fragen">
+    <div class="accordion-item">
+      <button class="accordion-header" aria-expanded="false" aria-controls="faq1" id="faq1-header">
+        Wie funktioniert Locorent?
+      </button>
+      <div id="faq1" class="accordion-content" role="region" aria-labelledby="faq1-header">
+        <p>Locorent ist eine Plattform zum Mieten und Vermieten von Gegenständen. Nutzer können Artikel inserieren und andere diese mieten, um Ressourcen zu schonen und Geld zu sparen.</p>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" aria-expanded="false" aria-controls="faq2" id="faq2-header">
+        Wie kann ich einen Artikel mieten?
+      </button>
+      <div id="faq2" class="accordion-content" role="region" aria-labelledby="faq2-header">
+        <p>Du findest einen Artikel über die Suche oder Kategorien, sendest eine Mietanfrage über die Chatfunktion und vereinbarst dann die Abholung direkt mit dem Vermieter.</p>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" aria-expanded="false" aria-controls="faq3" id="faq3-header">
+        Wie funktioniert die Rückgabe?
+      </button>
+      <div id="faq3" class="accordion-content" role="region" aria-labelledby="faq3-header">
+        <p>Die Rückgabe erfolgt zum vereinbarten Termin und Ort. Du bringst den Artikel im vereinbarten Zustand zurück und kannst den Vermieter anschließend bewerten.</p>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" aria-expanded="false" aria-controls="faq4" id="faq4-header">
+        Was passiert, wenn ein Artikel beschädigt wird?
+      </button>
+      <div id="faq4" class="accordion-content" role="region" aria-labelledby="faq4-header">
+        <p>Schäden sollten direkt mit dem Vermieter kommuniziert werden. Wir empfehlen, im Vorfeld die Bedingungen zu klären. Für weitere Hilfe steht unser Support-Team bereit.</p>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" aria-expanded="false" aria-controls="faq5" id="faq5-header">
+        Wie sicher sind Zahlungen bei Locorent?
+      </button>
+      <div id="faq5" class="accordion-content" role="region" aria-labelledby="faq5-header">
+        <p>Alle Zahlungen laufen sicher und verschlüsselt über unsere Plattform. Wir verwenden bewährte Zahlungsdienstleister, um deine Daten zu schützen.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div>
+    <div>
+      <h4>Mieten &amp; Vermieten</h4>
+      <ul>
+        <li><a href="so-funktionierts.html">So funktioniert's</a></li>
+        <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
+        <li><a href="kategorien.html">Beliebte Kategorien</a></li>
+        <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
+        <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Wissenswertes</h4>
+      <ul>
+        <li><a href="agb.html">AGB & Impressum</a></li>
+        <li><a href="datenschutz.html">Datenschutz</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Über uns</h4>
+      <ul>
+        <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
+        <li><a href="social-media.html">Folgen Sie uns</a></li>
+        <li><a href="mission.html">Unsere Mission</a></li>
+        <li><a href="nachhaltigkeit.html">Nachhaltigkeit</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="copyright">
+    © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
+  </div>
+</footer>
+
+<script>
+  document.querySelectorAll('.accordion-header').forEach(button => {
+    button.addEventListener('click', () => {
+      const expanded = button.getAttribute('aria-expanded') === 'true';
+      button.setAttribute('aria-expanded', !expanded);
+      button.classList.toggle('active');
+      const content = document.getElementById(button.getAttribute('aria-controls'));
+      if (!expanded) {
+        content.classList.add('open');
+      } else {
+        content.classList.remove('open');
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
