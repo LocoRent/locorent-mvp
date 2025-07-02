@@ -76,6 +76,12 @@
     color: var(--primary-color);
     font-weight: 700;
   }
+  /* Link-Styling für Bewertungen Überschrift */
+  h2 a {
+    color: var(--primary-color);
+    text-decoration: underline;
+    cursor: pointer;
+  }
   .profile-box {
     background-color: var(--light-gray);
     padding: 1.5rem 2rem;
@@ -243,7 +249,7 @@
     <div id="profile-info" class="profile-box">Lade Profil...</div>
   </section>
   <section id="reviews-section" class="review-box">
-    <h2>Bewertungen</h2>
+    <h2><a href="#" id="all-reviews-link">Bewertungen</a></h2>
     <div id="reviews-list">⏳ Lade Bewertungen…</div>
     <div id="review-button-container"></div>
   </section>
@@ -322,6 +328,10 @@
     const { data: { session } } = await supabase.auth.getSession();
     const currentUser = session?.user;
 
+    // Setze Link zur kompletten Bewertungsseite
+    const allReviewsLink = document.getElementById("all-reviews-link");
+    allReviewsLink.href = `bewertungen.html?id=${userId}`;
+
     // Profil laden
     const { data: profile, error: profileError } = await supabase
       .from("profiles")
@@ -337,30 +347,37 @@
       <p><strong>Über mich:</strong> ${profile.bio || '–'}</p>
     `;
 
-    // Bewertungen laden inkl. Name des Bewerters
+    // Bewertungen laden, nur die letzten 2
     const { data: reviews, error: reviewError } = await supabase
       .from("reviews")
       .select("rating, comment, from_user_id, created_at, from_user:from_user_id(name)")
       .eq("to_user_id", userId)
-      .order("created_at", { ascending: false });
+      .order("created_at", { ascending: false })
+      .limit(2);
 
     const reviewList = document.getElementById("reviews-list");
 
     if (reviewError || !Array.isArray(reviews) || reviews.length === 0) {
       reviewList.innerHTML = "<p>Noch keine Bewertungen.</p>";
     } else {
-      const average = (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1);
-      const summary = `<p class="review-summary">⭐ ${average} von 5 aus ${reviews.length} Bewertungen</p>`;
-      const latestReviews = reviews.slice(0, 2);
-      const list = latestReviews.map(r => `
+      // Durchschnitt aus allen Bewertungen berechnen
+      const { data: allReviewsData } = await supabase
+        .from("reviews")
+        .select("rating")
+        .eq("to_user_id", userId);
+
+      const allRatings = allReviewsData || [];
+      const average = allRatings.length > 0 ? (allRatings.reduce((sum, r) => sum + r.rating, 0) / allRatings.length).toFixed(1) : "–";
+
+      const summary = `<p class="review-summary">⭐ ${average} von 5 aus ${allRatings.length} Bewertungen</p>`;
+      const list = reviews.map(r => `
         <div class="review-item">
           <strong>⭐ ${r.rating}/5</strong>
           <p>${r.comment}</p>
           <small>Von <strong>${r.from_user?.name || 'Unbekannt'}</strong> am ${new Date(r.created_at).toLocaleDateString()}</small>
         </div>
       `).join('');
-      const moreReviewsLink = reviews.length > 2 ? `<p style="text-align:right; margin-top:0.5rem;"><a href="bewertungen.html?id=${userId}" style="color: var(--primary-color); font-weight:600; text-decoration: underline;">Alle Bewertungen anzeigen</a></p>` : '';
-      reviewList.innerHTML = summary + list + moreReviewsLink;
+      reviewList.innerHTML = summary + list;
     }
 
     // Prüfen, ob aktueller User schon bewertet hat
