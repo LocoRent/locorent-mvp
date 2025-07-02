@@ -101,8 +101,15 @@
     width: 160px;
     height: 160px;
     border-radius: 50%;
-    background: var(--light-gray) url('https://via.placeholder.com/160?text=Avatar') center/cover no-repeat;
+    background: var(--light-gray) center/cover no-repeat;
     box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    font-weight: 700;
+    font-size: 3.5rem;
+    color: var(--primary-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
   }
   #profile-info {
     flex: 1;
@@ -195,7 +202,7 @@
     width: 48px;
     height: 48px;
     border-radius: 50%;
-    background: var(--white) url('https://via.placeholder.com/48?text=👤') center/cover no-repeat;
+    background: var(--white) center/cover no-repeat;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   }
   .reviewer-name {
@@ -464,6 +471,25 @@
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
   );
 
+  // Initialen aus Namen erzeugen
+  function getInitials(name) {
+    if (!name) return '?';
+    const parts = name.trim().split(' ');
+    if (parts.length === 1) return parts[0][0].toUpperCase();
+    return (parts[0][0] + parts[1][0]).toUpperCase();
+  }
+
+  function createStarIcons(rating) {
+    let fullStars = Math.floor(rating);
+    let halfStar = rating - fullStars >= 0.5;
+    let emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+    let starsHtml = '';
+    for (let i = 0; i < fullStars; i++) starsHtml += '<span class="star" aria-hidden="true">&#9733;</span>';
+    if (halfStar) starsHtml += '<span class="star" aria-hidden="true">&#9733;</span>'; // Für Einfachheit volle Sterne
+    for (let i = 0; i < emptyStars; i++) starsHtml += '<span class="star empty" aria-hidden="true">&#9734;</span>';
+    return starsHtml;
+  }
+
   async function updateNav() {
     const { data: { session } } = await supabase.auth.getSession();
     const nav = document.getElementById("nav-links");
@@ -486,23 +512,6 @@
     window.location.href = "login.html";
   }
 
-  function createStarIcons(rating) {
-    let fullStars = Math.floor(rating);
-    let halfStar = rating - fullStars >= 0.5;
-    let emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
-    let starsHtml = '';
-    for (let i = 0; i < fullStars; i++) {
-      starsHtml += '<span class="star" aria-hidden="true">&#9733;</span>';
-    }
-    if (halfStar) {
-      starsHtml += '<span class="star" aria-hidden="true">&#9733;</span>'; // Using full star for simplicity
-    }
-    for (let i = 0; i < emptyStars; i++) {
-      starsHtml += '<span class="star empty" aria-hidden="true">&#9734;</span>';
-    }
-    return starsHtml;
-  }
-
   async function loadVermieterProfil() {
     const params = new URLSearchParams(location.search);
     const userId = params.get("id");
@@ -514,7 +523,7 @@
     const { data: { session } } = await supabase.auth.getSession();
     const currentUser = session?.user;
 
-    // Setze Link zur kompletten Bewertungsseite
+    // Bewertungslink setzen
     const allReviewsLink = document.getElementById("all-reviews-link");
     allReviewsLink.href = `bewertungen.html?id=${userId}`;
 
@@ -525,12 +534,13 @@
       .eq("id", userId)
       .single();
 
-    // Profilbild setzen oder Default
     const profilePhoto = document.getElementById("profile-photo");
-    if(profile?.avatar_url) {
+    if (profile?.avatar_url) {
       profilePhoto.style.backgroundImage = `url(${profile.avatar_url})`;
+      profilePhoto.textContent = '';
     } else {
-      profilePhoto.style.backgroundImage = "url('https://via.placeholder.com/160?text=Avatar')";
+      profilePhoto.style.backgroundImage = 'none';
+      profilePhoto.textContent = getInitials(profile?.name);
     }
 
     document.getElementById("profile-info").innerHTML = profileError || !profile ? `
@@ -541,7 +551,7 @@
       <p><strong>Über mich:</strong> ${profile.bio || '–'}</p>
     `;
 
-    // Bewertungen laden, nur die letzten 2
+    // Bewertungen laden (nur 2)
     const { data: reviews, error: reviewError } = await supabase
       .from("reviews")
       .select("rating, comment, from_user_id, created_at, from_user:from_user_id(name, avatar_url)")
@@ -575,9 +585,7 @@
           <div class="review-header">
             <div class="review-avatar" style="background-image: url('${r.from_user?.avatar_url || 'https://via.placeholder.com/48?text=👤'}');" aria-hidden="true"></div>
             <div class="reviewer-name">${r.from_user?.name || 'Unbekannt'}</div>
-            <div class="review-rating" aria-label="Bewertung: ${r.rating} von 5 Sternen">
-              ${createStarIcons(r.rating)}
-            </div>
+            <div class="review-rating" aria-label="Bewertung: ${r.rating} von 5 Sternen">${createStarIcons(r.rating)}</div>
           </div>
           <p class="review-text">${r.comment}</p>
           <time class="review-date" datetime="${new Date(r.created_at).toISOString()}">Verfasst am ${new Date(r.created_at).toLocaleDateString()}</time>
@@ -586,7 +594,7 @@
       reviewList.innerHTML = summary + list;
     }
 
-    // Prüfen, ob aktueller User schon bewertet hat
+    // Prüfen ob User schon bewertet hat
     let hasReviewed = false;
     if (currentUser) {
       const { data: existingReview } = await supabase
@@ -598,7 +606,7 @@
       hasReviewed = !!existingReview;
     }
 
-    // Bewertungsbutton nur zeigen wenn User angemeldet, nicht eigenes Profil und noch nicht bewertet hat
+    // Review-Button anzeigen/nicht anzeigen
     const reviewBtn = document.getElementById("review-btn");
     if (currentUser && currentUser.id !== userId && !hasReviewed) {
       reviewBtn.style.display = "inline-block";
