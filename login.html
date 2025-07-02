@@ -218,7 +218,7 @@
       </div>
 
       <button type="submit">Einloggen</button>
-      <div id="message" class="message"></div>
+      <div id="message" class="message" aria-live="polite"></div>
     </form>
   </div>
 </main>
@@ -229,7 +229,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
 <script>
-  const supabase = window.supabase.createClient(
+  // Supabase-Client korrekt initialisieren (ohne window.)
+  const supabase = supabase.createClient(
     'https://flnjalgqtkqycsaymmbd.supabase.co',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
   );
