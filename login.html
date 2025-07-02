@@ -217,47 +217,52 @@
   © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
 <script>
-  const supabase = supabase.createClient(
-    'https://flnjalgqtkqycsaymmbd.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-  );
+  document.addEventListener('DOMContentLoaded', () => {
+    const supabase = supabase.createClient(
+      'https://flnjalgqtkqycsaymmbd.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+    );
 
-  const form = document.getElementById('login-form');
-  const messageDiv = document.getElementById('message');
+    const form = document.getElementById('login-form');
+    const messageDiv = document.getElementById('message');
 
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    messageDiv.textContent = '';
-    messageDiv.className = 'message';
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      messageDiv.textContent = '';
+      messageDiv.className = 'message';
 
-    const email = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value;
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
 
-    try {
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
-      if (error) {
-        messageDiv.textContent = '❌ ' + error.message;
+        if (error) {
+          messageDiv.textContent = '❌ ' + error.message;
+          messageDiv.classList.add('error');
+        } else {
+          messageDiv.textContent = '✅ Login erfolgreich!';
+          messageDiv.classList.add('success');
+          setTimeout(() => {
+            window.location.href = 'index.html';
+          }, 1000);
+        }
+      } catch (err) {
+        messageDiv.textContent = '❌ Unerwarteter Fehler: ' + err.message;
         messageDiv.classList.add('error');
-      } else {
-        messageDiv.textContent = '✅ Login erfolgreich!';
-        messageDiv.classList.add('success');
-        setTimeout(() => {
-          window.location.href = 'index.html';
-        }, 1000);
       }
-    } catch (err) {
-      messageDiv.textContent = '❌ Unerwarteter Fehler: ' + err.message;
-      messageDiv.classList.add('error');
-    }
-  });
+    });
 
-  function togglePassword() {
-    const pwField = document.getElementById('password');
-    pwField.type = pwField.type === 'password' ? 'text' : 'password';
-  }
+    function togglePassword() {
+      const pwField = document.getElementById('password');
+      pwField.type = pwField.type === 'password' ? 'text' : 'password';
+    }
+
+    // Macht togglePassword global verfügbar für onclick
+    window.togglePassword = togglePassword;
+  });
 </script>
 
 </body>
