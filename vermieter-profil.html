@@ -13,15 +13,14 @@
     --background-color: #f1f8e9;
     --white: #fff;
     --light-gray: #f5f5f5;
-    --border-radius: 12px;
-    --shadow-color: rgba(0, 0, 0, 0.1);
+    --border-radius: 16px;
+    --shadow-color: rgba(0, 0, 0, 0.12);
     --max-width: 1200px;
-    --star-color: #f5c518;
+    --star-color: #fbc02d;
+    --transition-speed: 0.3s;
   }
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  *, *::before, *::after {
+    margin: 0; padding: 0; box-sizing: border-box;
   }
   body {
     font-family: 'Poppins', sans-serif;
@@ -31,86 +30,131 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   header {
     background-color: var(--primary-color);
     color: var(--white);
     width: 100%;
-    padding: 1.5rem 2rem;
+    padding: 1.8rem 2.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
     position: sticky;
     top: 0;
-    z-index: 1000;
-    box-shadow: 0 2px 8px var(--shadow-color);
+    z-index: 1100;
+    box-shadow: 0 3px 12px var(--shadow-color);
   }
   header h1 {
-    font-weight: 600;
-    font-size: 1.8rem;
+    font-weight: 700;
+    font-size: 2rem;
     cursor: pointer;
     user-select: none;
+    letter-spacing: 1px;
   }
   nav#nav-links a {
     color: var(--white);
-    margin-left: 1.5rem;
+    margin-left: 2rem;
     text-decoration: none;
     font-weight: 600;
-    transition: border-bottom 0.3s ease;
+    font-size: 1.1rem;
+    padding-bottom: 4px;
+    position: relative;
+    transition: color var(--transition-speed);
+  }
+  nav#nav-links a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: var(--star-color);
+    transition: width var(--transition-speed);
   }
   nav#nav-links a:hover {
-    border-bottom: 2px solid var(--primary-dark);
+    color: var(--star-color);
+  }
+  nav#nav-links a:hover::after {
+    width: 100%;
   }
   main {
     max-width: var(--max-width);
     background: var(--white);
     border-radius: var(--border-radius);
-    box-shadow: 0 6px 18px var(--shadow-color);
-    padding: 3rem 3rem 4rem;
-    margin: 3rem 1rem 4rem;
+    box-shadow: 0 10px 30px var(--shadow-color);
+    padding: 3rem 4rem 4rem;
+    margin: 4rem 1rem 6rem;
     width: 100%;
   }
-  /* Vermieter Header */
+  /* Profil Header */
   #profile-section {
     display: flex;
-    gap: 2rem;
-    margin-bottom: 3rem;
+    gap: 3rem;
     align-items: center;
+    margin-bottom: 4rem;
+    flex-wrap: wrap;
+  }
+  #profile-photo {
+    flex-shrink: 0;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    background: var(--light-gray) url('https://via.placeholder.com/160?text=Avatar') center/cover no-repeat;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
   }
   #profile-info {
     flex: 1;
-    background-color: var(--light-gray);
-    border-radius: var(--border-radius);
-    padding: 2rem;
-    box-shadow: inset 0 0 8px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
   }
   #profile-info p {
-    margin-bottom: 0.8rem;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     color: #444;
   }
   #profile-info p strong {
     color: var(--primary-dark);
+    font-weight: 700;
   }
-  /* Star rating visual */
-  .star-rating {
-    font-size: 1.6rem;
-    color: var(--star-color);
+  /* Rating Display */
+  #rating-summary {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--primary-dark);
+    margin-top: 0.4rem;
     user-select: none;
-    margin-top: 0.3rem;
+  }
+  .stars {
+    display: flex;
+    gap: 2px;
+  }
+  .star {
+    font-size: 1.8rem;
+    color: var(--star-color);
+    filter: drop-shadow(0 1px 1px rgba(0,0,0,0.1));
+    transition: transform 0.2s ease;
+  }
+  .star.empty {
+    color: #ccc;
+    filter: none;
   }
   /* Bewertungen Section */
   #reviews-section {
-    margin-bottom: 3rem;
+    margin-bottom: 4rem;
   }
   #reviews-section h2 {
-    color: var(--primary-color);
-    font-weight: 700;
-    margin-bottom: 1rem;
-    font-size: 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    color: var(--primary-color);
+    font-weight: 700;
+    font-size: 2.4rem;
+    margin-bottom: 1.5rem;
   }
   #all-reviews-link {
     font-weight: 600;
@@ -118,119 +162,142 @@
     color: var(--primary-color);
     text-decoration: underline;
     cursor: pointer;
-    transition: color 0.3s ease;
+    transition: color var(--transition-speed);
   }
   #all-reviews-link:hover {
     color: var(--primary-dark);
   }
   #reviews-list {
     display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit,minmax(320px,1fr));
+    gap: 2rem;
   }
   .review-item {
     background-color: var(--light-gray);
     border-radius: var(--border-radius);
-    padding: 1.5rem 1.8rem;
-    box-shadow: inset 0 0 8px rgba(0,0,0,0.05);
+    padding: 1.8rem 2rem;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.06);
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    transition: box-shadow 0.3s ease, transform 0.2s ease;
+    gap: 0.6rem;
+    transition: box-shadow 0.3s ease, transform 0.25s ease;
   }
   .review-item:hover {
-    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
-    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    transform: translateY(-6px);
   }
-  .review-item strong {
-    font-size: 1.2rem;
+  .review-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .review-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--white) url('https://via.placeholder.com/48?text=👤') center/cover no-repeat;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  .reviewer-name {
+    font-weight: 700;
     color: var(--primary-dark);
-    margin-bottom: 0.5rem;
-    user-select: none;
+    font-size: 1.1rem;
   }
-  .review-item p {
-    font-size: 1rem;
-    margin-bottom: 0.8rem;
-    line-height: 1.5;
-  }
-  .review-item small {
+  .review-date {
     font-size: 0.85rem;
     color: #666;
+  }
+  .review-rating {
+    margin-left: auto;
+    color: var(--star-color);
+    font-size: 1.3rem;
     user-select: none;
+  }
+  .review-text {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #444;
+    margin-top: 0.4rem;
+    white-space: pre-line;
   }
   /* Inserate Section */
   #listings-section h2 {
     color: var(--primary-color);
     font-weight: 700;
-    margin-bottom: 1.5rem;
-    font-size: 2rem;
+    margin-bottom: 2rem;
+    font-size: 2.4rem;
   }
   .listing-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill,minmax(280px,1fr));
-    gap: 1.5rem;
+    gap: 2rem;
   }
   .listing-card {
     background-color: var(--white);
-    padding: 1rem 1rem 1.2rem;
-    border-radius: 10px;
-    box-shadow: 0 3px 12px var(--shadow-color);
+    padding: 1.2rem 1.5rem 1.6rem;
+    border-radius: 14px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
     display: flex;
     flex-direction: column;
-    transition: box-shadow 0.3s ease, transform 0.2s ease;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
   }
   .listing-card:hover {
-    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-    transform: translateY(-4px);
+    box-shadow: 0 14px 40px rgba(0,0,0,0.18);
+    transform: translateY(-5px);
   }
   .listing-card img {
     width: 100%;
-    height: 180px;
+    height: 190px;
     object-fit: cover;
-    border-radius: 8px;
-    margin-bottom: 0.75rem;
+    border-radius: 12px;
+    margin-bottom: 1rem;
   }
   .listing-card h3 {
-    font-size: 1.3rem;
-    margin-bottom: 0.3rem;
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
     color: var(--primary-dark);
   }
   .listing-card p {
-    margin: 0.3rem 0;
-    font-weight: 500;
+    margin: 0.25rem 0;
+    font-weight: 600;
   }
   .listing-card p.category {
     text-transform: capitalize;
-    font-weight: 600;
     color: var(--primary-color);
   }
   .listing-card button {
     margin-top: auto;
-    padding: 0.7rem 1rem;
+    padding: 0.9rem 1.5rem;
     background-color: var(--primary-color);
     color: var(--white);
     border: none;
-    border-radius: 8px;
+    border-radius: 14px;
     cursor: pointer;
-    font-weight: 600;
-    font-size: 1rem;
-    transition: background-color 0.3s ease;
+    font-weight: 700;
+    font-size: 1.1rem;
+    transition: background-color var(--transition-speed);
+    user-select: none;
   }
   .listing-card button:hover {
     background-color: var(--primary-dark);
   }
   /* Review Button */
   .review-btn {
-    margin-top: 1.5rem;
-    padding: 0.8rem 1.5rem;
+    margin-top: 2rem;
+    padding: 1rem 2rem;
     background-color: var(--primary-color);
     color: var(--white);
     font-weight: 700;
     border: none;
-    border-radius: 10px;
+    border-radius: 16px;
     cursor: pointer;
-    font-size: 1.1rem;
-    transition: background-color 0.3s ease;
+    font-size: 1.3rem;
+    transition: background-color var(--transition-speed);
+    user-select: none;
+    position: sticky;
+    bottom: 2rem;
+    float: right;
+    box-shadow: 0 5px 15px rgba(46,125,50,0.4);
   }
   .review-btn:hover {
     background-color: var(--primary-dark);
@@ -240,8 +307,8 @@
     width: 100%;
     background-color: var(--primary-color);
     color: var(--white);
-    padding: 2rem 0;
-    box-shadow: 0 -2px 12px var(--shadow-color);
+    padding: 2.5rem 0;
+    box-shadow: 0 -3px 16px var(--shadow-color);
     user-select: none;
   }
   footer > div {
@@ -251,7 +318,7 @@
     flex-wrap: wrap;
     justify-content: space-between;
     gap: 2rem;
-    padding: 0 1rem;
+    padding: 0 1.5rem;
   }
   footer h4 {
     margin-bottom: 0.75rem;
@@ -267,7 +334,7 @@
     text-decoration: underline;
     font-weight: 400;
     cursor: pointer;
-    transition: color 0.3s ease;
+    transition: color var(--transition-speed);
   }
   footer ul li a:hover {
     color: var(--primary-dark);
@@ -280,19 +347,24 @@
     user-select: none;
   }
   /* Responsive */
-  @media (max-width: 900px) {
+  @media (max-width: 960px) {
     main {
-      padding: 2rem 1.5rem 3rem;
+      padding: 3rem 2rem 4rem;
     }
     #profile-section {
       flex-direction: column;
+      align-items: center;
+      text-align: center;
     }
-    .listing-grid {
-      grid-template-columns: 1fr 1fr;
+    #profile-photo {
+      width: 140px;
+      height: 140px;
+      margin-bottom: 1.5rem;
     }
-  }
-  @media (max-width: 600px) {
-    .listing-grid {
+    #profile-info p {
+      font-size: 1.15rem;
+    }
+    #reviews-list {
       grid-template-columns: 1fr;
     }
   }
@@ -304,8 +376,18 @@
     }
     nav#nav-links a {
       margin-left: 0;
-      margin-top: 0.6rem;
+      margin-top: 0.7rem;
       font-size: 1rem;
+    }
+    .review-btn {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      padding: 1rem 1.5rem;
+      font-size: 1rem;
+      border-radius: 14px;
+      box-shadow: 0 4px 12px rgba(46,125,50,0.5);
+      z-index: 2000;
     }
   }
 </style>
@@ -317,7 +399,8 @@
 </header>
 <main>
   <section id="profile-section" aria-label="Profilinformationen des Vermieters">
-    <div id="profile-info">
+    <div id="profile-photo" aria-hidden="true"></div>
+    <div id="profile-info" role="region" aria-live="polite">
       Lade Profil...
     </div>
   </section>
@@ -327,7 +410,7 @@
       Bewertungen
       <a href="#" id="all-reviews-link" aria-label="Alle Bewertungen anzeigen">Alle anzeigen →</a>
     </h2>
-    <div id="reviews-list">
+    <div id="reviews-list" role="list" aria-live="polite">
       ⏳ Lade Bewertungen…
     </div>
     <div id="review-button-container"></div>
@@ -335,11 +418,14 @@
 
   <section id="listings-section" aria-label="Inserate des Vermieters">
     <h2>Inserate dieses Vermieters</h2>
-    <div id="listing-grid" class="listing-grid">
+    <div id="listing-grid" class="listing-grid" role="list">
       <p>⏳ Lade Inserate…</p>
     </div>
   </section>
+
+  <button class="review-btn" id="review-btn" title="Bewertung abgeben">Bewertung abgeben</button>
 </main>
+
 <footer role="contentinfo">
   <div>
     <section aria-labelledby="footer-rent-title">
@@ -371,6 +457,7 @@
     © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
   </div>
 </footer>
+
 <script>
   const supabase = window.supabase.createClient(
     'https://flnjalgqtkqycsaymmbd.supabase.co',
@@ -399,6 +486,23 @@
     window.location.href = "login.html";
   }
 
+  function createStarIcons(rating) {
+    let fullStars = Math.floor(rating);
+    let halfStar = rating - fullStars >= 0.5;
+    let emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+    let starsHtml = '';
+    for (let i = 0; i < fullStars; i++) {
+      starsHtml += '<span class="star" aria-hidden="true">&#9733;</span>';
+    }
+    if (halfStar) {
+      starsHtml += '<span class="star" aria-hidden="true">&#9733;</span>'; // Using full star for simplicity
+    }
+    for (let i = 0; i < emptyStars; i++) {
+      starsHtml += '<span class="star empty" aria-hidden="true">&#9734;</span>';
+    }
+    return starsHtml;
+  }
+
   async function loadVermieterProfil() {
     const params = new URLSearchParams(location.search);
     const userId = params.get("id");
@@ -417,9 +521,17 @@
     // Profil laden
     const { data: profile, error: profileError } = await supabase
       .from("profiles")
-      .select("name, city, bio")
+      .select("name, city, bio, avatar_url")
       .eq("id", userId)
       .single();
+
+    // Profilbild setzen oder Default
+    const profilePhoto = document.getElementById("profile-photo");
+    if(profile?.avatar_url) {
+      profilePhoto.style.backgroundImage = `url(${profile.avatar_url})`;
+    } else {
+      profilePhoto.style.backgroundImage = "url('https://via.placeholder.com/160?text=Avatar')";
+    }
 
     document.getElementById("profile-info").innerHTML = profileError || !profile ? `
       <p>Profil nicht gefunden.</p>
@@ -432,7 +544,7 @@
     // Bewertungen laden, nur die letzten 2
     const { data: reviews, error: reviewError } = await supabase
       .from("reviews")
-      .select("rating, comment, from_user_id, created_at, from_user:from_user_id(name)")
+      .select("rating, comment, from_user_id, created_at, from_user:from_user_id(name, avatar_url)")
       .eq("to_user_id", userId)
       .order("created_at", { ascending: false })
       .limit(2);
@@ -451,27 +563,25 @@
       const allRatings = allReviewsData || [];
       const average = allRatings.length > 0 ? (allRatings.reduce((sum, r) => sum + r.rating, 0) / allRatings.length).toFixed(1) : "–";
 
-      // Stern-Darstellung
-      const stars = () => {
-        const fullStars = Math.floor(average);
-        const halfStar = average - fullStars >= 0.5;
-        let starHtml = "";
-        for (let i = 1; i <= 5; i++) {
-          if(i <= fullStars) starHtml += "&#9733;"; // Voller Stern ★
-          else if(i === fullStars + 1 && halfStar) starHtml += "&#9733;"; // Halbstern als voller (für Simplizität)
-          else starHtml += "&#9734;"; // Leerer Stern ☆
-        }
-        return starHtml;
-      };
-
-      const summary = `<p class="review-summary"> <span class="star-rating" aria-label="Durchschnittliche Bewertung">${stars()} ${average} von 5 aus ${allRatings.length} Bewertungen</span></p>`;
+      const summary = `
+        <div id="rating-summary" aria-label="Durchschnittliche Bewertung: ${average} von 5 Sternen">
+          <div class="stars" aria-hidden="true">${createStarIcons(average)}</div>
+          <span>${average} / 5 aus ${allRatings.length} Bewertungen</span>
+        </div>
+      `;
 
       const list = reviews.map(r => `
-        <div class="review-item" tabindex="0" aria-label="Bewertung ${r.rating} von 5 Sternen von ${r.from_user?.name || 'Unbekannt'}">
-          <strong>⭐ ${r.rating}/5</strong>
-          <p>${r.comment}</p>
-          <small>Von <strong>${r.from_user?.name || 'Unbekannt'}</strong> am ${new Date(r.created_at).toLocaleDateString()}</small>
-        </div>
+        <article class="review-item" tabindex="0" aria-label="Bewertung ${r.rating} von 5 Sternen von ${r.from_user?.name || 'Unbekannt'}">
+          <div class="review-header">
+            <div class="review-avatar" style="background-image: url('${r.from_user?.avatar_url || 'https://via.placeholder.com/48?text=👤'}');" aria-hidden="true"></div>
+            <div class="reviewer-name">${r.from_user?.name || 'Unbekannt'}</div>
+            <div class="review-rating" aria-label="Bewertung: ${r.rating} von 5 Sternen">
+              ${createStarIcons(r.rating)}
+            </div>
+          </div>
+          <p class="review-text">${r.comment}</p>
+          <time class="review-date" datetime="${new Date(r.created_at).toISOString()}">Verfasst am ${new Date(r.created_at).toLocaleDateString()}</time>
+        </article>
       `).join('');
       reviewList.innerHTML = summary + list;
     }
@@ -489,14 +599,12 @@
     }
 
     // Bewertungsbutton nur zeigen wenn User angemeldet, nicht eigenes Profil und noch nicht bewertet hat
+    const reviewBtn = document.getElementById("review-btn");
     if (currentUser && currentUser.id !== userId && !hasReviewed) {
-      document.getElementById("review-button-container").innerHTML = `
-        <button class="review-btn" onclick="location.href='bewertung-schreiben.html?id=${userId}'">
-          Bewertung abgeben
-        </button>
-      `;
+      reviewBtn.style.display = "inline-block";
+      reviewBtn.onclick = () => location.href = `bewertung-schreiben.html?id=${userId}`;
     } else {
-      document.getElementById("review-button-container").innerHTML = '';
+      reviewBtn.style.display = "none";
     }
 
     // Inserate laden
@@ -512,13 +620,13 @@
       container.innerHTML = "<p>Keine Inserate gefunden.</p>";
     } else {
       container.innerHTML = listings.map(item => `
-        <div class="listing-card">
+        <article class="listing-card" tabindex="0" aria-label="Inserat: ${item.title}, Kategorie: ${item.category}, Preis: ${item.price_per_day} Euro pro Tag">
           <img src="${item.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" alt="${item.title}" />
           <h3>${item.title}</h3>
           <p class="category"><strong>Kategorie:</strong> ${item.category}</p>
           <p><strong>Preis:</strong> ${item.price_per_day} € / Tag</p>
-          <button onclick="location.href='mietobjekt.html?id=${item.id}'">Details</button>
-        </div>
+          <button aria-label="Details zu ${item.title}" onclick="location.href='mietobjekt.html?id=${item.id}'">Details</button>
+        </article>
       `).join('');
     }
   }
