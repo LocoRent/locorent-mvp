@@ -204,6 +204,14 @@
     border-radius: 50%;
     background: var(--white) center/cover no-repeat;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: var(--primary-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    flex-shrink: 0;
   }
   .reviewer-name {
     font-weight: 700;
@@ -471,9 +479,8 @@
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
   );
 
-  // Initialen aus Namen erzeugen
   function getInitials(name) {
-    if (!name) return '?';
+    if (!name) return '';
     const parts = name.trim().split(' ');
     if (parts.length === 1) return parts[0][0].toUpperCase();
     return (parts[0][0] + parts[1][0]).toUpperCase();
@@ -484,9 +491,15 @@
     let halfStar = rating - fullStars >= 0.5;
     let emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
     let starsHtml = '';
-    for (let i = 0; i < fullStars; i++) starsHtml += '<span class="star" aria-hidden="true">&#9733;</span>';
-    if (halfStar) starsHtml += '<span class="star" aria-hidden="true">&#9733;</span>'; // Für Einfachheit volle Sterne
-    for (let i = 0; i < emptyStars; i++) starsHtml += '<span class="star empty" aria-hidden="true">&#9734;</span>';
+    for (let i = 0; i < fullStars; i++) {
+      starsHtml += '<span class="star" aria-hidden="true">&#9733;</span>';
+    }
+    if (halfStar) {
+      starsHtml += '<span class="star" aria-hidden="true">&#9733;</span>'; // für Halbstern vereinfacht mit Vollstern
+    }
+    for (let i = 0; i < emptyStars; i++) {
+      starsHtml += '<span class="star empty" aria-hidden="true">&#9734;</span>';
+    }
     return starsHtml;
   }
 
@@ -583,7 +596,9 @@
       const list = reviews.map(r => `
         <article class="review-item" tabindex="0" aria-label="Bewertung ${r.rating} von 5 Sternen von ${r.from_user?.name || 'Unbekannt'}">
           <div class="review-header">
-            <div class="review-avatar" style="background-image: url('${r.from_user?.avatar_url || 'https://via.placeholder.com/48?text=👤'}');" aria-hidden="true"></div>
+            <div class="review-avatar" style="background-image: url('${r.from_user?.avatar_url || ''}');" aria-hidden="true">
+              ${!r.from_user?.avatar_url ? getInitials(r.from_user?.name) : ''}
+            </div>
             <div class="reviewer-name">${r.from_user?.name || 'Unbekannt'}</div>
             <div class="review-rating" aria-label="Bewertung: ${r.rating} von 5 Sternen">${createStarIcons(r.rating)}</div>
           </div>
@@ -606,7 +621,7 @@
       hasReviewed = !!existingReview;
     }
 
-    // Review-Button anzeigen/nicht anzeigen
+    // Bewertungsbutton anzeigen wenn angemeldet, nicht eigenes Profil, noch nicht bewertet
     const reviewBtn = document.getElementById("review-btn");
     if (currentUser && currentUser.id !== userId && !hasReviewed) {
       reviewBtn.style.display = "inline-block";
