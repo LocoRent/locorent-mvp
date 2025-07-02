@@ -14,9 +14,10 @@
       --highlight-color: #66bb6a;
       --white: #fff;
       --gray-dark: #333;
-      --border-radius: 16px;
-      --shadow-color: rgba(0, 0, 0, 0.12);
+      --border-radius: 12px;
+      --shadow-color: rgba(0, 0, 0, 0.1);
       --max-width: 900px;
+      --icon-size: 48px;
     }
     * {
       margin: 0;
@@ -27,7 +28,7 @@
       font-family: 'Poppins', sans-serif;
       background-color: var(--background-color);
       color: var(--gray-dark);
-      line-height: 1.7;
+      line-height: 1.6;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -37,22 +38,22 @@
     header {
       background-color: var(--primary-color);
       color: var(--white);
-      padding: 1.5rem 3rem;
+      padding: 1.5rem 2.5rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
       position: sticky;
       top: 0;
-      z-index: 10000;
-      box-shadow: 0 3px 10px var(--shadow-color);
+      z-index: 1000;
+      box-shadow: 0 4px 10px var(--shadow-color);
       user-select: none;
     }
     header h1 {
       font-weight: 700;
       font-size: 1.8rem;
+      color: var(--white);
       cursor: pointer;
       letter-spacing: 1.2px;
-      transition: color 0.3s ease;
     }
     header h1:hover {
       color: var(--highlight-color);
@@ -60,9 +61,9 @@
     nav a {
       color: var(--white);
       margin-left: 2rem;
-      text-decoration: none;
       font-weight: 600;
       font-size: 1.1rem;
+      text-decoration: none;
       position: relative;
       transition: color 0.3s ease;
     }
@@ -74,8 +75,8 @@
       width: 0%;
       height: 3px;
       background: var(--highlight-color);
-      transition: width 0.3s ease;
       border-radius: 3px;
+      transition: width 0.3s ease;
     }
     nav a:hover {
       color: var(--highlight-color);
@@ -89,32 +90,71 @@
       margin: 4rem auto 6rem;
       padding: 0 2rem;
     }
-    section {
+    .hero {
       background: var(--white);
-      padding: 3rem 3.5rem;
       border-radius: var(--border-radius);
-      box-shadow: 0 8px 28px var(--shadow-color);
-      transition: box-shadow 0.3s ease;
+      box-shadow: 0 10px 28px var(--shadow-color);
+      padding: 3rem 2.5rem;
+      text-align: center;
+      margin-bottom: 4rem;
     }
-    section:hover {
-      box-shadow: 0 12px 40px rgba(46, 125, 50, 0.3);
-    }
-    h2 {
-      color: var(--primary-color);
+    .hero h2 {
+      font-size: 3rem;
       font-weight: 800;
-      font-size: 2.8rem;
-      margin-bottom: 1.5rem;
-      user-select: none;
-      letter-spacing: 0.04em;
+      color: var(--primary-color);
+      margin-bottom: 1rem;
+      letter-spacing: 0.05em;
       line-height: 1.1;
+      user-select: none;
     }
-    p {
-      font-size: 1.2rem;
-      color: var(--dark-color);
-      margin-top: 1rem;
-      line-height: 1.9;
-      max-width: 780px;
+    .hero p {
+      font-size: 1.3rem;
+      max-width: 700px;
+      margin: 0 auto;
+      color: #3a3a3a;
+      line-height: 1.8;
     }
+
+    /* Grid für die Mission Punkte */
+    .mission-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2.5rem;
+    }
+    .mission-item {
+      background: var(--white);
+      border-radius: var(--border-radius);
+      box-shadow: 0 6px 20px var(--shadow-color);
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .mission-item:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 28px rgba(102, 187, 106, 0.3);
+    }
+    .icon {
+      font-size: var(--icon-size);
+      color: var(--highlight-color);
+      margin-bottom: 1.25rem;
+      user-select: none;
+    }
+    .mission-item h3 {
+      color: var(--primary-color);
+      font-weight: 700;
+      margin-bottom: 1rem;
+      font-size: 1.3rem;
+      user-select: none;
+    }
+    .mission-item p {
+      font-size: 1rem;
+      color: var(--gray-dark);
+      line-height: 1.5;
+    }
+
     footer {
       background-color: var(--primary-color);
       color: var(--white);
@@ -123,12 +163,13 @@
       user-select: none;
       text-align: center;
       box-shadow: 0 -5px 15px var(--shadow-color);
+      margin-top: auto;
     }
     footer > div {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 3.5rem;
+      gap: 3rem;
       margin-bottom: 2rem;
       max-width: var(--max-width);
       margin-left: auto;
@@ -137,14 +178,14 @@
     footer h4 {
       font-weight: 700;
       font-size: 1.2rem;
-      margin-bottom: 0.8rem;
+      margin-bottom: 0.5rem;
       text-transform: uppercase;
       letter-spacing: 0.1em;
     }
     footer ul {
       list-style: none;
       padding: 0;
-      line-height: 1.9;
+      line-height: 1.8;
       font-size: 1rem;
     }
     footer ul li a {
@@ -158,7 +199,7 @@
       color: var(--highlight-color);
     }
     footer .copyright {
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       letter-spacing: 0.05em;
       color: var(--secondary-color);
     }
@@ -174,14 +215,8 @@
         margin-left: 1.3rem;
         font-size: 1rem;
       }
-      h2 {
-        font-size: 2.2rem;
-      }
-      p {
-        font-size: 1.1rem;
-      }
-      footer > div {
-        gap: 2.2rem;
+      .hero h2 {
+        font-size: 2.4rem;
       }
     }
     @media (max-width: 480px) {
@@ -230,41 +265,41 @@
 </header>
 
 <main>
-  <section aria-label="Unsere Mission">
+  <section class="hero" aria-label="Unsere Mission">
     <h2>Unsere Mission</h2>
-    <p>
-      Bei Locorent glauben wir fest daran, dass die Zukunft des Konsums in Gemeinschaft und nachhaltigem Nutzen liegt. In einer Welt, in der Ressourcen knapper und Umweltschutz immer dringlicher werden, setzen wir auf ein einfaches, aber kraftvolles Prinzip: Mieten statt Kaufen.
-    </p>
-    <p>
-      Unsere Mission ist es, Menschen zu befähigen, bewusster und verantwortungsvoller mit den Dingen umzugehen, die sie im Alltag benötigen. Statt Dinge ungenutzt und staubig in Kellern zu lagern, fördern wir den Austausch und die gemeinschaftliche Nutzung von Produkten aller Art – von Werkzeugen über Fahrzeuge bis hin zu Sport- und Freizeitartikeln.
-    </p>
-    <p>
-      <strong>Testen, bevor man kauft:</strong><br>
-      Wir wissen, wie wichtig es ist, ein Produkt vor einer Anschaffung genau kennenzulernen. Deshalb ermöglicht Locorent nicht nur das Mieten als kurzfristige Lösung, sondern auch das Ausprobieren und Testen, bevor man sich für einen Kauf entscheidet. So helfen wir, Fehlkäufe zu vermeiden und unnötige Ausgaben zu reduzieren.
-    </p>
-    <p>
-      <strong>Nachhaltigkeit als Kern:</strong><br>
-      Durch das Teilen und Mehrfachnutzen von Produkten reduzieren wir die Nachfrage nach neuen Produkten und senken damit Produktion, Transport und Rohstoffverbrauch. Das schont die Umwelt, mindert Müllberge und trägt aktiv zum Klimaschutz bei. Jeder Mietvorgang ist ein kleiner Beitrag zu einer ressourcenschonenderen Zukunft.
-    </p>
-    <p>
-      <strong>Gemeinschaft und Vertrauen:</strong><br>
-      Locorent verbindet Menschen auf einer verlässlichen Plattform, die Transparenz, Fairness und Vertrauen in den Mittelpunkt stellt. Bewertungen, sichere Abwicklungen und eine aktive Community schaffen ein Umfeld, in dem sich Vermieter und Mieter gleichermaßen wohlfühlen.
-    </p>
-    <p>
-      <strong>Wirtschaftlicher Vorteil:</strong><br>
-      Mieten bedeutet nicht nur sparen, sondern auch neue Einnahmequellen erschließen. Wer ungenutzte Gegenstände besitzt, kann mit Locorent einfach und flexibel Geld verdienen. Das stärkt die lokale Wirtschaft und bietet finanzielle Entlastung in Zeiten steigender Lebenshaltungskosten.
-    </p>
-    <p>
-      <strong>Innovation und Zukunftsfähigkeit:</strong><br>
-      Wir sind stolz darauf, mit Locorent eine Plattform zu bieten, die innovative Technologien und moderne digitale Services nutzt, um das Teilen so einfach und sicher wie möglich zu gestalten. Wir arbeiten stetig daran, unser Angebot zu verbessern und die Nutzererfahrung zu optimieren.
-    </p>
-    <p>
-      <strong>Für ein besseres Miteinander:</strong><br>
-      Bei Locorent geht es nicht nur ums Mieten, sondern auch um den Aufbau von Gemeinschaften, das Fördern von Nachhaltigkeit und die Verantwortung für unsere gemeinsame Umwelt. Wir laden alle ein, Teil dieser Bewegung zu sein und gemeinsam mit uns eine lebenswerte Zukunft zu gestalten.
-    </p>
-    <p style="font-weight: 700; font-size: 1.3rem; margin-top: 2rem; color: var(--highlight-color); user-select: none;">
-      Mieten statt Kaufen – Weil Ressourcen teilen Zukunft schafft.
-    </p>
+    <p>Wir glauben an eine Welt, in der gemeinschaftliches Nutzen die Norm ist – eine Welt, in der jeder mit wenig Ressourcen viel bewirken kann.</p>
+  </section>
+
+  <section class="mission-grid" aria-label="Mission Details">
+    <article class="mission-item" tabindex="0" aria-labelledby="mission1-title">
+      <div class="icon" aria-hidden="true">🤝</div>
+      <h3 id="mission1-title">Gemeinschaft stärken</h3>
+      <p>Wir bringen Menschen zusammen, um Ressourcen sinnvoll zu teilen und nachhaltige Verbindungen aufzubauen.</p>
+    </article>
+
+    <article class="mission-item" tabindex="0" aria-labelledby="mission2-title">
+      <div class="icon" aria-hidden="true">💰</div>
+      <h3 id="mission2-title">Kosten sparen</h3>
+      <p>Mit Locorent kannst du Geld sparen, indem du Dinge mietest, anstatt sie neu zu kaufen.</p>
+    </article>
+
+    <article class="mission-item" tabindex="0" aria-labelledby="mission3-title">
+      <div class="icon" aria-hidden="true">🌱</div>
+      <h3 id="mission3-title">Umwelt schützen</h3>
+      <p>Wir reduzieren den Ressourcenverbrauch und Abfall durch gemeinsames Nutzen statt Besitz.</p>
+    </article>
+
+    <article class="mission-item" tabindex="0" aria-labelledby="mission4-title">
+      <div class="icon" aria-hidden="true">🔄</div>
+      <h3 id="mission4-title">Neu testen</h3>
+      <p>Teste neue Produkte, bevor du sie kaufst – vermeide Fehlkäufe und trage zu mehr Nachhaltigkeit bei.</p>
+    </article>
+
+    <article class="mission-item" tabindex="0" aria-labelledby="mission5-title">
+      <div class="icon" aria-hidden="true">🌍</div>
+      <h3 id="mission5-title">Zukunft gestalten</h3>
+      <p>Gemeinsam schaffen wir eine lebenswerte Zukunft, in der Teilen die Norm und Verantwortung für unseren Planeten selbstverständlich ist.</p>
+    </article>
   </section>
 </main>
 
