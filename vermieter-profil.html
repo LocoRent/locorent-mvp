@@ -116,6 +116,11 @@
   .listing-card p {
     margin: 0.2rem 0;
   }
+  .listing-card p.category {
+    /* Großschreibung nur Anfangsbuchstabe */
+    text-transform: capitalize;
+    font-weight: 600;
+  }
   .listing-card button {
     margin-top: 0.5rem;
     width: 100%;
@@ -419,7 +424,7 @@
         <div class="listing-card">
           <img src="${item.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" alt="${item.title}" />
           <h3>${item.title}</h3>
-          <p><strong>Kategorie:</strong> ${item.category}</p>
+          <p class="category"><strong>Kategorie:</strong> ${item.category}</p>
           <p><strong>Preis:</strong> ${item.price_per_day} € / Tag</p>
           <button onclick="location.href='mietobjekt.html?id=${item.id}'">Details</button>
         </div>
