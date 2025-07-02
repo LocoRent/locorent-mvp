@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bewertungen – Locorent</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root {
+      --primary-color: #2e7d32;
+      --primary-dark: #1b5e20;
+      --background-color: #f1f8e9;
+      --white: #fff;
+      --light-gray: #f5f5f5;
+      --border-radius: 12px;
+      --shadow-color: rgba(0, 0, 0, 0.1);
+      --max-width: 900px;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--background-color);
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    header {
+      background-color: var(--primary-color);
+      color: var(--white);
+      width: 100%;
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 8px var(--shadow-color);
+    }
+    header h1 {
+      font-weight: 600;
+      font-size: 1.8rem;
+      cursor: pointer;
+    }
+    nav#nav-links a {
+      color: var(--white);
+      margin-left: 1.5rem;
+      text-decoration: none;
+      font-weight: 600;
+      transition: border-bottom 0.3s ease;
+    }
+    nav#nav-links a:hover {
+      border-bottom: 2px solid var(--primary-dark);
+    }
+    main {
+      max-width: var(--max-width);
+      background: var(--white);
+      border-radius: var(--border-radius);
+      box-shadow: 0 6px 18px var(--shadow-color);
+      padding: 2rem 3rem;
+      margin: 3rem 1rem 4rem;
+      width: 100%;
+      min-height: 60vh;
+    }
+    h2 {
+      margin-bottom: 1.5rem;
+      color: var(--primary-color);
+      font-weight: 700;
+    }
+    .review-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .review-item {
+      background-color: var(--light-gray);
+      padding: 1.2rem 1.5rem;
+      border-radius: var(--border-radius);
+      box-shadow: inset 0 0 8px rgba(0,0,0,0.05);
+    }
+    .review-item strong {
+      display: block;
+      margin-bottom: 0.4rem;
+      color: var(--primary-dark);
+      font-weight: 600;
+    }
+    .review-item p {
+      margin-bottom: 0.3rem;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+    .review-item small {
+      color: #666;
+    }
+    .back-btn {
+      margin-top: 2rem;
+      background-color: var(--primary-color);
+      color: var(--white);
+      border: none;
+      padding: 0.8rem 1.4rem;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      font-weight: 700;
+      transition: background-color 0.3s ease;
+    }
+    .back-btn:hover {
+      background-color: var(--primary-dark);
+    }
+    footer {
+      width: 100%;
+      background-color: var(--primary-color);
+      color: var(--white);
+      padding: 2rem 0;
+      box-shadow: 0 -2px 12px var(--shadow-color);
+      user-select: none;
+    }
+    footer > div {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 2rem;
+      padding: 0 1rem;
+    }
+    footer h4 {
+      margin-bottom: 0.75rem;
+      font-weight: 600;
+    }
+    footer ul {
+      list-style: none;
+      line-height: 1.7;
+      padding-left: 0;
+    }
+    footer ul li a {
+      color: var(--white);
+      text-decoration: underline;
+      font-weight: 400;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+    footer ul li a:hover {
+      color: var(--primary-dark);
+    }
+    footer .copyright {
+      margin-top: 2rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--white);
+      user-select: none;
+    }
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      nav#nav-links a {
+        margin-left: 0;
+        margin-top: 0.5rem;
+      }
+      footer > div {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
+  <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
+</header>
+<main>
+  <h2>Bewertungen</h2>
+  <div id="review-list" class="review-list">⏳ Lade Bewertungen…</div>
+  <button class="back-btn" onclick="history.back()">← Zurück zum Vermieterprofil</button>
+</main>
+<footer role="contentinfo">
+  <div>
+    <section aria-labelledby="footer-rent-title">
+      <h4 id="footer-rent-title">Mieten &amp; Vermieten</h4>
+      <ul>
+        <li><a href="so-funktionierts.html">So funktioniert's</a></li>
+        <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
+        <li><a href="kategorien.html">Beliebte Kategorien</a></li>
+        <li><a href="vermieter-tipps.html">Tipps &amp; Tricks für Vermieter</a></li>
+        <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
+      </ul>
+    </section>
+    <section aria-labelledby="footer-info-title">
+      <h4 id="footer-info-title">Wissenswertes</h4>
+      <ul>
+        <li><a href="agb.html">AGB &amp; Impressum</a></li>
+        <li><a href="datenschutz.html">Datenschutz</a></li>
+      </ul>
+    </section>
+    <section aria-labelledby="footer-about-title">
+      <h4 id="footer-about-title">Über uns</h4>
+      <ul>
+        <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
+        <li><a href="social-media.html">Folgen Sie uns</a></li>
+      </ul>
+    </section>
+  </div>
+  <div class="copyright" aria-label="Copyright">
+    © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
+  </div>
+</footer>
+
+<script>
+  const supabase = window.supabase.createClient(
+    'https://flnjalgqtkqycsaymmbd.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+  );
+
+  async function updateNav() {
+    const { data: { session } } = await supabase.auth.getSession();
+    const nav = document.getElementById("nav-links");
+    nav.innerHTML = session?.user ? `
+      <a href="index.html">Start</a>
+      <a href="profil.html">Mein Profil</a>
+      <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+      <a href="favoriten.html">Meine Favoriten</a>
+      <a href="inserate.html">Meine Inserate</a>
+      <a href="#" onclick="logout(event)">Logout</a>
+    ` : `
+      <a href="index.html">Start</a>
+      <a href="login.html">Einloggen</a>
+    `;
+  }
+
+  async function logout(event) {
+    event.preventDefault();
+    await supabase.auth.signOut();
+    window.location.href = "login.html";
+  }
+
+  async function loadReviews() {
+    const params = new URLSearchParams(window.location.search);
+    const userId = params.get("id");
+    if (!userId) {
+      document.getElementById("review-list").innerText = "Keine Vermieter-ID übergeben.";
+      return;
+    }
+
+    const { data: reviews, error } = await supabase
+      .from("reviews")
+      .select("rating, comment, from_user_id, created_at, from_user:from_user_id(name)")
+      .eq("to_user_id", userId)
+      .order("created_at", { ascending: false });
+
+    const container = document.getElementById("review-list");
+
+    if (error || !Array.isArray(reviews) || reviews.length === 0) {
+      container.innerHTML = "<p>Keine Bewertungen gefunden.</p>";
+      return;
+    }
+
+    container.innerHTML = reviews.map(r => `
+      <div class="review-item">
+        <strong>⭐ ${r.rating}/5</strong>
+        <p>${r.comment}</p>
+        <small>Von <strong>${r.from_user?.name || 'Unbekannt'}</strong> am ${new Date(r.created_at).toLocaleDateString()}</small>
+      </div>
+    `).join('');
+  }
+
+  updateNav();
+  loadReviews();
+</script>
+</body>
+</html>
