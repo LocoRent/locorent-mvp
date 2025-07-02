@@ -1,330 +1,212 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Hilfe & FAQ – Locorent</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
-<style>
-  :root {
-    --primary: #2e7d32;
-    --secondary: #a5d6a7;
-    --background: #f9faf7;
-    --white: #fff;
-    --text-dark: #222;
-    --text-muted: #555;
-    --border-radius: 14px;
-    --shadow: rgba(0,0,0,0.08);
-    --transition: 0.3s ease;
-    --max-width: 900px;
-  }
-
-  *, *::before, *::after {
-    box-sizing: border-box;
-  }
-
-  body {
-    margin: 0; padding: 0;
-    font-family: 'Poppins', sans-serif;
-    background-color: var(--background);
-    color: var(--text-dark);
-    line-height: 1.6;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-
-  header {
-    background: var(--primary);
-    padding: 1.8rem 2.5rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: sticky;
-    top: 0;
-    z-index: 1100;
-    box-shadow: 0 4px 15px var(--shadow);
-  }
-
-  header h1 {
-    color: var(--white);
-    font-weight: 700;
-    font-size: 1.8rem;
-    letter-spacing: 2px;
-    cursor: pointer;
-    user-select: none;
-    transition: color var(--transition);
-  }
-
-  header h1:hover {
-    color: var(--secondary);
-  }
-
-  nav a {
-    color: var(--white);
-    font-weight: 600;
-    margin-left: 2.5rem;
-    font-size: 1.1rem;
-    text-decoration: none;
-    position: relative;
-    padding-bottom: 4px;
-    user-select: none;
-    transition: color var(--transition);
-  }
-
-  nav a::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 0%;
-    height: 3px;
-    background: var(--secondary);
-    border-radius: 2px;
-    transition: width var(--transition);
-  }
-
-  nav a:hover, nav a:focus {
-    color: var(--secondary);
-  }
-
-  nav a:hover::after, nav a:focus::after {
-    width: 100%;
-  }
-
-  main {
-    flex: 1;
-    max-width: var(--max-width);
-    margin: 4rem auto 6rem;
-    padding: 0 2rem;
-  }
-
-  main h2 {
-    font-size: 2.8rem;
-    font-weight: 700;
-    text-align: center;
-    color: var(--primary);
-    margin-bottom: 1rem;
-    user-select: none;
-    letter-spacing: 0.05em;
-  }
-
-  main .intro {
-    max-width: 650px;
-    margin: 0 auto 3.5rem;
-    font-size: 1.25rem;
-    color: var(--text-muted);
-    text-align: center;
-    line-height: 1.8;
-    font-weight: 400;
-  }
-
-  .accordion {
-    max-width: 700px;
-    margin: 0 auto;
-    background: var(--white);
-    border-radius: var(--border-radius);
-    box-shadow: 0 10px 40px var(--shadow);
-    overflow: hidden;
-  }
-
-  .accordion-item {
-    border-bottom: 1px solid #e1e5e2;
-  }
-
-  .accordion-item:last-child {
-    border-bottom: none;
-  }
-
-  .accordion-header {
-    background: var(--secondary);
-    cursor: pointer;
-    padding: 1.3rem 2rem;
-    font-weight: 600;
-    font-size: 1.15rem;
-    color: var(--primary);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    user-select: none;
-    transition: background-color var(--transition), color var(--transition);
-    border-radius: 0;
-  }
-
-  .accordion-header:hover, .accordion-header:focus {
-    background: var(--primary);
-    color: var(--white);
-    outline: none;
-  }
-
-  .accordion-header:focus-visible {
-    outline: 3px solid var(--secondary);
-    outline-offset: 3px;
-  }
-
-  .accordion-header::after {
-    content: '+';
-    font-weight: 900;
-    font-size: 1.6rem;
-    color: inherit;
-    transition: transform var(--transition);
-  }
-
-  .accordion-header.active::after {
-    content: '−';
-    transform: rotate(180deg);
-  }
-
-  .accordion-content {
-    max-height: 0;
-    overflow: hidden;
-    padding: 0 2rem;
-    font-size: 1rem;
-    color: var(--text-muted);
-    background: var(--white);
-    transition: max-height 0.35s ease, padding 0.35s ease;
-  }
-
-  .accordion-content.open {
-    padding: 1.5rem 2rem 2rem;
-    max-height: 500px;
-  }
-
-  footer {
-    background: var(--primary);
-    color: var(--white);
-    padding: 3rem 2rem 2rem;
-    text-align: center;
-    border-radius: var(--border-radius);
-    box-shadow: 0 -8px 18px var(--shadow);
-    user-select: none;
-    margin-top: auto;
-  }
-
-  footer > div {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 3rem;
-    max-width: var(--max-width);
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 2rem;
-  }
-
-  footer h4 {
-    font-weight: 700;
-    font-size: 1.3rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-bottom: 0.7rem;
-  }
-
-  footer ul {
-    list-style: none;
-    padding: 0;
-    line-height: 1.8;
-    font-size: 1rem;
-  }
-
-  footer ul li a {
-    color: var(--white);
-    text-decoration: underline;
-    cursor: pointer;
-    user-select: text;
-    transition: color var(--transition);
-  }
-
-  footer ul li a:hover,
-  footer ul li a:focus {
-    color: var(--secondary);
-    outline: none;
-  }
-
-  footer .copyright {
-    font-size: 0.9rem;
-    letter-spacing: 0.05em;
-    color: var(--secondary);
-  }
-
-  /* Responsive */
-  @media (max-width: 900px) {
-    main {
-      margin: 3rem 1.5rem 5rem;
-      padding: 0 1.5rem;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hilfe & FAQ – Locorent</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary-color: #2e7d32;
+      --secondary-color: #a5d6a7;
+      --background-color: #f1f8e9;
+      --dark-color: #1b5e20;
+      --highlight-color: #66bb6a;
+      --white: #fff;
+      --gray-dark: #333;
+      --border-radius: 12px;
+      --shadow-color: rgba(0, 0, 0, 0.1);
+      --transition-speed: 0.3s;
     }
-    header {
-      padding: 1.2rem 2rem;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
-    nav a {
-      margin-left: 1.5rem;
-      font-size: 1rem;
-    }
-    main h2 {
-      font-size: 2.2rem;
-    }
-  }
-
-  @media (max-width: 480px) {
-    header {
-      flex-direction: column;
-      align-items: flex-start;
-      padding: 1rem 1.5rem;
-    }
-    nav {
-      margin-top: 1rem;
-      width: 100%;
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--background-color);
+      color: var(--gray-dark);
+      min-height: 100vh;
       display: flex;
-      flex-wrap: wrap;
-      gap: 1.3rem;
+      flex-direction: column;
+      line-height: 1.6;
+    }
+    header {
+      background-color: var(--primary-color);
+      color: var(--white);
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      user-select: none;
+    }
+    header h1 {
+      font-weight: 700;
+      font-size: 1.5rem;
+      cursor: pointer;
     }
     nav a {
-      margin-left: 0;
-      font-size: 0.95rem;
+      color: var(--white);
+      margin-left: 1.5rem;
+      text-decoration: none;
+      font-weight: 600;
+      user-select: none;
+      transition: border-bottom var(--transition-speed) ease;
+    }
+    nav a:hover {
+      border-bottom: 2px solid var(--highlight-color);
     }
     main {
-      margin: 2rem 1rem 4rem;
-      padding: 0 1rem;
+      flex: 1;
+      max-width: 900px;
+      margin: 3rem auto;
+      padding: 0 1.5rem 3rem;
+      user-select: text;
+    }
+    h2 {
+      color: var(--primary-color);
+      font-weight: 700;
+      font-size: 2.4rem;
+      margin-bottom: 2rem;
+      user-select: none;
+      text-align: center;
+    }
+    .accordion {
+      border-radius: var(--border-radius);
+      box-shadow: 0 6px 16px var(--shadow-color);
+      background: var(--white);
+      overflow: hidden;
+    }
+    .accordion-item + .accordion-item {
+      border-top: 1px solid #ddd;
+    }
+    .accordion-header {
+      width: 100%;
+      background: var(--secondary-color);
+      border: none;
+      padding: 1.25rem 1.5rem;
+      text-align: left;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--dark-color);
+      cursor: pointer;
+      transition: background-color var(--transition-speed) ease;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .accordion-header:hover,
+    .accordion-header[aria-expanded="true"] {
+      background: var(--highlight-color);
+      color: var(--white);
+    }
+    .accordion-header::after {
+      content: "▼";
+      font-size: 0.75rem;
+      transition: transform var(--transition-speed) ease;
+      margin-left: 1rem;
+    }
+    .accordion-header[aria-expanded="true"]::after {
+      transform: rotate(-180deg);
+    }
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      padding: 0 1.5rem;
+      transition: max-height var(--transition-speed) ease, padding var(--transition-speed) ease;
+      font-size: 1rem;
+      color: var(--gray-dark);
+      user-select: text;
+    }
+    .accordion-content p {
+      padding: 1rem 0;
+    }
+    .accordion-content[aria-hidden="false"] {
+      max-height: 500px; /* genug Höhe für Inhalt */
+      padding-bottom: 1rem;
+    }
+    footer {
+      background-color: var(--primary-color);
+      color: var(--white);
+      padding: 2rem;
+      border-radius: var(--border-radius);
+      margin-top: auto;
+      user-select: none;
+      text-align: center;
     }
     footer > div {
-      flex-direction: column;
-      gap: 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 3rem;
+      margin-bottom: 1.5rem;
     }
     footer h4 {
-      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
     }
     footer ul {
-      font-size: 0.95rem;
+      list-style: none;
+      padding: 0;
+      line-height: 1.8;
     }
-  }
-</style>
+    footer ul li a {
+      color: var(--white);
+      text-decoration: underline;
+      cursor: pointer;
+      user-select: text;
+    }
+    footer ul li a:hover {
+      color: var(--highlight-color);
+    }
+    footer .copyright {
+      font-size: 0.9rem;
+    }
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      nav a {
+        margin-left: 0;
+        margin-top: 0.5rem;
+      }
+      main {
+        margin: 2rem 1rem 3rem;
+      }
+      footer > div {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
 </head>
 <body>
 
 <header>
-  <h1 tabindex="0" onclick="window.location.href='index.html'">Locorent</h1>
-  <nav aria-label="Hauptnavigation">
-    <a href="index.html" tabindex="0">Startseite</a>
-    <a href="so-funktionierts.html" tabindex="0">So funktioniert's</a>
-    <a href="angebote_neueste.html" tabindex="0">Angebote</a>
-    <a href="kontakt.html" tabindex="0">Kontakt</a>
+  <h1 onclick="window.location.href='index.html'">Locorent</h1>
+  <nav>
+    <a href="index.html">Startseite</a>
+    <a href="so-funktionierts.html">So funktioniert's</a>
+    <a href="angebote_neueste.html">Angebote</a>
+    <a href="kontakt.html">Kontakt</a>
   </nav>
 </header>
 
 <main>
   <h2>Hilfe & FAQ</h2>
-  <p class="intro" aria-live="polite" aria-atomic="true">
-    Hier findest du Antworten auf die häufigsten Fragen rund um Locorent – von der Registrierung, über die Nutzung bis zur Rückgabe.
-    Solltest du weitere Fragen haben, kontaktiere uns jederzeit gerne.
-  </p>
 
-  <section class="accordion" aria-label="Häufig gestellte Fragen">
+  <div class="accordion" role="list">
     <div class="accordion-item">
       <button class="accordion-header" aria-expanded="false" aria-controls="faq1" id="faq1-header">
-        Wie funktioniert Locorent?
+        Wie registriere ich mich bei Locorent?
       </button>
-      <div id="faq1" class="accordion-content" role="region" aria-labelledby="faq1-header">
-        <p>Locorent ist eine innovative Plattform, die Menschen ermöglicht, Gegenstände unkompliziert zu mieten und zu vermieten. So schonen wir gemeinsam Ressourcen und sparen Geld.</p>
+      <div id="faq1" class="accordion-content" role="region" aria-labelledby="faq1-header" aria-hidden="true">
+        <p>Die Registrierung ist einfach: Klicke auf „Registrieren“ oben rechts, gib deine Daten ein und bestätige deine E-Mail-Adresse. Danach kannst du sofort loslegen.</p>
       </div>
     </div>
 
@@ -332,38 +214,83 @@
       <button class="accordion-header" aria-expanded="false" aria-controls="faq2" id="faq2-header">
         Wie kann ich einen Artikel mieten?
       </button>
-      <div id="faq2" class="accordion-content" role="region" aria-labelledby="faq2-header">
-        <p>Suche einen Artikel über die Suchfunktion oder Kategorien, sende eine Mietanfrage direkt an den Vermieter über unsere sichere Chatfunktion und vereinbare die Details unkompliziert.</p>
+      <div id="faq2" class="accordion-content" role="region" aria-labelledby="faq2-header" aria-hidden="true">
+        <p>Suche deinen Wunschartikel oder stöbere durch die Kategorien. Um einen Artikel zu mieten, sende eine Mietanfrage direkt über unsere Chatfunktion und kläre alle Details unkompliziert mit dem Vermieter.</p>
       </div>
     </div>
 
     <div class="accordion-item">
       <button class="accordion-header" aria-expanded="false" aria-controls="faq3" id="faq3-header">
-        Was muss ich bei der Rückgabe beachten?
+        Was muss ich bei der Abholung und Rückgabe beachten?
       </button>
-      <div id="faq3" class="accordion-content" role="region" aria-labelledby="faq3-header">
-        <p>Der Artikel wird zum vereinbarten Termin und Ort zurückgegeben. Achte darauf, dass der Zustand dem bei der Übergabe entspricht, um eine faire Bewertung zu gewährleisten.</p>
+      <div id="faq3" class="accordion-content" role="region" aria-labelledby="faq3-header" aria-hidden="true">
+        <p>Die Abholung und Rückgabe erfolgt direkt zwischen dir und dem Vermieter, idealerweise über unsere Chatfunktion. Klärt die Uhrzeiten und den Zustand des Artikels vorab, um Missverständnisse zu vermeiden.</p>
       </div>
     </div>
 
     <div class="accordion-item">
       <button class="accordion-header" aria-expanded="false" aria-controls="faq4" id="faq4-header">
-        Was passiert, wenn ein Artikel beschädigt wird?
+        Wie funktioniert die Kommunikation mit dem Vermieter?
       </button>
-      <div id="faq4" class="accordion-content" role="region" aria-labelledby="faq4-header">
-        <p>Informiere den Vermieter umgehend über Schäden. Wir empfehlen, vor Mietbeginn die Bedingungen zur Haftung zu klären. Unser Support steht bei Problemen beratend zur Seite.</p>
+      <div id="faq4" class="accordion-content" role="region" aria-labelledby="faq4-header" aria-hidden="true">
+        <p>Alle Anfragen und Absprachen erfolgen bequem über unsere integrierte Chatfunktion. So bleibt die Kommunikation übersichtlich und nachvollziehbar.</p>
       </div>
     </div>
 
     <div class="accordion-item">
       <button class="accordion-header" aria-expanded="false" aria-controls="faq5" id="faq5-header">
-        Wie sicher sind die Zahlungen auf Locorent?
+        Wie kontaktiere ich den Support?
       </button>
-      <div id="faq5" class="accordion-content" role="region" aria-labelledby="faq5-header">
-        <p>Alle Transaktionen laufen über sichere, verschlüsselte Zahlungsdienstleister. Deine Daten und Zahlungen sind bei uns geschützt und vertrauenswürdig.</p>
+      <div id="faq5" class="accordion-content" role="region" aria-labelledby="faq5-header" aria-hidden="true">
+        <p>Du kannst uns jederzeit über das Kontaktformular auf unserer Website oder per E-Mail erreichen. Wir helfen dir gerne weiter.</p>
       </div>
     </div>
-  </section>
+
+    <div class="accordion-item">
+      <button class="accordion-header" aria-expanded="false" aria-controls="faq6" id="faq6-header">
+        Wie sicher sind meine Daten bei Locorent?
+      </button>
+      <div id="faq6" class="accordion-content" role="region" aria-labelledby="faq6-header" aria-hidden="true">
+        <p>Der Schutz deiner Daten hat für uns höchste Priorität. Wir nutzen moderne Verschlüsselungstechnologien und halten uns an strenge Datenschutzrichtlinien.</p>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" aria-expanded="false" aria-controls="faq7" id="faq7-header">
+        Welche Vorteile bietet Locorent gegenüber dem Kauf?
+      </button>
+      <div id="faq7" class="accordion-content" role="region" aria-labelledby="faq7-header" aria-hidden="true">
+        <p>Locorent ermöglicht dir, Dinge flexibel zu nutzen ohne langfristige Bindung. So sparst du Geld, schonst Ressourcen und kannst Artikel vor einem eventuellen Kauf ausprobieren.</p>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" aria-expanded="false" aria-controls="faq8" id="faq8-header">
+        Was kann ich tun, wenn es ein Problem mit einem Vermieter gibt?
+      </button>
+      <div id="faq8" class="accordion-content" role="region" aria-labelledby="faq8-header" aria-hidden="true">
+        <p>Kontaktiere bitte unseren Support über das Kontaktformular oder per E-Mail. Wir kümmern uns schnellstmöglich um dein Anliegen und vermitteln bei Bedarf zwischen den Parteien.</p>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" aria-expanded="false" aria-controls="faq9" id="faq9-header">
+        Gibt es eine Community-Richtlinie?
+      </button>
+      <div id="faq9" class="accordion-content" role="region" aria-labelledby="faq9-header" aria-hidden="true">
+        <p>Ja, unsere Community-Richtlinie sorgt für respektvolles und faires Miteinander. Verstöße können zu Sperrungen führen. Details findest du in unseren Nutzungsbedingungen.</p>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" aria-expanded="false" aria-controls="faq10" id="faq10-header">
+        Wie kann ich meinen Account löschen?
+      </button>
+      <div id="faq10" class="accordion-content" role="region" aria-labelledby="faq10-header" aria-hidden="true">
+        <p>Du kannst deinen Account jederzeit über die Profileinstellungen löschen. Falls du Hilfe benötigst, wende dich bitte an unseren Support.</p>
+      </div>
+    </div>
+  </div>
 </main>
 
 <footer>
@@ -374,14 +301,14 @@
         <li><a href="so-funktionierts.html">So funktioniert's</a></li>
         <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
         <li><a href="kategorien.html">Beliebte Kategorien</a></li>
-        <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
+        <li><a href="vermieter-tipps.html">Tipps &amp; Tricks für Vermieter</a></li>
         <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
       </ul>
     </div>
     <div>
       <h4>Wissenswertes</h4>
       <ul>
-        <li><a href="agb.html">AGB & Impressum</a></li>
+        <li><a href="agb.html">AGB &amp; Impressum</a></li>
         <li><a href="datenschutz.html">Datenschutz</a></li>
       </ul>
     </div>
@@ -401,19 +328,18 @@
 </footer>
 
 <script>
-  const headers = document.querySelectorAll('.accordion-header');
-  headers.forEach(header => {
+  const accordionHeaders = document.querySelectorAll('.accordion-header');
+
+  accordionHeaders.forEach(header => {
     header.addEventListener('click', () => {
       const expanded = header.getAttribute('aria-expanded') === 'true';
-      headers.forEach(h => {
+      accordionHeaders.forEach(h => {
         h.setAttribute('aria-expanded', 'false');
-        h.classList.remove('active');
-        document.getElementById(h.getAttribute('aria-controls')).classList.remove('open');
+        document.getElementById(h.getAttribute('aria-controls')).setAttribute('aria-hidden', 'true');
       });
       if (!expanded) {
         header.setAttribute('aria-expanded', 'true');
-        header.classList.add('active');
-        document.getElementById(header.getAttribute('aria-controls')).classList.add('open');
+        document.getElementById(header.getAttribute('aria-controls')).setAttribute('aria-hidden', 'false');
       }
     });
   });
@@ -421,3 +347,4 @@
 
 </body>
 </html>
+
