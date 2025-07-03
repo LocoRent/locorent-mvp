@@ -1,247 +1,562 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Vermieter Tipps – Locorent</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
-  <style>
-    :root {
-      --primary: #2e7d32;
-      --primary-light: #66bb6a;
-      --primary-dark: #1b5e20;
-      --background: #f1f8e9;
-      --white: #fff;
-      --text-dark: #0f2e13;
-      --text-muted: #466843;
-      --accent: #b9f6ca;
-      --highlight: #a5d6a7;
-      --radius: 18px;
-      --shadow-light: rgba(46, 125, 50, 0.08);
-      --shadow-strong: rgba(46, 125, 50, 0.25);
-      --transition: 0.4s ease;
-      --font-primary: 'Poppins', sans-serif;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>Beliebte Kategorien – Locorent</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root {
+    --primary-color: #2e7d32;
+    --secondary-color: #a5d6a7;
+    --background-color: #f1f8e9;
+    --dark-color: #1b5e20;
+    --highlight-color: #66bb6a;
+    --white: #fff;
+    --gray-light: #f7f7f7;
+    --gray-dark: #333;
+    --border-radius: 12px;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+  }
 
-    *, *::before, *::after {
-      box-sizing: border-box;
-    }
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
 
-    body {
-      margin: 0;
-      font-family: var(--font-primary);
-      background: linear-gradient(to bottom, #e8f5e9 0%, #ffffff 100%);
-      color: var(--text-dark);
-      scroll-behavior: smooth;
-    }
+  body {
+    margin: 0; padding: 0;
+    background: var(--background-color);
+    font-family: 'Poppins', sans-serif;
+    color: var(--gray-dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.6;
+  }
 
-    header {
-      background-color: var(--primary);
-      color: var(--white);
-      padding: 1.6rem 2rem;
-      display: flex;
-      justify-content: space-between;
+  header {
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+
+  header h1 {
+    font-size: 1.8rem;
+    user-select: none;
+  }
+
+  nav {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  nav a {
+    color: var(--white);
+    text-decoration: none;
+    margin-left: 1.5rem;
+    font-weight: 600;
+    font-size: 1rem;
+    position: relative;
+    padding-bottom: 3px;
+    transition: border-bottom 0.3s ease;
+    white-space: nowrap;
+  }
+
+  nav a:hover,
+  nav a:focus {
+    border-bottom: 2px solid var(--highlight-color);
+    outline: none;
+  }
+
+  main {
+    max-width: 1200px;
+    margin: 2rem auto 5rem;
+    padding: 0 2rem;
+    text-align: center;
+    flex-grow: 1;
+  }
+
+  .hero-section {
+    background: var(--white);
+    border-radius: var(--border-radius);
+    padding: 3rem 2rem 4rem;
+    color: var(--dark-color);
+    max-width: 900px;
+    margin: 0 auto 3rem;
+    box-shadow: 0 2px 10px var(--shadow-color);
+    font-weight: 400;
+    font-size: 1.15rem;
+    line-height: 1.7;
+  }
+
+  .hero-section h2 {
+    font-weight: 800;
+    font-size: 2.8rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-section p {
+    margin-bottom: 1.25rem;
+  }
+
+  .category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2.8rem;
+    justify-items: stretch;
+  }
+
+  .category-card {
+    background: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: 0 12px 28px rgba(46, 125, 50, 0.1);
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.4rem 1.4rem 3.6rem;
+    min-height: 520px;
+
+    transition: box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1), transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+  }
+
+  .category-card:hover,
+  .category-card:focus {
+    box-shadow: 0 28px 60px rgba(46, 125, 50, 0.3);
+    transform: translateY(-14px);
+    outline: none;
+  }
+
+  .category-image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 220px;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    margin-bottom: 1.8rem;
+    box-shadow: 0 10px 22px rgba(46, 125, 50, 0.1);
+    flex-shrink: 0;
+  }
+
+  .category-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    transition: transform 0.5s ease;
+    will-change: transform;
+    border-radius: var(--border-radius);
+    display: block;
+  }
+
+  .category-card:hover .category-image,
+  .category-card:focus .category-image {
+    transform: scale(1.08);
+  }
+
+  .image-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(46, 125, 50, 0.22);
+    mix-blend-mode: multiply;
+    pointer-events: none;
+    transition: background 0.5s ease;
+    border-radius: var(--border-radius);
+  }
+
+  .category-card:hover .image-overlay,
+  .category-card:focus .image-overlay {
+    background: rgba(46, 125, 50, 0.38);
+  }
+
+  .category-card h3 {
+    font-weight: 800;
+    font-size: 2rem;
+    color: var(--dark-color);
+    margin-bottom: 0.7rem;
+    line-height: 1.1;
+  }
+
+  .category-card p {
+    font-weight: 400;
+    color: #4f6d42;
+    font-size: 1.06rem;
+    line-height: 1.55;
+    margin-bottom: 2.4rem;
+    text-align: center;
+    padding: 0 0.5rem;
+  }
+
+  .category-cta {
+    position: absolute;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background: var(--highlight-color);
+    color: var(--white);
+    padding: 0.75rem 2.2rem;
+    font-weight: 600;
+    font-size: 1.15rem;
+    border-radius: 40px;
+    box-shadow: 0 7px 18px rgba(102, 187, 106, 0.48);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1), transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    user-select: none;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  .category-card:hover .category-cta,
+  .category-card:focus .category-cta {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .category-cta svg {
+    width: 26px;
+    height: 26px;
+    stroke: var(--white);
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  footer {
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 2rem 2rem 1rem;
+    border-radius: var(--border-radius);
+    margin: 2rem 0 0 0;
+    font-weight: 400;
+    user-select: none;
+    box-shadow: 0 8px 32px rgba(46, 125, 50, 0.22);
+    font-size: 0.92rem;
+    letter-spacing: 0.02em;
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+  }
+
+  footer > div {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+
+  footer > div > div {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  footer h4 {
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+    user-select: none;
+  }
+
+  footer ul {
+    list-style: none;
+    padding: 0;
+    line-height: 1.8;
+  }
+
+  footer ul li a {
+    color: var(--white);
+    text-decoration: underline;
+  }
+
+  footer ul li a:hover,
+  footer ul li a:focus {
+    color: var(--highlight-color);
+    outline: none;
+  }
+
+  footer small {
+    margin-top: 2rem;
+    display: block;
+    font-size: 0.9rem;
+    user-select: none;
+  }
+
+  @media (max-width: 900px) {
+    .category-card {
+      min-height: auto;
+    }
+    footer > div {
+      flex-direction: column;
       align-items: center;
-      font-weight: 700;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
     }
-
-    header h1 {
-      font-size: 1.8rem;
-    }
-
-    header nav a {
-      color: var(--white);
-      text-decoration: none;
-      margin-left: 2rem;
-      font-weight: 600;
-      font-size: 1rem;
-      position: relative;
-    }
-
-    header nav a::after {
-      content: '';
-      position: absolute;
-      left: 0; bottom: -4px;
-      width: 0;
-      height: 2px;
-      background-color: var(--accent);
-      transition: width 0.3s ease;
-    }
-
-    header nav a:hover::after {
+    footer > div > div {
+      min-width: unset;
       width: 100%;
-    }
-
-    main {
-      max-width: 1200px;
-      margin: 3rem auto;
-      padding: 0 2rem;
-    }
-
-    .hero {
-      background: linear-gradient(rgba(46, 125, 50, 0.8), rgba(46, 125, 50, 0.8)), url('https://images.pexels.com/photos/3730760/pexels-photo-3730760.jpeg') center/cover no-repeat;
-      color: white;
-      border-radius: var(--radius);
-      padding: 5rem 2rem;
-      text-align: center;
-      animation: fadeIn 1.5s ease;
-    }
-
-    .hero h2 {
-      font-size: 3.2rem;
-      margin-bottom: 1rem;
-      line-height: 1.3;
-    }
-
-    .hero p {
-      font-size: 1.3rem;
-      max-width: 700px;
-      margin: 0 auto;
-    }
-
-    .tips-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 3rem;
-      margin-top: 4rem;
-      animation: fadeInUp 1s ease-in-out;
-    }
-
-    .tip-card {
-      background: var(--white);
-      border-radius: var(--radius);
-      padding: 2.4rem;
-      box-shadow: 0 20px 50px var(--shadow-light);
-      position: relative;
-      overflow: hidden;
-      transition: transform 0.4s ease, box-shadow 0.4s ease;
-    }
-
-    .tip-card:hover {
-      transform: translateY(-8px) scale(1.02);
-      box-shadow: 0 24px 60px var(--shadow-strong);
-    }
-
-    .tip-card::before {
-      content: '✔';
-      position: absolute;
-      font-size: 5rem;
-      top: -20px;
-      right: 20px;
-      color: var(--highlight);
-      opacity: 0.15;
-    }
-
-    .tip-card h3 {
-      font-size: 1.7rem;
-      margin-bottom: 1rem;
-      color: var(--primary-dark);
-    }
-
-    .tip-card p {
-      color: var(--text-muted);
-      font-size: 1.05rem;
-      line-height: 1.6;
-    }
-
-    footer {
-      background-color: var(--primary);
-      color: var(--white);
-      text-align: center;
-      padding: 4rem 2rem;
-      margin: 0 2rem 3rem;
-      border-radius: var(--radius);
-      font-size: 0.95rem;
-    }
-
-    footer h4 {
-      font-size: 1.2rem;
-      margin-top: 1rem;
-      font-weight: 600;
-    }
-
-    footer ul {
-      list-style: none;
-      padding: 0;
-      margin: 1rem auto 0;
       max-width: 320px;
+      margin-bottom: 1.5rem;
     }
+  }
 
-    footer ul li {
-      margin: 0.4rem 0;
+  @media (max-width: 480px) {
+    header {
+      flex-direction: column;
+      gap: 1rem;
+      padding: 1rem;
     }
-
-    footer ul li a {
-      color: var(--white);
-      text-decoration: underline;
+    nav a {
+      margin-left: 0;
+      margin-right: 1rem;
+      white-space: normal;
     }
-
-    @keyframes fadeIn {
-      from {opacity: 0; transform: translateY(-20px);}
-      to {opacity: 1; transform: translateY(0);}
+    .category-grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
     }
-
-    @keyframes fadeInUp {
-      from {opacity: 0; transform: translateY(40px);}
-      to {opacity: 1; transform: translateY(0);}
+    footer {
+      margin: 1rem 0;
+      padding: 1.5rem;
+      font-size: 0.85rem;
     }
-  </style>
+  }
+</style>
 </head>
 <body>
   <header>
     <h1>Locorent</h1>
-    <nav>
-      <a href="index.html">Start</a>
-      <a href="login.html">Einloggen</a>
-    </nav>
+    <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
   </header>
 
   <main>
-    <section class="hero">
-      <h2>Deine Vermietung. Auf einem neuen Level.</h2>
-      <p>Unsere Profi-Tipps bringen dir mehr Buchungen, bessere Bewertungen und entspanntes Vermieten mit Stil.</p>
+    <section class="hero-section" aria-label="Introtext zu beliebten Kategorien">
+      <h2>Unsere beliebtesten Mietartikel und alles, was du darüber wissen musst</h2>
+      <p>Locorent ist die nachhaltige Mietplattform für Alltagsgegenstände und besondere Artikel aus deiner Region. Unsere Mission: Weniger besitzen, mehr erleben.</p>
+      <p>Mit Locorent kannst du einfach und schnell Mieter:in oder Vermieter:in werden. So handelst du nachhaltig, senkst deinen Konsum und CO₂-Verbrauch und sparst Geld – oder verdienst sogar welches.</p>
+      <p>Damit du ganz leicht einsteigen kannst, findest du hier eine Auswahl der beliebtesten Produktkategorien auf Locorent.</p>
     </section>
 
-    <section class="tips-grid">
-      <div class="tip-card">
-        <h3>1. Setze auf starke Bilder</h3>
-        <p>Verkaufe mit dem ersten Eindruck! Helle, scharfe und detailreiche Fotos machen den Unterschied.</p>
-      </div>
-      <div class="tip-card">
-        <h3>2. Qualität = Vertrauen</h3>
-        <p>Reinige, prüfe und pflege deine Artikel – so sicherst du dir wiederkehrende Mieter:innen.</p>
-      </div>
-      <div class="tip-card">
-        <h3>3. Bewertungen boosten</h3>
-        <p>Bitte nach jeder Miete aktiv um eine Bewertung – viele Sterne bringen mehr Sichtbarkeit.</p>
-      </div>
-      <div class="tip-card">
-        <h3>4. Flexible Übergaben</h3>
-        <p>Abends oder am Wochenende – je flexibler du bist, desto mehr Anfragen bekommst du.</p>
-      </div>
-      <div class="tip-card">
-        <h3>5. Antworte wie ein Profi</h3>
-        <p>Je schneller deine Antwort, desto höher deine Chancen auf die nächste Buchung!</p>
-      </div>
-    </section>
+    <div class="category-grid" aria-label="Beliebte Kategorien">
+      <a href="search_results.html?category=fahrzeuge" class="category-card" tabindex="0" aria-label="Fahrzeuge mieten">
+        <div class="category-image-wrapper">
+          <img src="https://images.pexels.com/photos/164634/pexels-photo-164634.jpeg" alt="Mercedes-Benz in einer Reihe geparkt" class="category-image" loading="lazy" />
+          <div class="image-overlay"></div>
+        </div>
+        <h3>Fahrzeuge</h3>
+        <p>PKWs, Motorräder und mehr – mobil bleiben leicht gemacht.</p>
+        <span class="category-cta" aria-hidden="true">Hier klicken →
+          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
+        </span>
+      </a>
+      <a href="search_results.html?category=transporter" class="category-card" tabindex="0" aria-label="Transporter mieten">
+        <div class="category-image-wrapper">
+          <img src="https://images.pexels.com/photos/3593923/pexels-photo-3593923.jpeg" alt="Transportfahrzeuge auf der Straße" class="category-image" loading="lazy" />
+          <div class="image-overlay"></div>
+        </div>
+        <h3>Transporter</h3>
+        <p>Für den großen Umzug oder den Wocheneinkauf.</p>
+        <span class="category-cta" aria-hidden="true">Hier klicken →
+          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
+        </span>
+      </a>
+      <a href="search_results.html?category=boote" class="category-card" tabindex="0" aria-label="Boote mieten">
+        <div class="category-image-wrapper">
+          <img src="https://images.pexels.com/photos/1295036/pexels-photo-1295036.jpeg" alt="Boot auf dem Wasser von oben" class="category-image" loading="lazy" />
+          <div class="image-overlay"></div>
+        </div>
+        <h3>Boote</h3>
+        <p>Für entspannte Tage auf dem Wasser.</p>
+        <span class="category-cta" aria-hidden="true">Hier klicken →
+          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
+        </span>
+      </a>
+      <a href="search_results.html?category=fahrrad" class="category-card" tabindex="0" aria-label="Fahrräder & E-Bikes mieten">
+        <div class="category-image-wrapper">
+          <img src="https://images.pexels.com/photos/2270328/pexels-photo-2270328.jpeg" alt="Mann sitzt neben seinem Fahrrad" class="category-image" loading="lazy" />
+          <div class="image-overlay"></div>
+        </div>
+        <h3>Fahrräder & E-Bikes</h3>
+        <p>Aktiv und nachhaltig unterwegs.</p>
+        <span class="category-cta" aria-hidden="true">Hier klicken →
+          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
+        </span>
+      </a>
+      <a href="search_results.html?category=werkzeuge" class="category-card" tabindex="0" aria-label="Werkzeuge mieten">
+        <div class="category-image-wrapper">
+          <img src="https://images.pexels.com/photos/909256/pexels-photo-909256.jpeg" alt="Werkzeuge hängen an einer Werkbank" class="category-image" loading="lazy" />
+          <div class="image-overlay"></div>
+        </div>
+        <h3>Werkzeuge</h3>
+        <p>Vom Bohrer bis zur Säge – alles für dein Projekt.</p>
+        <span class="category-cta" aria-hidden="true">Hier klicken →
+          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
+        </span>
+      </a>
+      <a href="search_results.html?category=maschinen" class="category-card" tabindex="0" aria-label="Maschinen & Baugeräte mieten">
+        <div class="category-image-wrapper">
+          <img src="https://images.pexels.com/photos/13039119/pexels-photo-13039119.jpeg" alt="Mann schneidet Metall mit Baugerät" class="category-image" loading="lazy" />
+          <div class="image-overlay"></div>
+        </div>
+        <h3>Maschinen & Baugeräte</h3>
+        <p>Professionelle Geräte für den Bau.</p>
+        <span class="category-cta" aria-hidden="true">Hier klicken →
+          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
+        </span>
+      </a>
+      <a href="search_results.html?category=party" class="category-card" tabindex="0" aria-label="Party & Event mieten">
+        <div class="category-image-wrapper">
+          <img src="https://images.pexels.com/photos/919734/pexels-photo-919734.jpeg" alt="Laptop und Audiomixer auf Party" class="category-image" loading="lazy" />
+          <div class="image-overlay"></div>
+        </div>
+        <h3>Party & Event</h3>
+        <p>Alles für die perfekte Feier.</p>
+        <span class="category-cta" aria-hidden="true">Hier klicken →
+          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
+        </span>
+      </a>
+      <a href="search_results.html?category=technik" class="category-card" tabindex="0" aria-label="Technik mieten">
+        <div class="category-image-wrapper">
+          <img src="https://images.pexels.com/photos/123335/pexels-photo-123335.jpeg" alt="Frau mit VR-Brille" class="category-image" loading="lazy" />
+          <div class="image-overlay"></div>
+        </div>
+        <h3>Technik</h3>
+        <p>Beamer, Kameras, Soundsysteme und mehr.</p>
+        <span class="category-cta" aria-hidden="true">Hier klicken →
+          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
+        </span>
+      </a>
+      <a href="search_results.html?category=haushalt" class="category-card" tabindex="0" aria-label="Haushalt & Möbel mieten">
+        <div class="category-image-wrapper">
+          <img src="https://images.pexels.com/photos/4107286/pexels-photo-4107286.jpeg" alt="Frau in heller Wohnung mit Reinigungsutensilien" class="category-image" loading="lazy" />
+          <div class="image-overlay"></div>
+        </div>
+        <h3>Haushalt & Möbel</h3>
+        <p>Alles, was dein Zuhause braucht.</p>
+        <span class="category-cta" aria-hidden="true">Hier klicken →
+          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
+        </span>
+      </a>
+      <a href="search_results.html?category=garten" class="category-card" tabindex="0" aria-label="Garten mieten">
+        <div class="category-image-wrapper">
+          <img src="https://images.pexels.com/photos/1301856/pexels-photo-1301856.jpeg" alt="Person arbeitet im Garten mit Schaufel" class="category-image" loading="lazy" />
+          <div class="image-overlay"></div>
+        </div>
+        <h3>Garten</h3>
+        <p>Geräte und Möbel für draußen.</p>
+        <span class="category-cta" aria-hidden="true">Hier klicken →
+          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
+        </span>
+      </a>
+      <a href="search_results.html?category=freizeit" class="category-card" tabindex="0" aria-label="Freizeit & Sport mieten">
+        <div class="category-image-wrapper">
+          <img src="https://images.pexels.com/photos/209977/pexels-photo-209977.jpeg" alt="Tennisball liegt auf Tennisschläger" class="category-image" loading="lazy" />
+          <div class="image-overlay"></div>
+        </div>
+        <h3>Freizeit & Sport</h3>
+        <p>Für Spaß und Bewegung in der Freizeit.</p>
+        <span class="category-cta" aria-hidden="true">Hier klicken →
+          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
+        </span>
+      </a>
+      <a href="search_results.html?category=baby" class="category-card" tabindex="0" aria-label="Baby & Kind mieten">
+        <div class="category-image-wrapper">
+          <img src="https://images.pexels.com/photos/32747057/pexels-photo-32747057.jpeg" alt="Kind spielt mit Bausteinen im Kinderzimmer" class="category-image" loading="lazy" />
+          <div class="image-overlay"></div>
+        </div>
+        <h3>Baby & Kind</h3>
+        <p>Alles für die Kleinsten – flexibel und günstig.</p>
+        <span class="category-cta" aria-hidden="true">Hier klicken →
+          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
+        </span>
+      </a>
+    </div>
   </main>
 
-  <footer>
-    © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
+  <footer role="contentinfo">
     <div>
-      <h4>Mieten & Vermieten</h4>
-      <ul>
-        <li><a href="so-funktionierts.html">So funktioniert's</a></li>
-        <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
-        <li><a href="kategorien.html">Beliebte Kategorien</a></li>
-        <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
-        <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
-      </ul>
+      <div>
+        <h4>Mieten & Vermieten</h4>
+        <ul>
+          <li><a href="so-funktionierts.html">So funktioniert's</a></li>
+          <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
+          <li><a href="kategorien.html">Beliebte Kategorien</a></li>
+          <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
+          <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Wissenswertes</h4>
+        <ul>
+          <li><a href="agb.html">AGB & Impressum</a></li>
+          <li><a href="datenschutz.html">Datenschutz</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Über uns</h4>
+        <ul>
+          <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
+          <li><a href="social-media.html">Folgen Sie uns</a></li>
+          <li><a href="mission.html">Unsere Mission</a></li>
+        </ul>
+      </div>
     </div>
+    <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
   </footer>
+
+  <script>
+    const supabase = window.supabase.createClient(
+      'https://flnjalgqtkqycsaymmbd.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+    );
+
+    let userSession = null;
+
+    async function init() {
+      const { data: { session } } = await supabase.auth.getSession();
+      userSession = session;
+      updateNav();
+    }
+
+    function updateNav() {
+      const nav = document.getElementById('nav-links');
+      nav.innerHTML = userSession?.user ? `
+        <a href="index.html">Start</a>
+        <a href="profil.html">Mein Profil</a>
+        <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+        <a href="favoriten.html">Meine Favoriten</a>
+        <a href="inserate.html">Meine Inserate</a>
+        <a href="#" onclick="logout(event)">Logout</a>
+      ` : `
+        <a href="index.html">Start</a>
+        <a href="login.html">Einloggen</a>
+      `;
+    }
+
+    async function logout(event) {
+      event.preventDefault();
+      await supabase.auth.signOut();
+      window.location.href = "login.html";
+    }
+
+    init();
+  </script>
 </body>
 </html>
