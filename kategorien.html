@@ -5,22 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Beliebte Kategorien – Locorent</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root {
-    --primary: #2e7d32;
-    --primary-light: #66bb6a;
-    --primary-dark: #1b5e20;
-    --background: #f1f8e9;
+    --primary-color: #2e7d32;
+    --secondary-color: #a5d6a7;
+    --background-color: #f1f8e9;
+    --dark-color: #1b5e20;
+    --highlight-color: #66bb6a;
     --white: #fff;
-    --text-dark: #133214;
-    --text-muted: #4f6d42;
-    --radius: 12px;
-    --shadow-light: rgba(46, 125, 50, 0.1);
-    --shadow-strong: rgba(46, 125, 50, 0.3);
-    --transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-    --max-width: 1200px;
-    --gap: 2.8rem;
-    --font-primary: 'Poppins', sans-serif;
+    --gray-light: #f7f7f7;
+    --gray-dark: #333;
+    --border-radius: 12px;
+    --shadow-color: rgba(0, 0, 0, 0.1);
   }
 
   *, *::before, *::after {
@@ -29,9 +26,9 @@
 
   body {
     margin: 0; padding: 0;
-    background: var(--background);
-    font-family: var(--font-primary);
-    color: var(--text-dark);
+    background: var(--background-color);
+    font-family: 'Poppins', sans-serif;
+    color: var(--gray-dark);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -39,14 +36,12 @@
   }
 
   header {
-    background-color: var(--primary);
+    background-color: var(--primary-color);
     color: var(--white);
     padding: 1.5rem 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-weight: 700;
-    letter-spacing: 0.06em;
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -57,54 +52,44 @@
     user-select: none;
   }
 
-  header nav a {
+  nav {
+    display: flex;
+    align-items: center;
+  }
+
+  nav a {
     color: var(--white);
     text-decoration: none;
-    margin-left: 2rem;
+    margin-left: 1.5rem;
     font-weight: 600;
     font-size: 1rem;
     position: relative;
     padding-bottom: 3px;
-    transition: color var(--transition);
+    transition: border-bottom 0.3s ease;
   }
 
-  header nav a::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0;
-    width: 0;
-    height: 3px;
-    background: var(--primary-light);
-    border-radius: 3px;
-    transition: width var(--transition);
-  }
-
-  header nav a:hover,
-  header nav a:focus-visible {
-    color: var(--primary-light);
+  nav a:hover,
+  nav a:focus {
+    border-bottom: 2px solid var(--highlight-color);
     outline: none;
   }
 
-  header nav a:hover::after,
-  header nav a:focus-visible::after {
-    width: 100%;
-  }
-
   main {
-    max-width: var(--max-width);
+    max-width: 1200px;
     margin: 2rem auto 5rem;
     padding: 0 2rem;
     text-align: center;
+    flex-grow: 1;
   }
 
   .hero-section {
     background: var(--white);
-    border-radius: var(--radius);
+    border-radius: var(--border-radius);
     padding: 3rem 2rem 4rem;
-    color: var(--primary-dark);
+    color: var(--dark-color);
     max-width: 900px;
     margin: 0 auto 3rem;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    box-shadow: 0 2px 10px var(--shadow-color);
     font-weight: 400;
     font-size: 1.15rem;
     line-height: 1.7;
@@ -123,14 +108,14 @@
   .category-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: var(--gap);
+    gap: 2.8rem;
     justify-items: stretch;
   }
 
   .category-card {
     background: var(--white);
-    border-radius: var(--radius);
-    box-shadow: 0 12px 28px var(--shadow-light);
+    border-radius: var(--border-radius);
+    box-shadow: 0 12px 28px rgba(46, 125, 50, 0.1);
     cursor: pointer;
     text-decoration: none;
     color: inherit;
@@ -141,13 +126,13 @@
     padding: 1.4rem 1.4rem 3.6rem;
     min-height: 520px;
 
-    transition: box-shadow var(--transition), transform var(--transition);
+    transition: box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1), transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
   }
 
   .category-card:hover,
-  .category-card:focus-visible {
-    box-shadow: 0 28px 60px var(--shadow-strong);
+  .category-card:focus {
+    box-shadow: 0 28px 60px rgba(46, 125, 50, 0.3);
     transform: translateY(-14px);
     outline: none;
   }
@@ -156,7 +141,7 @@
     position: relative;
     width: 100%;
     height: 220px;
-    border-radius: var(--radius);
+    border-radius: var(--border-radius);
     overflow: hidden;
     margin-bottom: 1.8rem;
     box-shadow: 0 10px 22px rgba(46, 125, 50, 0.1);
@@ -170,12 +155,12 @@
     object-position: center center;
     transition: transform 0.5s ease;
     will-change: transform;
-    border-radius: var(--radius);
+    border-radius: var(--border-radius);
     display: block;
   }
 
   .category-card:hover .category-image,
-  .category-card:focus-visible .category-image {
+  .category-card:focus .category-image {
     transform: scale(1.08);
   }
 
@@ -186,25 +171,25 @@
     mix-blend-mode: multiply;
     pointer-events: none;
     transition: background 0.5s ease;
-    border-radius: var(--radius);
+    border-radius: var(--border-radius);
   }
 
   .category-card:hover .image-overlay,
-  .category-card:focus-visible .image-overlay {
+  .category-card:focus .image-overlay {
     background: rgba(46, 125, 50, 0.38);
   }
 
   .category-card h3 {
     font-weight: 800;
     font-size: 2rem;
-    color: var(--primary-dark);
+    color: var(--dark-color);
     margin-bottom: 0.7rem;
     line-height: 1.1;
   }
 
   .category-card p {
     font-weight: 400;
-    color: var(--text-muted);
+    color: #4f6d42;
     font-size: 1.06rem;
     line-height: 1.55;
     margin-bottom: 2.4rem;
@@ -217,7 +202,7 @@
     bottom: 28px;
     left: 50%;
     transform: translateX(-50%) translateY(10px);
-    background: var(--primary-light);
+    background: var(--highlight-color);
     color: var(--white);
     padding: 0.75rem 2.2rem;
     font-weight: 600;
@@ -226,7 +211,7 @@
     box-shadow: 0 7px 18px rgba(102, 187, 106, 0.48);
     opacity: 0;
     pointer-events: none;
-    transition: opacity var(--transition), transform var(--transition);
+    transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1), transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     align-items: center;
     gap: 0.65rem;
@@ -235,7 +220,7 @@
   }
 
   .category-card:hover .category-cta,
-  .category-card:focus-visible .category-cta {
+  .category-card:focus .category-cta {
     opacity: 1;
     pointer-events: auto;
     transform: translateX(-50%) translateY(0);
@@ -251,49 +236,72 @@
   }
 
   footer {
-    background-color: var(--primary);
+    padding: 2rem;
+    background-color: var(--primary-color);
     color: var(--white);
+    border-radius: var(--border-radius);
+    margin: 2rem;
     text-align: center;
-    padding: 3rem 2rem;
-    border-radius: var(--radius);
-    margin: 0 2rem 3rem;
-    font-weight: 400;
-    user-select: none;
-    box-shadow: 0 8px 32px rgba(46, 125, 50, 0.22);
-    font-size: 0.92rem;
-    letter-spacing: 0.02em;
+  }
+
+  footer div {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  footer > div > div {
+    flex: 1;
+    min-width: 200px;
   }
 
   footer h4 {
-    margin: 2rem 0 1rem 0;
-    font-weight: 700;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
     font-size: 1.1rem;
-    letter-spacing: 0.04em;
+    user-select: none;
   }
 
   footer ul {
     list-style: none;
     padding: 0;
-    margin: 0 auto;
-    max-width: 320px;
     line-height: 1.8;
   }
 
   footer ul li a {
     color: var(--white);
     text-decoration: underline;
-    transition: color 0.3s ease;
   }
 
   footer ul li a:hover,
-  footer ul li a:focus-visible {
-    color: var(--primary-light);
+  footer ul li a:focus {
+    color: var(--highlight-color);
     outline: none;
+  }
+
+  footer small {
+    margin-top: 2rem;
+    display: block;
+    font-size: 0.9rem;
+    user-select: none;
   }
 
   @media (max-width: 900px) {
     .category-card {
       min-height: auto;
+    }
+    footer div {
+      flex-direction: column;
+      align-items: center;
+    }
+    footer > div > div {
+      min-width: unset;
+      width: 100%;
+      max-width: 320px;
+      margin-bottom: 1.5rem;
     }
   }
 
@@ -301,14 +309,15 @@
     header {
       flex-direction: column;
       gap: 1rem;
-      padding: 1rem 1rem;
+      padding: 1rem;
     }
     .category-grid {
       grid-template-columns: 1fr;
       gap: 2rem;
     }
     footer {
-      margin: 0 1rem 2.5rem;
+      margin: 1rem;
+      padding: 1.5rem;
       font-size: 0.85rem;
     }
   }
@@ -316,183 +325,221 @@
 </head>
 <body>
   <header>
-  <h1>Locorent</h1>
-  <nav>
-    <a href="index.html" tabindex="0">Start</a>
-    <a href="login.html" tabindex="0">Einloggen</a>
-  </nav>
-</header>
+    <h1>Locorent</h1>
+    <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
+  </header>
 
-<main>
-  <section class="hero-section" aria-label="Introtext zu beliebten Kategorien">
-    <h2>Unsere beliebtesten Mietartikel und alles, was du darüber wissen musst</h2>
-    <p>Locorent ist die nachhaltige Mietplattform für Alltagsgegenstände und besondere Artikel aus deiner Region. Unsere Mission: Weniger besitzen, mehr erleben.</p>
-    <p>Mit Locorent kannst du einfach und schnell Mieter:in oder Vermieter:in werden. So handelst du nachhaltig, senkst deinen Konsum und CO₂-Verbrauch und sparst Geld – oder verdienst sogar welches.</p>
-    <p>Damit du ganz leicht einsteigen kannst, findest du hier eine Auswahl der beliebtesten Produktkategorien auf Locorent.</p>
-  </section>
+  <main>
+    <section class="hero-section" aria-label="Introtext zu beliebten Kategorien">
+      <h2>Unsere beliebtesten Mietartikel und alles, was du darüber wissen musst</h2>
+      <p>Locorent ist die nachhaltige Mietplattform für Alltagsgegenstände und besondere Artikel aus deiner Region. Unsere Mission: Weniger besitzen, mehr erleben.</p>
+      <p>Mit Locorent kannst du einfach und schnell Mieter:in oder Vermieter:in werden. So handelst du nachhaltig, senkst deinen Konsum und CO₂-Verbrauch und sparst Geld – oder verdienst sogar welches.</p>
+      <p>Damit du ganz leicht einsteigen kannst, findest du hier eine Auswahl der beliebtesten Produktkategorien auf Locorent.</p>
+    </section>
 
-  <div class="category-grid" aria-label="Beliebte Kategorien">
-    <a href="search_results.html?category=fahrzeuge" class="category-card" tabindex="0" aria-label="Fahrzeuge mieten">
-  <div class="category-image-wrapper">
-    <img src="https://images.pexels.com/photos/164634/pexels-photo-164634.jpeg" alt="Mercedes-Benz in einer Reihe geparkt" class="category-image" loading="lazy" />
-    <div class="image-overlay"></div>
-  </div>
-  <h3>Fahrzeuge</h3>
-  <p>PKWs, Motorräder und mehr – mobil bleiben leicht gemacht.</p>
-  <span class="category-cta" aria-hidden="true">Hier klicken →
-    <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
-  </span>
-</a>
+    <div class="category-grid" aria-label="Beliebte Kategorien">
+      <a href="search_results.html?category=fahrzeuge" class="category-card" tabindex="0" aria-label="Fahrzeuge mieten">
+        <div class="category-image-wrapper">
+          <img src="https://images.pexels.com/photos/164634/pexels-photo-164634.jpeg" alt="Mercedes-Benz in einer Reihe geparkt" class="category-image" loading="lazy" />
+          <div class="image-overlay"></div>
+        </div>
+        <h3>Fahrzeuge</h3>
+        <p>PKWs, Motorräder und mehr – mobil bleiben leicht gemacht.</p>
+        <span class="category-cta" aria-hidden="true">Hier klicken →
+          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
+        </span>
+      </a>
+      <a href="search_results.html?category=transporter" class="category-card" tabindex="0" aria-label="Transporter mieten">
+        <div class="category-image-wrapper">
+          <img src="https://images.pexels.com/photos/3593923/pexels-photo-3593923.jpeg" alt="Transportfahrzeuge auf der Straße" class="category-image" loading="lazy" />
+          <div class="image-overlay"></div>
+        </div>
+        <h3>Transporter</h3>
+        <p>Für den großen Umzug oder den Wocheneinkauf.</p>
+        <span class="category-cta" aria-hidden="true">Hier klicken →
+          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
+        </span>
+      </a>
+      <a href="search_results.html?category=boote" class="category-card" tabindex="0" aria-label="Boote mieten">
+        <div class="category-image-wrapper">
+          <img src="https://images.pexels.com/photos/1295036/pexels-photo-1295036.jpeg" alt="Boot auf dem Wasser von oben" class="category-image" loading="lazy" />
+          <div class="image-overlay"></div>
+        </div>
+        <h3>Boote</h3>
+        <p>Für entspannte Tage auf dem Wasser.</p>
+        <span class="category-cta" aria-hidden="true">Hier klicken →
+          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
+        </span>
+      </a>
+      <a href="search_results.html?category=fahrrad" class="category-card" tabindex="0" aria-label="Fahrräder & E-Bikes mieten">
+        <div class="category-image-wrapper">
+          <img src="https://images.pexels.com/photos/2270328/pexels-photo-2270328.jpeg" alt="Mann sitzt neben seinem Fahrrad" class="category-image" loading="lazy" />
+          <div class="image-overlay"></div>
+        </div>
+        <h3>Fahrräder & E-Bikes</h3>
+        <p>Aktiv und nachhaltig unterwegs.</p>
+        <span class="category-cta" aria-hidden="true">Hier klicken →
+          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
+        </span>
+      </a>
+      <a href="search_results.html?category=werkzeuge" class="category-card" tabindex="0" aria-label="Werkzeuge mieten">
+        <div class="category-image-wrapper">
+          <img src="https://images.pexels.com/photos/909256/pexels-photo-909256.jpeg" alt="Werkzeuge hängen an einer Werkbank" class="category-image" loading="lazy" />
+          <div class="image-overlay"></div>
+        </div>
+        <h3>Werkzeuge</h3>
+        <p>Vom Bohrer bis zur Säge – alles für dein Projekt.</p>
+        <span class="category-cta" aria-hidden="true">Hier klicken →
+          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
+        </span>
+      </a>
+      <a href="search_results.html?category=maschinen" class="category-card" tabindex="0" aria-label="Maschinen & Baugeräte mieten">
+        <div class="category-image-wrapper">
+          <img src="https://images.pexels.com/photos/13039119/pexels-photo-13039119.jpeg" alt="Mann schneidet Metall mit Baugerät" class="category-image" loading="lazy" />
+          <div class="image-overlay"></div>
+        </div>
+        <h3>Maschinen & Baugeräte</h3>
+        <p>Professionelle Geräte für den Bau.</p>
+        <span class="category-cta" aria-hidden="true">Hier klicken →
+          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
+        </span>
+      </a>
+      <a href="search_results.html?category=party" class="category-card" tabindex="0" aria-label="Party & Event mieten">
+        <div class="category-image-wrapper">
+          <img src="https://images.pexels.com/photos/919734/pexels-photo-919734.jpeg" alt="Laptop und Audiomixer auf Party" class="category-image" loading="lazy" />
+          <div class="image-overlay"></div>
+        </div>
+        <h3>Party & Event</h3>
+        <p>Alles für die perfekte Feier.</p>
+        <span class="category-cta" aria-hidden="true">Hier klicken →
+          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
+        </span>
+      </a>
+      <a href="search_results.html?category=technik" class="category-card" tabindex="0" aria-label="Technik mieten">
+        <div class="category-image-wrapper">
+          <img src="https://images.pexels.com/photos/123335/pexels-photo-123335.jpeg" alt="Frau mit VR-Brille" class="category-image" loading="lazy" />
+          <div class="image-overlay"></div>
+        </div>
+        <h3>Technik</h3>
+        <p>Beamer, Kameras, Soundsysteme und mehr.</p>
+        <span class="category-cta" aria-hidden="true">Hier klicken →
+          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
+        </span>
+      </a>
+      <a href="search_results.html?category=haushalt" class="category-card" tabindex="0" aria-label="Haushalt & Möbel mieten">
+        <div class="category-image-wrapper">
+          <img src="https://images.pexels.com/photos/4107286/pexels-photo-4107286.jpeg" alt="Frau in heller Wohnung mit Reinigungsutensilien" class="category-image" loading="lazy" />
+          <div class="image-overlay"></div>
+        </div>
+        <h3>Haushalt & Möbel</h3>
+        <p>Alles, was dein Zuhause braucht.</p>
+        <span class="category-cta" aria-hidden="true">Hier klicken →
+          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
+        </span>
+      </a>
+      <a href="search_results.html?category=garten" class="category-card" tabindex="0" aria-label="Garten mieten">
+        <div class="category-image-wrapper">
+          <img src="https://images.pexels.com/photos/1301856/pexels-photo-1301856.jpeg" alt="Person arbeitet im Garten mit Schaufel" class="category-image" loading="lazy" />
+          <div class="image-overlay"></div>
+        </div>
+        <h3>Garten</h3>
+        <p>Geräte und Möbel für draußen.</p>
+        <span class="category-cta" aria-hidden="true">Hier klicken →
+          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
+        </span>
+      </a>
+      <a href="search_results.html?category=freizeit" class="category-card" tabindex="0" aria-label="Freizeit & Sport mieten">
+        <div class="category-image-wrapper">
+          <img src="https://images.pexels.com/photos/209977/pexels-photo-209977.jpeg" alt="Tennisball liegt auf Tennisschläger" class="category-image" loading="lazy" />
+          <div class="image-overlay"></div>
+        </div>
+        <h3>Freizeit & Sport</h3>
+        <p>Für Spaß und Bewegung in der Freizeit.</p>
+        <span class="category-cta" aria-hidden="true">Hier klicken →
+          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
+        </span>
+      </a>
+      <a href="search_results.html?category=baby" class="category-card" tabindex="0" aria-label="Baby & Kind mieten">
+        <div class="category-image-wrapper">
+          <img src="https://images.pexels.com/photos/32747057/pexels-photo-32747057.jpeg" alt="Kind spielt mit Bausteinen im Kinderzimmer" class="category-image" loading="lazy" />
+          <div class="image-overlay"></div>
+        </div>
+        <h3>Baby & Kind</h3>
+        <p>Alles für die Kleinsten – flexibel und günstig.</p>
+        <span class="category-cta" aria-hidden="true">Hier klicken →
+          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
+        </span>
+      </a>
+    </div>
+  </main>
 
-<a href="search_results.html?category=transporter" class="category-card" tabindex="0" aria-label="Transporter mieten">
-  <div class="category-image-wrapper">
-    <img src="https://images.pexels.com/photos/3593923/pexels-photo-3593923.jpeg" alt="Transportfahrzeuge auf der Straße" class="category-image" loading="lazy" />
-    <div class="image-overlay"></div>
-  </div>
-  <h3>Transporter</h3>
-  <p>Für den großen Umzug oder den Wocheneinkauf.</p>
-  <span class="category-cta" aria-hidden="true">Hier klicken →
-    <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
-  </span>
-</a>
+  <footer role="contentinfo">
+    <div>
+      <div>
+        <h4>Mieten & Vermieten</h4>
+        <ul>
+          <li><a href="so-funktionierts.html">So funktioniert's</a></li>
+          <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
+          <li><a href="kategorien.html">Beliebte Kategorien</a></li>
+          <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
+          <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Wissenswertes</h4>
+        <ul>
+          <li><a href="agb.html">AGB & Impressum</a></li>
+          <li><a href="datenschutz.html">Datenschutz</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Über uns</h4>
+        <ul>
+          <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
+          <li><a href="social-media.html">Folgen Sie uns</a></li>
+          <li><a href="mission.html">Unsere Mission</a></li>
+        </ul>
+      </div>
+    </div>
+    <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
+  </footer>
 
-<a href="search_results.html?category=boote" class="category-card" tabindex="0" aria-label="Boote mieten">
-  <div class="category-image-wrapper">
-    <img src="https://images.pexels.com/photos/1295036/pexels-photo-1295036.jpeg" alt="Boot auf dem Wasser von oben" class="category-image" loading="lazy" />
-    <div class="image-overlay"></div>
-  </div>
-  <h3>Boote</h3>
-  <p>Für entspannte Tage auf dem Wasser.</p>
-  <span class="category-cta" aria-hidden="true">Hier klicken →
-    <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
-  </span>
-</a>
+  <script>
+    const supabase = window.supabase.createClient(
+      'https://flnjalgqtkqycsaymmbd.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+    );
 
-<a href="search_results.html?category=fahrrad" class="category-card" tabindex="0" aria-label="Fahrräder & E-Bikes mieten">
-  <div class="category-image-wrapper">
-    <img src="https://images.pexels.com/photos/2270328/pexels-photo-2270328.jpeg" alt="Mann sitzt neben seinem Fahrrad" class="category-image" loading="lazy" />
-    <div class="image-overlay"></div>
-  </div>
-  <h3>Fahrräder & E-Bikes</h3>
-  <p>Aktiv und nachhaltig unterwegs.</p>
-  <span class="category-cta" aria-hidden="true">Hier klicken →
-    <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
-  </span>
-</a>
+    let userSession = null;
 
-<a href="search_results.html?category=werkzeuge" class="category-card" tabindex="0" aria-label="Werkzeuge mieten">
-  <div class="category-image-wrapper">
-    <img src="https://images.pexels.com/photos/909256/pexels-photo-909256.jpeg" alt="Werkzeuge hängen an einer Werkbank" class="category-image" loading="lazy" />
-    <div class="image-overlay"></div>
-  </div>
-  <h3>Werkzeuge</h3>
-  <p>Vom Bohrer bis zur Säge – alles für dein Projekt.</p>
-  <span class="category-cta" aria-hidden="true">Hier klicken →
-    <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
-  </span>
-</a>
+    async function init() {
+      const { data: { session } } = await supabase.auth.getSession();
+      userSession = session;
+      updateNav();
+    }
 
-<a href="search_results.html?category=maschinen" class="category-card" tabindex="0" aria-label="Maschinen & Baugeräte mieten">
-  <div class="category-image-wrapper">
-    <img src="https://images.pexels.com/photos/13039119/pexels-photo-13039119.jpeg" alt="Mann schneidet Metall mit Baugerät" class="category-image" loading="lazy" />
-    <div class="image-overlay"></div>
-  </div>
-  <h3>Maschinen & Baugeräte</h3>
-  <p>Professionelle Geräte für den Bau.</p>
-  <span class="category-cta" aria-hidden="true">Hier klicken →
-    <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
-  </span>
-</a>
+    function updateNav() {
+      const nav = document.getElementById('nav-links');
+      nav.innerHTML = userSession?.user ? `
+        <a href="index.html">Start</a>
+        <a href="profil.html">Mein Profil</a>
+        <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+        <a href="favoriten.html">Meine Favoriten</a>
+        <a href="inserate.html">Meine Inserate</a>
+        <a href="#" onclick="logout(event)">Logout</a>
+      ` : `
+        <a href="index.html">Start</a>
+        <a href="login.html">Einloggen</a>
+      `;
+    }
 
-<a href="search_results.html?category=party" class="category-card" tabindex="0" aria-label="Party & Event mieten">
-  <div class="category-image-wrapper">
-    <img src="https://images.pexels.com/photos/919734/pexels-photo-919734.jpeg" alt="Laptop und Audiomixer auf Party" class="category-image" loading="lazy" />
-    <div class="image-overlay"></div>
-  </div>
-  <h3>Party & Event</h3>
-  <p>Alles für die perfekte Feier.</p>
-  <span class="category-cta" aria-hidden="true">Hier klicken →
-    <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
-  </span>
-</a>
+    async function logout(event) {
+      event.preventDefault();
+      await supabase.auth.signOut();
+      window.location.href = "login.html";
+    }
 
-<a href="search_results.html?category=technik" class="category-card" tabindex="0" aria-label="Technik mieten">
-  <div class="category-image-wrapper">
-    <img src="https://images.pexels.com/photos/123335/pexels-photo-123335.jpeg" alt="Frau mit VR-Brille" class="category-image" loading="lazy" />
-    <div class="image-overlay"></div>
-  </div>
-  <h3>Technik</h3>
-  <p>Beamer, Kameras, Soundsysteme und mehr.</p>
-  <span class="category-cta" aria-hidden="true">Hier klicken →
-    <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
-  </span>
-</a>
-
-<a href="search_results.html?category=haushalt" class="category-card" tabindex="0" aria-label="Haushalt & Möbel mieten">
-  <div class="category-image-wrapper">
-    <img src="https://images.pexels.com/photos/4107286/pexels-photo-4107286.jpeg" alt="Frau in heller Wohnung mit Reinigungsutensilien" class="category-image" loading="lazy" />
-    <div class="image-overlay"></div>
-  </div>
-  <h3>Haushalt & Möbel</h3>
-  <p>Alles, was dein Zuhause braucht.</p>
-  <span class="category-cta" aria-hidden="true">Hier klicken →
-    <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
-  </span>
-</a>
-
-<a href="search_results.html?category=garten" class="category-card" tabindex="0" aria-label="Garten mieten">
-  <div class="category-image-wrapper">
-    <img src="https://images.pexels.com/photos/1301856/pexels-photo-1301856.jpeg" alt="Person arbeitet im Garten mit Schaufel" class="category-image" loading="lazy" />
-    <div class="image-overlay"></div>
-  </div>
-  <h3>Garten</h3>
-  <p>Geräte und Möbel für draußen.</p>
-  <span class="category-cta" aria-hidden="true">Hier klicken →
-    <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
-  </span>
-</a>
-
-<a href="search_results.html?category=freizeit" class="category-card" tabindex="0" aria-label="Freizeit & Sport mieten">
-  <div class="category-image-wrapper">
-    <img src="https://images.pexels.com/photos/209977/pexels-photo-209977.jpeg" alt="Tennisball liegt auf Tennisschläger" class="category-image" loading="lazy" />
-    <div class="image-overlay"></div>
-  </div>
-  <h3>Freizeit & Sport</h3>
-  <p>Für Spaß und Bewegung in der Freizeit.</p>
-  <span class="category-cta" aria-hidden="true">Hier klicken →
-    <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
-  </span>
-</a>
-
-<a href="search_results.html?category=baby" class="category-card" tabindex="0" aria-label="Baby & Kind mieten">
-  <div class="category-image-wrapper">
-    <img src="https://images.pexels.com/photos/32747057/pexels-photo-32747057.jpeg" alt="Kind spielt mit Bausteinen im Kinderzimmer" class="category-image" loading="lazy" />
-    <div class="image-overlay"></div>
-  </div>
-  <h3>Baby & Kind</h3>
-  <p>Alles für die Kleinsten – flexibel und günstig.</p>
-  <span class="category-cta" aria-hidden="true">Hier klicken →
-    <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
-  </span>
-</a>
-
-  </nav>
-
-</main>
-
-<footer>
-  © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
-  <div style="margin-top: 2rem;">
-    <h4>Mieten & Vermieten</h4>
-    <ul style="list-style:none; padding:0; max-width: 320px; margin: 0 auto; line-height: 1.8;">
-      <li><a href="so-funktionierts.html">So funktioniert's</a></li>
-      <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
-      <li><a href="kategorien.html">Beliebte Kategorien</a></li>
-      <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
-      <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
-    </ul>
-  </div>
-</footer>
-
+    init();
+  </script>
 </body>
 </html>
