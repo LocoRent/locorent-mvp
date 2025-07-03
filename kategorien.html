@@ -236,15 +236,19 @@
   }
 
   footer {
-    padding: 2rem;
     background-color: var(--primary-color);
     color: var(--white);
+    padding: 2rem 2rem 1rem;
     border-radius: var(--border-radius);
     margin: 2rem;
-    text-align: center;
+    font-weight: 400;
+    user-select: none;
+    box-shadow: 0 8px 32px rgba(46, 125, 50, 0.22);
+    font-size: 0.92rem;
+    letter-spacing: 0.02em;
   }
 
-  footer div {
+  footer > div {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -260,7 +264,7 @@
 
   footer h4 {
     margin-bottom: 0.5rem;
-    font-weight: 600;
+    font-weight: 700;
     font-size: 1.1rem;
     user-select: none;
   }
@@ -274,18 +278,19 @@
   footer ul li a {
     color: var(--white);
     text-decoration: underline;
+    transition: color 0.3s ease;
   }
 
   footer ul li a:hover,
-  footer ul li a:focus {
+  footer ul li a:focus-visible {
     color: var(--highlight-color);
     outline: none;
   }
 
   footer small {
-    margin-top: 2rem;
     display: block;
-    font-size: 0.9rem;
+    margin-top: 2rem;
+    text-align: center;
     user-select: none;
   }
 
@@ -293,7 +298,7 @@
     .category-card {
       min-height: auto;
     }
-    footer div {
+    footer > div {
       flex-direction: column;
       align-items: center;
     }
