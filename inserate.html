@@ -234,6 +234,18 @@
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
+
+    /* Hinweis-Meldung */
+    #profile-warning {
+      background-color: #fff3cd;
+      border: 1px solid #ffeeba;
+      color: #856404;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      font-weight: 600;
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -244,6 +256,8 @@
 </header>
 
 <main>
+  <div id="profile-warning" role="alert" aria-live="assertive"></div>
+
   <section class="form-container">
     <h2>Neues Inserat erstellen</h2>
     <div class="form-group">
@@ -333,6 +347,12 @@ let uploadedImageUrls = [];
 let selectedAddressData = null;
 let userSession = null;
 
+// Profil-Daten zwischenspeichern
+let userProfile = {
+  name: null,
+  city: null
+};
+
 async function updateNav() {
   const nav = document.getElementById('nav-links');
   nav.innerHTML = userSession?.user ?
@@ -408,6 +428,18 @@ document.getElementById("save-btn").addEventListener("click", async () => {
   const { data: sd } = await supabase.auth.getSession();
   const user = sd?.session?.user;
   if (!user) return alert("Nicht eingeloggt!");
+
+  // Prüfe, ob Name und Wohnort gesetzt sind
+  if (!userProfile.name || userProfile.name.trim().length < 2 || !userProfile.city || userProfile.city.trim().length < 2) {
+    const warningEl = document.getElementById('profile-warning');
+    warningEl.textContent = "Bitte fülle zuerst deine Profildaten (Name & Wohnort) aus, bevor du ein Inserat erstellen kannst.";
+    warningEl.style.display = "block";
+    // Optional: automatisch zur Profilseite weiterleiten
+    setTimeout(() => {
+      window.location.href = "profil.html";
+    }, 4000);
+    return;
+  }
 
   const title = document.getElementById('title-input').value.trim();
   const category = document.getElementById('category-input').value;
@@ -494,8 +526,28 @@ async function loadGallery() {
   updateNav();
 
   const user = userSession?.user;
+  if (!user) {
+    document.getElementById('gallery').innerHTML = 'Nicht eingeloggt.';
+    return;
+  }
+
+  // Profil-Daten laden und zwischenspeichern
+  const { data: profile, error: profileError } = await supabase
+    .from('profiles')
+    .select('name, city')
+    .eq('id', user.id)
+    .single();
+
+  if (profileError) {
+    console.error("Fehler beim Laden des Profils:", profileError);
+    userProfile.name = null;
+    userProfile.city = null;
+  } else {
+    userProfile.name = profile?.name || null;
+    userProfile.city = profile?.city || null;
+  }
+
   const gallery = document.getElementById('gallery');
-  if (!user) return gallery.innerHTML = 'Nicht eingeloggt.';
 
   const { data: listings, error } = await supabase
     .from('listings')
