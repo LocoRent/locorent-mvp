@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>Hilfe & FAQ – Locorent</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <style>
@@ -43,22 +43,34 @@
       top: 0;
       z-index: 1000;
       user-select: none;
+      flex-wrap: wrap;
     }
     header h1 {
       font-weight: 700;
       font-size: 1.5rem;
       cursor: pointer;
+      user-select: none;
+    }
+    nav {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
     }
     nav a {
       color: var(--white);
-      margin-left: 1.5rem;
       text-decoration: none;
       font-weight: 600;
       user-select: none;
       transition: border-bottom var(--transition-speed) ease;
+      white-space: nowrap;
+      padding-bottom: 3px;
+      position: relative;
     }
-    nav a:hover {
+    nav a:hover,
+    nav a:focus {
       border-bottom: 2px solid var(--highlight-color);
+      outline: none;
     }
     main {
       flex: 1;
@@ -132,48 +144,70 @@
     footer {
       background-color: var(--primary-color);
       color: var(--white);
-      padding: 2rem;
+      padding: 2rem 2rem 1rem;
       border-radius: var(--border-radius);
       margin-top: auto;
       user-select: none;
       text-align: center;
+      width: 100vw;
+      position: relative;
+      left: 50%;
+      right: 50%;
+      margin-left: -50vw;
+      margin-right: -50vw;
+      box-shadow: 0 8px 32px rgba(46, 125, 50, 0.22);
+      font-size: 0.92rem;
+      letter-spacing: 0.02em;
     }
     footer > div {
+      max-width: 1200px;
+      margin: 0 auto 1.5rem auto;
       display: flex;
       flex-wrap: wrap;
-      justify-content: center;
-      gap: 3rem;
-      margin-bottom: 1.5rem;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+    footer > div > div {
+      flex: 1;
+      min-width: 200px;
+      text-align: left;
     }
     footer h4 {
       font-weight: 600;
       margin-bottom: 0.5rem;
+      user-select: none;
     }
     footer ul {
       list-style: none;
       padding: 0;
       line-height: 1.8;
+      user-select: text;
     }
     footer ul li a {
       color: var(--white);
       text-decoration: underline;
       cursor: pointer;
-      user-select: text;
     }
-    footer ul li a:hover {
+    footer ul li a:hover,
+    footer ul li a:focus {
       color: var(--highlight-color);
+      outline: none;
     }
     footer .copyright {
       font-size: 0.9rem;
+      user-select: none;
     }
     @media (max-width: 768px) {
       header {
         flex-direction: column;
         align-items: flex-start;
       }
+      nav {
+        gap: 0.8rem;
+      }
       nav a {
         margin-left: 0;
-        margin-top: 0.5rem;
+        white-space: normal;
       }
       main {
         margin: 2rem 1rem 3rem;
@@ -181,6 +215,12 @@
       footer > div {
         flex-direction: column;
         align-items: center;
+        text-align: center;
+      }
+      footer > div > div {
+        width: 100%;
+        max-width: 320px;
+        margin-bottom: 1.5rem;
       }
     }
   </style>
@@ -293,7 +333,7 @@
   </div>
 </main>
 
-<footer>
+<footer role="contentinfo">
   <div>
     <div>
       <h4>Mieten &amp; Vermieten</h4>
@@ -347,4 +387,3 @@
 
 </body>
 </html>
-
