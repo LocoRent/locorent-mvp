@@ -6,6 +6,7 @@
 <title>Mein Profil – Locorent</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/zxcvbn@4.4.2/dist/zxcvbn.js"></script>
 <style>
   :root {
     --primary-color: #2e7d32;
@@ -86,48 +87,6 @@
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-  }
-
-  #profile-photo {
-    width: 160px;
-    height: 160px;
-    border-radius: 50%;
-    background: var(--gray-light) center/cover no-repeat;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    font-weight: 700;
-    font-size: 3rem;
-    color: var(--primary-color);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    user-select: none;
-    margin-bottom: 1rem;
-  }
-
-  #photo-upload-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    margin-bottom: 1.5rem;
-  }
-
-  #photo-upload {
-    cursor: pointer;
-  }
-
-  #upload-loader {
-    width: 40px;
-    height: 40px;
-    border: 4px solid #c8e6c9;
-    border-top-color: var(--primary-color);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    margin: 0 auto;
-    display: none;
-  }
-
-  @keyframes spin {
-    to { transform: rotate(360deg); }
   }
 
   #profile-section label {
@@ -260,11 +219,11 @@
   .review-item {
     background-color: var(--gray-light);
     border-radius: var(--border-radius);
-    padding: 1rem 1.2rem;
+    padding: 1rem 1.5rem;
     box-shadow: inset 0 0 10px rgba(0,0,0,0.06);
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
+    gap: 0.5rem;
     transition: box-shadow 0.3s ease, transform 0.25s ease;
   }
   .review-item:hover {
@@ -277,41 +236,62 @@
     gap: 1rem;
   }
   .review-avatar {
-    width: 44px;
-    height: 44px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
-    background: var(--white) center/cover no-repeat;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    background: #e0f5e9 center/cover no-repeat;
     font-weight: 700;
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     color: var(--primary-color);
     display: flex;
     align-items: center;
     justify-content: center;
-    user-select: none;
     flex-shrink: 0;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.12);
   }
   .reviewer-name {
     font-weight: 700;
+    font-size: 1.1rem;
     color: var(--primary-color);
-    font-size: 1.05rem;
   }
   .review-date {
-    font-size: 0.8rem;
-    color: #666;
     margin-left: auto;
+    font-size: 0.8rem;
+    color: #777;
+    font-style: italic;
   }
   .review-rating {
-    color: var(--highlight-color);
-    font-size: 1.3rem;
+    color: #fbc02d;
+    font-size: 1.4rem;
     user-select: none;
     margin-left: 1rem;
   }
   .review-text {
     font-size: 1rem;
-    line-height: 1.4;
+    line-height: 1.5;
     color: #444;
     white-space: pre-line;
+    border-left: 3px solid var(--primary-color);
+    padding-left: 1rem;
+    background: #e9f5e9;
+    border-radius: 6px;
+  }
+
+  /* Avatar Preview */
+  #avatar-preview {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: #ddd center/cover no-repeat;
+    margin-top: 0.5rem;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.15);
+    font-weight: 700;
+    font-size: 2.8rem;
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
   }
 
   footer {
@@ -379,11 +359,11 @@
 
 <main role="main" aria-label="Mein Profil">
   <section id="profile-section" aria-label="Profilinformationen">
-
-    <div id="photo-upload-wrapper">
-      <div id="profile-photo" aria-label="Profilfoto"></div>
-      <input type="file" id="photo-upload" accept="image/*" aria-label="Profilfoto hochladen" />
-      <div id="upload-loader" role="status" aria-live="polite" aria-label="Lade Profilbild"></div>
+    <div class="input-group" style="position:relative;">
+      <label for="avatar-upload">Profilbild</label>
+      <input type="file" id="avatar-upload" accept="image/*" />
+      <div id="avatar-preview"></div>
+      <div id="upload-status" style="font-size:0.85rem; margin-top:0.3rem;"></div>
     </div>
 
     <div class="input-group">
@@ -397,7 +377,7 @@
     <div class="input-group" style="position:relative;">
       <label for="city">Wohnort</label>
       <input id="city" type="text" autocomplete="address-level2" placeholder="Wohnort eingeben" aria-autocomplete="list" aria-controls="city-suggestions" aria-expanded="false" />
-      <div id="city-suggestions" role="listbox" aria-label="Wohnort Vorschläge"></div>
+      <div id="city-suggestions" role="listbox" aria-label="Wohnort Vorschläge" style="position:absolute; top:100%; left:0; right:0; background:white; border:1px solid #ccc; max-height: 180px; overflow-y:auto; z-index: 999;"></div>
     </div>
     <div class="input-group">
       <label for="bio">Über mich</label>
@@ -456,7 +436,6 @@
   </div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/zxcvbn@4.4.2/dist/zxcvbn.js"></script>
 <script>
   const supabase = window.supabase.createClient(
     'https://flnjalgqtkqycsaymmbd.supabase.co',
@@ -490,58 +469,6 @@
     window.location.href = "login.html";
   }
 
-  // Foto Upload Elemente
-  const photoUploadInput = document.getElementById('photo-upload');
-  const profilePhotoDiv = document.getElementById('profile-photo');
-  const uploadLoader = document.getElementById('upload-loader');
-
-  photoUploadInput.addEventListener('change', async () => {
-    const file = photoUploadInput.files[0];
-    if (!file) return;
-
-    if (file.size > 2 * 1024 * 1024) {
-      alert("Das Bild darf maximal 2 MB groß sein.");
-      photoUploadInput.value = '';
-      return;
-    }
-
-    uploadLoader.style.display = 'block';
-
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.user) throw new Error("Nicht eingeloggt.");
-
-      const userId = session.user.id;
-      const path = `avatars/${userId}-${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from('avatars')
-        .upload(path, file, { upsert: true });
-
-      if (uploadError) throw uploadError;
-
-      const { data: { publicUrl } } = supabase.storage.from('avatars').getPublicUrl(path);
-
-      // Profil aktualisieren mit neuem Avatar-URL
-      const { error: updateError } = await supabase
-        .from('profiles')
-        .upsert({ id: userId, avatar_url: publicUrl });
-
-      if (updateError) throw updateError;
-
-      // Foto im Profil aktualisieren
-      profilePhotoDiv.style.backgroundImage = `url(${publicUrl})`;
-      profilePhotoDiv.textContent = '';
-
-      alert("Profilbild erfolgreich hochgeladen!");
-      photoUploadInput.value = '';
-    } catch (err) {
-      alert("Fehler beim Hochladen des Bildes: " + err.message);
-    } finally {
-      uploadLoader.style.display = 'none';
-    }
-  });
-
   // Profil laden
   async function loadProfile() {
     const { data: { session } } = await supabase.auth.getSession();
@@ -552,38 +479,37 @@
     const user = session.user;
     document.getElementById('email').value = user.email;
 
-    try {
-      const { data: profile, error } = await supabase
-        .from('profiles')
-        .select('name, city, bio, avatar_url')
-        .eq('id', user.id)
-        .single();
+    // Profil-Daten holen
+    const { data: profile, error } = await supabase
+      .from('profiles')
+      .select('name, city, bio, avatar_url')
+      .eq('id', user.id)
+      .single();
 
-      if (error) throw error;
-
-      if (profile) {
-        document.getElementById('name').value = profile.name || '';
-        document.getElementById('city').value = profile.city || '';
-        document.getElementById('bio').value = profile.bio || '';
-
-        if (profile.avatar_url) {
-          profilePhotoDiv.style.backgroundImage = `url(${profile.avatar_url})`;
-          profilePhotoDiv.textContent = '';
-        } else {
-          profilePhotoDiv.style.backgroundImage = 'none';
-          profilePhotoDiv.textContent = profile.name ? profile.name.split(' ').map(n => n[0]).join('').toUpperCase() : '';
-        }
-      }
-    } catch {
+    if (error) {
       alert("Fehler beim Laden des Profils.");
       return;
+    }
+
+    if (profile) {
+      document.getElementById('name').value = profile.name || '';
+      document.getElementById('city').value = profile.city || '';
+      document.getElementById('bio').value = profile.bio || '';
+      if (profile.avatar_url) {
+        avatarPreview.style.backgroundImage = `url('${profile.avatar_url}')`;
+        avatarPreview.textContent = '';
+      } else {
+        avatarPreview.style.backgroundImage = '';
+        // Zeige Initialen wenn kein Bild
+        avatarPreview.textContent = profile.name ? profile.name.split(' ').map(n => n[0]).join('').toUpperCase() : '';
+      }
     }
 
     // Bewertungen laden
     loadReviews(user.id);
   }
 
-  // Bewertungen laden und anzeigen
+  // Bewertungen laden und anzeigen (max 5)
   async function loadReviews(userId) {
     const container = document.getElementById('reviews-list');
     container.innerHTML = '⏳ Lade Bewertungen…';
@@ -604,7 +530,7 @@
       <article class="review-item" tabindex="0" aria-label="Bewertung ${r.rating} von 5 Sternen von ${r.from_user?.name || 'Unbekannt'}">
         <div class="review-header">
           <div class="review-avatar" style="background-image: url('${r.from_user?.avatar_url || ''}');" aria-hidden="true">
-            ${!r.from_user?.avatar_url ? (r.from_user?.name ? r.from_user.name[0].toUpperCase() : '') : ''}
+            ${!r.from_user?.avatar_url ? (r.from_user?.name ? r.from_user.name.split(' ').map(n => n[0]).join('').toUpperCase() : '') : ''}
           </div>
           <div class="reviewer-name">${r.from_user?.name || 'Unbekannt'}</div>
           <div class="review-rating" aria-label="Bewertung: ${r.rating} von 5 Sternen">${createStarIcons(r.rating)}</div>
@@ -640,6 +566,7 @@
   const pwInput = document.getElementById('password');
   const pwStrengthBar = document.getElementById('pw-strength');
   const pwStrengthLabel = document.getElementById('strength-label');
+  const avatarPreview = document.getElementById('avatar-preview');
 
   if (pwInput) {
     pwInput.addEventListener('input', () => {
@@ -769,6 +696,11 @@
       return;
     }
 
+    // Avatar URL ist im State gespeichert (siehe Upload-Handler)
+    if (avatarUrl) {
+      updates.avatar_url = avatarUrl;
+    }
+
     const btn = document.getElementById('save-btn');
     btn.disabled = true;
     try {
@@ -781,6 +713,47 @@
       btn.disabled = false;
     }
   }
+
+  // Avatar Upload mit max 2MB und Ladeanzeige
+  const avatarUploadInput = document.getElementById('avatar-upload');
+  const uploadStatus = document.getElementById('upload-status');
+  let avatarUrl = null;
+
+  avatarUploadInput.addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      alert("Datei darf maximal 2 MB groß sein.");
+      return;
+    }
+
+    uploadStatus.textContent = "🔄 Upload läuft...";
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) {
+      alert("Nicht eingeloggt!");
+      uploadStatus.textContent = "";
+      return;
+    }
+    const userId = session.user.id;
+    const fileExt = file.name.split('.').pop();
+    const filePath = `avatars/${userId}-${Date.now()}.${fileExt}`;
+
+    // Upload im Storage
+    const { error: uploadError } = await supabase.storage.from('avatars').upload(filePath, file, { upsert: true });
+
+    if (uploadError) {
+      alert("Upload-Fehler: " + uploadError.message);
+      uploadStatus.textContent = "";
+      return;
+    }
+
+    // Public URL holen
+    const { data } = supabase.storage.from('avatars').getPublicUrl(filePath);
+    avatarUrl = data.publicUrl;
+    avatarPreview.style.backgroundImage = `url('${avatarUrl}')`;
+    avatarPreview.textContent = '';
+    uploadStatus.textContent = "✔️ Upload erfolgreich!";
+  });
 
   updateNav();
   loadProfile();
