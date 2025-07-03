@@ -4,38 +4,42 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Unsere Mission – Locorent</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary-color: #2e7d32;
-      --highlight-color: #66bb6a;
-      --background-color: #f1f8e9;
+      --green: #2e7d32;
+      --lightgreen: #a5d6a7;
+      --highlight: #66bb6a;
       --white: #fff;
-      --dark: #1b5e20;
       --gray: #444;
-      --shadow: rgba(0, 0, 0, 0.1);
+      --bg: #f1f8e9;
       --radius: 12px;
-      --max-width: 900px;
+      --shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: 'Poppins', sans-serif;
-      background: var(--background-color);
+      background-color: var(--bg);
       color: var(--gray);
       display: flex;
       flex-direction: column;
       min-height: 100vh;
+      line-height: 1.7;
+    }
+
+    header, footer {
+      background: var(--green);
+      color: var(--white);
+      padding: 1.5rem 2rem;
     }
 
     header {
-      background: var(--primary-color);
-      color: white;
-      padding: 1.5rem 2.5rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      box-shadow: var(--shadow);
       position: sticky;
       top: 0;
       z-index: 1000;
@@ -47,22 +51,22 @@
     }
 
     nav a {
-      color: white;
-      margin-left: 2rem;
-      font-weight: 600;
+      color: var(--white);
+      margin-left: 1.5rem;
       text-decoration: none;
+      font-weight: 600;
       position: relative;
     }
 
     nav a::after {
       content: "";
       position: absolute;
-      bottom: -5px;
+      bottom: -4px;
       left: 0;
-      width: 0;
-      height: 3px;
-      background: var(--highlight-color);
-      transition: width 0.3s;
+      width: 0%;
+      height: 2px;
+      background: var(--highlight);
+      transition: 0.3s;
     }
 
     nav a:hover::after {
@@ -70,10 +74,9 @@
     }
 
     main {
-      max-width: var(--max-width);
-      margin: 3rem auto 4rem;
+      max-width: 960px;
+      margin: 3rem auto;
       padding: 0 1.5rem;
-      flex: 1;
     }
 
     .hero {
@@ -82,49 +85,87 @@
     }
 
     .hero h2 {
-      font-size: 2.5rem;
-      color: var(--primary-color);
-      font-weight: 800;
+      font-size: 2.8rem;
+      color: var(--green);
       margin-bottom: 1rem;
     }
 
     .hero p {
       font-size: 1.2rem;
-      color: var(--gray);
-      line-height: 1.7;
+      color: #333;
     }
 
-    .section {
-      background: white;
-      border-radius: var(--radius);
-      box-shadow: 0 8px 24px var(--shadow);
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 2rem;
+      margin: 3rem 0;
+    }
+
+    .card {
+      background: var(--white);
       padding: 2rem;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      text-align: center;
+      transition: transform 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+    }
+
+    .card h3 {
+      color: var(--green);
+      margin-bottom: 0.7rem;
+    }
+
+    .card p {
+      font-size: 0.96rem;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 2rem;
+      margin: 3rem 0 1rem;
+      color: var(--green);
+    }
+
+    .timeline, .ethics {
+      background: var(--white);
+      padding: 2rem;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
       margin-bottom: 3rem;
     }
 
-    .section h3 {
-      color: var(--dark);
-      font-size: 1.6rem;
-      margin-bottom: 1rem;
-    }
-
-    .section p {
-      font-size: 1.05rem;
-      line-height: 1.7;
-    }
-
-    .facts-list {
+    .timeline ul, .ethics ul {
+      list-style: none;
+      padding: 0;
       margin-top: 1rem;
-      list-style: disc;
-      padding-left: 1.5rem;
+    }
+
+    .timeline li, .ethics li {
+      margin-bottom: 1rem;
+      padding-left: 1.2rem;
+      position: relative;
+    }
+
+    .timeline li::before, .ethics li::before {
+      content: "✔";
+      position: absolute;
+      left: 0;
+      color: var(--highlight);
+      font-weight: bold;
     }
 
     .cta {
-      text-align: center;
-      padding: 3rem 2rem;
-      background: var(--highlight-color);
-      color: white;
+      background: var(--highlight);
+      color: var(--white);
+      padding: 2.5rem 2rem;
       border-radius: var(--radius);
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
     }
 
     .cta h3 {
@@ -134,59 +175,56 @@
 
     .cta a {
       display: inline-block;
-      background: white;
-      color: var(--primary-color);
-      font-weight: 600;
-      font-size: 1.1rem;
-      padding: 0.8rem 2rem;
+      background: var(--white);
+      color: var(--green);
+      padding: 0.8rem 1.8rem;
       border-radius: 30px;
       text-decoration: none;
-      transition: background 0.3s;
-    }
-
-    .cta a:hover {
-      background: #e0f2f1;
-    }
-
-    footer {
-      background: var(--primary-color);
-      color: white;
-      padding: 2.5rem 2rem 1.5rem;
-      text-align: center;
+      font-weight: bold;
+      margin-top: 1rem;
     }
 
     footer > div {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 3rem;
-      margin-bottom: 1.5rem;
+      gap: 2rem;
+      margin-top: 2rem;
     }
 
     footer h4 {
-      margin-bottom: 0.5rem;
+      font-size: 1rem;
       text-transform: uppercase;
+      margin-bottom: 0.5rem;
     }
 
     footer ul {
       list-style: none;
+      line-height: 1.6;
       padding: 0;
-      line-height: 1.8;
     }
 
     footer ul li a {
-      color: white;
+      color: var(--white);
       text-decoration: underline;
     }
 
     .copyright {
-      color: #a5d6a7;
+      text-align: center;
       font-size: 0.9rem;
+      margin-top: 1.5rem;
+      color: var(--lightgreen);
     }
 
     @media (max-width: 600px) {
-      nav { flex-wrap: wrap; gap: 1rem; }
-      nav a { margin-left: 0; }
+      header, footer {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      nav {
+        margin-top: 1rem;
+      }
     }
   </style>
 </head>
@@ -205,32 +243,51 @@
 <main>
   <section class="hero">
     <h2>Unsere Mission</h2>
-    <p>Wir setzen uns für eine faire, nachhaltige und gemeinschaftliche Zukunft ein – mit weniger Besitz und mehr Nutzen.</p>
+    <p>Wir bauen eine Welt mit weniger Besitz, mehr Nutzung – nachhaltig, flexibel und fair.</p>
   </section>
 
-  <section class="section">
-    <h3>Warum Teilen wichtig ist</h3>
-    <p>Studien zeigen, dass gemeinschaftliches Nutzen Ressourcen spart und soziale Bindungen stärkt:</p>
-    <ul class="facts-list">
-      <li>Über 60 % der Deutschen nutzen bereits Sharing-Dienste (Statista, 2023)</li>
-      <li>Ein geteiltes Elektrogerät kann bis zu 95 % der Ressourcen im Vergleich zum Neukauf einsparen (Umweltbundesamt)</li>
-      <li>Sharing trägt laut Eurostat signifikant zur Reduzierung von CO₂ bei – besonders im städtischen Raum</li>
+  <section class="grid">
+    <div class="card">
+      <h3>🌍 Nachhaltigkeit</h3>
+      <p>Weniger Konsum = weniger CO₂. Studien zeigen: gemeinsames Nutzen spart im Schnitt 82 % an Emissionen.</p>
+    </div>
+    <div class="card">
+      <h3>📦 Ressourcen schonen</h3>
+      <p>Ein gemeinsam genutzter Gegenstand ersetzt bis zu 8 Neukäufe – laut Umweltbundesamt.</p>
+    </div>
+    <div class="card">
+      <h3>🤝 Gemeinschaft</h3>
+      <p>Locorent verbindet Nachbar:innen und schafft Vertrauen in lokalen Netzwerken.</p>
+    </div>
+    <div class="card">
+      <h3>📈 Globaler Trend</h3>
+      <p>Die Sharing Economy wächst jährlich um 30 % weltweit. Quelle: PwC Global Sharing Report.</p>
+    </div>
+  </section>
+
+  <section class="timeline">
+    <h3 class="section-title">Unsere Reise</h3>
+    <ul>
+      <li>2023 – Idee & Entwicklung</li>
+      <li>2024 – Start mit 500+ Nutzer:innen</li>
+      <li>2025 – Lokale Partnerschaften & mobile App</li>
+      <li>2026 – Fokus: CO₂-Einsparungen transparent machen</li>
     </ul>
   </section>
 
-  <section class="section">
-    <h3>Unsere Vision</h3>
-    <p>Wir glauben an eine Welt, in der Besitz nicht mehr notwendig ist, um Zugang zu Dingen zu haben. Locorent ermöglicht genau das – mit Sicherheit, Vertrauen und regionalem Fokus.</p>
-  </section>
-
-  <section class="section">
-    <h3>Was wir konkret tun</h3>
-    <p>Locorent verbindet Menschen in der Region, die Dinge verleihen oder mieten wollen – schnell, einfach und rechtlich abgesichert. So vermeiden wir Müll, sparen Geld und fördern Nachbarschaftshilfe.</p>
+  <section class="ethics">
+    <h3 class="section-title">Unser Ethik-Kodex</h3>
+    <ul>
+      <li>Respekt & Fairness in jeder Interaktion</li>
+      <li>Datenschutz & Transparenz an erster Stelle</li>
+      <li>Gemeinwohl vor Wachstum</li>
+      <li>Technologie soll Menschen verbinden</li>
+    </ul>
   </section>
 
   <section class="cta">
-    <h3>Mach mit bei Locorent</h3>
-    <p>Jetzt registrieren und Teil der Bewegung werden – für weniger Besitz und mehr Miteinander.</p>
+    <h3>Mach mit & verändere dein Konsumverhalten</h3>
+    <p>Starte jetzt kostenlos mit Locorent und sei Teil einer nachhaltigen Bewegung.</p>
     <a href="registrieren.html">Jetzt registrieren</a>
   </section>
 </main>
@@ -241,7 +298,7 @@
       <h4>Mieten & Vermieten</h4>
       <ul>
         <li><a href="so-funktionierts.html">So funktioniert's</a></li>
-        <li><a href="vermieter-werden.html">Werde Vermieter</a></li>
+        <li><a href="vermieter-werden.html">Werde Vermieter:in</a></li>
         <li><a href="kategorien.html">Kategorien</a></li>
       </ul>
     </div>
@@ -253,17 +310,18 @@
       </ul>
     </div>
     <div>
-      <h4>Über uns</h4>
+      <h4>Locorent</h4>
       <ul>
         <li><a href="kontakt.html">Kontakt</a></li>
-        <li><a href="mission.html">Unsere Mission</a></li>
         <li><a href="nachhaltigkeit.html">Nachhaltigkeit</a></li>
+        <li><a href="social-media.html">Folge uns</a></li>
       </ul>
     </div>
   </div>
-  <div class="copyright">© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</div>
+  <div class="copyright">
+    © 2025 Locorent – Gemeinsam teilen. Nachhaltig leben.
+  </div>
 </footer>
 
 </body>
 </html>
-
