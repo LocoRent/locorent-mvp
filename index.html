@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Locorent – Alles Mieten</title>
+  <title>Locorent – Nachhaltig mieten in Deutschland</title>
+  <meta name="description" content="Finde und vermiete nachhaltige Mietobjekte in deiner Nähe bei Locorent." />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
@@ -52,8 +53,10 @@
       font-weight: 600;
     }
 
-    nav a:hover {
+    nav a:hover,
+    nav a:focus {
       border-bottom: 2px solid var(--highlight-color);
+      outline: none;
     }
 
     .hero {
@@ -71,7 +74,7 @@
       margin-bottom: 1rem;
     }
 
-    .search-row {
+    form.search-form {
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
@@ -80,9 +83,9 @@
       position: relative;
     }
 
-    .search-row input,
-    .search-row select,
-    .search-row button {
+    form.search-form input,
+    form.search-form select,
+    form.search-form button {
       padding: 1rem;
       border: 1px solid #ccc;
       border-radius: 8px;
@@ -91,7 +94,7 @@
       min-width: 200px;
     }
 
-    .search-row button {
+    form.search-form button {
       background-color: var(--highlight-color);
       color: var(--white);
       font-weight: 600;
@@ -99,8 +102,10 @@
       transition: background-color 0.3s ease;
     }
 
-    .search-row button:hover {
+    form.search-form button:hover,
+    form.search-form button:focus {
       background-color: var(--secondary-color);
+      outline: none;
     }
 
     #suggestions {
@@ -123,8 +128,10 @@
       cursor: pointer;
     }
 
-    #suggestions div:hover {
+    #suggestions div:hover,
+    #suggestions div:focus {
       background-color: #e0f2f1;
+      outline: none;
     }
 
     .category-grid {
@@ -143,9 +150,11 @@
       transition: transform 0.2s ease;
     }
 
-    .result-card:hover {
+    .result-card:hover,
+    .result-card:focus-within {
       transform: translateY(-3px);
       box-shadow: 0 4px 16px var(--shadow-color);
+      outline: none;
     }
 
     .result-card img {
@@ -169,8 +178,10 @@
       transition: background-color 0.3s ease;
     }
 
-    .result-card button:hover {
+    .result-card button:hover,
+    .result-card button:focus {
       background-color: var(--highlight-color);
+      outline: none;
     }
 
     .more-link {
@@ -199,10 +210,12 @@
       transition: transform 0.3s ease;
     }
 
-    .btn-more:hover {
+    .btn-more:hover,
+    .btn-more:focus {
       background-color: var(--primary-color);
       color: white;
       text-decoration: none;
+      outline: none;
     }
 
     .btn-more:hover span {
@@ -218,13 +231,18 @@
       margin-top: 2rem;
     }
 
+    footer a {
+      color: white;
+      text-decoration: underline;
+    }
+
     @media (max-width: 768px) {
       header {
         flex-direction: column;
         align-items: flex-start;
       }
 
-      .search-row {
+      form.search-form {
         flex-direction: column;
         gap: 0.5rem;
       }
@@ -243,14 +261,14 @@
 <body>
   <header>
     <h1>Locorent</h1>
-    <nav id="nav-links"></nav>
+    <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
   </header>
 
-  <section class="hero">
+  <section class="hero" aria-label="Suchbereich">
     <h2>Finde das perfekte Mietobjekt</h2>
-    <div class="search-row">
-      <input type="text" placeholder="Was suchst du?" id="search-input" />
-      <select id="category-select">
+    <form class="search-form" onsubmit="event.preventDefault(); search();" role="search" aria-label="Suchformular">
+      <input type="text" placeholder="Was suchst du?" id="search-input" aria-label="Suchbegriff eingeben" />
+      <select id="category-select" aria-label="Kategorie auswählen">
         <option value="">Alle Kategorien</option>
         <option value="fahrzeuge">Fahrzeuge</option>
         <option value="transporter">Transporter</option>
@@ -266,10 +284,10 @@
         <option value="baby">Baby & Kind</option>
       </select>
       <div style="position: relative; flex: 1; min-width: 200px;">
-        <input type="text" placeholder="Ort" id="location-input" autocomplete="off" />
-        <div id="suggestions"></div>
+        <input type="text" placeholder="Ort" id="location-input" autocomplete="off" aria-label="Ort eingeben" />
+        <div id="suggestions" role="listbox" aria-label="Ortsvorschläge"></div>
       </div>
-      <select id="radius-select">
+      <select id="radius-select" aria-label="Suchradius auswählen">
         <option value="">Ganzer Ort</option>
         <option value="5">5 km</option>
         <option value="10">10 km</option>
@@ -279,62 +297,58 @@
         <option value="100">100 km</option>
         <option value="200">200 km</option>
       </select>
-      <button onclick="search()">Suchen</button>
-    </div>
+      <button type="submit">Suchen</button>
+    </form>
   </section>
 
-  <section>
+  <section aria-label="Neueste Angebote">
     <h2>Neueste Angebote</h2>
-    <div id="newest-offers" class="category-grid"><p>⏳ Lade Angebote…</p></div>
-<div class="more-link">
-  <a href="angebote_neueste.html" class="btn-more">MEHR <span>→</span></a>
-</div>
-
+    <div id="newest-offers" class="category-grid" aria-live="polite" aria-busy="true"><p>⏳ Lade Angebote…</p></div>
+    <div class="more-link">
+      <a href="angebote_neueste.html" class="btn-more">MEHR <span>→</span></a>
+    </div>
   </section>
 
-  <section>
+  <section aria-label="Beliebte Angebote">
     <h2>Beliebte Angebote</h2>
-    <div id="popular-offers" class="category-grid"><p>⏳ Lade Angebote…</p></div>
-<div class="more-link">
-  <a href="angebote_beliebte.html" class="btn-more">MEHR <span>→</span></a>
-</div>
-
+    <div id="popular-offers" class="category-grid" aria-live="polite" aria-busy="true"><p>⏳ Lade Angebote…</p></div>
+    <div class="more-link">
+      <a href="angebote_beliebte.html" class="btn-more">MEHR <span>→</span></a>
+    </div>
   </section>
 
-<footer>
-  <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2rem;">
-    <div style="flex: 1; min-width: 200px;">
-      <h4 style="margin-bottom: 0.5rem;">Mieten & Vermieten</h4>
-      <ul style="list-style: none; padding: 0; line-height: 1.8;">
-        <li><a href="so-funktionierts.html" style="color: white; text-decoration: underline;">So funktioniert's</a></li>
-        <li><a href="vermieter-werden.html" style="color: white; text-decoration: underline;">Werde zum Vermieter</a></li>
-        <li><a href="kategorien.html" style="color: white; text-decoration: underline;">Beliebte Kategorien</a></li>
-        <li><a href="vermieter-tipps.html" style="color: white; text-decoration: underline;">Tipps & Tricks für Vermieter</a></li>
-        <li><a href="hilfe-faq.html" style="color: white; text-decoration: underline;">Hilfe und FAQ</a></li>
-      </ul>
+  <footer role="contentinfo">
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2rem;">
+      <div style="flex: 1; min-width: 200px;">
+        <h4 style="margin-bottom: 0.5rem;">Mieten & Vermieten</h4>
+        <ul style="list-style: none; padding: 0; line-height: 1.8;">
+          <li><a href="so-funktionierts.html">So funktioniert's</a></li>
+          <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
+          <li><a href="kategorien.html">Beliebte Kategorien</a></li>
+          <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
+          <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
+        </ul>
+      </div>
+      <div style="flex: 1; min-width: 200px;">
+        <h4 style="margin-bottom: 0.5rem;">Wissenswertes</h4>
+        <ul style="list-style: none; padding: 0; line-height: 1.8;">
+          <li><a href="agb.html">AGB & Impressum</a></li>
+          <li><a href="datenschutz.html">Datenschutz</a></li>
+        </ul>
+      </div>
+      <div style="flex: 1; min-width: 200px;">
+        <h4 style="margin-bottom: 0.5rem;">Über uns</h4>
+        <ul style="list-style: none; padding: 0; line-height: 1.8;">
+          <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
+          <li><a href="social-media.html">Folgen Sie uns</a></li>
+          <li><a href="mission.html">Unsere Mission</a></li>
+        </ul>
+      </div>
     </div>
-    <div style="flex: 1; min-width: 200px;">
-      <h4 style="margin-bottom: 0.5rem;">Wissenswertes</h4>
-      <ul style="list-style: none; padding: 0; line-height: 1.8;">
-        <li><a href="agb.html" style="color: white; text-decoration: underline;">AGB & Impressum</a></li>
-        <li><a href="datenschutz.html" style="color: white; text-decoration: underline;">Datenschutz</a></li>
-      </ul>
+    <div style="margin-top: 2rem; text-align: center; font-size: 0.9rem;">
+      © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
     </div>
-    <div style="flex: 1; min-width: 200px;">
-      <h4 style="margin-bottom: 0.5rem;">Über uns</h4>
-      <ul style="list-style: none; padding: 0; line-height: 1.8;">
-        <li><a href="kontakt.html" style="color: white; text-decoration: underline;">Kontaktieren Sie uns</a></li>
-        <li><a href="social-media.html" style="color: white; text-decoration: underline;">Folgen Sie uns</a></li>
-        <li><a href="mission.html" style="color: white; text-decoration: underline;">Unsere Mission</a></li>
-        <li><a href="nachhaltigkeit.html" style="color: white; text-decoration: underline;">Nachhaltigkeit</a></li>
-      </ul>
-    </div>
-  </div>
-  <div style="margin-top: 2rem; text-align: center; font-size: 0.9rem;">
-    © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
-  </div>
-</footer>
-
+  </footer>
 
   <script>
     const supabase = window.supabase.createClient(
@@ -349,8 +363,8 @@
       const { data: { session } } = await supabase.auth.getSession();
       userSession = session;
       updateNav();
-      loadNewestOffers();
-      loadPopularOffers();
+      await loadNewestOffers();
+      await loadPopularOffers();
     }
 
     function updateNav() {
@@ -375,32 +389,46 @@
     }
 
     async function loadNewestOffers() {
+      const container = document.getElementById('newest-offers');
+      container.setAttribute('aria-busy', 'true');
+      container.innerHTML = '<p>⏳ Lade Angebote…</p>';
       const { data, error } = await supabase
         .from('listings')
         .select('*')
         .order('created_at', { ascending: false })
         .limit(5);
       if (error) {
-        document.getElementById('newest-offers').innerHTML = '<p>Fehler beim Laden der neuesten Angebote.</p>';
+        container.innerHTML = '<p>Fehler beim Laden der neuesten Angebote.</p>';
         console.error('Fehler bei loadNewestOffers:', error);
         return;
       }
-      console.log('Neueste Angebote geladen:', data);
+      if (data.length === 0) {
+        container.innerHTML = '<p>Keine Angebote gefunden.</p>';
+        return;
+      }
+      container.removeAttribute('aria-busy');
       await renderOffers(data, 'newest-offers');
     }
 
     async function loadPopularOffers() {
+      const container = document.getElementById('popular-offers');
+      container.setAttribute('aria-busy', 'true');
+      container.innerHTML = '<p>⏳ Lade Angebote…</p>';
       const { data, error } = await supabase
         .from('listings')
         .select('*')
         .order('views', { ascending: false })
         .limit(5);
       if (error) {
-        document.getElementById('popular-offers').innerHTML = '<p>Fehler beim Laden der beliebtesten Angebote.</p>';
+        container.innerHTML = '<p>Fehler beim Laden der beliebtesten Angebote.</p>';
         console.error('Fehler bei loadPopularOffers:', error);
         return;
       }
-      console.log('Beliebteste Angebote geladen:', data);
+      if (data.length === 0) {
+        container.innerHTML = '<p>Keine Angebote gefunden.</p>';
+        return;
+      }
+      container.removeAttribute('aria-busy');
       await renderOffers(data, 'popular-offers');
     }
 
@@ -475,28 +503,40 @@
       const suggestionsBox = document.getElementById('suggestions');
       if (value.length < 2) return suggestionsBox.innerHTML = '';
 
-      const res = await fetch(`https://corsproxy.io/?https://nominatim.openstreetmap.org/search?format=json&accept-language=de&countrycodes=de&addressdetails=1&limit=6&q=${encodeURIComponent(value)}`);
-      const results = await res.json();
-      suggestionsBox.innerHTML = '';
+      try {
+        const res = await fetch(`https://corsproxy.io/?https://nominatim.openstreetmap.org/search?format=json&accept-language=de&countrycodes=de&addressdetails=1&limit=6&q=${encodeURIComponent(value)}`);
+        const results = await res.json();
+        suggestionsBox.innerHTML = '';
 
-      results.forEach(r => {
-        const ort = r.address.city || r.address.town || r.address.village || r.display_name.split(',')[0];
-        const bundesland = r.address.state || '';
-        const display = [ort, bundesland].filter(Boolean).join(', ');
-        const div = document.createElement('div');
-        div.textContent = display;
-        div.onclick = () => {
-          document.getElementById('location-input').value = display;
-          selectedAddressData = {
-            city: ort,
-            lat: parseFloat(r.lat),
-            lon: parseFloat(r.lon),
-            location: display
+        results.forEach(r => {
+          const ort = r.address.city || r.address.town || r.address.village || r.display_name.split(',')[0];
+          const bundesland = r.address.state || '';
+          const display = [ort, bundesland].filter(Boolean).join(', ');
+          const div = document.createElement('div');
+          div.textContent = display;
+          div.setAttribute('role', 'option');
+          div.tabIndex = 0;
+          div.onclick = () => {
+            document.getElementById('location-input').value = display;
+            selectedAddressData = {
+              city: ort,
+              lat: parseFloat(r.lat),
+              lon: parseFloat(r.lon),
+              location: display
+            };
+            suggestionsBox.innerHTML = '';
           };
-          suggestionsBox.innerHTML = '';
-        };
-        suggestionsBox.appendChild(div);
-      });
+          div.onkeydown = (evt) => {
+            if(evt.key === 'Enter' || evt.key === ' ') {
+              evt.preventDefault();
+              div.click();
+            }
+          }
+          suggestionsBox.appendChild(div);
+        });
+      } catch(err) {
+        console.error("Fehler bei Ortssuche:", err);
+      }
     });
 
     function search() {
