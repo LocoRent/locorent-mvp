@@ -277,21 +277,32 @@
     border-radius: 6px;
   }
 
-  /* Avatar Preview */
-  #avatar-preview {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    background: #ddd center/cover no-repeat;
-    margin-top: 0.5rem;
-    box-shadow: 0 1px 6px rgba(0,0,0,0.15);
-    font-weight: 700;
-    font-size: 2.8rem;
-    color: var(--primary-color);
+  /* Statistik Sektion */
+  #stats-section {
+    flex: 1 1 250px;
+    background: var(--white);
+    padding: 2.5rem 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 12px var(--shadow-color);
     display: flex;
-    align-items: center;
-    justify-content: center;
-    user-select: none;
+    flex-direction: column;
+    gap: 1.5rem;
+    justify-content: flex-start;
+  }
+  #stats-section h2 {
+    color: var(--primary-color);
+    font-weight: 700;
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+  }
+  .stat-item {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--dark-color);
+    background: var(--gray-light);
+    padding: 1rem 1.2rem;
+    border-radius: var(--border-radius);
+    box-shadow: inset 0 0 8px rgba(0,0,0,0.05);
   }
 
   footer {
@@ -344,7 +355,7 @@
       margin: 2rem auto;
       gap: 2rem;
     }
-    #profile-section, #reviews-section {
+    #profile-section, #reviews-section, #stats-section {
       flex: unset;
       width: 100%;
     }
@@ -359,13 +370,6 @@
 
 <main role="main" aria-label="Mein Profil">
   <section id="profile-section" aria-label="Profilinformationen">
-    <div class="input-group" style="position:relative;">
-      <label for="avatar-upload">Profilbild</label>
-      <input type="file" id="avatar-upload" accept="image/*" />
-      <div id="avatar-preview"></div>
-      <div id="upload-status" style="font-size:0.85rem; margin-top:0.3rem;"></div>
-    </div>
-
     <div class="input-group">
       <label for="name">Name</label>
       <input id="name" type="text" autocomplete="name" placeholder="Dein Name" />
@@ -403,6 +407,12 @@
     <div id="reviews-list" role="list" aria-live="polite">
       ⏳ Lade Bewertungen…
     </div>
+  </section>
+
+  <section id="stats-section" aria-label="Profil Statistiken">
+    <h2>Statistiken</h2>
+    <div class="stat-item" id="stat-inserate">Inserate: …</div>
+    <div class="stat-item" id="stat-bewertungen">Bewertungen: …</div>
   </section>
 </main>
 
@@ -482,7 +492,7 @@
     // Profil-Daten holen
     const { data: profile, error } = await supabase
       .from('profiles')
-      .select('name, city, bio, avatar_url')
+      .select('name, city, bio')
       .eq('id', user.id)
       .single();
 
@@ -495,18 +505,13 @@
       document.getElementById('name').value = profile.name || '';
       document.getElementById('city').value = profile.city || '';
       document.getElementById('bio').value = profile.bio || '';
-      if (profile.avatar_url) {
-        avatarPreview.style.backgroundImage = `url('${profile.avatar_url}')`;
-        avatarPreview.textContent = '';
-      } else {
-        avatarPreview.style.backgroundImage = '';
-        // Zeige Initialen wenn kein Bild
-        avatarPreview.textContent = profile.name ? profile.name.split(' ').map(n => n[0]).join('').toUpperCase() : '';
-      }
     }
 
     // Bewertungen laden
     loadReviews(user.id);
+
+    // Statistik laden
+    loadStats(user.id);
   }
 
   // Bewertungen laden und anzeigen (max 5)
@@ -544,6 +549,37 @@
     document.getElementById('show-all-reviews').href = `bewertungen.html?id=${userId}`;
   }
 
+  // Statistik laden (Inserate & Bewertungen zählen)
+  async function loadStats(userId) {
+    try {
+      const { data: inserate, error: inserateError } = await supabase
+        .from('listings')
+        .select('id', { count: 'exact' })
+        .eq('user_id', userId);
+
+      const { data: bewertungen, error: bewertungenError } = await supabase
+        .from('reviews')
+        .select('id', { count: 'exact' })
+        .eq('to_user_id', userId);
+
+      if (inserateError || bewertungenError) {
+        document.getElementById('stat-inserate').textContent = 'Inserate: Fehler';
+        document.getElementById('stat-bewertungen').textContent = 'Bewertungen: Fehler';
+        return;
+      }
+
+      const inserateCount = inserate?.length || 0;
+      const bewertungenCount = bewertungen?.length || 0;
+
+      document.getElementById('stat-inserate').textContent = `Inserate: ${inserateCount}`;
+      document.getElementById('stat-bewertungen').textContent = `Bewertungen: ${bewertungenCount}`;
+    } catch (err) {
+      document.getElementById('stat-inserate').textContent = 'Inserate: Fehler';
+      document.getElementById('stat-bewertungen').textContent = 'Bewertungen: Fehler';
+      console.error('Fehler beim Laden der Statistik:', err);
+    }
+  }
+
   // Stern-Icons Helper
   function createStarIcons(rating) {
     let fullStars = Math.floor(rating);
@@ -566,7 +602,6 @@
   const pwInput = document.getElementById('password');
   const pwStrengthBar = document.getElementById('pw-strength');
   const pwStrengthLabel = document.getElementById('strength-label');
-  const avatarPreview = document.getElementById('avatar-preview');
 
   if (pwInput) {
     pwInput.addEventListener('input', () => {
@@ -696,11 +731,6 @@
       return;
     }
 
-    // Avatar URL ist im State gespeichert (siehe Upload-Handler)
-    if (avatarUrl) {
-      updates.avatar_url = avatarUrl;
-    }
-
     const btn = document.getElementById('save-btn');
     btn.disabled = true;
     try {
@@ -713,47 +743,6 @@
       btn.disabled = false;
     }
   }
-
-  // Avatar Upload mit max 2MB und Ladeanzeige
-  const avatarUploadInput = document.getElementById('avatar-upload');
-  const uploadStatus = document.getElementById('upload-status');
-  let avatarUrl = null;
-
-  avatarUploadInput.addEventListener('change', async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    if (file.size > 2 * 1024 * 1024) {
-      alert("Datei darf maximal 2 MB groß sein.");
-      return;
-    }
-
-    uploadStatus.textContent = "🔄 Upload läuft...";
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session?.user) {
-      alert("Nicht eingeloggt!");
-      uploadStatus.textContent = "";
-      return;
-    }
-    const userId = session.user.id;
-    const fileExt = file.name.split('.').pop();
-    const filePath = `avatars/${userId}-${Date.now()}.${fileExt}`;
-
-    // Upload im Storage
-    const { error: uploadError } = await supabase.storage.from('avatars').upload(filePath, file, { upsert: true });
-
-    if (uploadError) {
-      alert("Upload-Fehler: " + uploadError.message);
-      uploadStatus.textContent = "";
-      return;
-    }
-
-    // Public URL holen
-    const { data } = supabase.storage.from('avatars').getPublicUrl(filePath);
-    avatarUrl = data.publicUrl;
-    avatarPreview.style.backgroundImage = `url('${avatarUrl}')`;
-    avatarPreview.textContent = '';
-    uploadStatus.textContent = "✔️ Upload erfolgreich!";
-  });
 
   updateNav();
   loadProfile();
