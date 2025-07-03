@@ -12,8 +12,8 @@
       --white: #ffffff;
       --dark: #1b5e20;
       --accent: #81c784;
-      --radius: 18px;
-      --shadow: 0 15px 45px rgba(0,0,0,0.08);
+      --radius: 16px;
+      --shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
     }
 
     *, *::before, *::after {
@@ -24,7 +24,7 @@
       margin: 0;
       font-family: 'Poppins', sans-serif;
       background: linear-gradient(180deg, var(--light), var(--white));
-      color: #222;
+      color: #333;
       line-height: 1.7;
       display: flex;
       flex-direction: column;
@@ -40,90 +40,113 @@
       align-items: center;
       position: sticky;
       top: 0;
-      z-index: 1000;
+      z-index: 100;
     }
 
     header h1 {
       font-size: 1.8rem;
-    }
-
-    nav {
-      display: flex;
-      align-items: center;
+      margin: 0;
     }
 
     nav a {
       color: var(--white);
       text-decoration: none;
       margin-left: 1.5rem;
-      font-weight: 600;
+      font-weight: 500;
       position: relative;
-      padding-bottom: 3px;
     }
 
-    nav a:hover {
-      border-bottom: 2px solid var(--accent);
+    nav a::after {
+      content: "";
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -5px;
+      left: 0;
+      background: var(--accent);
+      transition: 0.3s;
+    }
+
+    nav a:hover::after {
+      width: 100%;
     }
 
     main {
-      flex-grow: 1;
-      max-width: 1000px;
+      max-width: 1100px;
       margin: 4rem auto;
       padding: 0 2rem;
+      flex: 1;
     }
 
-    .contact-card {
+    .contact-section {
+      display: flex;
+      flex-wrap: wrap;
       background: var(--white);
-      padding: 3rem 2rem;
       border-radius: var(--radius);
       box-shadow: var(--shadow);
+      overflow: hidden;
     }
 
-    .contact-card h2 {
-      font-size: 2.2rem;
-      color: var(--primary);
+    .contact-info {
+      flex: 1;
+      padding: 2.5rem;
+      background-color: var(--light);
+      color: var(--dark);
+    }
+
+    .contact-info h2 {
+      font-size: 2rem;
       margin-bottom: 1rem;
     }
 
-    .contact-card p {
-      font-size: 1.1rem;
-      color: #444;
-      margin-bottom: 2rem;
+    .contact-info p {
+      margin-bottom: 1rem;
+    }
+
+    .contact-info a {
+      color: var(--dark);
+      font-weight: 500;
+    }
+
+    .contact-form {
+      flex: 1;
+      padding: 2.5rem;
+      background: var(--white);
     }
 
     form {
-      display: grid;
-      gap: 1.5rem;
+      display: flex;
+      flex-direction: column;
     }
 
     label {
+      margin-top: 1rem;
       font-weight: 500;
-      display: block;
-      margin-bottom: 0.3rem;
     }
 
     input, textarea {
-      width: 100%;
-      padding: 0.8rem 1rem;
-      border-radius: var(--radius);
+      padding: 0.9rem 1rem;
       border: 1px solid #ccc;
-      font-size: 1rem;
+      border-radius: var(--radius);
+      margin-top: 0.5rem;
       font-family: 'Poppins', sans-serif;
+      font-size: 1rem;
     }
 
     textarea {
       resize: vertical;
-      min-height: 140px;
+      min-height: 120px;
     }
 
     button {
+      margin-top: 2rem;
       background: var(--primary);
       color: var(--white);
       border: none;
-      padding: 1rem 2rem;
-      border-radius: var(--radius);
-      font-size: 1rem;
+      padding: 0.9rem 1.6rem;
+      font-size: 1.1rem;
       font-weight: 600;
+      border-radius: var(--radius);
       cursor: pointer;
       transition: background 0.3s ease;
     }
@@ -133,19 +156,18 @@
     }
 
     footer {
-      background: var(--primary);
+      background-color: var(--primary);
       color: var(--white);
-      padding: 3rem 2rem 1rem;
-      margin-top: 4rem;
-      border-radius: var(--radius);
+      padding: 2rem 2rem 1rem;
+      margin-top: 3rem;
+      font-size: 0.92rem;
     }
 
     footer > div {
-      max-width: 1200px;
-      margin: 0 auto;
+      max-width: 1100px;
+      margin: auto;
       display: flex;
       flex-wrap: wrap;
-      justify-content: space-between;
       gap: 2rem;
     }
 
@@ -155,9 +177,8 @@
     }
 
     footer h4 {
-      font-size: 1.1rem;
       margin-bottom: 0.5rem;
-      font-weight: 700;
+      font-weight: 600;
     }
 
     footer ul {
@@ -178,30 +199,28 @@
     }
 
     @media (max-width: 768px) {
-      header {
+      .contact-section {
+        flex-direction: column;
+      }
+
+      nav {
         flex-direction: column;
         align-items: flex-start;
       }
 
       nav a {
-        margin-left: 0;
-        margin-top: 0.8rem;
+        margin: 0.5rem 0;
       }
 
       footer > div {
         flex-direction: column;
-        align-items: center;
         text-align: center;
-      }
-
-      footer > div > div {
-        max-width: 320px;
-        width: 100%;
       }
     }
   </style>
 </head>
 <body>
+
   <header>
     <h1>Locorent</h1>
     <nav>
@@ -211,25 +230,29 @@
   </header>
 
   <main>
-    <div class="contact-card">
-      <h2>Kontaktiere uns</h2>
-      <p>Du hast Fragen, Feedback oder möchtest einfach nur Hallo sagen? Schreib uns gerne!</p>
-      <form name="kontaktformular" method="POST" data-netlify="true">
-        <input type="hidden" name="form-name" value="kontaktformular" />
-        <div>
+    <div class="contact-section">
+      <div class="contact-info">
+        <h2>Kontaktiere uns</h2>
+        <p>Du hast Fragen, Feedback oder möchtest einfach nur Hallo sagen? Schreib uns gerne über das Formular oder direkt per E-Mail.</p>
+        <p><strong>E-Mail:</strong> <a href="mailto:info@locorent.de">info@locorent.de</a></p>
+        <p>Wir melden uns in der Regel innerhalb von 24 Stunden bei dir.</p>
+      </div>
+
+      <div class="contact-form">
+        <form name="kontaktformular" method="POST" data-netlify="true">
+          <input type="hidden" name="form-name" value="kontaktformular" />
           <label for="name">Name *</label>
           <input type="text" id="name" name="name" required />
-        </div>
-        <div>
+
           <label for="email">E-Mail *</label>
           <input type="email" id="email" name="email" required />
-        </div>
-        <div>
+
           <label for="message">Nachricht *</label>
           <textarea id="message" name="message" required></textarea>
-        </div>
-        <button type="submit">Absenden</button>
-      </form>
+
+          <button type="submit">Nachricht senden</button>
+        </form>
+      </div>
     </div>
   </main>
 
@@ -263,5 +286,7 @@
     </div>
     <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
   </footer>
+
 </body>
 </html>
+
