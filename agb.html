@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>AGB & Impressum – Locorent</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --primary: #2e7d32;
@@ -26,6 +27,9 @@
       background: linear-gradient(180deg, var(--light), var(--white));
       color: #222;
       line-height: 1.7;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
 
     header {
@@ -39,19 +43,27 @@
       top: 0;
       z-index: 100;
       box-shadow: var(--shadow);
+      flex-wrap: wrap;
     }
 
     header h1 {
       font-size: 2rem;
       font-weight: 700;
+      user-select: none;
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
     }
 
     nav a {
       color: var(--white);
       text-decoration: none;
-      margin-left: 2rem;
       font-weight: 500;
       position: relative;
+      padding-bottom: 3px;
     }
 
     nav a::after {
@@ -73,6 +85,7 @@
       max-width: 1100px;
       margin: 4rem auto;
       padding: 0 2rem;
+      flex: 1;
     }
 
     .section-card {
@@ -123,10 +136,31 @@
     footer {
       background: var(--primary);
       color: var(--white);
-      text-align: center;
-      padding: 4rem 2rem;
-      margin: 3rem 2rem 0;
+      padding: 2rem 2rem 1rem;
       border-radius: var(--radius);
+      margin-top: auto;
+      font-size: 0.92rem;
+      width: 100vw;
+      position: relative;
+      left: 50%;
+      right: 50%;
+      margin-left: -50vw;
+      margin-right: -50vw;
+      box-shadow: 0 8px 32px rgba(46, 125, 50, 0.22);
+    }
+
+    footer > div {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+
+    footer > div > div {
+      flex: 1;
+      min-width: 200px;
     }
 
     footer h4 {
@@ -139,7 +173,6 @@
       list-style: none;
       padding: 0;
       margin: 1rem auto 0;
-      max-width: 320px;
     }
 
     footer ul li {
@@ -151,92 +184,108 @@
       text-decoration: underline;
     }
 
+    footer ul li a:hover {
+      color: var(--accent);
+    }
+
+    footer small {
+      display: block;
+      margin-top: 2rem;
+      text-align: center;
+    }
+
     @media (max-width: 768px) {
       header {
         flex-direction: column;
         align-items: flex-start;
       }
-
       nav a {
         margin-left: 0;
         margin-top: 0.8rem;
+      }
+      footer > div {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+      footer > div > div {
+        width: 100%;
+        max-width: 320px;
+        margin-bottom: 1.5rem;
       }
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>Locorent</h1>
-    <nav>
-      <a href="index.html">Start</a>
-      <a href="login.html">Einloggen</a>
-    </nav>
-  </header>
+<header>
+  <h1>Locorent</h1>
+  <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
+</header>
 
-  <div class="container">
-    <div class="section-card">
-      <div class="badge">Stand: 2025</div>
-      <h2>Allgemeine Geschäftsbedingungen (AGB)</h2>
+<div class="container">
+  <div class="section-card">
+    <div class="badge">Stand: 2025</div>
+    <h2>Allgemeine Geschäftsbedingungen (AGB)</h2>
 
-      <h3>1. Geltungsbereich</h3>
-      <p>Diese AGB gelten für die Nutzung der Plattform <strong>Locorent</strong> unter <a href="https://www.locorent.de">www.locorent.de</a>. Locorent stellt die Infrastruktur bereit, um Gegenstände zwischen privaten Nutzer:innen zu vermieten. Verträge kommen nur zwischen den Parteien zustande.</p>
+    <h3>1. Geltungsbereich</h3>
+    <p>Diese AGB gelten für die Nutzung der Plattform <strong>Locorent</strong> unter <a href="https://www.locorent.de">www.locorent.de</a>. Locorent stellt die Infrastruktur bereit, um Gegenstände zwischen privaten Nutzer:innen zu vermieten. Verträge kommen nur zwischen den Parteien zustande.</p>
 
-      <h3>2. Registrierung</h3>
-      <p>Eine Registrierung ist notwendig. Die Daten müssen korrekt sein. Das Konto ist nicht übertragbar.</p>
+    <h3>2. Registrierung</h3>
+    <p>Eine Registrierung ist notwendig. Die Daten müssen korrekt sein. Das Konto ist nicht übertragbar.</p>
 
-      <h3>3. Leistungen</h3>
-      <p>Locorent bietet die Plattform – nicht die Artikel. Wir haften nicht für Richtigkeit, Qualität oder Zustand der Mietobjekte.</p>
+    <h3>3. Leistungen</h3>
+    <p>Locorent bietet die Plattform – nicht die Artikel. Wir haften nicht für Richtigkeit, Qualität oder Zustand der Mietobjekte.</p>
 
-      <h3>4. Zustandekommen von Verträgen</h3>
-      <p>Ein Mietvertrag entsteht erst, wenn der/die Vermieter:in eine Anfrage aktiv annimmt.</p>
+    <h3>4. Zustandekommen von Verträgen</h3>
+    <p>Ein Mietvertrag entsteht erst, wenn der/die Vermieter:in eine Anfrage aktiv annimmt.</p>
 
-      <h3>5. Pflichten der Nutzer:innen</h3>
-      <ul>
-        <li>Keine illegalen Inhalte oder Objekte</li>
-        <li>Keine Rechte Dritter verletzen</li>
-        <li>Keine Fakes, Betrug oder automatisierte Bots</li>
-      </ul>
+    <h3>5. Pflichten der Nutzer:innen</h3>
+    <ul>
+      <li>Keine illegalen Inhalte oder Objekte</li>
+      <li>Keine Rechte Dritter verletzen</li>
+      <li>Keine Fakes, Betrug oder automatisierte Bots</li>
+    </ul>
 
-      <h3>6. Haftung</h3>
-      <p>Locorent haftet nur bei Vorsatz oder grober Fahrlässigkeit. Schäden zwischen Mietparteien müssen direkt geregelt werden.</p>
+    <h3>6. Haftung</h3>
+    <p>Locorent haftet nur bei Vorsatz oder grober Fahrlässigkeit. Schäden zwischen Mietparteien müssen direkt geregelt werden.</p>
 
-      <h3>7. Kündigung</h3>
-      <p>Jede:r kann sein/ihr Konto jederzeit löschen. Bei Missbrauch behalten wir uns die Sperrung vor.</p>
+    <h3>7. Kündigung</h3>
+    <p>Jede:r kann sein/ihr Konto jederzeit löschen. Bei Missbrauch behalten wir uns die Sperrung vor.</p>
 
-      <h3>8. Datenschutz</h3>
-      <p>Infos findest du in der <a href="datenschutz.html">Datenschutzerklärung</a>.</p>
+    <h3>8. Datenschutz</h3>
+    <p>Infos findest du in der <a href="datenschutz.html">Datenschutzerklärung</a>.</p>
 
-      <h3>9. Rechtliches</h3>
-      <p>Es gilt deutsches Recht. Gerichtsstand ist Maintal. Sollte eine Klausel unwirksam sein, bleibt der Rest bestehen.</p>
-    </div>
-
-    <div class="section-card">
-      <div class="badge">Impressum</div>
-      <h2>Angaben gemäß § 5 TMG</h2>
-
-      <p><strong>Betreiber der Website:</strong><br>
-      Pascal Merten<br>
-      Wilhelmsbader Straße 15<br>
-      63477 Maintal<br>
-      Deutschland</p>
-
-      <p><strong>Kontakt:</strong><br>
-      E-Mail: <a href="mailto:info@locorent.de">info@locorent.de</a></p>
-
-      <p><strong>Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV:</strong><br>
-      Pascal Merten, Anschrift wie oben.</p>
-
-      <h3>Haftungsausschluss</h3>
-      <p>Diese Website wird derzeit rein privat und nicht kommerziell betrieben. Keine Werbung, kein Verkauf, keine Einnahmen.</p>
-
-      <h3>Urheberrecht</h3>
-      <p>Alle Inhalte sind urheberrechtlich geschützt. Vervielfältigung oder Weiterverbreitung nur mit ausdrücklicher Genehmigung.</p>
-    </div>
+    <h3>9. Rechtliches</h3>
+    <p>Es gilt deutsches Recht. Gerichtsstand ist Maintal. Sollte eine Klausel unwirksam sein, bleibt der Rest bestehen.</p>
   </div>
 
-  <footer>
-    © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
+  <div class="section-card">
+    <div class="badge">Impressum</div>
+    <h2>Angaben gemäß § 5 TMG</h2>
+
+    <p><strong>Betreiber der Website:</strong><br>
+    Pascal Merten<br>
+    Wilhelmsbader Straße 15<br>
+    63477 Maintal<br>
+    Deutschland</p>
+
+    <p><strong>Kontakt:</strong><br>
+    E-Mail: <a href="mailto:info@locorent.de">info@locorent.de</a></p>
+
+    <p><strong>Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV:</strong><br>
+    Pascal Merten, Anschrift wie oben.</p>
+
+    <h3>Haftungsausschluss</h3>
+    <p>Diese Website wird derzeit rein privat und nicht kommerziell betrieben. Keine Werbung, kein Verkauf, keine Einnahmen.</p>
+
+    <h3>Urheberrecht</h3>
+    <p>Alle Inhalte sind urheberrechtlich geschützt. Vervielfältigung oder Weiterverbreitung nur mit ausdrücklicher Genehmigung.</p>
+  </div>
+</div>
+
+<footer role="contentinfo">
+  <div>
     <div>
       <h4>Mieten & Vermieten</h4>
       <ul>
@@ -247,7 +296,62 @@
         <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
       </ul>
     </div>
-  </footer>
+    <div>
+      <h4>Wissenswertes</h4>
+      <ul>
+        <li><a href="agb.html">AGB & Impressum</a></li>
+        <li><a href="datenschutz.html">Datenschutz</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Über uns</h4>
+      <ul>
+        <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
+        <li><a href="social-media.html">Folgen Sie uns</a></li>
+        <li><a href="mission.html">Unsere Mission</a></li>
+      </ul>
+    </div>
+  </div>
+  <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
+</footer>
+
+<script>
+  const supabase = window.supabase.createClient(
+    'https://flnjalgqtkqycsaymmbd.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+  );
+
+  let userSession = null;
+
+  async function init() {
+    const { data: { session } } = await supabase.auth.getSession();
+    userSession = session;
+    updateNav();
+  }
+
+  function updateNav() {
+    const nav = document.getElementById('nav-links');
+    nav.innerHTML = userSession?.user ? `
+      <a href="index.html">Start</a>
+      <a href="profil.html">Mein Profil</a>
+      <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+      <a href="favoriten.html">Meine Favoriten</a>
+      <a href="inserate.html">Meine Inserate</a>
+      <a href="#" onclick="logout(event)">Logout</a>
+    ` : `
+      <a href="index.html">Start</a>
+      <a href="login.html">Einloggen</a>
+    `;
+  }
+
+  async function logout(event) {
+    event.preventDefault();
+    await supabase.auth.signOut();
+    window.location.href = "login.html";
+  }
+
+  init();
+</script>
 
 </body>
 </html>
