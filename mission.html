@@ -8,37 +8,30 @@
   <style>
     :root {
       --primary-color: #2e7d32;
-      --secondary-color: #a5d6a7;
-      --background-color: #f1f8e9;
-      --dark-color: #1b5e20;
       --highlight-color: #66bb6a;
+      --background-color: #f1f8e9;
       --white: #fff;
-      --gray-dark: #333;
-      --border-radius: 12px;
-      --shadow-color: rgba(0, 0, 0, 0.1);
+      --dark: #1b5e20;
+      --gray: #444;
+      --shadow: rgba(0, 0, 0, 0.1);
+      --radius: 12px;
       --max-width: 900px;
-      --icon-size: 48px;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: 'Poppins', sans-serif;
-      background-color: var(--background-color);
-      color: var(--gray-dark);
-      line-height: 1.6;
+      background: var(--background-color);
+      color: var(--gray);
       display: flex;
       flex-direction: column;
       min-height: 100vh;
     }
 
     header {
-      background-color: var(--primary-color);
-      color: var(--white);
+      background: var(--primary-color);
+      color: white;
       padding: 1.5rem 2.5rem;
       display: flex;
       justify-content: space-between;
@@ -46,21 +39,17 @@
       position: sticky;
       top: 0;
       z-index: 1000;
-      box-shadow: 0 4px 10px var(--shadow-color);
     }
 
     header h1 {
-      font-weight: 700;
       font-size: 1.8rem;
-      letter-spacing: 1px;
       cursor: pointer;
     }
 
     nav a {
-      color: var(--white);
+      color: white;
       margin-left: 2rem;
       font-weight: 600;
-      font-size: 1.1rem;
       text-decoration: none;
       position: relative;
     }
@@ -70,11 +59,10 @@
       position: absolute;
       bottom: -5px;
       left: 0;
-      width: 0%;
+      width: 0;
       height: 3px;
       background: var(--highlight-color);
-      border-radius: 3px;
-      transition: width 0.3s ease;
+      transition: width 0.3s;
     }
 
     nav a:hover::after {
@@ -82,23 +70,19 @@
     }
 
     main {
-      flex: 1;
       max-width: var(--max-width);
-      margin: 4rem auto 6rem;
-      padding: 0 2rem;
+      margin: 3rem auto 4rem;
+      padding: 0 1.5rem;
+      flex: 1;
     }
 
     .hero {
-      background: var(--white);
-      border-radius: var(--border-radius);
-      padding: 3rem 2rem;
       text-align: center;
-      box-shadow: 0 10px 30px var(--shadow-color);
       margin-bottom: 3rem;
     }
 
     .hero h2 {
-      font-size: 2.8rem;
+      font-size: 2.5rem;
       color: var(--primary-color);
       font-weight: 800;
       margin-bottom: 1rem;
@@ -106,116 +90,41 @@
 
     .hero p {
       font-size: 1.2rem;
-      max-width: 720px;
-      margin: 0 auto;
-      color: #3a3a3a;
-      line-height: 1.75;
+      color: var(--gray);
+      line-height: 1.7;
     }
 
-    .mission-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 2rem;
-      margin-bottom: 4rem;
-    }
-
-    .mission-item {
-      background: var(--white);
-      border-radius: var(--border-radius);
+    .section {
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: 0 8px 24px var(--shadow);
       padding: 2rem;
-      text-align: center;
-      box-shadow: 0 6px 20px var(--shadow-color);
-      transition: transform 0.3s ease;
-    }
-
-    .mission-item:hover {
-      transform: translateY(-6px);
-    }
-
-    .icon {
-      font-size: var(--icon-size);
-      color: var(--highlight-color);
-      margin-bottom: 1rem;
-    }
-
-    .mission-item h3 {
-      font-size: 1.3rem;
-      color: var(--primary-color);
-      margin-bottom: 0.8rem;
-    }
-
-    .facts {
-      display: flex;
-      justify-content: space-around;
-      flex-wrap: wrap;
-      gap: 2rem;
       margin-bottom: 3rem;
     }
 
-    .fact-box {
-      background: var(--white);
-      padding: 2rem;
-      border-radius: var(--border-radius);
-      box-shadow: 0 6px 16px var(--shadow-color);
-      text-align: center;
-      min-width: 200px;
-    }
-
-    .fact-box h4 {
-      font-size: 2rem;
-      color: var(--primary-color);
-      margin-bottom: 0.5rem;
-    }
-
-    .timeline {
-      background: var(--white);
-      padding: 2rem;
-      border-radius: var(--border-radius);
-      margin-bottom: 3rem;
-      box-shadow: 0 4px 12px var(--shadow-color);
-    }
-
-    .timeline h3 {
-      font-size: 1.8rem;
-      color: var(--primary-color);
+    .section h3 {
+      color: var(--dark);
+      font-size: 1.6rem;
       margin-bottom: 1rem;
     }
 
-    .timeline ul {
-      list-style: none;
-      padding-left: 0;
-    }
-
-    .timeline li {
-      margin-bottom: 0.8rem;
+    .section p {
       font-size: 1.05rem;
+      line-height: 1.7;
     }
 
-    .testimonial {
-      background: var(--white);
-      border-left: 4px solid var(--highlight-color);
-      padding: 2rem;
-      font-style: italic;
-      margin-bottom: 3rem;
-      border-radius: var(--border-radius);
-      box-shadow: 0 4px 12px var(--shadow-color);
-    }
-
-    .testimonial cite {
-      display: block;
+    .facts-list {
       margin-top: 1rem;
-      font-style: normal;
-      color: var(--dark-color);
-      font-weight: 600;
+      list-style: disc;
+      padding-left: 1.5rem;
     }
 
     .cta {
       text-align: center;
       padding: 3rem 2rem;
       background: var(--highlight-color);
-      color: var(--white);
-      border-radius: var(--border-radius);
-      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+      color: white;
+      border-radius: var(--radius);
     }
 
     .cta h3 {
@@ -223,29 +132,27 @@
       margin-bottom: 1rem;
     }
 
-    .cta a.cta-btn {
+    .cta a {
       display: inline-block;
-      margin-top: 1rem;
-      background: var(--white);
+      background: white;
       color: var(--primary-color);
-      padding: 0.8rem 1.8rem;
       font-weight: 600;
       font-size: 1.1rem;
-      text-decoration: none;
+      padding: 0.8rem 2rem;
       border-radius: 30px;
-      transition: background 0.3s ease;
+      text-decoration: none;
+      transition: background 0.3s;
     }
 
-    .cta a.cta-btn:hover {
+    .cta a:hover {
       background: #e0f2f1;
     }
 
     footer {
-      background-color: var(--primary-color);
-      color: var(--white);
-      padding: 3rem 2rem 2rem;
+      background: var(--primary-color);
+      color: white;
+      padding: 2.5rem 2rem 1.5rem;
       text-align: center;
-      margin-top: auto;
     }
 
     footer > div {
@@ -253,12 +160,10 @@
       flex-wrap: wrap;
       justify-content: center;
       gap: 3rem;
-      max-width: var(--max-width);
-      margin: 0 auto 2rem;
+      margin-bottom: 1.5rem;
     }
 
     footer h4 {
-      font-weight: 700;
       margin-bottom: 0.5rem;
       text-transform: uppercase;
     }
@@ -270,20 +175,18 @@
     }
 
     footer ul li a {
-      color: var(--white);
+      color: white;
       text-decoration: underline;
     }
 
     .copyright {
+      color: #a5d6a7;
       font-size: 0.9rem;
-      color: var(--secondary-color);
     }
 
     @media (max-width: 600px) {
-      .facts {
-        flex-direction: column;
-        align-items: center;
-      }
+      nav { flex-wrap: wrap; gap: 1rem; }
+      nav a { margin-left: 0; }
     }
   </style>
 </head>
@@ -302,65 +205,33 @@
 <main>
   <section class="hero">
     <h2>Unsere Mission</h2>
-    <p>Wir glauben an eine Welt, in der gemeinschaftliches Nutzen die Norm ist – in der jeder mit wenig Ressourcen viel bewirken kann.</p>
+    <p>Wir setzen uns für eine faire, nachhaltige und gemeinschaftliche Zukunft ein – mit weniger Besitz und mehr Nutzen.</p>
   </section>
 
-  <section class="mission-grid">
-    <div class="mission-item">
-      <div class="icon">🤝</div>
-      <h3>Gemeinschaft stärken</h3>
-      <p>Ressourcen teilen, Nachbarschaft fördern, Vertrauen aufbauen.</p>
-    </div>
-    <div class="mission-item">
-      <div class="icon">💰</div>
-      <h3>Kosten sparen</h3>
-      <p>Mieten statt kaufen – schont nicht nur das Konto, sondern auch die Umwelt.</p>
-    </div>
-    <div class="mission-item">
-      <div class="icon">🌱</div>
-      <h3>Nachhaltig handeln</h3>
-      <p>Jeder gemietete Gegenstand spart CO₂, Energie und Material.</p>
-    </div>
-    <div class="mission-item">
-      <div class="icon">🔄</div>
-      <h3>Flexibel bleiben</h3>
-      <p>Einfach ausprobieren – ohne langfristige Bindung oder Verschwendung.</p>
-    </div>
-  </section>
-
-  <section class="facts">
-    <div class="fact-box">
-      <h4>4.200+</h4>
-      <p>Vermietungen über Locorent</p>
-    </div>
-    <div class="fact-box">
-      <h4>2.8 t</h4>
-      <p>CO₂ durch Teilen eingespart</p>
-    </div>
-    <div class="fact-box">
-      <h4>98%</h4>
-      <p>zufriedene Nutzer:innen</p>
-    </div>
-  </section>
-
-  <section class="timeline">
-    <h3>Unsere Reise</h3>
-    <ul>
-      <li><strong>2023:</strong> Idee & erste Prototypen</li>
-      <li><strong>2024:</strong> Launch & Wachstum der Community</li>
-      <li><strong>2025:</strong> 10.000+ aktive Nutzer:innen</li>
+  <section class="section">
+    <h3>Warum Teilen wichtig ist</h3>
+    <p>Studien zeigen, dass gemeinschaftliches Nutzen Ressourcen spart und soziale Bindungen stärkt:</p>
+    <ul class="facts-list">
+      <li>Über 60 % der Deutschen nutzen bereits Sharing-Dienste (Statista, 2023)</li>
+      <li>Ein geteiltes Elektrogerät kann bis zu 95 % der Ressourcen im Vergleich zum Neukauf einsparen (Umweltbundesamt)</li>
+      <li>Sharing trägt laut Eurostat signifikant zur Reduzierung von CO₂ bei – besonders im städtischen Raum</li>
     </ul>
   </section>
 
-  <section class="testimonial">
-    <blockquote>„Dank Locorent konnte ich meine Bohrmaschine teilen statt verstauben lassen – genial einfach.“</blockquote>
-    <cite>– Lisa M., Nutzerin aus Köln</cite>
+  <section class="section">
+    <h3>Unsere Vision</h3>
+    <p>Wir glauben an eine Welt, in der Besitz nicht mehr notwendig ist, um Zugang zu Dingen zu haben. Locorent ermöglicht genau das – mit Sicherheit, Vertrauen und regionalem Fokus.</p>
+  </section>
+
+  <section class="section">
+    <h3>Was wir konkret tun</h3>
+    <p>Locorent verbindet Menschen in der Region, die Dinge verleihen oder mieten wollen – schnell, einfach und rechtlich abgesichert. So vermeiden wir Müll, sparen Geld und fördern Nachbarschaftshilfe.</p>
   </section>
 
   <section class="cta">
-    <h3>Werde Teil der Bewegung</h3>
-    <p>Starte jetzt mit deiner ersten Vermietung oder finde, was du brauchst – nachhaltig und einfach.</p>
-    <a class="cta-btn" href="registrieren.html">Jetzt registrieren</a>
+    <h3>Mach mit bei Locorent</h3>
+    <p>Jetzt registrieren und Teil der Bewegung werden – für weniger Besitz und mehr Miteinander.</p>
+    <a href="registrieren.html">Jetzt registrieren</a>
   </section>
 </main>
 
@@ -371,7 +242,7 @@
       <ul>
         <li><a href="so-funktionierts.html">So funktioniert's</a></li>
         <li><a href="vermieter-werden.html">Werde Vermieter</a></li>
-        <li><a href="kategorien.html">Beliebte Kategorien</a></li>
+        <li><a href="kategorien.html">Kategorien</a></li>
       </ul>
     </div>
     <div>
@@ -382,18 +253,17 @@
       </ul>
     </div>
     <div>
-      <h4>Über Locorent</h4>
+      <h4>Über uns</h4>
       <ul>
         <li><a href="kontakt.html">Kontakt</a></li>
-        <li><a href="social-media.html">Folge uns</a></li>
+        <li><a href="mission.html">Unsere Mission</a></li>
         <li><a href="nachhaltigkeit.html">Nachhaltigkeit</a></li>
       </ul>
     </div>
   </div>
-  <div class="copyright">
-    © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
-  </div>
+  <div class="copyright">© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</div>
 </footer>
 
 </body>
 </html>
+
