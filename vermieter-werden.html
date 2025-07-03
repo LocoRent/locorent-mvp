@@ -9,27 +9,31 @@
   <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
   <style>
     :root {
-      --primary: #2e7d32;
-      --highlight: #66bb6a;
-      --light-bg: #f1f8e9;
+      --primary-color: #2e7d32;
+      --secondary-color: #a5d6a7;
+      --background-color: #f1f8e9;
+      --dark-color: #1b5e20;
+      --highlight-color: #66bb6a;
       --white: #fff;
-      --gray: #333;
-      --radius: 12px;
+      --gray-light: #f7f7f7;
+      --gray-dark: #333;
+      --border-radius: 12px;
+      --shadow-color: rgba(0, 0, 0, 0.1);
     }
     * {
-      box-sizing: border-box;
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
     }
     body {
       font-family: 'Poppins', sans-serif;
-      background-color: var(--light-bg);
-      color: var(--gray);
+      background-color: var(--background-color);
+      color: var(--gray-dark);
       line-height: 1.7;
     }
     header {
-      background-color: var(--primary);
-      color: white;
+      background-color: var(--primary-color);
+      color: var(--white);
       padding: 1.5rem 2rem;
       display: flex;
       justify-content: space-between;
@@ -42,14 +46,19 @@
       font-size: 1.6rem;
     }
     header nav a {
-      color: white;
+      color: var(--white);
       margin-left: 1.5rem;
       text-decoration: none;
       font-weight: 600;
     }
+    header nav a:hover,
+    header nav a:focus {
+      border-bottom: 2px solid var(--highlight-color);
+      outline: none;
+    }
     .cta-btn {
-      background-color: var(--highlight);
-      color: white;
+      background-color: var(--highlight-color);
+      color: var(--white);
       padding: 0.9rem 1.8rem;
       border: none;
       border-radius: 8px;
@@ -61,8 +70,10 @@
       display: inline-block;
       margin-top: 1rem;
     }
-    .cta-btn:hover {
+    .cta-btn:hover,
+    .cta-btn:focus {
       background-color: #4caf50;
+      outline: none;
     }
     main {
       max-width: 1100px;
@@ -70,10 +81,10 @@
       padding: 0 1rem;
     }
     .section {
-      background-color: white;
+      background-color: var(--white);
       padding: 2rem;
-      border-radius: var(--radius);
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+      border-radius: var(--border-radius);
+      box-shadow: 0 2px 12px var(--shadow-color);
       margin-bottom: 3rem;
     }
     .features {
@@ -97,9 +108,9 @@
     }
     .gallery-item {
       min-width: 220px;
-      background-color: white;
-      border-radius: var(--radius);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      background-color: var(--white);
+      border-radius: var(--border-radius);
+      box-shadow: 0 2px 8px var(--shadow-color);
       overflow: hidden;
       text-align: center;
     }
@@ -114,6 +125,7 @@
       flex-wrap: wrap;
       gap: 1.5rem;
       text-align: center;
+      margin-top: 1rem;
     }
     .stat {
       flex: 1;
@@ -121,28 +133,11 @@
     }
     .stat h3 {
       font-size: 2rem;
-      color: var(--primary);
+      color: var(--primary-color);
     }
-    footer {
-      background-color: var(--primary);
-      color: white;
-      text-align: center;
-      padding: 2rem;
-    }
-    footer ul {
-      list-style: none;
-      padding: 0;
-      line-height: 1.8;
-      margin-top: 1rem;
-    }
-    footer a {
-      color: white;
-      text-decoration: underline;
-    }
-
     .faq {
       max-width: 800px;
-      margin: 2rem auto;
+      margin: 2rem auto 0;
     }
     .faq-item {
       border-bottom: 1px solid #ddd;
@@ -157,7 +152,7 @@
       border: none;
       outline: none;
       cursor: pointer;
-      color: var(--gray);
+      color: var(--gray-dark);
       position: relative;
     }
     .faq-question::after {
@@ -181,16 +176,65 @@
       max-height: 400px;
       padding: 1rem;
     }
+    footer {
+      padding: 2rem;
+      text-align: center;
+      background-color: var(--primary-color);
+      color: var(--white);
+      border-radius: var(--border-radius);
+      margin-top: 2rem;
+    }
+    footer a {
+      color: var(--white);
+      text-decoration: underline;
+    }
+    footer > div {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    footer > div > div {
+      flex: 1;
+      min-width: 200px;
+    }
+    footer h4 {
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+    footer ul {
+      list-style: none;
+      padding: 0;
+      line-height: 1.8;
+    }
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .features {
+        grid-template-columns: 1fr;
+      }
+      .gallery {
+        flex-wrap: wrap;
+      }
+      .gallery-item {
+        min-width: 100%;
+      }
+      footer > div {
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+    }
   </style>
 </head>
 <body>
 
 <header>
   <h1>Locorent</h1>
-  <nav>
-    <a href="index.html">Start</a>
-    <a href="login.html">Einloggen</a>
-  </nav>
+  <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
 </header>
 
 <main>
@@ -285,16 +329,37 @@
 
 </main>
 
-<footer>
-  © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
-  <h4 style="margin-top: 1.5rem;">Mieten & Vermieten</h4>
-  <ul>
-    <li><a href="so-funktionierts.html">So funktioniert's</a></li>
-    <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
-    <li><a href="kategorien.html">Beliebte Kategorien</a></li>
-    <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
-    <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
-  </ul>
+<footer role="contentinfo">
+  <div>
+    <div>
+      <h4>Mieten & Vermieten</h4>
+      <ul>
+        <li><a href="so-funktionierts.html">So funktioniert's</a></li>
+        <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
+        <li><a href="kategorien.html">Beliebte Kategorien</a></li>
+        <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
+        <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Wissenswertes</h4>
+      <ul>
+        <li><a href="agb.html">AGB & Impressum</a></li>
+        <li><a href="datenschutz.html">Datenschutz</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Über uns</h4>
+      <ul>
+        <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
+        <li><a href="social-media.html">Folgen Sie uns</a></li>
+        <li><a href="mission.html">Unsere Mission</a></li>
+      </ul>
+    </div>
+  </div>
+  <div style="margin-top: 2rem; font-size: 0.9rem;">
+    © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
+  </div>
 </footer>
 
 <script>
@@ -302,6 +367,37 @@
     'https://flnjalgqtkqycsaymmbd.supabase.co',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
   );
+
+  let userSession = null;
+
+  async function init() {
+    const { data: { session } } = await supabase.auth.getSession();
+    userSession = session;
+    updateNav();
+    loadCommunityListings();
+    loadPlatformStats();
+  }
+
+  function updateNav() {
+    const nav = document.getElementById('nav-links');
+    nav.innerHTML = userSession?.user ? `
+      <a href="index.html">Start</a>
+      <a href="profil.html">Mein Profil</a>
+      <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+      <a href="favoriten.html">Meine Favoriten</a>
+      <a href="inserate.html">Meine Inserate</a>
+      <a href="#" onclick="logout(event)">Logout</a>
+    ` : `
+      <a href="index.html">Start</a>
+      <a href="login.html">Einloggen</a>
+    `;
+  }
+
+  async function logout(event) {
+    event.preventDefault();
+    await supabase.auth.signOut();
+    window.location.href = "login.html";
+  }
 
   async function loadCommunityListings() {
     const container = document.getElementById("community-gallery");
@@ -331,10 +427,12 @@
   }
 
   async function loadPlatformStats() {
+    // Anzahl aktive Mieter:innen (Profilanzahl)
     const mieterRes = await supabase
       .from('profiles')
       .select('id', { count: 'exact', head: true });
 
+    // Anzahl verfügbare Artikel (Inserate)
     const listingsRes = await supabase
       .from('listings')
       .select('id', { count: 'exact', head: true });
@@ -348,15 +446,14 @@
     }
   }
 
-  loadCommunityListings();
-  loadPlatformStats();
-
   document.querySelectorAll('.faq-question').forEach(button => {
     button.addEventListener('click', () => {
       const item = button.parentElement;
       item.classList.toggle('open');
     });
   });
+
+  init();
 </script>
 
 </body>
