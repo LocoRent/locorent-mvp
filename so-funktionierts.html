@@ -1,193 +1,124 @@
 <!DOCTYPE html>
-<html lang="de" >
+<html lang="de">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>So funktioniert's – Locorent</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --primary: #2e7d32;
-      --primary-light: #66bb6a;
-      --primary-dark: #1b3e1b;
-      --secondary: #a5d6a7;
-      --background: linear-gradient(135deg, #e6f0de 0%, #f1f8e9 100%);
+      --primary-color: #2e7d32;
+      --secondary-color: #a5d6a7;
+      --background-color: #f1f8e9;
+      --dark-color: #1b5e20;
+      --highlight-color: #66bb6a;
       --white: #fff;
-      --gray-dark: #212121;
-      --gray-light: #666;
-      --shadow-light: rgba(0, 0, 0, 0.07);
-      --shadow-dark: rgba(0, 0, 0, 0.18);
-      --radius: 20px;
-      --transition: 0.35s ease;
-      --max-width: 1280px;
-      --font-sans: 'Poppins', sans-serif;
-      --spacing: 1.6rem;
+      --gray-light: #f7f7f7;
+      --gray-dark: #333;
+      --border-radius: 12px;
+      --shadow-color: rgba(0, 0, 0, 0.1);
+      --transition-speed: 0.3s;
+      --max-width: 1100px;
     }
 
-    /* Reset & base */
-    *, *::before, *::after {
+    * {
+      margin: 0;
+      padding: 0;
       box-sizing: border-box;
     }
+
     body {
-      margin: 0;
-      font-family: var(--font-sans);
-      background: var(--background);
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--background-color);
       color: var(--gray-dark);
-      line-height: 1.65;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
+      line-height: 1.6;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      scroll-behavior: smooth;
-      overflow-x: hidden;
     }
 
-    a {
-      color: var(--primary);
-      text-decoration: none;
-      transition: color var(--transition);
-      font-weight: 600;
-    }
-    a:hover, a:focus {
-      color: var(--primary-dark);
-      outline: none;
-      text-decoration: underline;
-    }
-
-    /* HEADER */
     header {
-      position: sticky;
-      top: 0;
-      z-index: 1500;
-      background: var(--white);
-      box-shadow: 0 4px 20px var(--shadow-light);
-      padding: 1rem 3rem;
+      background-color: var(--primary-color);
+      color: var(--white);
+      padding: 1.5rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      user-select: none;
-      transform-style: preserve-3d;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
     }
 
     header h1 {
-      font-weight: 800;
-      font-size: 2.2rem;
-      color: var(--primary);
-      letter-spacing: 0.1em;
       cursor: default;
-      text-shadow: 1px 1px 3px var(--secondary);
-      transform: translateZ(0);
+      user-select: none;
+      font-weight: 700;
+      font-size: 1.8rem;
     }
 
     nav {
       display: flex;
-      gap: 2.5rem;
-      font-size: 1.1rem;
+      gap: 1.5rem;
     }
 
     nav a {
-      position: relative;
-      padding: 0.25rem 0;
-      user-select: none;
-      cursor: pointer;
-      transform-style: preserve-3d;
-      will-change: transform;
-      transition: color var(--transition), transform var(--transition);
-    }
-    nav a::after {
-      content: '';
-      position: absolute;
-      bottom: -6px;
-      left: 0;
-      width: 0%;
-      height: 3px;
-      background: linear-gradient(90deg, var(--primary-light), var(--primary-dark));
-      border-radius: 5px;
-      transition: width var(--transition);
-      will-change: width;
+      color: var(--white);
+      text-decoration: none;
+      font-weight: 600;
+      transition: border-bottom var(--transition-speed);
+      padding-bottom: 2px;
     }
     nav a:hover, nav a:focus {
-      color: var(--primary-dark);
+      border-bottom: 2px solid var(--highlight-color);
       outline: none;
-      transform: translateY(-3px);
-    }
-    nav a:hover::after, nav a:focus::after {
-      width: 100%;
     }
 
-    /* HERO - BIG TITLE */
     main {
-      flex-grow: 1;
       max-width: var(--max-width);
-      margin: 3rem auto 6rem;
-      padding: 0 2rem;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-      gap: 3rem;
-      perspective: 1200px;
+      margin: 3rem auto 4rem;
+      padding: 0 1rem;
+      flex-grow: 1;
     }
 
-    main > h1 {
-      grid-column: 1 / -1;
-      font-weight: 900;
-      font-size: 3.8rem;
-      color: var(--primary-dark);
-      text-align: center;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+    main h1 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 2rem;
       user-select: none;
-      margin-bottom: 3.5rem;
-      text-shadow: 0 3px 10px var(--secondary);
-      transform-style: preserve-3d;
+      text-align: center;
     }
 
-    /* CARD */
     .card {
       background: var(--white);
-      border-radius: var(--radius);
-      padding: 3rem 2.5rem 3.5rem;
-      box-shadow: 0 20px 40px var(--shadow-light);
-      transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1), box-shadow var(--transition);
+      border-radius: var(--border-radius);
+      padding: 2rem 2.5rem;
+      box-shadow: 0 2px 12px var(--shadow-color);
+      margin-bottom: 2rem;
       display: flex;
       flex-direction: column;
-      justify-content: flex-start;
-      will-change: transform, box-shadow;
-      cursor: default;
-      transform-style: preserve-3d;
-    }
-    .card:hover, .card:focus-within {
-      transform: translateY(-15px) rotateX(6deg) rotateY(-8deg);
-      box-shadow: 0 35px 70px var(--shadow-dark);
-      outline: none;
-      z-index: 10;
+      gap: 1.2rem;
+      user-select: none;
     }
 
     .card h2 {
-      color: var(--primary-dark);
-      font-weight: 700;
-      font-size: 1.8rem;
-      margin-bottom: 2.4rem;
-      border-bottom: 3px solid var(--primary-light);
-      padding-bottom: 0.5rem;
-      letter-spacing: 0.02em;
-      user-select: none;
-      text-shadow: 1px 1px 4px var(--secondary);
-      transform-style: preserve-3d;
+      font-weight: 600;
+      font-size: 1.6rem;
+      color: var(--primary-color);
+      border-bottom: 3px solid var(--highlight-color);
+      padding-bottom: 0.3rem;
+      margin-bottom: 1rem;
     }
 
-    /* STEPS */
     .step {
-      margin-bottom: 2.4rem;
-      padding-left: 3.5rem;
+      padding-left: 3rem;
       position: relative;
-      user-select: none;
-      color: var(--gray-dark);
-      font-size: 1.1rem;
+      font-size: 1rem;
+      color: var(--dark-color);
       line-height: 1.5;
       font-weight: 500;
-      transition: color var(--transition);
-      transform-style: preserve-3d;
+      transition: color var(--transition-speed);
+      cursor: default;
     }
 
     .step:last-child {
@@ -195,150 +126,91 @@
     }
 
     .step h3 {
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: var(--primary);
-      margin-bottom: 0.5rem;
-      letter-spacing: 0.03em;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--primary-color);
+      margin-bottom: 0.4rem;
       position: relative;
-      user-select: none;
-      transform-style: preserve-3d;
       padding-left: 0;
     }
+
     .step h3::before {
       content: attr(data-icon);
       position: absolute;
-      left: -3.5rem;
+      left: 0;
       top: 50%;
       transform: translateY(-50%);
-      font-size: 1.8rem;
-      line-height: 1;
+      font-size: 1.6rem;
+      color: var(--highlight-color);
       user-select: none;
-      color: var(--primary-light);
-      filter: drop-shadow(0 1px 1px rgba(0,0,0,0.08));
-      transform-style: preserve-3d;
     }
 
     .step:hover {
-      color: var(--primary-dark);
+      color: var(--dark-color);
     }
 
-    /* FOOTER */
     footer {
-      background: linear-gradient(90deg, var(--primary-dark), var(--primary));
-      padding: 4rem 3rem 3rem;
+      padding: 2rem;
+      background-color: var(--primary-color);
       color: var(--white);
       text-align: center;
+      border-radius: var(--border-radius);
       user-select: none;
-      border-radius: 40px 40px 0 0;
-      box-shadow: 0 -10px 30px var(--shadow-dark);
     }
+
     footer h4 {
-      font-weight: 800;
-      font-size: 1.6rem;
-      margin-bottom: 1.5rem;
-      letter-spacing: 0.05em;
-      user-select: none;
-      text-shadow: 0 1px 4px var(--primary-light);
+      margin-bottom: 0.75rem;
+      font-weight: 600;
     }
+
     footer ul {
       list-style: none;
       padding: 0;
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
       display: flex;
       justify-content: center;
-      gap: 2.5rem;
+      gap: 2rem;
       flex-wrap: wrap;
-      font-weight: 600;
-      font-size: 1.1rem;
+      font-weight: 500;
+      font-size: 0.95rem;
     }
+
     footer ul li a {
       color: var(--white);
-      text-decoration: none;
-      position: relative;
-      transition: color var(--transition);
-      user-select: none;
-    }
-    footer ul li a::after {
-      content: '';
-      position: absolute;
-      bottom: -5px;
-      left: 0;
-      width: 0%;
-      height: 3px;
-      background: var(--primary-light);
-      border-radius: 2px;
-      transition: width var(--transition);
+      text-decoration: underline;
     }
     footer ul li a:hover, footer ul li a:focus {
-      color: var(--primary-light);
+      color: var(--highlight-color);
       outline: none;
     }
-    footer ul li a:hover::after, footer ul li a:focus::after {
-      width: 100%;
-    }
+
     footer small {
-      font-size: 0.95rem;
-      opacity: 0.75;
-      user-select: text;
-      letter-spacing: 0.04em;
+      font-size: 0.85rem;
+      opacity: 0.8;
     }
 
-    /* Emojis as data-icon */
-    [data-icon="🔍"]::before { content: "🔍"; }
-    [data-icon="✉️"]::before { content: "✉️"; }
-    [data-icon="🤝"]::before { content: "🤝"; }
-    [data-icon="🔄"]::before { content: "🔄"; }
-    [data-icon="📦"]::before { content: "📦"; }
-    [data-icon="📸"]::before { content: "📸"; }
-    [data-icon="💬"]::before { content: "💬"; }
-    [data-icon="👤"]::before { content: "👤"; }
-
-    /* Responsive */
-    @media (max-width: 900px) {
+    @media (max-width: 768px) {
       main {
-        grid-template-columns: 1fr;
-        padding: 0 1.5rem;
-        margin: 2rem auto 5rem;
-      }
-      header {
-        padding: 1rem 2rem;
-      }
-      nav {
-        gap: 1.5rem;
-        font-size: 1rem;
+        margin: 2rem 1rem 3rem;
       }
       .card {
-        padding: 2.5rem 1.8rem 3rem;
+        padding: 1.5rem 1.8rem;
       }
-      .card h2 {
-        font-size: 1.5rem;
-      }
-      .step {
-        font-size: 1rem;
-        padding-left: 3rem;
+      main h1 {
+        font-size: 2rem;
       }
       .step h3 {
-        font-size: 1.15rem;
+        font-size: 1.1rem;
       }
     }
+
     @media (max-width: 480px) {
-      header h1 {
-        font-size: 1.8rem;
-      }
       nav {
         flex-wrap: wrap;
-        justify-content: center;
+        gap: 1rem;
       }
       nav a {
-        margin: 0.5rem 1rem 0 1rem;
-      }
-      footer ul {
-        gap: 1.5rem;
-        font-size: 1rem;
-      }
-      footer h4 {
-        font-size: 1.3rem;
+        font-size: 0.9rem;
       }
     }
   </style>
@@ -347,10 +219,7 @@
 
   <header role="banner" aria-label="Hauptnavigation">
     <h1>Locorent</h1>
-    <nav role="navigation" aria-label="Seiten-Navigation">
-      <a href="index.html" tabindex="0">Startseite</a>
-      <a href="login.html" tabindex="0">Einloggen</a>
-    </nav>
+    <nav role="navigation" aria-label="Seiten-Navigation" id="nav-links"></nav>
   </header>
 
   <main>
@@ -408,6 +277,42 @@
     </ul>
     <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
   </footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const supabase = window.supabase.createClient(
+    'https://flnjalgqtkqycsaymmbd.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+  );
+
+  async function updateNav() {
+    const { data: { session } } = await supabase.auth.getSession();
+    const nav = document.getElementById('nav-links');
+    if (session?.user) {
+      nav.innerHTML = `
+        <a href="index.html">Start</a>
+        <a href="profil.html">Mein Profil</a>
+        <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+        <a href="favoriten.html">Meine Favoriten</a>
+        <a href="inserate.html">Meine Inserate</a>
+        <a href="#" onclick="logout(event)">Logout</a>
+      `;
+    } else {
+      nav.innerHTML = `
+        <a href="index.html">Start</a>
+        <a href="login.html">Einloggen</a>
+      `;
+    }
+  }
+
+  async function logout(e) {
+    e.preventDefault();
+    await supabase.auth.signOut();
+    window.location.href = "login.html";
+  }
+
+  updateNav();
+</script>
 
 </body>
 </html>
