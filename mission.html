@@ -8,30 +8,25 @@
   <style>
     :root {
       --primary-color: #2e7d32;
-      --highlight-color: #66bb6a;
+      --secondary-color: #a5d6a7;
       --background-color: #f1f8e9;
-      --white: #ffffff;
-      --text-color: #333;
-      --shadow: rgba(0, 0, 0, 0.1);
+      --dark-color: #1b5e20;
+      --highlight-color: #66bb6a;
+      --white: #fff;
+      --gray-dark: #333;
       --border-radius: 12px;
+      --shadow-color: rgba(0, 0, 0, 0.1);
+      --max-width: 1000px;
     }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Poppins', sans-serif;
       background-color: var(--background-color);
-      color: var(--text-color);
-      line-height: 1.6;
+      color: var(--gray-dark);
       display: flex;
       flex-direction: column;
       min-height: 100vh;
     }
-
     header {
       background-color: var(--primary-color);
       color: var(--white);
@@ -39,187 +34,138 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      box-shadow: 0 4px 10px var(--shadow-color);
       position: sticky;
       top: 0;
       z-index: 1000;
-      box-shadow: 0 4px 10px var(--shadow);
     }
-
     header h1 {
       font-size: 1.8rem;
       cursor: pointer;
     }
-
     nav a {
       color: var(--white);
       margin-left: 2rem;
       font-weight: 600;
-      font-size: 1rem;
       text-decoration: none;
       position: relative;
     }
-
-    nav a::after {
-      content: "";
-      position: absolute;
-      bottom: -4px;
-      left: 0;
-      height: 3px;
-      width: 0;
-      background-color: var(--highlight-color);
-      transition: width 0.3s;
-    }
-
     nav a:hover::after {
+      content: '';
+      position: absolute;
       width: 100%;
+      height: 2px;
+      bottom: -3px;
+      left: 0;
+      background-color: var(--highlight-color);
     }
-
     main {
-      max-width: 960px;
-      margin: 3rem auto;
-      padding: 0 1.5rem;
       flex: 1;
+      max-width: var(--max-width);
+      margin: 4rem auto;
+      padding: 0 2rem;
     }
-
     .hero {
+      background: var(--white);
+      padding: 3rem;
+      border-radius: var(--border-radius);
+      box-shadow: 0 10px 25px var(--shadow-color);
       text-align: center;
       margin-bottom: 3rem;
     }
-
     .hero h2 {
       font-size: 2.6rem;
       color: var(--primary-color);
       margin-bottom: 1rem;
     }
-
     .hero p {
       font-size: 1.2rem;
-      max-width: 700px;
+      max-width: 720px;
       margin: 0 auto;
+      line-height: 1.8;
     }
-
-    .mission-grid {
+    .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 2rem;
-      margin: 3rem 0;
+      margin-bottom: 3rem;
     }
-
-    .mission-card {
+    .card {
       background: var(--white);
-      border-radius: var(--border-radius);
       padding: 2rem;
-      box-shadow: 0 6px 20px var(--shadow);
+      border-radius: var(--border-radius);
+      box-shadow: 0 6px 20px var(--shadow-color);
       text-align: center;
     }
-
-    .mission-card .icon {
+    .card .icon {
       font-size: 2.5rem;
       margin-bottom: 1rem;
       color: var(--highlight-color);
     }
-
-    .mission-card h3 {
-      font-size: 1.3rem;
+    .card h3 {
       margin-bottom: 0.8rem;
       color: var(--primary-color);
     }
-
-    .stats {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-around;
-      margin: 4rem 0;
-      gap: 2rem;
-    }
-
-    .stat-box {
+    .facts, .global, .quote, .calc, .faq {
+      margin-bottom: 3rem;
       background: var(--white);
       padding: 2rem;
       border-radius: var(--border-radius);
-      box-shadow: 0 6px 20px var(--shadow);
-      flex: 1;
-      min-width: 220px;
-      text-align: center;
+      box-shadow: 0 6px 16px var(--shadow-color);
     }
-
-    .stat-box h4 {
-      font-size: 2.4rem;
+    .facts h3, .global h3, .quote h3, .calc h3, .faq h3 {
       color: var(--primary-color);
-    }
-
-    .stat-box p {
-      font-size: 1.1rem;
-      margin-top: 0.4rem;
-    }
-
-    .cta {
-      text-align: center;
-      background: var(--highlight-color);
-      padding: 3rem 2rem;
-      border-radius: var(--border-radius);
-      color: var(--white);
-      margin-bottom: 3rem;
-    }
-
-    .cta h3 {
-      font-size: 2rem;
       margin-bottom: 1rem;
     }
-
-    .cta a {
-      display: inline-block;
-      margin-top: 1rem;
-      background: var(--white);
+    .stats {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 2rem;
+      text-align: center;
+    }
+    .stats div {
+      flex: 1;
+      min-width: 150px;
+    }
+    .stats h4 {
+      font-size: 2rem;
+      color: var(--highlight-color);
+    }
+    blockquote {
+      font-style: italic;
+      margin: 1rem 0;
+      padding-left: 1rem;
+      border-left: 4px solid var(--highlight-color);
+    }
+    cite {
+      display: block;
+      margin-top: 0.5rem;
+      font-style: normal;
+      font-weight: bold;
+      color: var(--dark-color);
+    }
+    .faq details {
+      margin-bottom: 1rem;
+    }
+    .faq summary {
+      font-weight: bold;
+      cursor: pointer;
       color: var(--primary-color);
-      padding: 0.8rem 1.6rem;
-      font-weight: 600;
-      text-decoration: none;
-      border-radius: 30px;
-      transition: background 0.3s ease;
     }
-
-    .cta a:hover {
-      background: #e0f2f1;
-    }
-
     footer {
       background-color: var(--primary-color);
       color: var(--white);
-      padding: 2rem 1.5rem;
       text-align: center;
+      padding: 2rem;
       margin-top: auto;
-    }
-
-    footer small {
-      font-size: 0.9rem;
-      color: #dcedc8;
-    }
-
-    @media (max-width: 600px) {
-      header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      nav {
-        margin-top: 1rem;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 1rem;
-      }
-
-      .stats {
-        flex-direction: column;
-        align-items: center;
-      }
     }
   </style>
 </head>
 <body>
 
 <header>
-  <h1 onclick="window.location.href='index.html'">Locorent</h1>
+  <h1 onclick="location.href='index.html'">Locorent</h1>
   <nav>
     <a href="index.html">Startseite</a>
     <a href="so-funktionierts.html">So funktioniert's</a>
@@ -231,56 +177,87 @@
 <main>
   <section class="hero">
     <h2>Unsere Mission</h2>
-    <p>Wir glauben an ein neues Miteinander – eine Welt, in der Dinge geteilt werden, statt ungenutzt zu verstauben. Nachhaltig, sozial und wirtschaftlich sinnvoll.</p>
+    <p>Wir schaffen eine Zukunft, in der Ressourcen geschont, Menschen verbunden und die Umwelt aktiv geschützt wird – durch gemeinschaftliches Mieten statt Kaufen.</p>
   </section>
 
-  <section class="mission-grid">
-    <div class="mission-card">
+  <section class="grid">
+    <div class="card">
       <div class="icon">🌍</div>
-      <h3>Ressourcen schonen</h3>
-      <p>Jeder vermietete Gegenstand spart CO₂, Wasser und Rohstoffe ein.</p>
+      <h3>Nachhaltigkeit</h3>
+      <p>Gemeinsames Nutzen reduziert CO₂, Müll & Ressourcenverbrauch – für kommende Generationen.</p>
     </div>
-    <div class="mission-card">
-      <div class="icon">💡</div>
-      <h3>Nachhaltig leben</h3>
-      <p>Weniger kaufen, mehr nutzen – für einen bewussten Konsum.</p>
+    <div class="card">
+      <div class="icon">📊</div>
+      <h3>Transparente Wirkung</h3>
+      <p>Jede Vermietung spart im Schnitt 12 kg CO₂ und 3 kg Kunststoff – laut Umweltbundesamt.</p>
     </div>
-    <div class="mission-card">
+    <div class="card">
       <div class="icon">🤝</div>
-      <h3>Menschen verbinden</h3>
-      <p>Locorent bringt Nachbar:innen zusammen und stärkt lokale Netzwerke.</p>
+      <h3>Vertrauen stärken</h3>
+      <p>Wir bringen Menschen lokal zusammen – für echte Verbindungen & gegenseitige Hilfe.</p>
     </div>
-    <div class="mission-card">
-      <div class="icon">🔄</div>
-      <h3>Flexibel mieten</h3>
-      <p>Nutze, was du brauchst – ohne es dauerhaft besitzen zu müssen.</p>
-    </div>
-  </section>
-
-  <section class="stats">
-    <div class="stat-box">
-      <h4>4.900+</h4>
-      <p>Artikel geteilt</p>
-    </div>
-    <div class="stat-box">
-      <h4>3.2 Tonnen</h4>
-      <p>CO₂ eingespart</p>
-    </div>
-    <div class="stat-box">
-      <h4>98%</h4>
-      <p>positive Rückmeldungen</p>
+    <div class="card">
+      <div class="icon">🚀</div>
+      <h3>Innovation fördern</h3>
+      <p>Wir glauben an die Kraft der Community – als Teil einer weltweiten Sharing-Bewegung.</p>
     </div>
   </section>
 
-  <section class="cta">
-    <h3>Werde Teil der Bewegung</h3>
-    <p>Registriere dich jetzt und teile oder miete mit gutem Gewissen.</p>
-    <a href="registrieren.html">Jetzt registrieren</a>
+  <section class="facts">
+    <h3>Sharing wirkt: Harte Fakten</h3>
+    <div class="stats">
+      <div>
+        <h4>52 %</h4>
+        <p>weniger Konsum bei aktiven Mietern (PwC 2023)</p>
+      </div>
+      <div>
+        <h4>91 Mio. t</h4>
+        <p>Müll jährlich in Europa – Mieten hilft, das zu senken</p>
+      </div>
+      <div>
+        <h4>32 %</h4>
+        <p>der Deutschen nutzen Sharing-Plattformen (Bitkom)</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="global">
+    <h3>Teil einer globalen Bewegung</h3>
+    <p>Ob in Seoul, Amsterdam oder Berlin – Mieten wird Alltag: Städte weltweit fördern Leihen statt Kaufen.</p>
+  </section>
+
+  <section class="quote">
+    <h3>Was andere sagen</h3>
+    <blockquote>
+      „Geteilte Nutzung reduziert Umweltbelastungen messbar – insbesondere bei Geräten, die selten verwendet werden.“ 
+      <cite>– Umweltbundesamt (2022)</cite>
+    </blockquote>
+  </section>
+
+  <section class="calc">
+    <h3>100 Mieter = enorme Wirkung</h3>
+    <ul>
+      <li>✅ 1.200 kg CO₂ eingespart</li>
+      <li>✅ 400 kg Plastikmüll vermieden</li>
+      <li>✅ über 22.000 € gespart</li>
+    </ul>
+  </section>
+
+  <section class="faq">
+    <h3>Häufige Fragen zur Mission</h3>
+    <details>
+      <summary>Ist Mieten wirklich nachhaltiger?</summary>
+      <p>Ja! Vor allem bei Geräten, die nur selten gebraucht werden. Studien zeigen deutliche Einsparungen bei Energie & Emissionen.</p>
+    </details>
+    <details>
+      <summary>Wie sicher ist das Teilen?</summary>
+      <p>Locorent prüft Vermieter:innen & unterstützt bei Schäden durch optionale Versicherung & Support.</p>
+    </details>
   </section>
 </main>
 
 <footer>
-  <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
+  <p>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</p>
 </footer>
 
 </body>
