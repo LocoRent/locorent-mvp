@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Unsere Mission – Locorent</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --primary-color: #2e7d32;
@@ -18,7 +19,7 @@
       --shadow-color: rgba(0, 0, 0, 0.1);
       --max-width: 1000px;
     }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Poppins', sans-serif;
       background-color: var(--background-color);
@@ -30,14 +31,14 @@
     header {
       background-color: var(--primary-color);
       color: var(--white);
-      padding: 1.5rem 2.5rem;
+      padding: 1.5rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 4px 10px var(--shadow-color);
       position: sticky;
       top: 0;
       z-index: 1000;
+      box-shadow: 0 4px 10px var(--shadow-color);
     }
     header h1 {
       font-size: 1.8rem;
@@ -45,19 +46,20 @@
     }
     nav a {
       color: var(--white);
-      margin-left: 2rem;
+      margin-left: 1.5rem;
       font-weight: 600;
       text-decoration: none;
       position: relative;
+      padding-bottom: 3px;
     }
     nav a:hover::after {
-      content: '';
+      content: "";
       position: absolute;
       width: 100%;
       height: 2px;
+      background-color: var(--highlight-color);
       bottom: -3px;
       left: 0;
-      background-color: var(--highlight-color);
     }
     main {
       flex: 1;
@@ -156,9 +158,9 @@
     footer {
       background-color: var(--primary-color);
       color: var(--white);
-      text-align: center;
       padding: 2rem;
       margin-top: auto;
+      text-align: center;
     }
   </style>
 </head>
@@ -166,12 +168,7 @@
 
 <header>
   <h1 onclick="location.href='index.html'">Locorent</h1>
-  <nav>
-    <a href="index.html">Startseite</a>
-    <a href="so-funktionierts.html">So funktioniert's</a>
-    <a href="angebote_neueste.html">Angebote</a>
-    <a href="kontakt.html">Kontakt</a>
-  </nav>
+  <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
 </header>
 
 <main>
@@ -181,43 +178,18 @@
   </section>
 
   <section class="grid">
-    <div class="card">
-      <div class="icon">🌍</div>
-      <h3>Nachhaltigkeit</h3>
-      <p>Gemeinsames Nutzen reduziert CO₂, Müll & Ressourcenverbrauch – für kommende Generationen.</p>
-    </div>
-    <div class="card">
-      <div class="icon">📊</div>
-      <h3>Transparente Wirkung</h3>
-      <p>Jede Vermietung spart im Schnitt 12 kg CO₂ und 3 kg Kunststoff – laut Umweltbundesamt.</p>
-    </div>
-    <div class="card">
-      <div class="icon">🤝</div>
-      <h3>Vertrauen stärken</h3>
-      <p>Wir bringen Menschen lokal zusammen – für echte Verbindungen & gegenseitige Hilfe.</p>
-    </div>
-    <div class="card">
-      <div class="icon">🚀</div>
-      <h3>Innovation fördern</h3>
-      <p>Wir glauben an die Kraft der Community – als Teil einer weltweiten Sharing-Bewegung.</p>
-    </div>
+    <div class="card"><div class="icon">🌍</div><h3>Nachhaltigkeit</h3><p>Gemeinsames Nutzen reduziert CO₂, Müll & Ressourcenverbrauch – für kommende Generationen.</p></div>
+    <div class="card"><div class="icon">📊</div><h3>Transparente Wirkung</h3><p>Jede Vermietung spart im Schnitt 12 kg CO₂ und 3 kg Kunststoff – laut Umweltbundesamt.</p></div>
+    <div class="card"><div class="icon">🤝</div><h3>Vertrauen stärken</h3><p>Wir bringen Menschen lokal zusammen – für echte Verbindungen & gegenseitige Hilfe.</p></div>
+    <div class="card"><div class="icon">🚀</div><h3>Innovation fördern</h3><p>Wir glauben an die Kraft der Community – als Teil einer weltweiten Sharing-Bewegung.</p></div>
   </section>
 
   <section class="facts">
     <h3>Sharing wirkt: Harte Fakten</h3>
     <div class="stats">
-      <div>
-        <h4>52 %</h4>
-        <p>weniger Konsum bei aktiven Mietern (PwC 2023)</p>
-      </div>
-      <div>
-        <h4>91 Mio. t</h4>
-        <p>Müll jährlich in Europa – Mieten hilft, das zu senken</p>
-      </div>
-      <div>
-        <h4>32 %</h4>
-        <p>der Deutschen nutzen Sharing-Plattformen (Bitkom)</p>
-      </div>
+      <div><h4>52 %</h4><p>weniger Konsum bei aktiven Mietern (PwC 2023)</p></div>
+      <div><h4>91 Mio. t</h4><p>Müll jährlich in Europa – Mieten hilft, das zu senken</p></div>
+      <div><h4>32 %</h4><p>der Deutschen nutzen Sharing-Plattformen (Bitkom)</p></div>
     </div>
   </section>
 
@@ -256,9 +228,46 @@
   </section>
 </main>
 
-<footer>
-  <p>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</p>
+<footer role="contentinfo">
+  <div>
+    <h4>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</h4>
+  </div>
 </footer>
+
+<script>
+  const supabase = window.supabase.createClient(
+    'https://flnjalgqtkqycsaymmbd.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+  );
+
+  async function init() {
+    const { data: { session } } = await supabase.auth.getSession();
+    const nav = document.getElementById('nav-links');
+    if (session?.user) {
+      nav.innerHTML = `
+        <a href="index.html">Start</a>
+        <a href="profil.html">Mein Profil</a>
+        <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+        <a href="favoriten.html">Meine Favoriten</a>
+        <a href="inserate.html">Meine Inserate</a>
+        <a href="#" onclick="logout(event)">Logout</a>
+      `;
+    } else {
+      nav.innerHTML = `
+        <a href="index.html">Start</a>
+        <a href="login.html">Einloggen</a>
+      `;
+    }
+  }
+
+  async function logout(event) {
+    event.preventDefault();
+    await supabase.auth.signOut();
+    window.location.href = "login.html";
+  }
+
+  init();
+</script>
 
 </body>
 </html>
