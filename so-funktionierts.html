@@ -18,7 +18,6 @@
       --gray-dark: #333;
       --border-radius: 12px;
       --shadow-color: rgba(0, 0, 0, 0.1);
-      --max-width: 1100px;
     }
 
     * {
@@ -49,20 +48,13 @@
       z-index: 1000;
     }
 
-    header h1 {
-      cursor: default;
-      user-select: none;
-      font-weight: 600;
-      font-size: 1.5rem;
-    }
-
     nav a {
       color: var(--white);
       margin-left: 1.5rem;
       text-decoration: none;
       font-weight: 600;
-      cursor: pointer;
     }
+
     nav a:hover,
     nav a:focus {
       border-bottom: 2px solid var(--highlight-color);
@@ -70,22 +62,22 @@
     }
 
     main {
-      max-width: var(--max-width);
-      margin: 3rem auto 4rem;
-      padding: 0 1rem;
       flex-grow: 1;
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 1rem;
     }
 
     h1.page-title {
-      margin-bottom: 2rem;
+      text-align: center;
       font-weight: 700;
-      font-size: 2.2rem;
-      color: var(--primary-color);
-      user-select: none;
+      margin-bottom: 2rem;
+      font-size: 2.4rem;
+      color: var(--dark-color);
     }
 
     .card {
-      background: var(--white);
+      background-color: var(--white);
       border-radius: var(--border-radius);
       padding: 2rem 2.5rem;
       box-shadow: 0 2px 12px var(--shadow-color);
@@ -93,13 +85,13 @@
     }
 
     .step {
+      margin-bottom: 1.8rem;
       position: relative;
       padding-left: 3.5rem;
-      margin-bottom: 1.5rem;
       font-size: 1.1rem;
       font-weight: 500;
       color: var(--gray-dark);
-      user-select: none;
+      line-height: 1.5;
     }
 
     .step:last-child {
@@ -107,90 +99,92 @@
     }
 
     .step h2 {
-      position: absolute;
-      left: 0;
-      top: 0;
+      font-size: 1.6rem;
       font-weight: 700;
-      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
       color: var(--primary-color);
+      position: relative;
+      padding-left: 0;
+    }
+
+    .step[data-icon] h2::before {
+      content: attr(data-icon);
+      position: absolute;
+      left: -3.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.8rem;
       user-select: none;
+      color: var(--highlight-color);
+      text-shadow: 0 1px 1px rgba(0,0,0,0.1);
     }
-
-    .step p {
-      margin-top: 0.4rem;
-      line-height: 1.5;
-    }
-
-    .step[data-icon="🔍"] h2::before { content: "🔍 "; }
-    .step[data-icon="✉️"] h2::before { content: "✉️ "; }
-    .step[data-icon="🤝"] h2::before { content: "🤝 "; }
-    .step[data-icon="🔄"] h2::before { content: "🔄 "; }
-    .step[data-icon="📦"] h2::before { content: "📦 "; }
-    .step[data-icon="📸"] h2::before { content: "📸 "; }
-    .step[data-icon="💬"] h2::before { content: "💬 "; }
-    .step[data-icon="👤"] h2::before { content: "👤 "; }
 
     footer {
-      padding: 2rem;
-      text-align: center;
       background-color: var(--primary-color);
       color: var(--white);
       border-radius: var(--border-radius);
-      margin-top: auto;
-    }
-
-    footer div {
-      max-width: var(--max-width);
-      margin: 0 auto;
-      padding: 0 1rem;
+      margin-top: 2rem;
+      padding: 2rem;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
       gap: 2rem;
+      font-size: 0.95rem;
+      user-select: none;
     }
-    footer div > div {
+
+    footer > div {
       flex: 1 1 200px;
     }
+
     footer h4 {
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.7rem;
       font-weight: 600;
+      font-size: 1.1rem;
     }
+
     footer ul {
       list-style: none;
-      padding-left: 0;
-      line-height: 1.7;
+      padding: 0;
+      line-height: 1.6;
     }
+
+    footer ul li {
+      margin-bottom: 0.4rem;
+    }
+
     footer ul li a {
       color: var(--white);
       text-decoration: underline;
-      cursor: pointer;
+      transition: color 0.3s ease;
     }
+
     footer ul li a:hover,
-    footer ul li a:focus-visible {
+    footer ul li a:focus {
       color: var(--highlight-color);
       outline: none;
     }
 
-    footer .copyright {
-      margin-top: 1rem;
+    .copyright {
+      width: 100%;
+      margin-top: 1.5rem;
+      text-align: center;
       font-size: 0.9rem;
-      user-select: none;
+      opacity: 0.8;
     }
 
     @media (max-width: 768px) {
-      header {
+      footer {
         flex-direction: column;
-        align-items: flex-start;
+        align-items: center;
+        text-align: center;
       }
-
-      nav a {
-        margin-left: 0;
-        margin-top: 0.5rem;
-      }
-
-      footer div {
-        flex-direction: column;
-        gap: 1.5rem;
+      footer > div {
+        max-width: 300px;
+        margin-bottom: 1.5rem;
       }
     }
   </style>
@@ -207,71 +201,71 @@
     <section class="card" aria-labelledby="mieter-title" tabindex="0">
       <div class="step" data-icon="🔍">
         <h2 id="mieter-title">Artikel finden</h2>
-        <p>Stöbern Sie gezielt oder lassen Sie sich inspirieren – finden Sie genau den Mietartikel, den Sie benötigen.</p>
+        <p>Durchstöbere unser vielfältiges Angebot und entdecke genau die Mietartikel, die perfekt zu deinem Bedarf passen. Ob Werkzeuge, Fahrzeuge oder Freizeitgeräte – unsere übersichtliche Suchfunktion und smarte Filter helfen dir dabei, schnell und unkompliziert das passende Objekt in deiner Nähe zu finden.</p>
       </div>
       <div class="step" data-icon="✉️">
         <h2>Mietanfrage stellen</h2>
-        <p>Kontaktieren Sie den Vermieter über unsere Chatfunktion und besprechen Sie alle relevanten Details individuell.</p>
+        <p>Hast du dein Wunschobjekt gefunden? Dann kontaktiere den Vermieter ganz einfach direkt über unsere integrierte Chatfunktion. Kläre alle wichtigen Details – wie Verfügbarkeit, Übergabezeitpunkt oder besondere Anforderungen – unkompliziert und persönlich mit deinem Vermieter.</p>
       </div>
       <div class="step" data-icon="🤝">
         <h2>Übergabe organisieren</h2>
-        <p>Vereinbaren Sie die Abholung direkt im Chat – klar, transparent und nachvollziehbar.</p>
+        <p>Vereinbare einen passenden Termin für die Übergabe des Mietobjekts direkt über den Chat. So kannst du sicher sein, dass alles reibungslos abläuft. Transparenz und direkte Kommunikation sorgen für Vertrauen und einen stressfreien Ablauf für beide Seiten.</p>
       </div>
       <div class="step" data-icon="🔄">
         <h2>Rückgabe & Bewertung</h2>
-        <p>Bringen Sie den Artikel im vereinbarten Zustand zurück und hinterlassen Sie eine Bewertung – für mehr Vertrauen in der Community.</p>
+        <p>Bringe das Mietobjekt nach Ablauf der Mietzeit im vereinbarten Zustand zurück. Anschließend kannst du eine Bewertung abgeben, um deine Erfahrungen zu teilen und anderen Nutzern bei der Auswahl zu helfen. So stärken wir gemeinsam die Community und sorgen für eine vertrauensvolle Plattform.</p>
       </div>
     </section>
 
     <section class="card" aria-labelledby="vermieter-title" tabindex="0">
       <div class="step" data-icon="📦">
         <h2 id="vermieter-title">Ungenutztes Potenzial nutzen</h2>
-        <p>Vermieten Sie selten genutzte Artikel und machen Sie daraus eine Einnahmequelle – ressourcenschonend und effizient.</p>
+        <p>Viele Gegenstände liegen ungenutzt herum – bei Locorent kannst du daraus eine Einnahmequelle machen. Vermiete deine Artikel an Interessierte in deiner Umgebung und trage damit zur nachhaltigen Nutzung von Ressourcen bei. So rentiert sich dein Besitz doppelt.</p>
       </div>
       <div class="step" data-icon="📸">
         <h2>Artikel inserieren</h2>
-        <p>Fügen Sie Fotos hinzu, beschreiben Sie Ihr Angebot präzise und legen Sie einen fairen Preis fest. Kleine Optimierungen können große Wirkung zeigen.</p>
+        <p>Erstelle dein Inserat mit wenigen Klicks: Lade aussagekräftige Fotos hoch, beschreibe dein Objekt detailliert und lege einen fairen Mietpreis fest. Je genauer und ansprechender dein Inserat, desto größer sind deine Chancen, schnell den passenden Mieter zu finden.</p>
       </div>
       <div class="step" data-icon="💬">
         <h2>Mietanfragen verwalten</h2>
-        <p>Kommunizieren Sie direkt mit potenziellen Mietern. Sie entscheiden, ob und wann vermietet wird – flexibel und sicher.</p>
+        <p>Verwalte alle Anfragen zentral und direkt über unsere Plattform. Kommuniziere flexibel mit potenziellen Mietern, beantworte Fragen und entscheide, wann und an wen du dein Objekt vermietest. So behältst du stets die Kontrolle und Übersicht.</p>
       </div>
       <div class="step" data-icon="👤">
         <h2>Vertrauenswürdiges Profil</h2>
-        <p>Ein vollständiges, professionelles Profil steigert Ihre Sichtbarkeit und Erfolgschancen erheblich.</p>
+        <p>Ein vollständiges und gepflegtes Profil erhöht deine Sichtbarkeit und schafft Vertrauen bei Mietern. Lade ein Profilbild hoch, füge eine persönliche Beschreibung hinzu und sammle Bewertungen – so hebst du dich positiv von der Masse ab und steigerst deine Erfolgschancen.</p>
       </div>
     </section>
   </main>
 
-  <footer role="contentinfo">
+  <footer role="contentinfo" aria-label="Seiten-Footer">
     <div>
-      <div>
-        <h4>Mieten &amp; Vermieten</h4>
-        <ul>
-          <li><a href="so-funktionierts.html">So funktioniert's</a></li>
-          <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
-          <li><a href="kategorien.html">Beliebte Kategorien</a></li>
-          <li><a href="vermieter-tipps.html">Tipps &amp; Tricks für Vermieter</a></li>
-          <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>Wissenswertes</h4>
-        <ul>
-          <li><a href="agb.html">AGB & Impressum</a></li>
-          <li><a href="datenschutz.html">Datenschutz</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>Über uns</h4>
-        <ul>
-          <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
-          <li><a href="social-media.html">Folgen Sie uns</a></li>
-          <li><a href="mission.html">Unsere Mission</a></li>
-        </ul>
-      </div>
+      <h4>Mieten &amp; Vermieten</h4>
+      <ul>
+        <li><a href="so-funktionierts.html">So funktioniert's</a></li>
+        <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
+        <li><a href="kategorien.html">Beliebte Kategorien</a></li>
+        <li><a href="vermieter-tipps.html">Tipps &amp; Tricks für Vermieter</a></li>
+        <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
+      </ul>
     </div>
-    <div class="copyright">© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</div>
+    <div>
+      <h4>Wissenswertes</h4>
+      <ul>
+        <li><a href="agb.html">AGB & Impressum</a></li>
+        <li><a href="datenschutz.html">Datenschutz</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Über uns</h4>
+      <ul>
+        <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
+        <li><a href="social-media.html">Folgen Sie uns</a></li>
+        <li><a href="mission.html">Unsere Mission</a></li>
+      </ul>
+    </div>
+    <div class="copyright">
+      © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
+    </div>
   </footer>
 
   <script>
