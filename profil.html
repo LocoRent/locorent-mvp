@@ -20,13 +20,11 @@
     --shadow-color: rgba(0, 0, 0, 0.1);
     --transition-speed: 0.3s;
   }
-
   * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
   }
-
   body {
     font-family: 'Poppins', sans-serif;
     background-color: var(--background-color);
@@ -36,7 +34,6 @@
     display: flex;
     flex-direction: column;
   }
-
   header {
     background-color: var(--primary-color);
     color: var(--white);
@@ -48,12 +45,10 @@
     top: 0;
     z-index: 1000;
   }
-
   header h1 {
     cursor: pointer;
     user-select: none;
   }
-
   nav#nav-links a {
     color: var(--white);
     margin-left: 1.5rem;
@@ -64,7 +59,6 @@
   nav#nav-links a:hover {
     border-bottom: 2px solid var(--highlight-color);
   }
-
   main.container {
     background-color: var(--white);
     max-width: 720px;
@@ -78,25 +72,22 @@
     gap: 1.5rem;
     user-select: none;
   }
-
   main.container h2 {
     font-weight: 600;
     font-size: 2rem;
     margin-bottom: 1rem;
     color: var(--primary-color);
   }
-
   .input-group {
     display: flex;
     flex-direction: column;
+    position: relative;
   }
-
   label {
     font-weight: 600;
     margin-bottom: 0.3rem;
     font-size: 1rem;
   }
-
   input, textarea {
     font-family: 'Poppins', sans-serif;
     font-size: 1rem;
@@ -106,24 +97,20 @@
     transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
     color: var(--gray-dark);
   }
-
   input:focus, textarea:focus {
     outline: none;
     border-color: var(--primary-color);
     box-shadow: 0 0 8px var(--primary-color);
   }
-
   input[disabled] {
     background-color: var(--gray-light);
     color: #888;
     cursor: not-allowed;
   }
-
   textarea {
     resize: vertical;
     min-height: 120px;
   }
-
   .btn {
     background-color: var(--primary-color);
     color: var(--white);
@@ -144,42 +131,46 @@
     box-shadow: 0 0 15px var(--dark-color);
     outline: none;
   }
-
-  #pw-strength {
-    height: 6px;
-    border-radius: 6px;
-    background-color: #eee;
-    margin-top: 7px;
-    overflow: hidden;
-  }
-  #pw-strength > div {
-    height: 100%;
-    width: 0;
-    transition: width 0.4s ease;
-  }
-  #pw-strength.weak > div {
-    background-color: #d32f2f;
-    width: 25%;
-  }
-  #pw-strength.fair > div {
-    background-color: #fbc02d;
-    width: 50%;
-  }
-  #pw-strength.good > div {
-    background-color: #388e3c;
-    width: 75%;
-  }
-  #pw-strength.strong > div {
-    background-color: var(--primary-color);
+  #city-suggestions {
+    position: absolute;
+    background: var(--white);
+    border: 1px solid #ccc;
+    border-radius: var(--border-radius);
+    max-height: 150px;
+    overflow-y: auto;
     width: 100%;
+    z-index: 100;
   }
-  #pw-strength-text {
-    margin-top: 0.35rem;
-    font-size: 0.9rem;
-    color: #555;
-    user-select: none;
+  #city-suggestions div {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
   }
-
+  #city-suggestions div:hover {
+    background-color: var(--secondary-color);
+    color: var(--white);
+  }
+  .reviews-section {
+    margin-top: 2rem;
+  }
+  .review {
+    border-top: 1px solid #ddd;
+    padding: 1rem 0;
+  }
+  .review:first-child {
+    border-top: none;
+  }
+  .review .author {
+    font-weight: 700;
+    color: var(--primary-color);
+  }
+  .review .rating {
+    color: var(--highlight-color);
+    margin-left: 0.5rem;
+  }
+  .review .comment {
+    margin-top: 0.3rem;
+    white-space: pre-line;
+  }
   footer {
     padding: 2rem;
     text-align: center;
@@ -222,7 +213,6 @@
     color: var(--highlight-color);
     outline: none;
   }
-
   @media (max-width: 768px) {
     header {
       flex-direction: column;
@@ -256,13 +246,10 @@
     <label for="email">E-Mail (nicht änderbar)</label>
     <input id="email" type="email" disabled autocomplete="email" />
   </div>
-  <div class="input-group">
-    <label for="phone">Telefon</label>
-    <input id="phone" type="tel" autocomplete="tel" placeholder="Telefonnummer" />
-  </div>
-  <div class="input-group">
+  <div class="input-group" style="position:relative;">
     <label for="city">Wohnort</label>
     <input id="city" type="text" autocomplete="address-level2" placeholder="Wohnort" />
+    <div id="city-suggestions"></div>
   </div>
   <div class="input-group">
     <label for="bio">Über mich</label>
@@ -283,6 +270,13 @@
   </div>
 
   <button class="btn" id="save-btn" aria-label="Profil speichern" onclick="saveProfile()">Profil speichern</button>
+
+  <section class="reviews-section" aria-label="Bewertungen">
+    <h3>Bewertungen über dich</h3>
+    <div id="reviews-container">
+      <p>Lade Bewertungen…</p>
+    </div>
+  </section>
 </main>
 
 <footer role="contentinfo">
@@ -327,7 +321,6 @@
   async function updateNav() {
     const { data: { session } } = await supabase.auth.getSession();
     const nav = document.getElementById('nav-links');
-
     if (session?.user) {
       nav.innerHTML = `
         <a href="index.html">Start</a>
@@ -344,11 +337,52 @@
       `;
     }
   }
-
   async function logout() {
     await supabase.auth.signOut();
     window.location.href = "login.html";
   }
+
+  // Wohnort Vorschläge (Nominatim)
+  const cityInput = document.getElementById('city');
+  const suggestionBox = document.getElementById('city-suggestions');
+  let selectedCityData = null;
+
+  cityInput.addEventListener('input', async () => {
+    const val = cityInput.value.trim();
+    if (val.length < 2) {
+      suggestionBox.innerHTML = '';
+      selectedCityData = null;
+      return;
+    }
+    try {
+      const res = await fetch(`https://corsproxy.io/?https://nominatim.openstreetmap.org/search?format=json&accept-language=de&countrycodes=de&addressdetails=1&limit=6&q=${encodeURIComponent(val)}`);
+      const results = await res.json();
+      suggestionBox.innerHTML = '';
+      results.forEach(r => {
+        const cityName = r.address.city || r.address.town || r.address.village || r.address.hamlet || r.display_name.split(',')[0];
+        const state = r.address.state || '';
+        const display = [cityName, state].filter(Boolean).join(', ');
+        const div = document.createElement('div');
+        div.textContent = display;
+        div.onclick = () => {
+          cityInput.value = display;
+          selectedCityData = {
+            city: cityName,
+            state,
+            lat: parseFloat(r.lat),
+            lon: parseFloat(r.lon)
+          };
+          suggestionBox.innerHTML = '';
+        };
+        suggestionBox.appendChild(div);
+      });
+      if (results.length === 0) {
+        suggestionBox.innerHTML = '<div style="padding:0.5rem;">Kein Ort gefunden</div>';
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  });
 
   async function loadProfile() {
     const { data: { session } } = await supabase.auth.getSession();
@@ -366,10 +400,11 @@
     }
     if (data) {
       document.getElementById('name').value = data.name || '';
-      document.getElementById('phone').value = data.phone || '';
+      // Telefon entfernt - nicht gesetzt
       document.getElementById('city').value = data.city || '';
       document.getElementById('bio').value = data.bio || '';
     }
+    loadReviews(user.id);
   }
 
   async function saveProfile() {
@@ -382,7 +417,6 @@
     const updates = {
       id: userId,
       name: document.getElementById('name').value.trim(),
-      phone: document.getElementById('phone').value.trim(),
       city: document.getElementById('city').value.trim(),
       bio: document.getElementById('bio').value.trim()
     };
@@ -392,16 +426,12 @@
       return;
     }
 
-    const btn = document.getElementById('save-btn');
-    btn.disabled = true;
     try {
       const { error } = await supabase.from('profiles').upsert(updates);
       if (error) throw error;
       alert("Profil erfolgreich gespeichert!");
     } catch (err) {
       alert("Fehler beim Speichern: " + err.message);
-    } finally {
-      btn.disabled = false;
     }
   }
 
@@ -423,21 +453,13 @@
     switch(result.score) {
       case 0:
       case 1:
-        strength = 'weak';
-        label = 'Schwach';
-        break;
+        strength = 'weak'; label = 'Schwach'; break;
       case 2:
-        strength = 'fair';
-        label = 'Fair';
-        break;
+        strength = 'fair'; label = 'Fair'; break;
       case 3:
-        strength = 'good';
-        label = 'Gut';
-        break;
+        strength = 'good'; label = 'Gut'; break;
       case 4:
-        strength = 'strong';
-        label = 'Stark';
-        break;
+        strength = 'strong'; label = 'Stark'; break;
     }
     pwStrengthBar.className = strength;
     pwStrengthLabel.textContent = label;
@@ -463,6 +485,37 @@
     } finally {
       btn.disabled = false;
     }
+  }
+
+  async function loadReviews(userId) {
+    // Annahme: Tabelle 'reviews' mit Spalten 'id', 'profile_id', 'author_name', 'rating', 'comment', 'created_at'
+    const { data, error } = await supabase
+      .from('reviews')
+      .select('id, author_name, rating, comment, created_at')
+      .eq('profile_id', userId)
+      .order('created_at', { ascending: false });
+
+    const container = document.getElementById('reviews-container');
+    if (error) {
+      container.innerHTML = '<p>Fehler beim Laden der Bewertungen.</p>';
+      return;
+    }
+    if (!data || data.length === 0) {
+      container.innerHTML = '<p>Keine Bewertungen vorhanden.</p>';
+      return;
+    }
+
+    container.innerHTML = '';
+    data.forEach(r => {
+      const div = document.createElement('div');
+      div.className = 'review';
+      div.innerHTML = `
+        <div><span class="author">${r.author_name || 'Anonym'}</span>
+        <span class="rating">${'⭐'.repeat(r.rating || 0)}</span></div>
+        <div class="comment">${r.comment || ''}</div>
+      `;
+      container.appendChild(div);
+    });
   }
 
   updateNav();
