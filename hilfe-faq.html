@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>Hilfe & FAQ – Locorent</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --primary-color: #2e7d32;
@@ -138,7 +139,7 @@
       padding: 1rem 0;
     }
     .accordion-content[aria-hidden="false"] {
-      max-height: 500px; /* genug Höhe für Inhalt */
+      max-height: 500px;
       padding-bottom: 1rem;
     }
     footer {
@@ -229,103 +230,68 @@
 
 <header>
   <h1 onclick="window.location.href='index.html'">Locorent</h1>
-  <nav>
-    <a href="index.html">Startseite</a>
-    <a href="so-funktionierts.html">So funktioniert's</a>
-    <a href="angebote_neueste.html">Angebote</a>
-    <a href="kontakt.html">Kontakt</a>
-  </nav>
+  <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
 </header>
 
 <main>
   <h2>Hilfe & FAQ</h2>
-
   <div class="accordion" role="list">
     <div class="accordion-item">
-      <button class="accordion-header" aria-expanded="false" aria-controls="faq1" id="faq1-header">
-        Wie registriere ich mich bei Locorent?
-      </button>
+      <button class="accordion-header" aria-expanded="false" aria-controls="faq1" id="faq1-header">Wie registriere ich mich bei Locorent?</button>
       <div id="faq1" class="accordion-content" role="region" aria-labelledby="faq1-header" aria-hidden="true">
         <p>Die Registrierung ist einfach: Klicke auf „Registrieren“ oben rechts, gib deine Daten ein und bestätige deine E-Mail-Adresse. Danach kannst du sofort loslegen.</p>
       </div>
     </div>
-
     <div class="accordion-item">
-      <button class="accordion-header" aria-expanded="false" aria-controls="faq2" id="faq2-header">
-        Wie kann ich einen Artikel mieten?
-      </button>
+      <button class="accordion-header" aria-expanded="false" aria-controls="faq2" id="faq2-header">Wie kann ich einen Artikel mieten?</button>
       <div id="faq2" class="accordion-content" role="region" aria-labelledby="faq2-header" aria-hidden="true">
         <p>Suche deinen Wunschartikel oder stöbere durch die Kategorien. Um einen Artikel zu mieten, sende eine Mietanfrage direkt über unsere Chatfunktion und kläre alle Details unkompliziert mit dem Vermieter.</p>
       </div>
     </div>
-
     <div class="accordion-item">
-      <button class="accordion-header" aria-expanded="false" aria-controls="faq3" id="faq3-header">
-        Was muss ich bei der Abholung und Rückgabe beachten?
-      </button>
+      <button class="accordion-header" aria-expanded="false" aria-controls="faq3" id="faq3-header">Was muss ich bei der Abholung und Rückgabe beachten?</button>
       <div id="faq3" class="accordion-content" role="region" aria-labelledby="faq3-header" aria-hidden="true">
         <p>Die Abholung und Rückgabe erfolgt direkt zwischen dir und dem Vermieter, idealerweise über unsere Chatfunktion. Klärt die Uhrzeiten und den Zustand des Artikels vorab, um Missverständnisse zu vermeiden.</p>
       </div>
     </div>
-
     <div class="accordion-item">
-      <button class="accordion-header" aria-expanded="false" aria-controls="faq4" id="faq4-header">
-        Wie funktioniert die Kommunikation mit dem Vermieter?
-      </button>
+      <button class="accordion-header" aria-expanded="false" aria-controls="faq4" id="faq4-header">Wie funktioniert die Kommunikation mit dem Vermieter?</button>
       <div id="faq4" class="accordion-content" role="region" aria-labelledby="faq4-header" aria-hidden="true">
         <p>Alle Anfragen und Absprachen erfolgen bequem über unsere integrierte Chatfunktion. So bleibt die Kommunikation übersichtlich und nachvollziehbar.</p>
       </div>
     </div>
-
     <div class="accordion-item">
-      <button class="accordion-header" aria-expanded="false" aria-controls="faq5" id="faq5-header">
-        Wie kontaktiere ich den Support?
-      </button>
+      <button class="accordion-header" aria-expanded="false" aria-controls="faq5" id="faq5-header">Wie kontaktiere ich den Support?</button>
       <div id="faq5" class="accordion-content" role="region" aria-labelledby="faq5-header" aria-hidden="true">
         <p>Du kannst uns jederzeit über das Kontaktformular auf unserer Website oder per E-Mail erreichen. Wir helfen dir gerne weiter.</p>
       </div>
     </div>
-
     <div class="accordion-item">
-      <button class="accordion-header" aria-expanded="false" aria-controls="faq6" id="faq6-header">
-        Wie sicher sind meine Daten bei Locorent?
-      </button>
+      <button class="accordion-header" aria-expanded="false" aria-controls="faq6" id="faq6-header">Wie sicher sind meine Daten bei Locorent?</button>
       <div id="faq6" class="accordion-content" role="region" aria-labelledby="faq6-header" aria-hidden="true">
         <p>Der Schutz deiner Daten hat für uns höchste Priorität. Wir nutzen moderne Verschlüsselungstechnologien und halten uns an strenge Datenschutzrichtlinien.</p>
       </div>
     </div>
-
     <div class="accordion-item">
-      <button class="accordion-header" aria-expanded="false" aria-controls="faq7" id="faq7-header">
-        Welche Vorteile bietet Locorent gegenüber dem Kauf?
-      </button>
+      <button class="accordion-header" aria-expanded="false" aria-controls="faq7" id="faq7-header">Welche Vorteile bietet Locorent gegenüber dem Kauf?</button>
       <div id="faq7" class="accordion-content" role="region" aria-labelledby="faq7-header" aria-hidden="true">
         <p>Locorent ermöglicht dir, Dinge flexibel zu nutzen ohne langfristige Bindung. So sparst du Geld, schonst Ressourcen und kannst Artikel vor einem eventuellen Kauf ausprobieren.</p>
       </div>
     </div>
-
     <div class="accordion-item">
-      <button class="accordion-header" aria-expanded="false" aria-controls="faq8" id="faq8-header">
-        Was kann ich tun, wenn es ein Problem mit einem Vermieter gibt?
-      </button>
+      <button class="accordion-header" aria-expanded="false" aria-controls="faq8" id="faq8-header">Was kann ich tun, wenn es ein Problem mit einem Vermieter gibt?</button>
       <div id="faq8" class="accordion-content" role="region" aria-labelledby="faq8-header" aria-hidden="true">
         <p>Kontaktiere bitte unseren Support über das Kontaktformular oder per E-Mail. Wir kümmern uns schnellstmöglich um dein Anliegen und vermitteln bei Bedarf zwischen den Parteien.</p>
       </div>
     </div>
-
     <div class="accordion-item">
-      <button class="accordion-header" aria-expanded="false" aria-controls="faq9" id="faq9-header">
-        Gibt es eine Community-Richtlinie?
-      </button>
+      <button class="accordion-header" aria-expanded="false" aria-controls="faq9" id="faq9-header">Gibt es eine Community-Richtlinie?</button>
       <div id="faq9" class="accordion-content" role="region" aria-labelledby="faq9-header" aria-hidden="true">
         <p>Ja, unsere Community-Richtlinie sorgt für respektvolles und faires Miteinander. Verstöße können zu Sperrungen führen. Details findest du in unseren Nutzungsbedingungen.</p>
       </div>
     </div>
-
     <div class="accordion-item">
-      <button class="accordion-header" aria-expanded="false" aria-controls="faq10" id="faq10-header">
-        Wie kann ich meinen Account löschen?
-      </button>
+      <button class="accordion-header" aria-expanded="false" aria-controls="faq10" id="faq10-header">Wie kann ich meinen Account löschen?</button>
       <div id="faq10" class="accordion-content" role="region" aria-labelledby="faq10-header" aria-hidden="true">
         <p>Du kannst deinen Account jederzeit über die Profileinstellungen löschen. Falls du Hilfe benötigst, wende dich bitte an unseren Support.</p>
       </div>
@@ -336,19 +302,19 @@
 <footer role="contentinfo">
   <div>
     <div>
-      <h4>Mieten &amp; Vermieten</h4>
+      <h4>Mieten & Vermieten</h4>
       <ul>
         <li><a href="so-funktionierts.html">So funktioniert's</a></li>
         <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
         <li><a href="kategorien.html">Beliebte Kategorien</a></li>
-        <li><a href="vermieter-tipps.html">Tipps &amp; Tricks für Vermieter</a></li>
+        <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
         <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
       </ul>
     </div>
     <div>
       <h4>Wissenswertes</h4>
       <ul>
-        <li><a href="agb.html">AGB &amp; Impressum</a></li>
+        <li><a href="agb.html">AGB & Impressum</a></li>
         <li><a href="datenschutz.html">Datenschutz</a></li>
       </ul>
     </div>
@@ -368,12 +334,44 @@
 </footer>
 
 <script>
-  const accordionHeaders = document.querySelectorAll('.accordion-header');
+  const supabase = window.supabase.createClient(
+    'https://flnjalgqtkqycsaymmbd.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+  );
 
-  accordionHeaders.forEach(header => {
+  let userSession = null;
+
+  async function init() {
+    const { data: { session } } = await supabase.auth.getSession();
+    userSession = session;
+    updateNav();
+  }
+
+  function updateNav() {
+    const nav = document.getElementById('nav-links');
+    nav.innerHTML = userSession?.user ? `
+      <a href="index.html">Start</a>
+      <a href="profil.html">Mein Profil</a>
+      <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+      <a href="favoriten.html">Meine Favoriten</a>
+      <a href="inserate.html">Meine Inserate</a>
+      <a href="#" onclick="logout(event)">Logout</a>
+    ` : `
+      <a href="index.html">Start</a>
+      <a href="login.html">Einloggen</a>
+    `;
+  }
+
+  async function logout(event) {
+    event.preventDefault();
+    await supabase.auth.signOut();
+    window.location.href = "login.html";
+  }
+
+  document.querySelectorAll('.accordion-header').forEach(header => {
     header.addEventListener('click', () => {
       const expanded = header.getAttribute('aria-expanded') === 'true';
-      accordionHeaders.forEach(h => {
+      document.querySelectorAll('.accordion-header').forEach(h => {
         h.setAttribute('aria-expanded', 'false');
         document.getElementById(h.getAttribute('aria-controls')).setAttribute('aria-hidden', 'true');
       });
@@ -383,6 +381,8 @@
       }
     });
   });
+
+  init();
 </script>
 
 </body>
