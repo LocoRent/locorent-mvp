@@ -5,7 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Folge uns – Locorent</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
+    :root {
+      --primary-color: #2e7d32;
+      --secondary-color: #a5d6a7;
+      --background-color: #f1f8e9;
+      --dark-color: #1b5e20;
+      --highlight-color: #66bb6a;
+      --white: #fff;
+      --gray-dark: #333;
+      --border-radius: 12px;
+      --shadow-color: rgba(0, 0, 0, 0.1);
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -14,52 +27,67 @@
 
     body {
       font-family: 'Poppins', sans-serif;
-      background: linear-gradient(to right, #e8f5e9, #c8e6c9);
-      color: #1b5e20;
+      background: var(--background-color);
+      color: var(--dark-color);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
     }
 
     header {
-      background-color: #2e7d32;
-      color: white;
+      background-color: var(--primary-color);
+      color: var(--white);
       padding: 1.5rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
     }
 
-    header a {
-      color: white;
+    header h1 {
+      font-size: 1.8rem;
+      user-select: none;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      color: var(--white);
       text-decoration: none;
+      margin-left: 1.5rem;
       font-weight: 600;
       font-size: 1rem;
-      transition: opacity 0.3s;
+      position: relative;
+      padding-bottom: 3px;
+      transition: border-bottom 0.3s ease;
     }
 
-    header a:hover {
-      opacity: 0.8;
+    nav a:hover,
+    nav a:focus {
+      border-bottom: 2px solid var(--highlight-color);
+      outline: none;
     }
 
     main {
       flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      padding: 3rem 1.5rem;
+      max-width: 1200px;
+      margin: 0 auto;
       text-align: center;
-      padding: 3rem 2rem;
     }
 
     h1 {
       font-size: 2.8rem;
-      color: #1b5e20;
       margin-bottom: 1rem;
     }
 
-    p.subtext {
+    .subtext {
       font-size: 1.2rem;
       margin-bottom: 2.5rem;
       color: #388e3c;
@@ -69,18 +97,15 @@
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
       gap: 2rem;
-      max-width: 900px;
-      width: 100%;
+      margin-top: 1rem;
     }
 
     .social-card {
-      background: white;
-      border-radius: 16px;
+      background: var(--white);
+      border-radius: var(--border-radius);
       padding: 2rem;
-      text-align: center;
       box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-      transition: transform 0.3s, box-shadow 0.3s;
-      position: relative;
+      transition: 0.3s ease;
     }
 
     .social-card:hover {
@@ -91,22 +116,23 @@
     .social-icon {
       width: 60px;
       height: 60px;
-      margin-bottom: 1rem;
+      margin: 0 auto 1rem;
       border-radius: 50%;
-      padding: 0.8rem;
-      display: inline-block;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       background-color: #c8e6c9;
     }
 
+    .social-icon svg,
     .social-icon img {
-      width: 100%;
-      height: auto;
+      width: 32px;
+      height: 32px;
     }
 
     .social-card h3 {
       font-size: 1.4rem;
       margin-bottom: 0.6rem;
-      color: #2e7d32;
     }
 
     .social-card p {
@@ -117,33 +143,97 @@
 
     .social-card a {
       text-decoration: none;
-      display: inline-block;
       padding: 0.6rem 1.2rem;
-      background: #2e7d32;
+      background: var(--primary-color);
       color: white;
       border-radius: 30px;
       font-weight: 600;
-      transition: background 0.3s;
+      display: inline-block;
+      transition: 0.3s;
     }
 
     .social-card a:hover {
-      background: #66bb6a;
+      background: var(--highlight-color);
     }
 
     footer {
-      background-color: #2e7d32;
-      color: white;
-      padding: 1.2rem;
+      background-color: var(--primary-color);
+      color: var(--white);
+      padding: 2rem 2rem 1rem;
+      font-size: 0.92rem;
+      width: 100vw;
+      position: relative;
+      left: 50%;
+      right: 50%;
+      margin-left: -50vw;
+      margin-right: -50vw;
+      box-shadow: 0 8px 32px rgba(46, 125, 50, 0.22);
+    }
+
+    footer > div {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+
+    footer > div > div {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    footer h4 {
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    footer ul {
+      list-style: none;
+      padding: 0;
+      line-height: 1.8;
+    }
+
+    footer ul li a {
+      color: var(--white);
+      text-decoration: underline;
+      transition: color 0.3s ease;
+    }
+
+    footer ul li a:hover {
+      color: var(--highlight-color);
+    }
+
+    footer small {
+      display: block;
+      margin-top: 2rem;
       text-align: center;
-      font-size: 0.9rem;
+    }
+
+    @media (max-width: 600px) {
+      header {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      nav {
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .social-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 <body>
 
 <header>
-  <h2>Locorent</h2>
-  <a href="index.html">Zurück zur Startseite</a>
+  <h1>Locorent</h1>
+  <nav id="nav-links"></nav>
 </header>
 
 <main>
@@ -151,10 +241,9 @@
   <p class="subtext">Bleib auf dem Laufenden & werde Teil der Community 🚀</p>
 
   <div class="social-grid">
-
     <div class="social-card">
       <div class="social-icon" style="background:#E1306C;">
-        <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/instagram.svg" alt="Instagram">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/instagram.svg" alt="Instagram" />
       </div>
       <h3>Instagram</h3>
       <p>Fotos, Storys & Highlights rund ums Mieten.</p>
@@ -163,7 +252,7 @@
 
     <div class="social-card">
       <div class="social-icon" style="background:#1877F2;">
-        <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/facebook.svg" alt="Facebook">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/facebook.svg" alt="Facebook" />
       </div>
       <h3>Facebook</h3>
       <p>News, Events & Gruppen rund um Locorent.</p>
@@ -172,7 +261,10 @@
 
     <div class="social-card">
       <div class="social-icon" style="background:#000;">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/TikTok_logo.svg" alt="TikTok">
+        <!-- TikTok SVG als Inline-Fallback -->
+        <svg viewBox="0 0 256 256" fill="white" xmlns="http://www.w3.org/2000/svg">
+          <path d="M204.8 76.8a76.8 76.8 0 01-38.4-10.24v76.8c0 35.84-28.16 66.56-64 68.48A68.03 68.03 0 0167.36 140.8a68.15 68.15 0 0158.24-67.84V102.4a38.4 38.4 0 00-25.6 72.96A38.4 38.4 0 00160 140.8V0h44.8a76.8 76.8 0 010 76.8z"/>
+        </svg>
       </div>
       <h3>TikTok</h3>
       <p>Kreative Videos, Trends & lustige Momente.</p>
@@ -181,19 +273,85 @@
 
     <div class="social-card">
       <div class="social-icon" style="background:#43a047;">
-        <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/maildotru.svg" alt="E-Mail">
+        <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2zm-1.4 3.25l-6.6 4.13L5.4 7.25a.5.5 0 01.6-.8L12 10.87l6-3.62a.5.5 0 01.6.8z"/>
+        </svg>
       </div>
       <h3>Kontakt</h3>
       <p>Du hast Fragen oder Feedback?</p>
       <a href="mailto:info@locorent.de">Schreib uns</a>
     </div>
-
   </div>
 </main>
 
-<footer>
-  © 2025 Locorent – Gemeinsam mieten statt kaufen.
+<footer role="contentinfo">
+  <div>
+    <div>
+      <h4>Mieten & Vermieten</h4>
+      <ul>
+        <li><a href="so-funktionierts.html">So funktioniert's</a></li>
+        <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
+        <li><a href="kategorien.html">Beliebte Kategorien</a></li>
+        <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
+        <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Wissenswertes</h4>
+      <ul>
+        <li><a href="agb.html">AGB & Impressum</a></li>
+        <li><a href="datenschutz.html">Datenschutz</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Über uns</h4>
+      <ul>
+        <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
+        <li><a href="social-media.html">Folgen Sie uns</a></li>
+        <li><a href="mission.html">Unsere Mission</a></li>
+      </ul>
+    </div>
+  </div>
+  <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
 </footer>
+
+<script>
+  const supabase = window.supabase.createClient(
+    'https://flnjalgqtkqycsaymmbd.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+  );
+
+  let userSession = null;
+
+  async function init() {
+    const { data: { session } } = await supabase.auth.getSession();
+    userSession = session;
+    updateNav();
+  }
+
+  function updateNav() {
+    const nav = document.getElementById('nav-links');
+    nav.innerHTML = userSession?.user ? `
+      <a href="index.html">Start</a>
+      <a href="profil.html">Mein Profil</a>
+      <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+      <a href="favoriten.html">Meine Favoriten</a>
+      <a href="inserate.html">Meine Inserate</a>
+      <a href="#" onclick="logout(event)">Logout</a>
+    ` : `
+      <a href="index.html">Start</a>
+      <a href="login.html">Einloggen</a>
+    `;
+  }
+
+  async function logout(event) {
+    event.preventDefault();
+    await supabase.auth.signOut();
+    window.location.href = "login.html";
+  }
+
+  init();
+</script>
 
 </body>
 </html>
