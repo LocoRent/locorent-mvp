@@ -4,57 +4,120 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Meine Inserate – Locorent</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
-      --primary-color: #2e7d32;
-      --secondary-color: #a5d6a7;
-      --background-color: #f1f8e9;
-      --dark-color: #1b5e20;
-      --highlight-color: #66bb6a;
+      --primary: #2e7d32;
+      --primary-light: #66bb6a;
+      --primary-dark: #1b5e20;
+      --background: #f1f8e9;
       --white: #fff;
-      --gray-light: #f7f7f7;
-      --gray-dark: #333;
-      --border-radius: 12px;
-      --shadow-color: rgba(0, 0, 0, 0.1);
+      --text-dark: #0f2e13;
+      --text-muted: #466843;
+      --accent: #b9f6ca;
+      --highlight: #a5d6a7;
+      --radius: 18px;
+      --shadow-light: rgba(46, 125, 50, 0.08);
+      --shadow-strong: rgba(46, 125, 50, 0.25);
+      --transition: 0.4s ease;
+      --font-primary: 'Poppins', sans-serif;
     }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: 'Poppins', sans-serif;
-      background: var(--background-color);
       margin: 0;
-      padding: 0;
-      color: var(--dark-color);
+      font-family: var(--font-primary);
+      background: var(--background);
+      color: var(--text-dark);
+      scroll-behavior: smooth;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
       line-height: 1.5;
     }
+
     header {
-      background-color: var(--primary-color);
+      background-color: var(--primary);
       color: var(--white);
       padding: 1.5rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      font-weight: 700;
       position: sticky;
       top: 0;
       z-index: 1000;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      flex-wrap: wrap;
     }
-    nav a {
+
+    header h1 {
+      font-size: 1.8rem;
+      cursor: pointer;
+      user-select: none;
+      margin: 0;
+    }
+
+    #nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.8rem;
       color: var(--white);
-      margin-left: 1.5rem;
+      cursor: pointer;
+    }
+
+    nav#main-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    nav#main-nav a {
+      color: var(--white);
       text-decoration: none;
       font-weight: 600;
+      font-size: 1rem;
+      position: relative;
+      transition: color 0.3s ease;
     }
-    nav a:hover {
-      border-bottom: 2px solid var(--highlight-color);
+
+    nav#main-nav a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -4px;
+      width: 0;
+      height: 2px;
+      background-color: var(--accent);
+      transition: width 0.3s ease;
     }
+
+    nav#main-nav a:hover::after,
+    nav#main-nav a:focus::after {
+      width: 100%;
+    }
+
+    nav#main-nav a:hover,
+    nav#main-nav a:focus {
+      color: var(--accent);
+      outline: none;
+    }
+
     main {
       max-width: 900px;
-      margin: 2rem auto;
-      padding: 1rem;
+      margin: 2rem auto 4rem;
       background: var(--white);
-      border-radius: var(--border-radius);
-      box-shadow: 0 2px 12px var(--shadow-color);
+      border-radius: var(--radius);
+      box-shadow: 0 4px 12px var(--shadow-light);
+      padding: 1rem 2rem 2rem 2rem;
+      flex-grow: 1;
     }
+
     .form-container {
       margin-bottom: 2rem;
     }
@@ -102,9 +165,9 @@
     .dropzone {
       margin-top: 1rem;
       padding: 1rem;
-      border: 2px dashed var(--primary-color);
+      border: 2px dashed var(--primary);
       text-align: center;
-      border-radius: var(--border-radius);
+      border-radius: var(--radius);
       background: #fafafa;
       cursor: pointer;
     }
@@ -147,7 +210,7 @@
       margin-top: 1rem;
     }
     .form-actions button {
-      background: var(--primary-color);
+      background: var(--primary);
       color: var(--white);
       padding: 0.7rem 1.5rem;
       border: none;
@@ -164,7 +227,7 @@
     }
     .card {
       background: var(--white);
-      border-radius: var(--border-radius);
+      border-radius: var(--radius);
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
       overflow: hidden;
       display: flex;
@@ -183,11 +246,11 @@
     .card-content h3 {
       margin: 0.2rem 0;
       font-size: 1.1rem;
-      color: var(--dark-color);
+      color: var(--text-dark);
     }
     .card-content .price {
       font-weight: 600;
-      color: var(--primary-color);
+      color: var(--primary);
       margin-bottom: 0.3rem;
     }
     .card-content .category {
@@ -202,7 +265,7 @@
       padding: 0.8rem;
     }
     .card .actions button {
-      background: var(--primary-color);
+      background: var(--primary);
       color: var(--white);
       padding: 0.4rem 0.8rem;
       border: none;
@@ -213,8 +276,8 @@
       transition: background-color 0.3s ease;
     }
     .card .actions button:hover {
-      background: var(--highlight-color);
-      color: var(--dark-color);
+      background: var(--highlight);
+      color: var(--primary-dark);
     }
     .card .actions button.delete {
       background: #c62828;
@@ -226,7 +289,7 @@
       width: 24px;
       height: 24px;
       border: 3px solid #c8e6c9;
-      border-top-color: var(--primary-color);
+      border-top-color: var(--primary);
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
       margin: auto;
@@ -235,7 +298,6 @@
       to { transform: rotate(360deg); }
     }
 
-    /* Hinweis-Meldung */
     #profile-warning {
       background-color: #fff3cd;
       border: 1px solid #ffeeba;
@@ -246,13 +308,50 @@
       font-weight: 600;
       display: none;
     }
+
+    @media (max-width: 720px) {
+      #nav-toggle {
+        display: block;
+      }
+
+      nav#main-nav {
+        width: 100%;
+        flex-direction: column;
+        display: none;
+        margin-top: 1rem;
+      }
+
+      nav#main-nav.show {
+        display: flex;
+      }
+
+      nav#main-nav a {
+        margin: 0.4rem 0;
+        padding: 0.5rem 1rem;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+      }
+
+      main {
+        margin: 1rem;
+        padding: 1rem;
+      }
+    }
   </style>
 </head>
 <body>
 
 <header>
-  <h1>Locorent – Meine Inserate</h1>
-  <nav id="nav-links"></nav>
+  <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
+  <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="main-nav">☰</button>
+  <nav id="main-nav" role="navigation" aria-label="Hauptnavigation">
+    <a href="index.html">Start</a>
+    <a href="profil.html">Mein Profil</a>
+    <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+    <a href="favoriten.html">Meine Favoriten</a>
+    <a href="inserate.html">Meine Inserate</a>
+    <a href="#" onclick="logout(event)">Logout</a>
+  </nav>
 </header>
 
 <main>
@@ -305,36 +404,34 @@
   </section>
 </main>
 
-<footer style="background-color: var(--primary-color); color: var(--white); padding: 2rem; border-radius: var(--border-radius); margin: 2rem auto 0; max-width: 900px; text-align: center;">
-  <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2rem;">
-    <div style="flex: 1; min-width: 200px;">
-      <h4 style="margin-bottom: 0.5rem;">Mieten & Vermieten</h4>
-      <ul style="list-style: none; padding: 0; line-height: 1.8;">
-        <li><a href="so-funktionierts.html" style="color: var(--white); text-decoration: underline;">So funktioniert's</a></li>
-        <li><a href="vermieter-werden.html" style="color: var(--white); text-decoration: underline;">Werde zum Vermieter</a></li>
-        <li><a href="kategorien.html" style="color: var(--white); text-decoration: underline;">Beliebte Kategorien</a></li>
-        <li><a href="vermieter-tipps.html" style="color: var(--white); text-decoration: underline;">Tipps & Tricks für Vermieter</a></li>
-        <li><a href="hilfe-faq.html" style="color: var(--white); text-decoration: underline;">Hilfe und FAQ</a></li>
+<footer role="contentinfo">
+  <div>
+    <div>
+      <h4>Mieten &amp; Vermieten</h4>
+      <ul>
+        <li><a href="so-funktionierts.html">So funktioniert's</a></li>
+        <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
+        <li><a href="kategorien.html">Beliebte Kategorien</a></li>
+        <li><a href="vermieter-tipps.html">Tipps &amp; Tricks für Vermieter</a></li>
+        <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
       </ul>
     </div>
-    <div style="flex: 1; min-width: 200px;">
-      <h4 style="margin-bottom: 0.5rem;">Wissenswertes</h4>
-      <ul style="list-style: none; padding: 0; line-height: 1.8;">
-        <li><a href="agb.html" style="color: var(--white); text-decoration: underline;">AGB & Impressum</a></li>
-        <li><a href="datenschutz.html" style="color: var(--white); text-decoration: underline;">Datenschutz</a></li>
+    <div>
+      <h4>Wissenswertes</h4>
+      <ul>
+        <li><a href="agb.html">AGB &amp; Impressum</a></li>
+        <li><a href="datenschutz.html">Datenschutz</a></li>
       </ul>
     </div>
-    <div style="flex: 1; min-width: 200px;">
-      <h4 style="margin-bottom: 0.5rem;">Über uns</h4>
-      <ul style="list-style: none; padding: 0; line-height: 1.8;">
-        <li><a href="kontakt.html" style="color: var(--white); text-decoration: underline;">Kontaktieren Sie uns</a></li>
-        <li><a href="social-media.html" style="color: var(--white); text-decoration: underline;">Folgen Sie uns</a></li>
+    <div>
+      <h4>Über uns</h4>
+      <ul>
+        <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
+        <li><a href="social-media.html">Folgen Sie uns</a></li>
       </ul>
     </div>
   </div>
-  <div style="margin-top: 2rem; font-size: 0.9rem;">
-    © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
-  </div>
+  <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
 </footer>
 
 <script>
@@ -361,8 +458,7 @@ async function updateNav() {
      <a href="nachrichten-inbox.html">📨 Nachrichten</a>
      <a href="favoriten.html">Meine Favoriten</a>
      <a href="inserate.html">Meine Inserate</a>
-     <a href="#" onclick="logout(event)">Logout</a>`
-    :
+     <a href="#" onclick="logout(event)">Logout</a>` :
     `<a href="index.html">Start</a>
      <a href="login.html">Einloggen</a>`;
 }
@@ -429,12 +525,10 @@ document.getElementById("save-btn").addEventListener("click", async () => {
   const user = sd?.session?.user;
   if (!user) return alert("Nicht eingeloggt!");
 
-  // Prüfe, ob Name und Wohnort gesetzt sind
   if (!userProfile.name || userProfile.name.trim().length < 2 || !userProfile.city || userProfile.city.trim().length < 2) {
     const warningEl = document.getElementById('profile-warning');
     warningEl.textContent = "Bitte fülle zuerst deine Profildaten (Name & Wohnort) aus, bevor du ein Inserat erstellen kannst.";
     warningEl.style.display = "block";
-    // Optional: automatisch zur Profilseite weiterleiten
     setTimeout(() => {
       window.location.href = "profil.html";
     }, 4000);
@@ -531,7 +625,6 @@ async function loadGallery() {
     return;
   }
 
-  // Profil-Daten laden und zwischenspeichern
   const { data: profile, error: profileError } = await supabase
     .from('profiles')
     .select('name, city')
@@ -589,7 +682,17 @@ async function deleteListing(id) {
   else alert("Fehler beim Löschen.");
 }
 
+document.getElementById('nav-toggle').addEventListener('click', () => {
+  const nav = document.getElementById('main-nav');
+  const toggle = document.getElementById('nav-toggle');
+  nav.classList.toggle('show');
+  const expanded = nav.classList.contains('show');
+  toggle.setAttribute('aria-expanded', expanded);
+});
+
 loadGallery();
+updateNav();
 </script>
+
 </body>
 </html>
