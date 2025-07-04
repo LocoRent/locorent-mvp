@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <title>Testseite – Locorent</title>
+  <script>
+    // Funktion zum Laden von Komponenten
+    async function loadComponent(id, url) {
+      const res = await fetch(url);
+      if (res.ok) {
+        const html = await res.text();
+        document.getElementById(id).innerHTML = html;
+      } else {
+        console.error(`Fehler beim Laden von ${url}`);
+      }
+    }
+  </script>
+</head>
+<body>
+
+  <!-- Hier wird der Head-Inhalt geladen -->
+  <div id="head-container" style="display:none"></div>
+
+  <!-- Header einfügen -->
+  <header id="header-container"></header>
+
+  <main>
+    <h1>Testseite</h1>
+    <p>Hier testest du die gemeinsame Gestaltung.</p>
+  </main>
+
+  <!-- Footer einfügen -->
+  <footer id="footer-container"></footer>
+
+  <script>
+    // Head einfügen (Fonts, Styles)
+    loadComponent('head-container', 'components/head.html').then(() => {
+      // Head-Inhalt in <head> verschieben (Styles, Fonts wirksam machen)
+      document.head.insertAdjacentHTML('beforeend', document.getElementById('head-container').innerHTML);
+      document.getElementById('head-container').remove();
+    });
+
+    // Header & Footer laden
+    loadComponent('header-container', 'components/header.html');
+    loadComponent('footer-container', 'components/footer.html');
+  </script>
+
+</body>
+</html>
