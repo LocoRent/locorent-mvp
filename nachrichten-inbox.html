@@ -22,15 +22,33 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      flex-wrap: wrap;
     }
 
-    nav a {
+    header h1 {
+      cursor: pointer;
+    }
+
+    #nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.6rem;
+      color: white;
+      cursor: pointer;
+    }
+
+    nav#main-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    nav#main-nav a {
       color: white;
       text-decoration: none;
       font-weight: 600;
       font-size: 1rem;
-      margin-left: 1rem;
     }
 
     main {
@@ -145,6 +163,421 @@
       color: #b71c1c;
     }
 
+    footer {
+      padding: 2rem;
+      background-color: #2e7d32;
+      color: white;
+      border-top-left-radius: 14px;
+      border-top-right-radius: 14px;
+      margin-top: 4rem;
+      font-size: 0.9rem;
+    }
+
+    footer > div {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 2rem;
+      text-align: left;
+    }
+
+    footer h4 {
+      margin-bottom: 0.6rem;
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    footer ul {
+      list-style: none;
+      padding: 0;
+      line-height: 1.8;
+    }
+
+    footer ul li a {
+      color: white;
+      text-decoration: underline;
+      transition: color 0.3s ease;
+    }
+
+    footer ul li a:hover {
+      color: #c8e6c9;
+    }
+
+    footer small {
+      display: block;
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.85rem;
+      opacity: 0.8;
+    }
+
+    @media (max-width: 720px) {
+      #nav-toggle {
+        display: block;
+      }
+
+      #main-nav {
+        width: 100%;
+        flex-direction: column;
+        display: none;
+        margin-top: 1rem;
+      }
+
+      #main-nav.show {
+        display: flex;
+      }
+
+      #main-nav a {
+        margin: 0.4rem 0;
+        padding: 0.5rem 1rem;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+      }
+
+      footer > div {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      footer div > div {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <h1 onclick="location.href='index.html'">Locorent</h1>
+  <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false">☰</button>
+  <nav id="main-nav">
+    <a href="index.html">Startseite</a>
+    <a href="profil.html">Mein Profil</a>
+    <a href="inserate.html">Inserate</a>
+    <a href="nachrichten-inbox.html">Nachrichten</a>
+  </nav>
+</header>
+<main>
+  <h2>📨 Nachrichteneingang</h2>
+  <div id="inbox">Lade Nachrichten...</div>
+</main>
+<footer role="contentinfo">
+  <div>
+    <div>
+      <h4>Mieten & Vermieten</h4>
+      <ul>
+        <li><a href="so-funktionierts.html">So funktioniert's</a></li>
+        <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
+        <li><a href="kategorien.html">Beliebte Kategorien</a></li>
+        <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
+        <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Wissenswertes</h4>
+      <ul>
+        <li><a href="agb.html">AGB & Impressum</a></li>
+        <li><a href="datenschutz.html">Datenschutz</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Über uns</h4>
+      <ul>
+        <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
+        <li><a href="social-media.html">Folgen Sie uns</a></li>
+        <li><a href="mission.html">Unsere Mission</a></li>
+      </ul>
+    </div>
+  </div>
+  <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
+</footer>
+
+<script>
+const supabase = window.supabase.createClient(
+  'https://flnjalgqtkqycsaymmbd.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+);
+
+document.getElementById('nav-toggle').addEventListener('click', () => {
+  const nav = document.getElementById('main-nav');
+  const toggle = document.getElementById('nav-toggle');
+  nav.classList.toggle('show');
+  const expanded = nav.classList.contains('show');
+  toggle.setAttribute('aria-expanded', expanded);
+});
+
+function timeAgo(dateString) {
+  const date = new Date(dateString);
+  const diff = (Date.now() - date.getTime()) / 1000;
+  if (diff < 60) return "gerade eben";
+  if (diff < 3600) return `${Math.floor(diff / 60)} Min.`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)} Std.`;
+  return `${Math.floor(diff / 86400)} Tg.`;
+}
+async function loadInbox() {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return window.location.href = "login.html";
+
+  const { data: messages } = await supabase
+    .from('messages')
+    .select('*')
+    .or(`sender_id.eq.${user.id},receiver_id.eq.${user.id}`)
+    .order('created_at', { ascending: false });
+
+  const inbox = document.getElementById('inbox');
+  inbox.innerHTML = '';
+
+  if (!messages || messages.length === 0) {
+    inbox.innerHTML = "<p>Keine Nachrichten gefunden.</p>";
+    return;
+  }
+
+  const uniqueChats = new Map();
+
+  messages.forEach(msg => {
+    const otherId = msg.sender_id === user.id ? msg.receiver_id : msg.sender_id;
+    const key = `${msg.listing_id}_${otherId}`;
+    if (!uniqueChats.has(key)) {
+      uniqueChats.set(key, msg);
+    }
+  });
+
+  for (const [key, msg] of uniqueChats.entries()) {
+    const otherId = msg.sender_id === user.id ? msg.receiver_id : msg.sender_id;
+
+    const [{ data: userData }, { data: listingData }] = await Promise.all([
+      supabase.from('profiles').select('name, avatar_url').eq('id', otherId).single(),
+      supabase.from('listings').select('title, image_urls, price_per_day, location').eq('id', msg.listing_id).single()
+    ]);
+
+    const name = userData?.name || 'Unbekannt';
+    const avatar = userData?.avatar_url || null;
+    const title = listingData?.title || 'Inserat gelöscht';
+    const price = listingData?.price_per_day ? `${listingData.price_per_day} €/Tag` : '';
+    const location = listingData?.location || '';
+    const image = listingData?.image_urls?.[0] || '';
+
+    const card = document.createElement('div');
+    card.className = 'chat-card';
+    card.onclick = () => {
+      window.location.href = `nachrichten.html?listing_id=${msg.listing_id}&with=${otherId}`;
+    };
+
+    card.innerHTML = `
+      <div class="delete-chat" title="Chat löschen" onclick="event.stopPropagation(); confirmDelete('${msg.listing_id}', '${otherId}', this)">🗑️</div>
+      <div class="chat-avatar">
+        ${avatar ? `<img src="${avatar}" alt="${name}" />` : `<span>${name.charAt(0).toUpperCase()}</span>`}
+      </div>
+      <div class="chat-info">
+        <div class="chat-name">${name}</div>
+        <div class="chat-title">📦 ${title}</div>
+        ${image ? `<img class="listing-thumb" src="${image}" alt="${title}" />` : ''}
+        <div class="listing-meta">
+          ${price ? `<span>💶 ${price}</span>` : ''}
+          ${location ? `<span>📍 ${location}</span>` : ''}
+        </div>
+        <div class="chat-preview">💬 ${msg.content.slice(0, 90)}${msg.content.length > 90 ? '…' : ''}</div>
+        <div class="chat-time">⏱️ ${timeAgo(msg.created_at)}</div>
+      </div>
+    `;
+
+    inbox.appendChild(card);
+  }
+}
+
+async function confirmDelete(listingId, otherId, el) {
+  if (!confirm("Möchtest du diesen Chatverlauf wirklich löschen?")) return;
+
+  const { data: { user } } = await supabase.auth.getUser();
+
+  const { error } = await supabase
+    .from('messages')
+    .delete()
+    .or(`and(sender_id.eq.${user.id},receiver_id.eq.${otherId},listing_id.eq.${listingId}),and(receiver_id.eq.${user.id},sender_id.eq.${otherId},listing_id.eq.${listingId})`);
+
+  if (!error) {
+    el.closest('.chat-card').remove();
+  } else {
+    alert("Fehler beim Löschen des Chats.");
+  }
+}
+
+loadInbox();
+</script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nachrichteneingang – Locorent</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #e8f5e9, #f1f8e9);
+      color: #1b5e20;
+    }
+
+    header {
+      background: linear-gradient(to right, #2e7d32, #66bb6a);
+      color: white;
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    header h1 {
+      font-weight: 700;
+      font-size: 1.8rem;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      margin-left: 1rem;
+      transition: color 0.3s ease;
+    }
+    nav a:hover,
+    nav a:focus {
+      color: #c5e1a5;
+      outline: none;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+      color: #2e7d32;
+    }
+
+    .chat-card {
+      background: white;
+      padding: 1rem;
+      margin-bottom: 1.2rem;
+      border-radius: 14px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+      transition: all 0.2s ease;
+      cursor: pointer;
+      display: flex;
+      gap: 1rem;
+      position: relative;
+    }
+
+    .chat-card:hover,
+    .chat-card:focus-within {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+      outline: none;
+    }
+
+    .chat-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #c8e6c9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: #1b5e20;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .chat-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .chat-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .chat-name {
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    .chat-title {
+      font-size: 0.95rem;
+      color: #4b8b4b;
+      margin-top: 0.2rem;
+    }
+
+    .listing-thumb {
+      width: 100%;
+      max-height: 140px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin: 0.6rem 0;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+
+    .listing-meta {
+      font-size: 0.85rem;
+      margin-bottom: 0.3rem;
+      color: #2e7d32;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .chat-preview {
+      margin-top: 0.3rem;
+      font-size: 0.9rem;
+      color: #444;
+    }
+
+    .chat-time {
+      font-size: 0.75rem;
+      color: #888;
+      margin-top: 0.3rem;
+      user-select: none;
+    }
+
+    .delete-chat {
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      color: #d32f2f;
+      font-size: 1.4rem;
+      cursor: pointer;
+      transition: transform 0.2s, color 0.2s;
+      z-index: 10;
+    }
+
+    .delete-chat:hover,
+    .delete-chat:focus {
+      transform: scale(1.25);
+      color: #b71c1c;
+      outline: none;
+    }
+
     @media (max-width: 600px) {
       .chat-card {
         flex-direction: column;
@@ -158,21 +591,35 @@
       .chat-preview {
         font-size: 0.85rem;
       }
+
+      nav a {
+        margin-left: 0.5rem;
+        font-size: 0.9rem;
+      }
+
+      main {
+        margin: 1rem;
+        padding: 1rem;
+      }
+
+      header {
+        padding: 1rem 1rem;
+      }
     }
   </style>
 </head>
 <body>
 
 <header>
-  <h1>Locorent</h1>
-  <nav>
+  <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
+  <nav role="navigation" aria-label="Hauptnavigation">
     <a href="index.html">Startseite</a>
   </nav>
 </header>
 
 <main>
   <h2>📨 Nachrichteneingang</h2>
-  <div id="inbox">Lade Nachrichten...</div>
+  <div id="inbox" aria-live="polite" aria-relevant="additions">Lade Nachrichten...</div>
 </main>
 
 <script>
@@ -235,13 +682,20 @@
 
       const card = document.createElement('div');
       card.className = 'chat-card';
+      card.tabIndex = 0;
       card.onclick = () => {
         window.location.href = `nachrichten.html?listing_id=${msg.listing_id}&with=${otherId}`;
       };
+      card.onkeydown = e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          card.click();
+        }
+      };
 
       card.innerHTML = `
-        <div class="delete-chat" title="Chat löschen" onclick="event.stopPropagation(); confirmDelete('${msg.listing_id}', '${otherId}', this)">🗑️</div>
-        <div class="chat-avatar">
+        <div class="delete-chat" title="Chat löschen" tabindex="0" role="button" aria-label="Chat löschen" onclick="event.stopPropagation(); confirmDelete('${msg.listing_id}', '${otherId}', this)" onkeydown="if(event.key==='Enter' || event.key===' ') {event.preventDefault(); this.click();}">🗑️</div>
+        <div class="chat-avatar" aria-hidden="true">
           ${avatar ? `<img src="${avatar}" alt="${name}" />` : `<span>${name.charAt(0).toUpperCase()}</span>`}
         </div>
         <div class="chat-info">
