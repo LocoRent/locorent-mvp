@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Testseite – Locorent</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #f1f8e9;
+      color: #333;
+    }
+
+    main {
+      max-width: 800px;
+      margin: 4rem auto;
+      padding: 2rem;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    h2 {
+      color: #2e7d32;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header wird hier eingefügt -->
+  <div id="header-placeholder"></div>
+
+  <main>
+    <h2>Willkommen auf der Testseite</h2>
+    <p>Dies ist eine Beispielseite mit eingebautem zentralem Header und Footer. Du bist bereit, Locorent modular zu machen!</p>
+  </main>
+
+  <!-- Footer wird hier eingefügt -->
+  <div id="footer-placeholder"></div>
+
+  <!-- Einbindung von Header + Footer -->
+  <script>
+    async function includeParts() {
+      const [headerRes, footerRes] = await Promise.all([
+        fetch('components/header.html'),
+        fetch('components/footer.html')
+      ]);
+      document.getElementById('header-placeholder').innerHTML = await headerRes.text();
+      document.getElementById('footer-placeholder').innerHTML = await footerRes.text();
+    }
+    includeParts();
+  </script>
+</body>
+</html>
