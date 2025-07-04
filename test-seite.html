@@ -15,8 +15,8 @@
   <section class="hero" aria-label="Suchbereich">
     <h2>Finde das perfekte Mietobjekt</h2>
     <form class="search-form" onsubmit="event.preventDefault(); search();" role="search" aria-label="Suchformular">
-      <input type="text" placeholder="Was suchst du?" id="search-input" aria-label="Suchbegriff eingeben" />
-      <select id="category-select" aria-label="Kategorie auswählen">
+      <input type="text" placeholder="Was suchst du?" id="search-input" />
+      <select id="category-select">
         <option value="">Alle Kategorien</option>
         <option value="fahrzeuge">Fahrzeuge</option>
         <option value="transporter">Transporter</option>
@@ -31,11 +31,11 @@
         <option value="freizeit">Freizeit & Sport</option>
         <option value="baby">Baby & Kind</option>
       </select>
-      <div style="position: relative; flex: 1; min-width: 200px;">
-        <input type="text" placeholder="Ort" id="location-input" autocomplete="off" aria-label="Ort eingeben" />
-        <div id="suggestions" role="listbox" aria-label="Ortsvorschläge"></div>
+      <div style="position: relative;">
+        <input type="text" placeholder="Ort" id="location-input" autocomplete="off" />
+        <div id="suggestions"></div>
       </div>
-      <select id="radius-select" aria-label="Suchradius auswählen">
+      <select id="radius-select">
         <option value="">Ganzer Ort</option>
         <option value="5">5 km</option>
         <option value="10">10 km</option>
@@ -49,17 +49,17 @@
     </form>
   </section>
 
-  <section aria-label="Neueste Angebote">
+  <section>
     <h2>Neueste Angebote</h2>
-    <div id="newest-offers" class="category-grid" aria-live="polite" aria-busy="true"><p>⏳ Lade Angebote…</p></div>
+    <div id="newest-offers" class="category-grid"><p>⏳ Lade Angebote…</p></div>
     <div class="more-link">
       <a href="angebote_neueste.html" class="btn-more">MEHR <span>→</span></a>
     </div>
   </section>
 
-  <section aria-label="Beliebte Angebote">
+  <section>
     <h2>Beliebte Angebote</h2>
-    <div id="popular-offers" class="category-grid" aria-live="polite" aria-busy="true"><p>⏳ Lade Angebote…</p></div>
+    <div id="popular-offers" class="category-grid"><p>⏳ Lade Angebote…</p></div>
     <div class="more-link">
       <a href="angebote_beliebte.html" class="btn-more">MEHR <span>→</span></a>
     </div>
@@ -69,3 +69,4 @@
   <script src="components/include.js"></script>
 </body>
 </html>
+
