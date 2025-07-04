@@ -31,5 +31,3 @@ async function logout(event) {
   await supabase.auth.signOut();
   window.location.href = "login.html";
 }
-
-window.addEventListener('DOMContentLoaded', init);
