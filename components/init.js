@@ -23,6 +23,7 @@ function updateNav() {
   ` : `
     <a href="index.html">Start</a>
     <a href="login.html">Einloggen</a>
+    <a href="register.html">Registrieren</a>
   `;
 }
 
