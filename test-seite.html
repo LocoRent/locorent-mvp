@@ -2,62 +2,48 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Testseite – Locorent</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Poppins', sans-serif;
-      background-color: #f1f8e9;
-      color: #333;
-    }
-
-    main {
-      max-width: 800px;
-      margin: 4rem auto;
-      padding: 2rem;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-      text-align: center;
-    }
-
-    h2 {
-      color: #2e7d32;
-      margin-bottom: 1rem;
-    }
-
-    p {
-      font-size: 1.1rem;
-      line-height: 1.6;
-    }
-  </style>
+  <title>Locorent Testseite</title>
 </head>
 <body>
+  <div id="layout">Lade Layout…</div>
 
-  <!-- Header wird hier eingefügt -->
-  <div id="header-placeholder"></div>
+  <template id="content">
+    <main style="padding: 2rem;">
+      <h2>👋 Willkommen auf der Testseite</h2>
+      <p>Hier siehst du, wie das Layout automatisch eingebunden wird.</p>
+    </main>
+  </template>
 
-  <main>
-    <h2>Willkommen auf der Testseite</h2>
-    <p>Dies ist eine Beispielseite mit eingebautem zentralem Header und Footer. Du bist bereit, Locorent modular zu machen!</p>
-  </main>
-
-  <!-- Footer wird hier eingefügt -->
-  <div id="footer-placeholder"></div>
-
-  <!-- Einbindung von Header + Footer -->
   <script>
-    async function includeParts() {
-      const [headerRes, footerRes] = await Promise.all([
-        fetch('components/header.html'),
-        fetch('components/footer.html')
-      ]);
-      document.getElementById('header-placeholder').innerHTML = await headerRes.text();
-      document.getElementById('footer-placeholder').innerHTML = await footerRes.text();
+    async function loadLayout() {
+      const res = await fetch("components/layout.html?nocache=" + Date.now());
+      const text = await res.text();
+      const doc = new DOMParser().parseFromString(text, "text/html");
+
+      // Neuen Body aus layout.html extrahieren
+      const layoutBody = doc.body.cloneNode(true);
+
+      // Eigenen Inhalt aus <template> einsetzen
+      const content = document.getElementById("content").content.cloneNode(true);
+      layoutBody.insertBefore(content, layoutBody.querySelector("footer"));
+
+      // Ganze Seite ersetzen
+      document.documentElement.replaceWith(doc.documentElement);
+      document.body.replaceWith(layoutBody);
+
+      // Skripte neu ausführen
+      for (const script of doc.querySelectorAll("script")) {
+        const newScript = document.createElement("script");
+        if (script.src) {
+          newScript.src = script.src;
+        } else {
+          newScript.textContent = script.textContent;
+        }
+        document.body.appendChild(newScript);
+      }
     }
-    includeParts();
+
+    loadLayout();
   </script>
 </body>
 </html>
