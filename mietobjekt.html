@@ -304,7 +304,6 @@
     © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
   </div>
 </footer>
-
 <script>
   const supabase = window.supabase.createClient(
     'https://flnjalgqtkqycsaymmbd.supabase.co',
@@ -334,7 +333,6 @@
         <a href="login.html">Einloggen</a>
         <a href="register.html">Registrieren</a>
       `;
-      currentUser = null;
     }
   }
 
@@ -379,8 +377,7 @@
 
   async function loadListing() {
     const { data: { session } } = await supabase.auth.getSession();
-    if (!session?.user) return alert("Bitte einloggen."), location.href = "login.html";
-    currentUser = session.user;
+    currentUser = session?.user || null;
 
     const params = new URLSearchParams(location.search);
     const listingId = params.get('id');
@@ -398,8 +395,7 @@
 
     listingOwnerId = listing.user_id;
 
-    // Vermieterprofil laden
-    const { data: profile, error: profileError } = await supabase
+    const { data: profile } = await supabase
       .from('profiles')
       .select('name, city, bio')
       .eq('id', listing.user_id)
@@ -409,7 +405,6 @@
 
     const categoryCapitalized = capitalize(listing.category);
     const createdAtFormatted = formatDate(listing.created_at);
-
     const images = listing.image_urls || (listing.image_url ? [listing.image_url] : []);
     const thumbs = images.map((url, i) =>
       `<img src="${url}" class="${i === 0 ? 'active' : ''}" alt="Vorschaubild ${i + 1}" tabindex="0" onclick="switchImage('${url}', this)" onkeydown="if(event.key==='Enter'||event.key===' ') {switchImage('${url}', this);}">`
@@ -429,7 +424,7 @@
         <p><strong>Beschreibung:</strong></p>
         <p class="description">${listing.description || 'Keine Beschreibung vorhanden.'}</p>
         <button onclick="goToChat()">Nachricht an Vermieter</button>
-        <button id="add-to-favorites" onclick="toggleFavorite('${listing.id}')">Lade Favoritenstatus...</button>
+        ${currentUser ? `<button id="add-to-favorites" onclick="toggleFavorite('${listing.id}')">Lade Favoritenstatus...</button>` : ''}
       </div>
       <div class="vendor-info" aria-label="Vermieterinformationen">
         <h3>Vermieter</h3>
@@ -439,7 +434,7 @@
       </div>
     `;
 
-    await updateFavoriteButton(listing.id);
+    if (currentUser) await updateFavoriteButton(listing.id);
   }
 
   function switchImage(url, element) {
@@ -449,7 +444,6 @@
   }
 
   async function updateFavoriteButton(listingId) {
-    if (!currentUser) return;
     const { data } = await supabase
       .from('favorites')
       .select('*')
@@ -496,10 +490,10 @@
   }
 
   function goToChat() {
+    if (!currentUser) return alert("Bitte einloggen, um Nachrichten zu senden.");
     const params = new URLSearchParams(location.search);
     const listingId = params.get('id');
     const chatWith = listingOwnerId;
-
     window.location.href = `nachrichten.html?listing_id=${listingId}&with=${chatWith}`;
   }
 
@@ -508,3 +502,4 @@
 </script>
 </body>
 </html>
+
