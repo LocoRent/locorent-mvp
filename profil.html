@@ -1,675 +1,751 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Mein Profil – Locorent</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://cdn.jsdelivr.net/npm/zxcvbn@4.4.2/dist/zxcvbn.js"></script>
-  <style>
-    :root {
-      --primary: #2e7d32;
-      --primary-light: #66bb6a;
-      --primary-dark: #1b5e20;
-      --background: #f1f8e9;
-      --white: #fff;
-      --text-dark: #0f2e13;
-      --text-muted: #466843;
-      --accent: #b9f6ca;
-      --highlight: #a5d6a7;
-      --radius: 18px;
-      --shadow-light: rgba(46, 125, 50, 0.08);
-      --shadow-strong: rgba(46, 125, 50, 0.25);
-      --transition: 0.4s ease;
-      --font-primary: 'Poppins', sans-serif;
-    }
-    *, *::before, *::after {
-      box-sizing: border-box;
-    }
-    body {
-      margin: 0;
-      font-family: var(--font-primary);
-      background: var(--background);
-      color: var(--text-dark);
-      scroll-behavior: smooth;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-    header {
-      background-color: var(--primary);
-      color: var(--white);
-      padding: 1.5rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-weight: 700;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-    }
-    header h1 {
-      font-size: 1.8rem;
-      cursor: pointer;
-    }
-    nav {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-    nav a {
-      color: var(--white);
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 1rem;
-      position: relative;
-    }
-    nav a::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      bottom: -4px;
-      width: 0;
-      height: 2px;
-      background-color: var(--accent);
-      transition: width 0.3s ease;
-    }
-    nav a:hover::after {
-      width: 100%;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mein Profil – Locorent</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/zxcvbn@4.4.2/dist/zxcvbn.js"></script>
+<style>
+  :root {
+    --primary-color: #2e7d32;
+    --secondary-color: #a5d6a7;
+    --background-color: #f1f8e9;
+    --dark-color: #1b5e20;
+    --highlight-color: #66bb6a;
+    --white: #fff;
+    --gray-light: #f7f7f7;
+    --gray-dark: #333;
+    --border-radius: 12px;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --transition-speed: 0.3s;
+    --max-width: 1100px;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--background-color);
+    color: var(--gray-dark);
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  header {
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+
+  header h1 {
+    cursor: pointer;
+    user-select: none;
+  }
+
+  nav#nav-links a {
+    color: var(--white);
+    margin-left: 1.5rem;
+    text-decoration: none;
+    font-weight: 600;
+    transition: border-bottom var(--transition-speed);
+  }
+  nav#nav-links a:hover {
+    border-bottom: 2px solid var(--highlight-color);
+  }
+
+  main {
+    max-width: var(--max-width);
+    margin: 4rem auto;
+    padding: 1rem;
+    display: flex;
+    gap: 3rem;
+    user-select: none;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  #profile-section {
+    flex: 1 1 400px;
+    background: var(--white);
+    padding: 2.5rem 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 12px var(--shadow-color);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  #profile-section label {
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+  }
+
+  #profile-section input,
+  #profile-section textarea {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    padding: 0.75rem 1rem;
+    border: 1.8px solid #ddd;
+    border-radius: var(--border-radius);
+    transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
+    color: var(--gray-dark);
+  }
+
+  #profile-section input:focus,
+  #profile-section textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 8px var(--primary-color);
+  }
+
+  #profile-section textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+
+  .input-group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .btn {
+    background-color: var(--primary-color);
+    color: var(--white);
+    border: none;
+    border-radius: var(--border-radius);
+    padding: 0.9rem 1.8rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color var(--transition-speed), box-shadow var(--transition-speed);
+    align-self: flex-start;
+    box-shadow: 0 3px 8px var(--shadow-color);
+  }
+  .btn:hover,
+  .btn:focus-visible {
+    background-color: var(--dark-color);
+    box-shadow: 0 0 15px var(--dark-color);
+    outline: none;
+  }
+
+  #pw-strength {
+    height: 6px;
+    border-radius: 6px;
+    background-color: #eee;
+    margin-top: 7px;
+    overflow: hidden;
+  }
+  #pw-strength > div {
+    height: 100%;
+    width: 0;
+    transition: width 0.4s ease;
+  }
+  #pw-strength.weak > div {
+    background-color: #d32f2f;
+    width: 25%;
+  }
+  #pw-strength.fair > div {
+    background-color: #fbc02d;
+    width: 50%;
+  }
+  #pw-strength.good > div {
+    background-color: #388e3c;
+    width: 75%;
+  }
+  #pw-strength.strong > div {
+    background-color: var(--primary-color);
+    width: 100%;
+  }
+  #pw-strength-text {
+    margin-top: 0.35rem;
+    font-size: 0.9rem;
+    color: #555;
+  }
+
+  #reviews-section {
+    flex: 1 1 500px;
+    background: var(--white);
+    padding: 2.5rem 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 12px var(--shadow-color);
+    display: flex;
+    flex-direction: column;
+  }
+
+  #reviews-section h2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 700;
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+  }
+  #reviews-section h2 a {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    text-decoration: underline;
+    cursor: pointer;
+    user-select: auto;
+  }
+  #reviews-section h2 a:hover,
+  #reviews-section h2 a:focus {
+    color: var(--dark-color);
+  }
+
+  #reviews-list {
+    flex-grow: 1;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+  }
+
+  .review-item {
+    background-color: var(--gray-light);
+    border-radius: var(--border-radius);
+    padding: 1rem 1.5rem;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    transition: box-shadow 0.3s ease, transform 0.25s ease;
+  }
+  .review-item:hover {
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    transform: translateY(-3px);
+  }
+  .review-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .review-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #e0f5e9 center/cover no-repeat;
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+  }
+  .reviewer-name {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--primary-color);
+  }
+  .review-date {
+    margin-left: auto;
+    font-size: 0.8rem;
+    color: #777;
+    font-style: italic;
+  }
+  .review-rating {
+    color: #fbc02d;
+    font-size: 1.4rem;
+    user-select: none;
+    margin-left: 1rem;
+  }
+  .review-text {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #444;
+    white-space: pre-line;
+    border-left: 3px solid var(--primary-color);
+    padding-left: 1rem;
+    background: #e9f5e9;
+    border-radius: 6px;
+  }
+
+  /* Statistik Sektion */
+  #stats-section {
+    flex: 1 1 250px;
+    background: var(--white);
+    padding: 2.5rem 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 12px var(--shadow-color);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    justify-content: flex-start;
+  }
+  #stats-section h2 {
+    color: var(--primary-color);
+    font-weight: 700;
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+  }
+  .stat-item {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--dark-color);
+    background: var(--gray-light);
+    padding: 1rem 1.2rem;
+    border-radius: var(--border-radius);
+    box-shadow: inset 0 0 8px rgba(0,0,0,0.05);
+  }
+
+  footer {
+    padding: 2rem;
+    text-align: center;
+    background-color: var(--primary-color);
+    color: var(--white);
+    border-radius: var(--border-radius);
+    margin-top: auto;
+    user-select: none;
+    font-weight: 400;
+    font-size: 0.9rem;
+  }
+
+  footer div {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+  footer div > div {
+    flex: 1 1 200px;
+  }
+  footer h4 {
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+  }
+  footer ul {
+    list-style: none;
+    padding-left: 0;
+    line-height: 1.7;
+  }
+  footer ul li a {
+    color: var(--white);
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  footer ul li a:hover,
+  footer ul li a:focus-visible {
+    color: var(--highlight-color);
+    outline: none;
+  }
+
+  @media (max-width: 960px) {
     main {
-      max-width: 1200px;
-      margin: 3rem auto;
-      padding: 0 1.5rem;
-      flex-grow: 1;
-      display: flex;
-      flex-wrap: wrap;
+      flex-direction: column;
+      margin: 2rem auto;
       gap: 2rem;
-      justify-content: center;
     }
     #profile-section, #reviews-section, #stats-section {
-      background: var(--white);
-      padding: 2.5rem 2rem;
-      border-radius: var(--radius);
-      box-shadow: 0 2px 12px var(--shadow-light);
-    }
-    #profile-section {
-      flex: 1 1 400px;
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-    .input-group {
-      display: flex;
-      flex-direction: column;
-    }
-    .input-group label {
-      font-weight: 600;
-      margin-bottom: 0.4rem;
-    }
-    .input-group input,
-    .input-group textarea {
-      font-family: var(--font-primary);
-      font-size: 1rem;
-      padding: 0.75rem 1rem;
-      border: 1.8px solid #ddd;
-      border-radius: var(--radius);
-      transition: border-color var(--transition), box-shadow var(--transition);
-      color: var(--text-dark);
-    }
-    .input-group input:focus,
-    .input-group textarea:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 8px var(--primary);
-    }
-    .input-group textarea {
-      resize: vertical;
-      min-height: 120px;
-    }
-    .btn {
-      background-color: var(--primary);
-      color: var(--white);
-      border: none;
-      border-radius: var(--radius);
-      padding: 0.9rem 1.8rem;
-      font-weight: 600;
-      font-size: 1.1rem;
-      cursor: pointer;
-      transition: background-color var(--transition), box-shadow var(--transition);
-      align-self: flex-start;
-      box-shadow: 0 3px 8px var(--shadow-light);
-    }
-    .btn:hover,
-    .btn:focus-visible {
-      background-color: var(--primary-dark);
-      box-shadow: 0 0 15px var(--primary-dark);
-      outline: none;
-    }
-    #pw-strength {
-      height: 6px;
-      border-radius: 6px;
-      background-color: #eee;
-      margin-top: 7px;
-      overflow: hidden;
-    }
-    #pw-strength > div {
-      height: 100%;
-      width: 0;
-      transition: width 0.4s ease;
-    }
-    #pw-strength.weak > div {
-      background-color: #d32f2f;
-      width: 25%;
-    }
-    #pw-strength.fair > div {
-      background-color: #fbc02d;
-      width: 50%;
-    }
-    #pw-strength.good > div {
-      background-color: #388e3c;
-      width: 75%;
-    }
-    #pw-strength.strong > div {
-      background-color: var(--primary);
+      flex: unset;
       width: 100%;
     }
-    #pw-strength-text {
-      margin-top: 0.35rem;
-      font-size: 0.9rem;
-      color: #555;
-    }
-    #reviews-section {
-      flex: 1 1 500px;
-      display: flex;
-      flex-direction: column;
-    }
-    #reviews-section h2 {
-      font-weight: 700;
-      font-size: 1.8rem;
-      margin-bottom: 1rem;
-      color: var(--primary);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    #reviews-section h2 a {
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--primary);
-      text-decoration: underline;
-      cursor: pointer;
-    }
-    #reviews-list {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1.2rem;
-    }
-    .review-item {
-      background-color: #f7f7f7;
-      border-radius: var(--radius);
-      padding: 1rem 1.5rem;
-      box-shadow: inset 0 0 10px rgba(0,0,0,0.06);
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-    .review-header {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    .review-avatar {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background: #e0f5e9 center/cover no-repeat;
-      font-weight: 700;
-      font-size: 1.3rem;
-      color: var(--primary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.12);
-    }
-    .reviewer-name {
-      font-weight: 700;
-      font-size: 1.1rem;
-      color: var(--primary);
-    }
-    .review-date {
-      margin-left: auto;
-      font-size: 0.8rem;
-      color: #777;
-      font-style: italic;
-    }
-    .review-rating {
-      color: #fbc02d;
-      font-size: 1.4rem;
-      margin-left: 1rem;
-    }
-    .review-text {
-      font-size: 1rem;
-      line-height: 1.5;
-      color: #444;
-      white-space: pre-line;
-      border-left: 3px solid var(--primary);
-      padding-left: 1rem;
-      background: #e9f5e9;
-      border-radius: 6px;
-    }
-    #stats-section {
-      flex: 1 1 250px;
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-    #stats-section h2 {
-      color: var(--primary);
-      font-weight: 700;
-      font-size: 1.8rem;
-      margin-bottom: 1rem;
-    }
-    .stat-item {
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: var(--primary-dark);
-      background: #f7f7f7;
-      padding: 1rem 1.2rem;
-      border-radius: var(--radius);
-      box-shadow: inset 0 0 8px rgba(0,0,0,0.05);
-    }
-    footer {
-      background-color: var(--primary);
-      color: var(--white);
-      padding: 2rem 2rem 1rem;
-      border-radius: var(--radius);
-      margin: 2rem 0 0 0;
-      box-shadow: 0 8px 32px rgba(46, 125, 50, 0.22);
-      font-size: 0.92rem;
-      width: 100vw;
-      position: relative;
-      left: 50%;
-      right: 50%;
-      margin-left: -50vw;
-      margin-right: -50vw;
-    }
-    footer > div {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 2rem;
-    }
-    footer > div > div {
-      flex: 1;
-      min-width: 200px;
-    }
-    footer h4 {
-      margin-bottom: 0.5rem;
-      font-weight: 700;
-      font-size: 1.1rem;
-    }
-    footer ul {
-      list-style: none;
-      padding: 0;
-      line-height: 1.8;
-    }
-    footer ul li a {
-      color: var(--white);
-      text-decoration: underline;
-    }
-    footer ul li a:hover {
-      color: var(--primary-light);
-    }
-    footer small {
-      display: block;
-      margin-top: 2rem;
-      text-align: center;
-    }
-    @media (max-width: 768px) {
-      header {
-        flex-direction: column;
-        gap: 1rem;
-      }
-      main {
-        flex-direction: column;
-      }
-      footer > div {
-        flex-direction: column;
-        align-items: center;
-      }
-      footer > div > div {
-        width: 100%;
-        max-width: 300px;
-      }
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
-  <header>
-    <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
-    <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
-  </header>
-  <main role="main" aria-label="Mein Profil">
-    <section id="profile-section" aria-label="Profilinformationen">
-      <div class="input-group">
-        <label for="name">Name</label>
-        <input id="name" type="text" autocomplete="name" placeholder="Dein Name" />
-      </div>
-      <div class="input-group">
-        <label for="email">E-Mail (nicht änderbar)</label>
-        <input id="email" type="email" disabled autocomplete="email" />
-      </div>
-      <div class="input-group" style="position:relative;">
-        <label for="city">Wohnort</label>
-        <input id="city" type="text" autocomplete="address-level2" placeholder="Wohnort eingeben" aria-autocomplete="list" aria-controls="city-suggestions" aria-expanded="false" />
-        <div id="city-suggestions" role="listbox" aria-label="Wohnort Vorschläge" style="position:absolute; top:100%; left:0; right:0; background:white; border:1px solid #ccc; max-height: 180px; overflow-y:auto; z-index: 999;"></div>
-      </div>
-      <div class="input-group">
-        <label for="bio">Über mich</label>
-        <textarea id="bio" placeholder="Erzähle etwas über dich..." rows="5"></textarea>
-      </div>
-      <div id="password-section" class="input-group">
-        <label for="password">Neues Passwort</label>
-        <input id="password" type="password" autocomplete="new-password" placeholder="Neues Passwort eingeben" aria-describedby="pw-strength-text" />
-        <div id="pw-strength" aria-hidden="true"><div></div></div>
-        <div id="pw-strength-text">Passwortstärke: <span id="strength-label">–</span></div>
-        <button class="btn" id="change-pw-btn" aria-live="polite" aria-label="Passwort ändern" onclick="changePassword()">Passwort ändern</button>
-      </div>
-      <button class="btn" id="save-btn" aria-label="Profil speichern" onclick="saveProfile()">Profil speichern</button>
-    </section>
-    <section id="reviews-section" aria-label="Bewertungen">
-      <h2>
-        Bewertungen
-        <a href="#" id="show-all-reviews" aria-label="Alle Bewertungen anzeigen">Alle anzeigen →</a>
-      </h2>
-      <div id="reviews-list" role="list" aria-live="polite">⏳ Lade Bewertungen…</div>
-    </section>
-    <section id="stats-section" aria-label="Profil Statistiken">
-      <h2>Statistiken</h2>
-      <div class="stat-item" id="stat-inserate">Inserate: …</div>
-      <div class="stat-item" id="stat-bewertungen">Bewertungen: …</div>
-    </section>
-  </main>
-  <footer role="contentinfo">
-    <div>
-      <div>
-        <h4>Mieten &amp; Vermieten</h4>
-        <ul>
-          <li><a href="so-funktionierts.html">So funktioniert's</a></li>
-          <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
-          <li><a href="kategorien.html">Beliebte Kategorien</a></li>
-          <li><a href="vermieter-tipps.html">Tipps &amp; Tricks für Vermieter</a></li>
-          <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>Wissenswertes</h4>
-        <ul>
-          <li><a href="agb.html">AGB &amp; Impressum</a></li>
-          <li><a href="datenschutz.html">Datenschutz</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>Über uns</h4>
-        <ul>
-          <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
-          <li><a href="social-media.html">Folgen Sie uns</a></li>
-          <li><a href="mission.html">Unsere Mission</a></li>
-        </ul>
-      </div>
+<header>
+  <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
+  <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
+</header>
+
+<main role="main" aria-label="Mein Profil">
+  <section id="profile-section" aria-label="Profilinformationen">
+    <div class="input-group">
+      <label for="name">Name</label>
+      <input id="name" type="text" autocomplete="name" placeholder="Dein Name" />
     </div>
-    <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
-  </footer>
-  <script>
-    const supabase = window.supabase.createClient(
-      'https://flnjalgqtkqycsaymmbd.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6IkFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-    );
+    <div class="input-group">
+      <label for="email">E-Mail (nicht änderbar)</label>
+      <input id="email" type="email" disabled autocomplete="email" />
+    </div>
+    <div class="input-group" style="position:relative;">
+      <label for="city">Wohnort</label>
+      <input id="city" type="text" autocomplete="address-level2" placeholder="Wohnort eingeben" aria-autocomplete="list" aria-controls="city-suggestions" aria-expanded="false" />
+      <div id="city-suggestions" role="listbox" aria-label="Wohnort Vorschläge" style="position:absolute; top:100%; left:0; right:0; background:white; border:1px solid #ccc; max-height: 180px; overflow-y:auto; z-index: 999;"></div>
+    </div>
+    <div class="input-group">
+      <label for="bio">Über mich</label>
+      <textarea id="bio" placeholder="Erzähle etwas über dich..." rows="5"></textarea>
+    </div>
 
-    async function updateNav() {
-      const { data: { session } } = await supabase.auth.getSession();
-      const nav = document.getElementById('nav-links');
-      if (session?.user) {
-        nav.innerHTML = `
-          <a href="index.html">Start</a>
-          <a href="profil.html" aria-current="page">Mein Profil</a>
-          <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-          <a href="favoriten.html">Meine Favoriten</a>
-          <a href="inserate.html">Meine Inserate</a>
-          <a href="#" onclick="logout(event)">Logout</a>
-        `;
-      } else {
-        nav.innerHTML = `
-          <a href="index.html">Start</a>
-          <a href="login.html">Einloggen</a>
-        `;
-      }
+    <div id="password-section" class="input-group">
+      <label for="password">Neues Passwort</label>
+      <input id="password" type="password" autocomplete="new-password" placeholder="Neues Passwort eingeben" aria-describedby="pw-strength-text" />
+      <div id="pw-strength" aria-hidden="true"><div></div></div>
+      <div id="pw-strength-text">Passwortstärke: <span id="strength-label">–</span></div>
+      <button class="btn" id="change-pw-btn" aria-live="polite" aria-label="Passwort ändern" onclick="changePassword()">Passwort ändern</button>
+    </div>
+
+    <button class="btn" id="save-btn" aria-label="Profil speichern" onclick="saveProfile()">Profil speichern</button>
+  </section>
+
+  <section id="reviews-section" aria-label="Bewertungen">
+    <h2>
+      Bewertungen
+      <a href="#" id="show-all-reviews" aria-label="Alle Bewertungen anzeigen">Alle anzeigen →</a>
+    </h2>
+    <div id="reviews-list" role="list" aria-live="polite">
+      ⏳ Lade Bewertungen…
+    </div>
+  </section>
+
+  <section id="stats-section" aria-label="Profil Statistiken">
+    <h2>Statistiken</h2>
+    <div class="stat-item" id="stat-inserate">Inserate: …</div>
+    <div class="stat-item" id="stat-bewertungen">Bewertungen: …</div>
+  </section>
+</main>
+
+<footer role="contentinfo">
+  <div>
+    <h4>Mieten &amp; Vermieten</h4>
+    <ul>
+      <li><a href="so-funktionierts.html">So funktioniert's</a></li>
+      <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
+      <li><a href="kategorien.html">Beliebte Kategorien</a></li>
+      <li><a href="vermieter-tipps.html">Tipps &amp; Tricks für Vermieter</a></li>
+      <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
+    </ul>
+  </div>
+  <div>
+    <h4>Wissenswertes</h4>
+    <ul>
+      <li><a href="agb.html">AGB &amp; Impressum</a></li>
+      <li><a href="datenschutz.html">Datenschutz</a></li>
+    </ul>
+  </div>
+  <div>
+    <h4>Über uns</h4>
+    <ul>
+      <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
+      <li><a href="social-media.html">Folgen Sie uns</a></li>
+    </ul>
+  </div>
+  <div class="copyright">
+    © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
+  </div>
+</footer>
+
+<script>
+  const supabase = window.supabase.createClient(
+    'https://flnjalgqtkqycsaymmbd.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+  );
+
+  // Navigation aktualisieren
+  async function updateNav() {
+    const { data: { session } } = await supabase.auth.getSession();
+    const nav = document.getElementById('nav-links');
+    if (session?.user) {
+      nav.innerHTML = `
+        <a href="index.html">Start</a>
+        <a href="profil.html" aria-current="page">Mein Profil</a>
+        <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+        <a href="favoriten.html">Meine Favoriten</a>
+        <a href="inserate.html">Meine Inserate</a>
+        <a href="#" onclick="logout(event)">Logout</a>
+      `;
+    } else {
+      nav.innerHTML = `
+        <a href="index.html">Start</a>
+        <a href="login.html">Einloggen</a>
+      `;
     }
+  }
 
-    async function logout(e) {
-      e.preventDefault();
-      await supabase.auth.signOut();
+  async function logout(e) {
+    e.preventDefault();
+    await supabase.auth.signOut();
+    window.location.href = "login.html";
+  }
+
+  // Profil laden
+  async function loadProfile() {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) {
       window.location.href = "login.html";
+      return;
+    }
+    const user = session.user;
+    document.getElementById('email').value = user.email;
+
+    // Profil-Daten holen
+    const { data: profile, error } = await supabase
+      .from('profiles')
+      .select('name, city, bio')
+      .eq('id', user.id)
+      .single();
+
+    if (error) {
+      alert("Fehler beim Laden des Profils.");
+      return;
     }
 
-    async function loadProfile() {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.user) {
-        window.location.href = "login.html";
-        return;
-      }
-      const user = session.user;
-      document.getElementById('email').value = user.email;
-
-      const { data: profile, error } = await supabase
-        .from('profiles')
-        .select('name, city, bio')
-        .eq('id', user.id)
-        .single();
-
-      if (error) {
-        alert("Fehler beim Laden des Profils.");
-        return;
-      }
-      if (profile) {
-        document.getElementById('name').value = profile.name || '';
-        document.getElementById('city').value = profile.city || '';
-        document.getElementById('bio').value = profile.bio || '';
-      }
-      loadReviews(user.id);
-      loadStats(user.id);
+    if (profile) {
+      document.getElementById('name').value = profile.name || '';
+      document.getElementById('city').value = profile.city || '';
+      document.getElementById('bio').value = profile.bio || '';
     }
 
-    async function loadReviews(userId) {
-      const container = document.getElementById('reviews-list');
-      container.innerHTML = '⏳ Lade Bewertungen…';
+    // Bewertungen laden
+    loadReviews(user.id);
 
-      const { data: reviews, error } = await supabase
-        .from('reviews')
-        .select('rating, comment, created_at, from_user:from_user_id(name, avatar_url)')
-        .eq('to_user_id', userId)
-        .order('created_at', { ascending: false })
-        .limit(5);
+    // Statistik laden
+    loadStats(user.id);
+  }
 
-      if (error || !reviews || reviews.length === 0) {
-        container.innerHTML = "<p>Keine Bewertungen vorhanden.</p>";
-        return;
-      }
+  // Bewertungen laden und anzeigen (max 5)
+  async function loadReviews(userId) {
+    const container = document.getElementById('reviews-list');
+    container.innerHTML = '⏳ Lade Bewertungen…';
 
-      container.innerHTML = reviews.map(r => `
-        <article class="review-item" tabindex="0" aria-label="Bewertung ${r.rating} von 5 Sternen von ${r.from_user?.name || 'Unbekannt'}">
-          <div class="review-header">
-            <div class="review-avatar" style="background-image: url('${r.from_user?.avatar_url || ''}');" aria-hidden="true">
-              ${!r.from_user?.avatar_url ? (r.from_user?.name ? r.from_user.name.split(' ').map(n => n[0]).join('').toUpperCase() : '') : ''}
-            </div>
-            <div class="reviewer-name">${r.from_user?.name || 'Unbekannt'}</div>
-            <div class="review-rating" aria-label="Bewertung: ${r.rating} von 5 Sternen">${createStarIcons(r.rating)}</div>
-            <time class="review-date" datetime="${new Date(r.created_at).toISOString()}">Verfasst am ${new Date(r.created_at).toLocaleDateString()}</time>
+    const { data: reviews, error } = await supabase
+      .from('reviews')
+      .select('rating, comment, created_at, from_user:from_user_id(name, avatar_url)')
+      .eq('to_user_id', userId)
+      .order('created_at', { ascending: false })
+      .limit(5);
+
+    if (error || !reviews || reviews.length === 0) {
+      container.innerHTML = "<p>Keine Bewertungen vorhanden.</p>";
+      return;
+    }
+
+    container.innerHTML = reviews.map(r => `
+      <article class="review-item" tabindex="0" aria-label="Bewertung ${r.rating} von 5 Sternen von ${r.from_user?.name || 'Unbekannt'}">
+        <div class="review-header">
+          <div class="review-avatar" style="background-image: url('${r.from_user?.avatar_url || ''}');" aria-hidden="true">
+            ${!r.from_user?.avatar_url ? (r.from_user?.name ? r.from_user.name.split(' ').map(n => n[0]).join('').toUpperCase() : '') : ''}
           </div>
-          <p class="review-text">${r.comment || ''}</p>
-        </article>
-      `).join('');
-      document.getElementById('show-all-reviews').href = `bewertungen.html?id=${userId}`;
-    }
+          <div class="reviewer-name">${r.from_user?.name || 'Unbekannt'}</div>
+          <div class="review-rating" aria-label="Bewertung: ${r.rating} von 5 Sternen">${createStarIcons(r.rating)}</div>
+          <time class="review-date" datetime="${new Date(r.created_at).toISOString()}">Verfasst am ${new Date(r.created_at).toLocaleDateString()}</time>
+        </div>
+        <p class="review-text">${r.comment || ''}</p>
+      </article>
+    `).join('');
 
-    async function loadStats(userId) {
-      try {
-        const { data: inserate, error: inserateError } = await supabase
-          .from('listings')
-          .select('id', { count: 'exact' })
-          .eq('user_id', userId);
+    // Link "Alle anzeigen" setzen auf Bewertungen-Seite mit User-ID
+    document.getElementById('show-all-reviews').href = `bewertungen.html?id=${userId}`;
+  }
 
-        const { data: bewertungen, error: bewertungenError } = await supabase
-          .from('reviews')
-          .select('id', { count: 'exact' })
-          .eq('to_user_id', userId);
+  // Statistik laden (Inserate & Bewertungen zählen)
+  async function loadStats(userId) {
+    try {
+      const { data: inserate, error: inserateError } = await supabase
+        .from('listings')
+        .select('id', { count: 'exact' })
+        .eq('user_id', userId);
 
-        if (inserateError || bewertungenError) {
-          document.getElementById('stat-inserate').textContent = 'Inserate: Fehler';
-          document.getElementById('stat-bewertungen').textContent = 'Bewertungen: Fehler';
-          return;
-        }
-        const inserateCount = inserate?.length || 0;
-        const bewertungenCount = bewertungen?.length || 0;
-        document.getElementById('stat-inserate').textContent = `Inserate: ${inserateCount}`;
-        document.getElementById('stat-bewertungen').textContent = `Bewertungen: ${bewertungenCount}`;
-      } catch (err) {
+      const { data: bewertungen, error: bewertungenError } = await supabase
+        .from('reviews')
+        .select('id', { count: 'exact' })
+        .eq('to_user_id', userId);
+
+      if (inserateError || bewertungenError) {
         document.getElementById('stat-inserate').textContent = 'Inserate: Fehler';
         document.getElementById('stat-bewertungen').textContent = 'Bewertungen: Fehler';
-        console.error('Fehler beim Laden der Statistik:', err);
+        return;
       }
-    }
 
-    function createStarIcons(rating) {
-      let fullStars = Math.floor(rating);
-      let halfStar = rating - fullStars >= 0.5;
-      let emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
-      let starsHtml = '';
-      for (let i = 0; i < fullStars; i++) {
-        starsHtml += '<span class="star" aria-hidden="true" style="color: #fbc02d; font-size:1.3rem;">★</span>';
-      }
-      if (halfStar) {
-        starsHtml += '<span class="star" aria-hidden="true" style="color: #fbc02d; font-size:1.3rem;">★</span>';
-      }
-      for (let i = 0; i < emptyStars; i++) {
-        starsHtml += '<span class="star empty" aria-hidden="true" style="color: #ccc; font-size:1.3rem;">☆</span>';
-      }
-      return starsHtml;
-    }
+      const inserateCount = inserate?.length || 0;
+      const bewertungenCount = bewertungen?.length || 0;
 
-    document.getElementById('password').addEventListener('input', () => {
-      const val = document.getElementById('password').value;
+      document.getElementById('stat-inserate').textContent = `Inserate: ${inserateCount}`;
+      document.getElementById('stat-bewertungen').textContent = `Bewertungen: ${bewertungenCount}`;
+    } catch (err) {
+      document.getElementById('stat-inserate').textContent = 'Inserate: Fehler';
+      document.getElementById('stat-bewertungen').textContent = 'Bewertungen: Fehler';
+      console.error('Fehler beim Laden der Statistik:', err);
+    }
+  }
+
+  // Stern-Icons Helper
+  function createStarIcons(rating) {
+    let fullStars = Math.floor(rating);
+    let halfStar = rating - fullStars >= 0.5;
+    let emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+    let starsHtml = '';
+    for (let i = 0; i < fullStars; i++) {
+      starsHtml += '<span class="star" aria-hidden="true" style="color: #fbc02d; font-size:1.3rem;">&#9733;</span>';
+    }
+    if (halfStar) {
+      starsHtml += '<span class="star" aria-hidden="true" style="color: #fbc02d; font-size:1.3rem;">&#9733;</span>'; // halber Stern als voller Stern vereinfacht
+    }
+    for (let i = 0; i < emptyStars; i++) {
+      starsHtml += '<span class="star empty" aria-hidden="true" style="color: #ccc; font-size:1.3rem;">&#9734;</span>';
+    }
+    return starsHtml;
+  }
+
+  // Passwortstärke Anzeige und Ändern
+  const pwInput = document.getElementById('password');
+  const pwStrengthBar = document.getElementById('pw-strength');
+  const pwStrengthLabel = document.getElementById('strength-label');
+
+  if (pwInput) {
+    pwInput.addEventListener('input', () => {
+      const val = pwInput.value;
       if (!val) {
-        document.getElementById('pw-strength').className = '';
-        document.getElementById('strength-label').textContent = '–';
-        document.getElementById('pw-strength').querySelector('div').style.width = '0';
+        pwStrengthBar.className = '';
+        pwStrengthLabel.textContent = '–';
+        pwStrengthBar.querySelector('div').style.width = '0';
         return;
       }
       const result = zxcvbn(val);
       let strength = 'weak';
       let label = 'Schwach';
       switch(result.score) {
-        case 2: strength = 'fair'; label = 'Fair'; break;
-        case 3: strength = 'good'; label = 'Gut'; break;
-        case 4: strength = 'strong'; label = 'Stark'; break;
+        case 0:
+        case 1:
+          strength = 'weak';
+          label = 'Schwach';
+          break;
+        case 2:
+          strength = 'fair';
+          label = 'Fair';
+          break;
+        case 3:
+          strength = 'good';
+          label = 'Gut';
+          break;
+        case 4:
+          strength = 'strong';
+          label = 'Stark';
+          break;
       }
-      document.getElementById('pw-strength').className = strength;
-      document.getElementById('strength-label').textContent = label;
+      pwStrengthBar.className = strength;
+      pwStrengthLabel.textContent = label;
     });
+  }
 
-    async function changePassword() {
-      const password = document.getElementById('password').value.trim();
-      if (!password) {
-        alert("Bitte gib ein neues Passwort ein.");
-        return;
+  async function changePassword() {
+    const password = pwInput.value.trim();
+    if (!password) {
+      alert("Bitte gib ein neues Passwort ein.");
+      return;
+    }
+    const btn = document.getElementById('change-pw-btn');
+    btn.disabled = true;
+    try {
+      const { data, error } = await supabase.auth.updateUser({ password });
+      if (error) throw error;
+      alert("Passwort erfolgreich geändert!");
+      pwInput.value = '';
+      pwStrengthBar.className = '';
+      pwStrengthLabel.textContent = '–';
+    } catch (err) {
+      alert("Fehler beim Ändern des Passworts: " + err.message);
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  // Wohnort Autocomplete (analog Inserate)
+  const cityInput = document.getElementById('city');
+  const citySuggestions = document.getElementById('city-suggestions');
+
+  cityInput.addEventListener('input', async e => {
+    const value = e.target.value.trim();
+    if (value.length < 2) {
+      citySuggestions.innerHTML = '';
+      cityInput.setAttribute('aria-expanded', 'false');
+      return;
+    }
+    try {
+      const res = await fetch(`https://corsproxy.io/?https://nominatim.openstreetmap.org/search?format=json&accept-language=de&addressdetails=1&countrycodes=de&limit=8&q=${encodeURIComponent(value)}`);
+      const results = await res.json();
+      const filtered = results.filter(r => r.lat && r.lon && r.address);
+      citySuggestions.innerHTML = '';
+      cityInput.setAttribute('aria-expanded', 'true');
+
+      filtered.forEach(r => {
+        const ort = r.address.city || r.address.town || r.address.village || r.address.hamlet || r.address.municipality || r.display_name.split(',')[0];
+        const bundesland = r.address.state || '';
+        const land = r.address.country || 'Deutschland';
+        const display = [ort, bundesland, land].filter(Boolean).join(', ');
+
+        const div = document.createElement('div');
+        div.textContent = display;
+        div.setAttribute('role', 'option');
+        div.tabIndex = 0;
+        div.onclick = () => {
+          cityInput.value = display;
+          citySuggestions.innerHTML = '';
+          cityInput.setAttribute('aria-expanded', 'false');
+        };
+        div.onkeydown = e => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            div.click();
+          }
+        };
+        citySuggestions.appendChild(div);
+      });
+
+      if (filtered.length === 0) {
+        citySuggestions.innerHTML = '<div style="padding:0.5rem;">Kein Ort gefunden</div>';
       }
-      const btn = document.getElementById('change-pw-btn');
-      btn.disabled = true;
-      try {
-        const { error } = await supabase.auth.updateUser({ password });
-        if (error) throw error;
-        alert("Passwort geändert!");
-        document.getElementById('password').value = '';
-        document.getElementById('pw-strength').className = '';
-        document.getElementById('strength-label').textContent = '–';
-      } catch (err) {
-        alert("Fehler: " + err.message);
-      } finally {
-        btn.disabled = false;
-      }
+    } catch (err) {
+      console.error("Fehler bei Ortssuche:", err);
+    }
+  });
+
+  // Profil speichern
+  async function saveProfile() {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) {
+      alert("Nicht eingeloggt!");
+      return;
+    }
+    const userId = session.user.id;
+    const updates = {
+      id: userId,
+      name: document.getElementById('name').value.trim(),
+      city: document.getElementById('city').value.trim(),
+      bio: document.getElementById('bio').value.trim()
+    };
+
+    if (updates.name.length < 2) {
+      alert("Bitte gib mindestens 2 Zeichen für den Namen ein.");
+      return;
     }
 
-    document.getElementById('city').addEventListener('input', async (e) => {
-      const value = e.target.value.trim();
-      const suggestions = document.getElementById('city-suggestions');
-      if (value.length < 2) {
-        suggestions.innerHTML = '';
-        document.getElementById('city').setAttribute('aria-expanded', 'false');
-        return;
-      }
-      try {
-        const res = await fetch(`https://corsproxy.io/?https://nominatim.openstreetmap.org/search?format=json&accept-language=de&countrycodes=de&limit=8&q=${encodeURIComponent(value)}`);
-        const results = await res.json();
-        const filtered = results.filter(r => r.address);
-        suggestions.innerHTML = '';
-        document.getElementById('city').setAttribute('aria-expanded', 'true');
-        filtered.forEach(r => {
-          const ort = r.address.city || r.address.town || r.address.village || r.display_name.split(',')[0];
-          const bundesland = r.address.state || '';
-          const land = r.address.country || 'Deutschland';
-          const display = [ort, bundesland, land].filter(Boolean).join(', ');
-          const div = document.createElement('div');
-          div.textContent = display;
-          div.role = 'option';
-          div.tabIndex = 0;
-          div.onclick = () => {
-            document.getElementById('city').value = display;
-            suggestions.innerHTML = '';
-            document.getElementById('city').setAttribute('aria-expanded', 'false');
-          };
-          div.onkeydown = e => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              div.click();
-            }
-          };
-          suggestions.appendChild(div);
-        });
-        if (filtered.length === 0) suggestions.innerHTML = '<div style="padding:0.5rem;">Kein Ort gefunden</div>';
-      } catch {}
-    });
-
-    async function saveProfile() {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.user) { alert("Nicht eingeloggt!"); return; }
-      const updates = {
-        id: session.user.id,
-        name: document.getElementById('name').value.trim(),
-        city: document.getElementById('city').value.trim(),
-        bio: document.getElementById('bio').value.trim()
-      };
-      if (updates.name.length < 2) { alert("Name min. 2 Zeichen."); return; }
-      const btn = document.getElementById('save-btn');
-      btn.disabled = true;
-      try {
-        const { error } = await supabase.from('profiles').upsert(updates);
-        if (error) throw error;
-        alert("Profil gespeichert!");
-      } catch (err) {
-        alert("Fehler: " + err.message);
-      } finally {
-        btn.disabled = false;
-      }
+    const btn = document.getElementById('save-btn');
+    btn.disabled = true;
+    try {
+      const { error } = await supabase.from('profiles').upsert(updates);
+      if (error) throw error;
+      alert("Profil erfolgreich gespeichert!");
+    } catch (err) {
+      alert("Fehler beim Speichern: " + err.message);
+    } finally {
+      btn.disabled = false;
     }
+  }
 
-    updateNav();
-    loadProfile();
-  </script>
+  updateNav();
+  loadProfile();
+</script>
 </body>
 </html>
