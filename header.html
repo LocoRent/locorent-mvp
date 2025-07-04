@@ -10,3 +10,18 @@
     <a href="#" onclick="logout(event)">Logout</a>
   </nav>
 </header>
+
+<script>
+  document.getElementById('nav-toggle').addEventListener('click', () => {
+    const nav = document.getElementById('main-nav');
+    nav.classList.toggle('show');
+    const expanded = nav.classList.contains('show');
+    document.getElementById('nav-toggle').setAttribute('aria-expanded', expanded);
+  });
+
+  async function logout(event) {
+    event.preventDefault();
+    await supabase.auth.signOut();
+    window.location.href = "login.html";
+  }
+</script>
