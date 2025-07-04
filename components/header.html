@@ -12,7 +12,7 @@
 
   let userSession = null;
 
-  async function updateNav() {
+  async function initHeader() {
     const { data: { session } } = await supabase.auth.getSession();
     userSession = session;
     const nav = document.getElementById('nav-links');
@@ -35,5 +35,5 @@
     window.location.href = "login.html";
   }
 
-  updateNav();
+  initHeader();
 </script>
