@@ -3,25 +3,69 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Locorent – Testseite</title>
-  <meta name="description" content="Dies ist eine Testseite für die Locorent-Komponenten." />
+  <title>Locorent – Nachhaltig mieten in Deutschland</title>
+  <meta name="description" content="Finde und vermiete nachhaltige Mietobjekte in deiner Nähe bei Locorent." />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="components/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="stylesheet" href="components/style.css" />
 </head>
 <body>
   <div id="header"></div>
 
-  <main style="padding: 2rem;">
-    <section>
-      <h2>Willkommen auf der Testseite</h2>
-      <p>Dies ist ein Beispielinhalt, um zu testen, ob Header, Footer und Styles korrekt eingebunden werden.</p>
-      <p>Die Navigation sollte je nach Login-Status angepasst erscheinen.</p>
-    </section>
-  </main>
+  <section class="hero" aria-label="Suchbereich">
+    <h2>Finde das perfekte Mietobjekt</h2>
+    <form class="search-form" onsubmit="event.preventDefault(); search();" role="search" aria-label="Suchformular">
+      <input type="text" placeholder="Was suchst du?" id="search-input" aria-label="Suchbegriff eingeben" />
+      <select id="category-select" aria-label="Kategorie auswählen">
+        <option value="">Alle Kategorien</option>
+        <option value="fahrzeuge">Fahrzeuge</option>
+        <option value="transporter">Transporter</option>
+        <option value="boote">Boote</option>
+        <option value="fahrrad">Fahrräder & E-Bikes</option>
+        <option value="werkzeuge">Werkzeuge</option>
+        <option value="maschinen">Maschinen & Baugeräte</option>
+        <option value="party">Party & Event</option>
+        <option value="technik">Technik</option>
+        <option value="haushalt">Haushalt & Möbel</option>
+        <option value="garten">Garten</option>
+        <option value="freizeit">Freizeit & Sport</option>
+        <option value="baby">Baby & Kind</option>
+      </select>
+      <div style="position: relative; flex: 1; min-width: 200px;">
+        <input type="text" placeholder="Ort" id="location-input" autocomplete="off" aria-label="Ort eingeben" />
+        <div id="suggestions" role="listbox" aria-label="Ortsvorschläge"></div>
+      </div>
+      <select id="radius-select" aria-label="Suchradius auswählen">
+        <option value="">Ganzer Ort</option>
+        <option value="5">5 km</option>
+        <option value="10">10 km</option>
+        <option value="20">20 km</option>
+        <option value="30">30 km</option>
+        <option value="50">50 km</option>
+        <option value="100">100 km</option>
+        <option value="200">200 km</option>
+      </select>
+      <button type="submit">Suchen</button>
+    </form>
+  </section>
+
+  <section aria-label="Neueste Angebote">
+    <h2>Neueste Angebote</h2>
+    <div id="newest-offers" class="category-grid" aria-live="polite" aria-busy="true"><p>⏳ Lade Angebote…</p></div>
+    <div class="more-link">
+      <a href="angebote_neueste.html" class="btn-more">MEHR <span>→</span></a>
+    </div>
+  </section>
+
+  <section aria-label="Beliebte Angebote">
+    <h2>Beliebte Angebote</h2>
+    <div id="popular-offers" class="category-grid" aria-live="polite" aria-busy="true"><p>⏳ Lade Angebote…</p></div>
+    <div class="more-link">
+      <a href="angebote_beliebte.html" class="btn-more">MEHR <span>→</span></a>
+    </div>
+  </section>
 
   <div id="footer"></div>
-
   <script src="components/include.js"></script>
 </body>
 </html>
