@@ -5,45 +5,62 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Locorent – Nachhaltig mieten in Deutschland</title>
   <meta name="description" content="Finde und vermiete nachhaltige Mietobjekte in deiner Nähe bei Locorent." />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
-      --primary-color: #2e7d32;
-      --secondary-color: #a5d6a7;
-      --background-color: #f1f8e9;
-      --dark-color: #1b5e20;
-      --highlight-color: #66bb6a;
+      --primary: #2e7d32;
+      --primary-light: #66bb6a;
+      --primary-dark: #1b5e20;
+      --background: #f1f8e9;
       --white: #fff;
-      --gray-light: #f7f7f7;
-      --gray-dark: #333;
-      --border-radius: 12px;
-      --shadow-color: rgba(0, 0, 0, 0.1);
+      --text-dark: #0f2e13;
+      --text-muted: #466843;
+      --accent: #b9f6ca;
+      --highlight: #a5d6a7;
+      --radius: 18px;
+      --shadow-light: rgba(46, 125, 50, 0.08);
+      --shadow-strong: rgba(46, 125, 50, 0.25);
+      --transition: 0.4s ease;
+      --font-primary: 'Poppins', sans-serif;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
+    *, *::before, *::after {
       box-sizing: border-box;
     }
 
     body {
-      font-family: 'Poppins', sans-serif;
-      background-color: var(--background-color);
-      color: var(--gray-dark);
-      line-height: 1.6;
+      margin: 0;
+      font-family: var(--font-primary);
+      background: linear-gradient(to bottom, #e8f5e9 0%, #ffffff 100%);
+      color: var(--text-dark);
+      scroll-behavior: smooth;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      overflow-x: hidden;
     }
 
     header {
-      background-color: var(--primary-color);
+      background-color: var(--primary);
       color: var(--white);
       padding: 1.5rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      font-weight: 700;
       position: sticky;
       top: 0;
       z-index: 1000;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      flex-wrap: wrap;
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+      cursor: pointer;
+      user-select: none;
+      margin: 0;
     }
 
     #nav-toggle {
@@ -57,8 +74,8 @@
 
     nav#nav-links {
       display: flex;
-      gap: 1.5rem;
       flex-wrap: wrap;
+      gap: 1rem;
     }
 
     nav#nav-links a {
@@ -70,25 +87,42 @@
       transition: color 0.3s ease;
     }
 
+    nav#nav-links a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -4px;
+      width: 0;
+      height: 2px;
+      background-color: var(--accent);
+      transition: width 0.3s ease;
+    }
+
+    nav#nav-links a:hover::after,
+    nav#nav-links a:focus::after {
+      width: 100%;
+    }
+
     nav#nav-links a:hover,
     nav#nav-links a:focus {
-      border-bottom: 2px solid var(--highlight-color);
+      color: var(--accent);
       outline: none;
     }
 
     .hero {
       background-color: var(--white);
       padding: 3rem 2rem;
-      border-radius: var(--border-radius);
-      box-shadow: 0 2px 12px var(--shadow-color);
+      border-radius: var(--radius);
+      box-shadow: 0 12px 30px rgba(46,125,50,0.1);
       margin-top: 2rem;
       text-align: center;
     }
 
     .hero h2 {
       font-size: 2rem;
-      font-weight: 600;
+      font-weight: 700;
       margin-bottom: 1rem;
+      color: var(--primary-dark);
     }
 
     form.search-form {
@@ -112,16 +146,16 @@
     }
 
     form.search-form button {
-      background-color: var(--highlight-color);
+      background-color: var(--primary);
       color: var(--white);
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
 
     form.search-form button:hover,
     form.search-form button:focus {
-      background-color: var(--secondary-color);
+      background-color: var(--accent);
       outline: none;
     }
 
@@ -160,17 +194,17 @@
 
     .result-card {
       background-color: var(--white);
-      border-radius: 10px;
+      border-radius: var(--radius);
       padding: 1rem;
-      box-shadow: 0 2px 8px var(--shadow-color);
+      box-shadow: 0 12px 30px rgba(46,125,50,0.1);
       margin-bottom: 1.5rem;
-      transition: transform 0.2s ease;
+      transition: transform 0.3s ease;
     }
 
     .result-card:hover,
     .result-card:focus-within {
       transform: translateY(-3px);
-      box-shadow: 0 4px 16px var(--shadow-color);
+      box-shadow: 0 20px 48px rgba(46,125,50,0.15);
       outline: none;
     }
 
@@ -178,7 +212,7 @@
       width: 100%;
       height: 200px;
       object-fit: cover;
-      border-radius: 8px;
+      border-radius: 12px;
       margin-bottom: 1rem;
     }
 
@@ -186,18 +220,18 @@
       margin-top: 0.5rem;
       padding: 0.6rem;
       width: 100%;
-      background-color: var(--primary-color);
-      color: white;
+      background-color: var(--primary);
+      color: var(--white);
       border: none;
       border-radius: 8px;
       cursor: pointer;
-      font-weight: 600;
+      font-weight: 700;
       transition: background-color 0.3s ease;
     }
 
     .result-card button:hover,
     .result-card button:focus {
-      background-color: var(--highlight-color);
+      background-color: var(--accent);
       outline: none;
     }
 
@@ -211,9 +245,9 @@
       align-items: center;
       gap: 0.25em;
       font-weight: 700;
-      color: var(--primary-color);
+      color: var(--primary);
       text-decoration: none;
-      border: 2px solid var(--primary-color);
+      border: 2px solid var(--primary);
       padding: 0.25em 0.75em;
       border-radius: 24px;
       transition: background-color 0.3s ease, color 0.3s ease;
@@ -229,8 +263,8 @@
 
     .btn-more:hover,
     .btn-more:focus {
-      background-color: var(--primary-color);
-      color: white;
+      background-color: var(--primary);
+      color: var(--white);
       text-decoration: none;
       outline: none;
     }
@@ -240,19 +274,17 @@
     }
 
     footer {
-      padding: 2rem;
-      text-align: center;
-      background-color: var(--primary-color);
+      width: 100%;
+      box-sizing: border-box;
+      padding: 2rem 2rem 1rem;
+      border-radius: var(--radius);
+      background-color: var(--primary);
       color: var(--white);
-      border-radius: var(--border-radius);
-      margin-top: 2rem;
-      width: 100vw;
-      position: relative;
-      left: 50%;
-      right: 50%;
-      margin-left: -50vw;
-      margin-right: -50vw;
+      box-shadow: 0 8px 32px rgba(46, 125, 50, 0.22);
+      font-size: 0.92rem;
       user-select: none;
+      text-align: center;
+      margin-top: 2rem;
     }
 
     footer > div {
@@ -289,7 +321,7 @@
     }
 
     footer ul li a:hover {
-      color: var(--highlight-color);
+      color: var(--accent);
     }
 
     footer small {
@@ -299,7 +331,6 @@
       opacity: 0.85;
     }
 
-    /* --- Mobile Responsive --- */
     @media (max-width: 720px) {
       #nav-toggle {
         display: block;
@@ -337,7 +368,7 @@
 </head>
 <body>
   <header>
-    <h1>Locorent</h1>
+    <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
     <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
     <nav id="nav-links" role="navigation" aria-label="Hauptnavigation">
       <!-- Navigation Links werden via JS gesetzt -->
@@ -400,19 +431,19 @@
   <footer role="contentinfo">
     <div>
       <div>
-        <h4>Mieten & Vermieten</h4>
+        <h4>Mieten &amp; Vermieten</h4>
         <ul>
           <li><a href="so-funktionierts.html">So funktioniert's</a></li>
           <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
           <li><a href="kategorien.html">Beliebte Kategorien</a></li>
-          <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
+          <li><a href="vermieter-tipps.html">Tipps &amp; Tricks für Vermieter</a></li>
           <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
         </ul>
       </div>
       <div>
         <h4>Wissenswertes</h4>
         <ul>
-          <li><a href="agb.html">AGB & Impressum</a></li>
+          <li><a href="agb.html">AGB &amp; Impressum</a></li>
           <li><a href="datenschutz.html">Datenschutz</a></li>
         </ul>
       </div>
@@ -425,9 +456,7 @@
         </ul>
       </div>
     </div>
-    <div style="margin-top: 2rem; font-size: 0.9rem; text-align: center;">
-      © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
-    </div>
+    <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
   </footer>
 
   <script>
@@ -628,7 +657,6 @@
       window.location.href = `search_results.html?${params.toString()}`;
     }
 
-    // Mobile nav toggle
     document.getElementById('nav-toggle').addEventListener('click', () => {
       const nav = document.getElementById('nav-links');
       nav.classList.toggle('show');
