@@ -2,41 +2,63 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Nachrichteneingang – Locorent</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --primary: #2e7d32;
+      --primary-light: #66bb6a;
+      --primary-dark: #1b5e20;
+      --background: #f1f8e9;
+      --white: #fff;
+      --text-dark: #0f2e13;
+      --text-muted: #466843;
+      --accent: #b9f6ca;
+      --highlight: #a5d6a7;
+      --radius: 18px;
+      --shadow-light: rgba(46, 125, 50, 0.08);
+      --shadow-strong: rgba(46, 125, 50, 0.25);
+      --transition: 0.4s ease;
+      --font-primary: 'Poppins', sans-serif;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
 
     body {
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(to right, #e8f5e9, #f1f8e9);
-      color: #1b5e20;
-      min-height: 100vh;
+      margin: 0;
+      font-family: var(--font-primary);
+      background: linear-gradient(to bottom, #e8f5e9 0%, #ffffff 100%);
+      color: var(--text-dark);
+      scroll-behavior: smooth;
       display: flex;
       flex-direction: column;
+      min-height: 100vh;
     }
 
     header {
-      background: linear-gradient(to right, #2e7d32, #66bb6a);
-      color: white;
+      background-color: var(--primary);
+      color: var(--white);
       padding: 1.5rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      font-weight: 700;
       position: sticky;
       top: 0;
       z-index: 1000;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
       flex-wrap: wrap;
     }
 
     header h1 {
-      font-weight: 700;
       font-size: 1.8rem;
       cursor: pointer;
       user-select: none;
+      margin: 0;
     }
 
     #nav-toggle {
@@ -44,7 +66,7 @@
       background: none;
       border: none;
       font-size: 1.8rem;
-      color: white;
+      color: var(--white);
       cursor: pointer;
     }
 
@@ -55,16 +77,33 @@
     }
 
     nav#main-nav a {
-      color: white;
+      color: var(--white);
       text-decoration: none;
       font-weight: 600;
       font-size: 1rem;
+      position: relative;
       transition: color 0.3s ease;
+    }
+
+    nav#main-nav a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -4px;
+      width: 0;
+      height: 2px;
+      background-color: var(--accent);
+      transition: width 0.3s ease;
+    }
+
+    nav#main-nav a:hover::after,
+    nav#main-nav a:focus::after {
+      width: 100%;
     }
 
     nav#main-nav a:hover,
     nav#main-nav a:focus {
-      color: #c5e1a5;
+      color: var(--accent);
       outline: none;
     }
 
@@ -78,15 +117,15 @@
     h2 {
       font-size: 2rem;
       margin-bottom: 1.5rem;
-      color: #2e7d32;
+      color: var(--primary);
     }
 
     .chat-card {
-      background: white;
+      background: var(--white);
       padding: 1.5rem 2rem;
       margin-bottom: 1.5rem;
-      border-radius: 16px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      border-radius: var(--radius);
+      box-shadow: 0 8px 24px var(--shadow-light);
       transition: transform 0.25s ease, box-shadow 0.25s ease;
       cursor: pointer;
       display: flex;
@@ -98,7 +137,7 @@
     .chat-card:hover,
     .chat-card:focus-within {
       transform: translateY(-5px);
-      box-shadow: 0 12px 36px rgba(0,0,0,0.18);
+      box-shadow: 0 12px 36px var(--shadow-strong);
       outline: none;
     }
 
@@ -113,7 +152,7 @@
       align-items: center;
       font-size: 1.8rem;
       font-weight: 700;
-      color: #1b5e20;
+      color: var(--primary-dark);
       overflow: hidden;
       box-shadow: 0 4px 10px rgba(0,0,0,0.15);
     }
@@ -134,7 +173,7 @@
     .chat-name {
       font-weight: 700;
       font-size: 1.3rem;
-      color: #2e7d32;
+      color: var(--primary);
       margin-bottom: 0.25rem;
     }
 
@@ -156,7 +195,7 @@
 
     .listing-meta {
       font-size: 0.95rem;
-      color: #2e7d32;
+      color: var(--primary);
       display: flex;
       gap: 1.5rem;
       flex-wrap: wrap;
@@ -199,33 +238,41 @@
     }
 
     footer {
-      padding: 2rem;
-      background-color: #2e7d32;
-      color: white;
-      border-top-left-radius: 14px;
-      border-top-right-radius: 14px;
-      font-size: 0.9rem;
+      background-color: var(--primary);
+      color: var(--white);
+      padding: 2rem 2rem 1rem;
+      border-radius: var(--radius);
+      margin: 2rem 0 0 0;
+      box-shadow: 0 8px 32px rgba(46, 125, 50, 0.22);
+      font-size: 0.92rem;
+      width: 100vw;
+      position: relative;
+      left: 50%;
+      right: 50%;
+      margin-left: -50vw;
+      margin-right: -50vw;
       user-select: none;
     }
 
     footer > div {
-      max-width: 1100px;
+      max-width: 1200px;
       margin: 0 auto;
       display: flex;
-      justify-content: space-around;
       flex-wrap: wrap;
+      justify-content: space-between;
       gap: 2rem;
       text-align: left;
     }
 
-    footer div > div {
-      flex: 1 1 220px;
+    footer > div > div {
+      flex: 1;
+      min-width: 200px;
     }
 
     footer h4 {
-      margin-bottom: 0.6rem;
-      font-weight: 600;
-      font-size: 1rem;
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+      font-size: 1.1rem;
     }
 
     footer ul {
@@ -235,21 +282,20 @@
     }
 
     footer ul li a {
-      color: white;
+      color: var(--white);
       text-decoration: underline;
       transition: color 0.3s ease;
     }
 
     footer ul li a:hover {
-      color: #c8e6c9;
+      color: var(--primary-light);
     }
 
     footer small {
       display: block;
-      text-align: center;
       margin-top: 2rem;
-      font-size: 0.85rem;
-      opacity: 0.8;
+      text-align: center;
+      opacity: 0.85;
     }
 
     @media (max-width: 720px) {
@@ -280,7 +326,7 @@
         align-items: flex-start;
       }
 
-      footer div > div {
+      footer > div > div {
         width: 100%;
       }
     }
@@ -292,10 +338,12 @@
   <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
   <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="main-nav">☰</button>
   <nav id="main-nav" role="navigation" aria-label="Hauptnavigation">
-    <a href="index.html">Startseite</a>
+    <a href="index.html">Start</a>
     <a href="profil.html">Mein Profil</a>
-    <a href="inserate.html">Inserate</a>
-    <a href="nachrichten-inbox.html">Nachrichten</a>
+    <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+    <a href="favoriten.html">Meine Favoriten</a>
+    <a href="inserate.html">Meine Inserate</a>
+    <a href="#" onclick="logout(event)">Logout</a>
   </nav>
 </header>
 
@@ -348,6 +396,12 @@
     const expanded = nav.classList.contains('show');
     toggle.setAttribute('aria-expanded', expanded);
   });
+
+  async function logout(event) {
+    event.preventDefault();
+    await supabase.auth.signOut();
+    window.location.href = "login.html";
+  }
 
   function timeAgo(dateString) {
     const date = new Date(dateString);
