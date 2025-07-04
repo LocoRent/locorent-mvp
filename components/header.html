@@ -1,82 +1,41 @@
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>AGB & Impressum – Locorent</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet"/>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <style>
-    :root {
-      --primary: #2e7d32;
-      --light: #e8f5e9;
-      --white: #ffffff;
-      --dark: #1b5e20;
-      --accent: #81c784;
-      --radius: 18px;
-      --shadow: 0 15px 45px rgba(0,0,0,0.08);
-    }
-
-    *, *::before, *::after {
-      box-sizing: border-box;
-    }
-}
-
-    header {
-      background: var(--primary);
-      padding: 2rem;
-      color: var(--white);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: var(--shadow);
-      flex-wrap: wrap;
-    }
-
-    header h1 {
-      font-size: 2rem;
-      font-weight: 700;
-      user-select: none;
-    }
 <header>
   <h1>Locorent</h1>
   <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
+
+  <script>
+    // Supabase-Client initialisieren (wenn noch nicht geschehen)
+    if (!window.supabase) {
+      window.supabase = window.supabase?.createClient?.(
+        'https://flnjalgqtkqycsaymmbd.supabase.co',
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+      );
+    }
+
+    async function updateNav() {
+      if (!window.supabase) return;
+      const { data: { session } } = await window.supabase.auth.getSession();
+      const userSession = session;
+      const nav = document.getElementById('nav-links');
+
+      nav.innerHTML = userSession?.user ? `
+        <a href="index.html">Start</a>
+        <a href="profil.html">Mein Profil</a>
+        <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+        <a href="favoriten.html">Meine Favoriten</a>
+        <a href="inserate.html">Meine Inserate</a>
+        <a href="#" onclick="logout(event)">Logout</a>
+      ` : `
+        <a href="index.html">Start</a>
+        <a href="login.html">Einloggen</a>
+      `;
+    }
+
+    async function logout(event) {
+      event.preventDefault();
+      await window.supabase.auth.signOut();
+      window.location.href = "login.html";
+    }
+
+    document.addEventListener('DOMContentLoaded', updateNav);
+  </script>
 </header>
-<script>
-  const supabase = window.supabase.createClient(
-    'https://flnjalgqtkqycsaymmbd.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-  );
-
-  let userSession = null;
-
-  async function init() {
-    const { data: { session } } = await supabase.auth.getSession();
-    userSession = session;
-    updateNav();
-  }
-
-  function updateNav() {
-    const nav = document.getElementById('nav-links');
-    nav.innerHTML = userSession?.user ? `
-      <a href="index.html">Start</a>
-      <a href="profil.html">Mein Profil</a>
-      <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-      <a href="favoriten.html">Meine Favoriten</a>
-      <a href="inserate.html">Meine Inserate</a>
-      <a href="#" onclick="logout(event)">Logout</a>
-    ` : `
-      <a href="index.html">Start</a>
-      <a href="login.html">Einloggen</a>
-    `;
-  }
-
-  async function logout(event) {
-    event.preventDefault();
-    await supabase.auth.signOut();
-    window.location.href = "login.html";
-  }
-
-  init();
-</script>
