@@ -15,6 +15,10 @@
   async function initHeader() {
     const { data: { session } } = await supabase.auth.getSession();
     userSession = session;
+    updateNav();
+  }
+
+  function updateNav() {
     const nav = document.getElementById('nav-links');
     nav.innerHTML = userSession?.user ? `
       <a href="index.html">Start</a>
