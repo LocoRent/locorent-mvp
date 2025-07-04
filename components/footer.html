@@ -1,119 +1,35 @@
 <footer role="contentinfo">
   <div>
-    <div>
-      <h4>Mieten & Vermieten</h4>
-      <ul>
-        <li><a href="so-funktionierts.html">So funktioniert's</a></li>
-        <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
-        <li><a href="kategorien.html">Beliebte Kategorien</a></li>
-        <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
-        <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
-      </ul>
-    </div>
-    <div>
-      <h4>Wissenswertes</h4>
-      <ul>
-        <li><a href="agb.html">AGB & Impressum</a></li>
-        <li><a href="datenschutz.html">Datenschutz</a></li>
-      </ul>
-    </div>
-    <div>
-      <h4>Über uns</h4>
-      <ul>
-        <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
-        <li><a href="social-media.html">Folgen Sie uns</a></li>
-        <li><a href="mission.html">Unsere Mission</a></li>
-      </ul>
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2rem;">
+      <div style="flex: 1; min-width: 200px;">
+        <h4 style="margin-bottom: 0.5rem;">Mieten & Vermieten</h4>
+        <ul style="list-style: none; padding: 0; line-height: 1.8;">
+          <li><a href="so-funktionierts.html">So funktioniert's</a></li>
+          <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
+          <li><a href="kategorien.html">Beliebte Kategorien</a></li>
+          <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
+          <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
+        </ul>
+      </div>
+      <div style="flex: 1; min-width: 200px;">
+        <h4 style="margin-bottom: 0.5rem;">Wissenswertes</h4>
+        <ul style="list-style: none; padding: 0; line-height: 1.8;">
+          <li><a href="agb.html">AGB & Impressum</a></li>
+          <li><a href="datenschutz.html">Datenschutz</a></li>
+        </ul>
+      </div>
+      <div style="flex: 1; min-width: 200px;">
+        <h4 style="margin-bottom: 0.5rem;">Über uns</h4>
+        <ul style="list-style: none; padding: 0; line-height: 1.8;">
+          <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
+          <li><a href="social-media.html">Folgen Sie uns</a></li>
+          <li><a href="mission.html">Unsere Mission</a></li>
+        </ul>
+      </div>
     </div>
   </div>
-  <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
+  <div style="margin-top: 2rem; text-align: center; font-size: 0.9rem;">
+    © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
+  </div>
 </footer>
 
-<style>
-  footer {
-    background-color: #2e7d32;
-    color: #fff;
-    padding: 2rem 2rem 1rem;
-    border-radius: 12px;
-    margin: 2rem 0 0 0;
-    font-weight: 400;
-    user-select: none;
-    box-shadow: 0 8px 32px rgba(46, 125, 50, 0.22);
-    font-size: 0.92rem;
-    letter-spacing: 0.02em;
-    width: 100vw;
-    position: relative;
-    left: 50%;
-    right: 50%;
-    margin-left: -50vw;
-    margin-right: -50vw;
-  }
-
-  footer > div {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 2rem;
-  }
-
-  footer > div > div {
-    flex: 1;
-    min-width: 200px;
-  }
-
-  footer h4 {
-    margin-bottom: 0.5rem;
-    font-weight: 700;
-    font-size: 1.1rem;
-    user-select: none;
-  }
-
-  footer ul {
-    list-style: none;
-    padding: 0;
-    line-height: 1.8;
-  }
-
-  footer ul li a {
-    color: #fff;
-    text-decoration: underline;
-    transition: color 0.3s ease;
-  }
-
-  footer ul li a:hover,
-  footer ul li a:focus-visible {
-    color: #66bb6a;
-    outline: none;
-  }
-
-  footer small {
-    display: block;
-    margin-top: 2rem;
-    text-align: center;
-    user-select: none;
-  }
-
-  @media (max-width: 900px) {
-    footer > div {
-      flex-direction: column;
-      align-items: center;
-    }
-
-    footer > div > div {
-      min-width: unset;
-      width: 100%;
-      max-width: 320px;
-      margin-bottom: 1.5rem;
-    }
-  }
-
-  @media (max-width: 480px) {
-    footer {
-      margin: 1rem;
-      padding: 1.5rem;
-      font-size: 0.85rem;
-    }
-  }
-</style>
