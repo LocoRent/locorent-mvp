@@ -1,306 +1,382 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Bewertungen – Locorent</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<style>
-  :root {
-    --primary-color: #2e7d32;
-    --primary-dark: #1b5e20;
-    --background-color: #f1f8e9;
-    --white: #fff;
-    --light-gray: #f5f5f5;
-    --border-radius: 12px;
-    --shadow-color: rgba(0, 0, 0, 0.12);
-    --max-width: 900px;
-    --star-yellow: #f5c518;
-    --accent: #a5d6a7;
-  }
-  *, *::before, *::after {
-    box-sizing: border-box;
-  }
-  body {
-    font-family: 'Poppins', sans-serif;
-    background-color: var(--background-color);
-    color: #333;
-    min-height: 100vh;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    overflow-x: hidden;
-  }
-  header {
-    background-color: var(--primary-color);
-    color: var(--white);
-    padding: 1.5rem 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: 700;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-    flex-wrap: wrap;
-  }
-  header h1 {
-    font-weight: 700;
-    font-size: 1.8rem;
-    cursor: pointer;
-    user-select: none;
-    margin: 0;
-  }
-  #nav-toggle {
-    display: none;
-    background: none;
-    border: none;
-    font-size: 1.8rem;
-    color: var(--white);
-    cursor: pointer;
-  }
-  nav#nav-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-  nav#nav-links a {
-    color: var(--white);
-    margin-left: 1rem;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 1rem;
-    position: relative;
-    transition: color 0.3s ease;
-  }
-  nav#nav-links a::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: -4px;
-    width: 0;
-    height: 2px;
-    background-color: var(--accent);
-    transition: width 0.3s ease;
-  }
-  nav#nav-links a:hover::after,
-  nav#nav-links a:focus::after {
-    width: 100%;
-  }
-  nav#nav-links a:hover,
-  nav#nav-links a:focus {
-    color: var(--accent);
-    outline: none;
-  }
-  main {
-    max-width: var(--max-width);
-    background: var(--white);
-    border-radius: var(--border-radius);
-    box-shadow: 0 12px 30px rgba(46, 125, 50, 0.08);
-    padding: 2.5rem 3rem;
-    margin: 3rem 1rem 4rem;
-    width: 100%;
-    min-height: 60vh;
-  }
-  h2 {
-    margin-bottom: 2rem;
-    color: var(--primary-color);
-    font-weight: 700;
-    font-size: 2.4rem;
-    user-select: none;
-  }
-  .controls {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-bottom: 2rem;
-    align-items: center;
-  }
-  label {
-    font-weight: 600;
-    color: var(--primary-dark);
-  }
-  select {
-    padding: 0.4rem 0.8rem;
-    border-radius: var(--border-radius);
-    border: 1.5px solid #ccc;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: border-color 0.3s ease;
-  }
-  select:focus {
-    border-color: var(--primary-color);
-    outline: none;
-  }
-  .review-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-  .review-item {
-    background-color: var(--light-gray);
-    padding: 1.5rem 2rem;
-    border-radius: var(--border-radius);
-    box-shadow: inset 0 0 8px rgba(0,0,0,0.05);
-    display: flex;
-    gap: 1.5rem;
-    align-items: flex-start;
-    transition: transform 0.2s ease;
-  }
-  .review-item:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-  }
-  .avatar {
-    flex-shrink: 0;
-    width: 60px;
-    height: 60px;
-    background-color: #bbb;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: 700;
-    font-size: 1.4rem;
-    color: var(--white);
-    user-select: none;
-  }
-  .review-content {
-    flex: 1;
-  }
-  .review-rating {
-    color: var(--star-yellow);
-    font-weight: 700;
-    margin-bottom: 0.3rem;
-    user-select: none;
-    font-size: 1.3rem;
-  }
-  .stars {
-    display: inline-block;
-    font-size: 1.3rem;
-    color: var(--star-yellow);
-    user-select: none;
-  }
-  .review-text {
-    font-size: 1rem;
-    line-height: 1.6;
-    margin-bottom: 0.4rem;
-  }
-  .review-meta {
-    font-size: 0.85rem;
-    color: #666;
-    user-select: none;
-  }
-  .back-btn {
-    margin-top: 3rem;
-    background-color: var(--primary-color);
-    color: var(--white);
-    border: none;
-    padding: 1rem 1.8rem;
-    border-radius: var(--border-radius);
-    cursor: pointer;
-    font-weight: 700;
-    font-size: 1.1rem;
-    transition: background-color 0.3s ease;
-    user-select: none;
-  }
-  .back-btn:hover, .back-btn:focus {
-    background-color: var(--primary-dark);
-    outline: none;
-  }
-  footer {
-    width: 100%;
-    background-color: var(--primary-color);
-    color: var(--white);
-    padding: 2rem 0;
-    box-shadow: 0 -2px 12px rgba(46, 125, 50, 0.22);
-    user-select: none;
-  }
-  footer > div {
-    max-width: var(--max-width);
-    margin: 0 auto;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 2rem;
-    padding: 0 1rem;
-  }
-  footer h4 {
-    margin-bottom: 0.75rem;
-    font-weight: 600;
-  }
-  footer ul {
-    list-style: none;
-    line-height: 1.7;
-    padding-left: 0;
-  }
-  footer ul li a {
-    color: var(--white);
-    text-decoration: underline;
-    font-weight: 400;
-    cursor: pointer;
-    transition: color 0.3s ease;
-  }
-  footer ul li a:hover,
-  footer ul li a:focus {
-    color: var(--primary-dark);
-    outline: none;
-  }
-  footer .copyright {
-    margin-top: 2rem;
-    text-align: center;
-    font-size: 0.9rem;
-    color: var(--white);
-  }
-
-  /* Responsive */
-  @media (max-width: 768px) {
-    header {
-      flex-direction: column;
-      align-items: flex-start;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bewertungen – Locorent</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root {
+      --primary: #2e7d32;
+      --primary-light: #66bb6a;
+      --primary-dark: #1b5e20;
+      --background: linear-gradient(to bottom, #e8f5e9 0%, #ffffff 100%);
+      --white: #fff;
+      --text-dark: #0f2e13;
+      --text-muted: #466843;
+      --accent: #b9f6ca;
+      --highlight: #a5d6a7;
+      --radius: 18px;
+      --shadow-light: rgba(46, 125, 50, 0.08);
+      --shadow-strong: rgba(46, 125, 50, 0.25);
+      --transition: 0.4s ease;
+      --font-primary: 'Poppins', sans-serif;
+      --max-width: 900px;
     }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font-primary);
+      background: var(--background);
+      color: var(--text-dark);
+      scroll-behavior: smooth;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      overflow-x: hidden;
+      align-items: center;
+    }
+
+    header {
+      background-color: var(--primary);
+      color: var(--white);
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 700;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      flex-wrap: wrap;
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+      cursor: pointer;
+      user-select: none;
+      margin: 0;
+      order: 1; /* Logo links */
+    }
+
     #nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.8rem;
+      color: var(--white);
+      cursor: pointer;
+      order: 2; /* Burger rechts */
+      margin: 0;
+    }
+
+    nav#nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      order: 3;
+    }
+
+    nav#nav-links a {
+      color: var(--white);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      position: relative;
+      transition: color 0.3s ease;
+    }
+
+    nav#nav-links a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -4px;
+      width: 0;
+      height: 2px;
+      background-color: var(--accent);
+      transition: width 0.3s ease;
+    }
+
+    nav#nav-links a:hover::after,
+    nav#nav-links a:focus::after {
+      width: 100%;
+    }
+
+    nav#nav-links a:hover,
+    nav#nav-links a:focus {
+      color: var(--accent);
+      outline: none;
+    }
+
+    main {
+      max-width: var(--max-width);
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: 0 12px 30px var(--shadow-light);
+      padding: 2rem 1rem;
+      box-sizing: border-box;
+      width: 100%;
+      margin: 2rem auto 4rem auto;
+      min-height: 60vh;
+    }
+
+    h2 {
+      color: var(--primary-dark);
+      font-weight: 700;
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      margin-top: 0;
+      text-align: center;
+      user-select: none;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      align-items: center;
+      justify-content: center;
+    }
+
+    label {
+      font-weight: 600;
+      color: var(--primary-dark);
+      user-select: none;
+    }
+
+    select {
+      padding: 0.4rem 0.8rem;
+      border-radius: var(--radius);
+      border: 1.5px solid #ccc;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: border-color 0.3s ease;
+    }
+
+    select:focus {
+      border-color: var(--primary);
+      outline: none;
+    }
+
+    .review-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .review-item {
+      background-color: var(--accent);
+      padding: 1.5rem 2rem;
+      border-radius: var(--radius);
+      box-shadow: inset 0 0 8px rgba(0,0,0,0.05);
+      display: flex;
+      gap: 1.5rem;
+      align-items: flex-start;
+      transition: transform 0.2s ease;
+      color: var(--text-dark);
+      user-select: none;
+    }
+
+    .review-item:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+    }
+
+    .avatar {
+      flex-shrink: 0;
+      width: 60px;
+      height: 60px;
+      background-color: var(--primary-dark);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: 700;
+      font-size: 1.4rem;
+      color: var(--white);
+      user-select: none;
+    }
+
+    .review-content {
+      flex: 1;
+    }
+
+    .review-rating {
+      color: #ffca28;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+      font-size: 1.3rem;
+      user-select: none;
+    }
+
+    .stars {
+      display: inline-block;
+      font-size: 1.3rem;
+      color: #ffca28;
+      user-select: none;
+    }
+
+    .review-text {
+      font-size: 1rem;
+      line-height: 1.6;
+      margin-bottom: 0.4rem;
+    }
+
+    .review-meta {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      user-select: none;
+    }
+
+    .back-btn {
+      margin-top: 3rem;
+      background-color: var(--primary);
+      color: var(--white);
+      border: none;
+      padding: 1rem 1.8rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 1.1rem;
+      transition: background-color 0.3s ease;
+      user-select: none;
       display: block;
       margin-left: auto;
+      margin-right: auto;
+      max-width: 220px;
     }
-    nav#nav-links {
-      width: 100%;
-      flex-direction: column;
-      display: none;
-      margin-top: 1rem;
+
+    .back-btn:hover, .back-btn:focus {
+      background-color: var(--primary-dark);
+      outline: none;
     }
-    nav#nav-links.show {
+
+    footer {
+      width: 100vw;
+      background-color: var(--primary);
+      color: var(--white);
+      padding: 2rem 2rem 1rem;
+      box-shadow: 0 -2px 12px rgba(46, 125, 50, 0.22);
+      user-select: none;
+      margin-top: auto;
+      position: relative;
+      left: 50%;
+      right: 50%;
+      margin-left: -50vw;
+      margin-right: -50vw;
+      box-sizing: border-box;
+    }
+
+    footer > div {
+      max-width: var(--max-width);
+      margin: 0 auto;
       display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 2rem;
+      padding: 0 1rem;
+      text-align: left;
     }
-    nav#nav-links a {
-      margin-left: 0;
-      margin: 0.4rem 0;
-      padding: 0.5rem 1rem;
-      background-color: rgba(255, 255, 255, 0.1);
-      border-radius: 6px;
-      display: block;
-    }
-    .review-item {
-      flex-direction: column;
-      align-items: stretch;
-    }
-    .avatar {
-      width: 50px;
-      height: 50px;
+
+    footer h4 {
+      margin-bottom: 0.5rem;
+      font-weight: 700;
       font-size: 1.1rem;
     }
-    footer > div {
-      flex-direction: column;
-      align-items: flex-start;
+
+    footer ul {
+      list-style: none;
+      padding: 0;
+      line-height: 1.8;
     }
-    footer > div > div {
-      width: 100%;
+
+    footer ul li a {
+      color: var(--white);
+      text-decoration: underline;
+      transition: color 0.3s ease;
     }
-  }
-</style>
+
+    footer ul li a:hover,
+    footer ul li a:focus {
+      color: var(--accent);
+      outline: none;
+    }
+
+    footer small {
+      display: block;
+      margin-top: 2rem;
+      text-align: center;
+      opacity: 0.85;
+      user-select: none;
+    }
+
+    /* Mobile Styles */
+    @media (max-width: 720px) {
+      header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+      }
+      header h1 {
+        order: 1;
+      }
+      #nav-toggle {
+        display: block;
+        order: 2;
+        margin: 0;
+      }
+      nav#nav-links {
+        width: 100%;
+        flex-direction: column;
+        display: none;
+        margin-top: 1rem;
+        order: 3;
+      }
+      nav#nav-links.show {
+        display: flex;
+      }
+      nav#nav-links a {
+        margin: 0.4rem 0;
+        padding: 0.5rem 1rem;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+        display: block;
+      }
+      main {
+        margin: 2rem 1rem 4rem 1rem;
+        padding: 2rem 1rem;
+      }
+      .review-item {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .avatar {
+        width: 50px;
+        height: 50px;
+        font-size: 1.1rem;
+      }
+      footer > div {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      footer > div > div {
+        width: 100%;
+      }
+      footer {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+    }
+  </style>
 </head>
 <body>
 
@@ -331,8 +407,8 @@
 
 <footer role="contentinfo">
   <div>
-    <section aria-labelledby="footer-rent-title">
-      <h4 id="footer-rent-title">Mieten &amp; Vermieten</h4>
+    <div>
+      <h4>Mieten &amp; Vermieten</h4>
       <ul>
         <li><a href="so-funktionierts.html">So funktioniert's</a></li>
         <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
@@ -340,25 +416,23 @@
         <li><a href="vermieter-tipps.html">Tipps &amp; Tricks für Vermieter</a></li>
         <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
       </ul>
-    </section>
-    <section aria-labelledby="footer-info-title">
-      <h4 id="footer-info-title">Wissenswertes</h4>
+    </div>
+    <div>
+      <h4>Wissenswertes</h4>
       <ul>
         <li><a href="agb.html">AGB &amp; Impressum</a></li>
         <li><a href="datenschutz.html">Datenschutz</a></li>
       </ul>
-    </section>
-    <section aria-labelledby="footer-about-title">
-      <h4 id="footer-about-title">Über uns</h4>
+    </div>
+    <div>
+      <h4>Über uns</h4>
       <ul>
         <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
         <li><a href="social-media.html">Folgen Sie uns</a></li>
       </ul>
-    </section>
+    </div>
   </div>
-  <div class="copyright" aria-label="Copyright">
-    © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
-  </div>
+  <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
 </footer>
 
 <script>
@@ -456,7 +530,7 @@
     sortReviews(e.target.value);
   });
 
-  document.getElementById("nav-toggle").addEventListener("click", () => {
+  document.getElementById('nav-toggle').addEventListener('click', () => {
     const nav = document.getElementById('nav-links');
     nav.classList.toggle('show');
     const toggle = document.getElementById('nav-toggle');
