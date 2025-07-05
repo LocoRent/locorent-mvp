@@ -33,10 +33,12 @@
       min-height: 100vh;
       overflow-x: hidden;
     }
+
+    /* HEADER */
     header {
       background-color: var(--primary);
       color: var(--white);
-      padding: 1.5rem 2rem;
+      padding: 1rem 1.5rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -45,26 +47,21 @@
       top: 0;
       z-index: 1000;
       box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-      flex-wrap: wrap;
+      flex-wrap: nowrap; /* kein Umbruch */
     }
     header h1 {
       font-size: 1.8rem;
       cursor: pointer;
       user-select: none;
       margin: 0;
-    }
-    #nav-toggle {
-      display: none;
-      background: none;
-      border: none;
-      font-size: 1.8rem;
-      color: var(--white);
-      cursor: pointer;
+      order: 1;
     }
     nav#main-nav {
       display: flex;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
       gap: 1rem;
+      order: 2;
+      align-items: center;
     }
     nav#main-nav a {
       color: var(--white);
@@ -93,6 +90,17 @@
       color: var(--accent);
       outline: none;
     }
+    #nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.8rem;
+      color: var(--white);
+      cursor: pointer;
+      order: 3;
+    }
+
+    /* MAIN CONTENT */
     main {
       max-width: 600px;
       margin: 3rem auto 4rem;
@@ -175,6 +183,8 @@
       text-align: center;
       font-weight: 600;
     }
+
+    /* FOOTER */
     footer {
       width: 100%;
       box-sizing: border-box;
@@ -229,7 +239,7 @@
       opacity: 0.85;
     }
 
-    /* Mobile */
+    /* RESPONSIVE */
     @media (max-width: 720px) {
       #nav-toggle {
         display: block;
@@ -275,8 +285,8 @@
 <body>
   <header>
     <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
-    <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="main-nav">☰</button>
     <nav id="main-nav" role="navigation" aria-label="Hauptnavigation"></nav>
+    <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="main-nav">☰</button>
   </header>
 
   <main>
