@@ -117,7 +117,7 @@
       flex-grow: 1;
     }
 
-    /* NEU: moderner grid für Favoriten */
+    /* moderner grid für Favoriten */
     .category-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -344,13 +344,13 @@
   </div>
   <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
 </footer>
-
 <script>
   const supabase = window.supabase.createClient(
     'https://flnjalgqtkqycsaymmbd.supabase.co',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
   );
 
+  // Navigation Toggle Burger
   document.getElementById('nav-toggle').addEventListener('click', () => {
     const nav = document.getElementById('main-nav');
     const toggle = document.getElementById('nav-toggle');
@@ -365,13 +365,15 @@
     window.location.href = "login.html";
   }
 
+  // Hilfsfunktion für Text-Kapitalisierung
   function capitalize(str) {
     return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
   }
 
+  // Dynamische Navigation je nach Loginstatus
   async function updateNav() {
     const { data: { session } } = await supabase.auth.getSession();
-    const nav = document.getElementById('nav-links');
+    const nav = document.getElementById('main-nav');
 
     if (session?.user) {
       nav.innerHTML = `
@@ -380,7 +382,7 @@
         <a href="nachrichten-inbox.html">📨 Nachrichten</a>
         <a href="favoriten.html">Meine Favoriten</a>
         <a href="inserate.html">Meine Inserate</a>
-        <a href="javascript:void(0);" onclick="logout(event)">Logout</a>
+        <a href="#" onclick="logout(event)">Logout</a>
       `;
     } else {
       nav.innerHTML = `
@@ -390,6 +392,7 @@
     }
   }
 
+  // Favoriten laden
   async function loadFavorites() {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
@@ -404,6 +407,7 @@
 
     if (error) {
       console.error("Fehler beim Laden der Favoriten:", error);
+      document.getElementById('favorites-list').innerHTML = "<p>Fehler beim Laden der Favoriten.</p>";
       return;
     }
 
@@ -412,6 +416,7 @@
       return;
     }
 
+    // Hole Details zu jedem Favoriten-Listing
     const favoriteListings = await Promise.all(favorites.map(async (favorite) => {
       const { data } = await supabase
         .from('listings')
@@ -424,6 +429,7 @@
     renderFavorites(favoriteListings);
   }
 
+  // Favoriten anzeigen
   function renderFavorites(listings) {
     const container = document.getElementById("favorites-list");
     container.innerHTML = "";
@@ -445,6 +451,7 @@
     });
   }
 
+  // Favorit entfernen
   async function removeFromFavorites(listingId, event) {
     event.preventDefault();
     event.stopPropagation();
@@ -467,9 +474,9 @@
     }
   }
 
+  // Starte alles
   loadFavorites();
   updateNav();
 </script>
-
 </body>
 </html>
