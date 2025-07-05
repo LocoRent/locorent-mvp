@@ -2,39 +2,42 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Hilfe & FAQ – Locorent</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
-      --primary-color: #2e7d32;
-      --secondary-color: #a5d6a7;
-      --background-color: #f1f8e9;
-      --dark-color: #1b5e20;
-      --highlight-color: #66bb6a;
+      --primary: #2e7d32;
+      --primary-light: #66bb6a;
+      --primary-dark: #1b5e20;
+      --background: #f1f8e9;
       --white: #fff;
-      --gray-dark: #333;
+      --text-dark: #333;
       --border-radius: 12px;
       --shadow-color: rgba(0, 0, 0, 0.1);
       --transition-speed: 0.3s;
+      --font-primary: 'Poppins', sans-serif;
     }
-    * {
+
+    *, *::before, *::after {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
+
     body {
-      font-family: 'Poppins', sans-serif;
-      background-color: var(--background-color);
-      color: var(--gray-dark);
+      font-family: var(--font-primary);
+      background: var(--background);
+      color: var(--text-dark);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       line-height: 1.6;
     }
+
     header {
-      background-color: var(--primary-color);
+      background-color: var(--primary);
       color: var(--white);
       padding: 1.5rem 2rem;
       display: flex;
@@ -46,19 +49,32 @@
       user-select: none;
       flex-wrap: wrap;
     }
+
     header h1 {
       font-weight: 700;
-      font-size: 1.5rem;
+      font-size: 1.8rem;
       cursor: pointer;
       user-select: none;
+      margin: 0;
     }
-    nav {
+
+    #nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.8rem;
+      color: var(--white);
+      cursor: pointer;
+    }
+
+    nav#nav-links {
       display: flex;
       align-items: center;
       flex-wrap: wrap;
       gap: 1rem;
     }
-    nav a {
+
+    nav#nav-links a {
       color: var(--white);
       text-decoration: none;
       font-weight: 600;
@@ -68,82 +84,97 @@
       padding-bottom: 3px;
       position: relative;
     }
-    nav a:hover,
-    nav a:focus {
-      border-bottom: 2px solid var(--highlight-color);
+
+    nav#nav-links a:hover,
+    nav#nav-links a:focus {
+      border-bottom: 2px solid var(--primary-light);
       outline: none;
     }
+
     main {
       flex: 1;
       max-width: 900px;
-      margin: 3rem auto;
-      padding: 0 1.5rem 3rem;
+      margin: 3rem auto 4rem auto;
+      padding: 0 1.5rem;
       user-select: text;
+      box-sizing: border-box;
     }
+
     h2 {
-      color: var(--primary-color);
+      color: var(--primary-dark);
       font-weight: 700;
-      font-size: 2.4rem;
-      margin-bottom: 2rem;
+      font-size: 2.5rem;
+      margin-bottom: 2.5rem;
       user-select: none;
       text-align: center;
     }
+
     .accordion {
       border-radius: var(--border-radius);
       box-shadow: 0 6px 16px var(--shadow-color);
       background: var(--white);
       overflow: hidden;
     }
+
     .accordion-item + .accordion-item {
       border-top: 1px solid #ddd;
     }
+
     .accordion-header {
       width: 100%;
-      background: var(--secondary-color);
+      background: var(--primary-light);
       border: none;
       padding: 1.25rem 1.5rem;
       text-align: left;
-      font-size: 1.1rem;
+      font-size: 1.15rem;
       font-weight: 600;
-      color: var(--dark-color);
+      color: var(--primary-dark);
       cursor: pointer;
-      transition: background-color var(--transition-speed) ease;
+      transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      user-select: none;
     }
+
     .accordion-header:hover,
     .accordion-header[aria-expanded="true"] {
-      background: var(--highlight-color);
+      background: var(--primary);
       color: var(--white);
     }
+
     .accordion-header::after {
       content: "▼";
-      font-size: 0.75rem;
+      font-size: 0.85rem;
       transition: transform var(--transition-speed) ease;
       margin-left: 1rem;
     }
+
     .accordion-header[aria-expanded="true"]::after {
       transform: rotate(-180deg);
     }
+
     .accordion-content {
       max-height: 0;
       overflow: hidden;
       padding: 0 1.5rem;
       transition: max-height var(--transition-speed) ease, padding var(--transition-speed) ease;
       font-size: 1rem;
-      color: var(--gray-dark);
+      color: var(--text-dark);
       user-select: text;
     }
+
     .accordion-content p {
       padding: 1rem 0;
     }
+
     .accordion-content[aria-hidden="false"] {
       max-height: 500px;
       padding-bottom: 1rem;
     }
+
     footer {
-      background-color: var(--primary-color);
+      background-color: var(--primary);
       color: var(--white);
       padding: 2rem 2rem 1rem;
       border-radius: var(--border-radius);
@@ -160,6 +191,7 @@
       font-size: 0.92rem;
       letter-spacing: 0.02em;
     }
+
     footer > div {
       max-width: 1200px;
       margin: 0 auto 1.5rem auto;
@@ -168,50 +200,62 @@
       justify-content: space-between;
       gap: 2rem;
     }
+
     footer > div > div {
       flex: 1;
       min-width: 200px;
       text-align: left;
     }
+
     footer h4 {
       font-weight: 600;
       margin-bottom: 0.5rem;
       user-select: none;
     }
+
     footer ul {
       list-style: none;
       padding: 0;
       line-height: 1.8;
       user-select: text;
     }
+
     footer ul li a {
       color: var(--white);
       text-decoration: underline;
       cursor: pointer;
     }
+
     footer ul li a:hover,
     footer ul li a:focus {
-      color: var(--highlight-color);
+      color: var(--primary-light);
       outline: none;
     }
+
     footer .copyright {
       font-size: 0.9rem;
       user-select: none;
     }
-    @media (max-width: 768px) {
+
+    @media (max-width: 720px) {
       header {
         flex-direction: column;
         align-items: flex-start;
       }
-      nav {
-        gap: 0.8rem;
+      nav#nav-links {
+        width: 100%;
+        flex-direction: column;
+        display: none;
+        margin-top: 1rem;
       }
-      nav a {
-        margin-left: 0;
-        white-space: normal;
+      nav#nav-links.show {
+        display: flex;
       }
-      main {
-        margin: 2rem 1rem 3rem;
+      nav#nav-links a {
+        margin: 0.4rem 0;
+        padding: 0.5rem 1rem;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
       }
       footer > div {
         flex-direction: column;
@@ -229,7 +273,8 @@
 <body>
 
 <header>
-  <h1 onclick="window.location.href='index.html'">Locorent</h1>
+  <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
+  <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
   <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
 </header>
 
@@ -302,19 +347,19 @@
 <footer role="contentinfo">
   <div>
     <div>
-      <h4>Mieten & Vermieten</h4>
+      <h4>Mieten &amp; Vermieten</h4>
       <ul>
         <li><a href="so-funktionierts.html">So funktioniert's</a></li>
         <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
         <li><a href="kategorien.html">Beliebte Kategorien</a></li>
-        <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
+        <li><a href="vermieter-tipps.html">Tipps &amp; Tricks für Vermieter</a></li>
         <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
       </ul>
     </div>
     <div>
       <h4>Wissenswertes</h4>
       <ul>
-        <li><a href="agb.html">AGB & Impressum</a></li>
+        <li><a href="agb.html">AGB &amp; Impressum</a></li>
         <li><a href="datenschutz.html">Datenschutz</a></li>
       </ul>
     </div>
@@ -383,6 +428,17 @@
   });
 
   init();
+</script>
+
+<script>
+  // Burger Menü Toggle
+  document.getElementById('nav-toggle').addEventListener('click', () => {
+    const nav = document.getElementById('nav-links');
+    const toggle = document.getElementById('nav-toggle');
+    nav.classList.toggle('show');
+    const expanded = nav.classList.contains('show');
+    toggle.setAttribute('aria-expanded', expanded);
+  });
 </script>
 
 </body>
