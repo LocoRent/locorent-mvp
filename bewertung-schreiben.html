@@ -7,32 +7,40 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
+    /* --- Alles aus agb.html Styles übernommen --- */
     :root {
       --primary: #2e7d32;
       --primary-light: #66bb6a;
       --primary-dark: #1b5e20;
-      --background: #f1f8e9;
+      --background: linear-gradient(to bottom, #e8f5e9 0%, #ffffff 100%);
       --white: #fff;
       --text-dark: #0f2e13;
+      --text-muted: #466843;
       --accent: #b9f6ca;
+      --highlight: #a5d6a7;
       --radius: 18px;
       --shadow-light: rgba(46, 125, 50, 0.08);
       --shadow-strong: rgba(46, 125, 50, 0.25);
+      --transition: 0.4s ease;
       --font-primary: 'Poppins', sans-serif;
     }
+
     *, *::before, *::after {
       box-sizing: border-box;
     }
+
     body {
       margin: 0;
       font-family: var(--font-primary);
       background: var(--background);
       color: var(--text-dark);
+      scroll-behavior: smooth;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
       overflow-x: hidden;
     }
+
     header {
       background-color: var(--primary);
       color: var(--white);
@@ -47,12 +55,14 @@
       box-shadow: 0 10px 20px rgba(0,0,0,0.1);
       flex-wrap: wrap;
     }
+
     header h1 {
       font-size: 1.8rem;
       cursor: pointer;
       user-select: none;
       margin: 0;
     }
+
     #nav-toggle {
       display: none;
       background: none;
@@ -61,11 +71,13 @@
       color: var(--white);
       cursor: pointer;
     }
+
     nav#nav-links {
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
     }
+
     nav#nav-links a {
       color: var(--white);
       text-decoration: none;
@@ -74,6 +86,7 @@
       position: relative;
       transition: color 0.3s ease;
     }
+
     nav#nav-links a::after {
       content: '';
       position: absolute;
@@ -84,55 +97,64 @@
       background-color: var(--accent);
       transition: width 0.3s ease;
     }
+
     nav#nav-links a:hover::after,
     nav#nav-links a:focus::after {
       width: 100%;
     }
+
     nav#nav-links a:hover,
     nav#nav-links a:focus {
       color: var(--accent);
       outline: none;
     }
+
+    /* Hauptcontainer ersetzen wir hier mit eigenem Main-Style */
     main {
-      max-width: 600px;
-      margin: 3rem auto 4rem;
+      max-width: 900px; /* wie bei agb */
+      margin: 2rem auto 4rem auto;
+      padding: 2rem 1rem;
       background: var(--white);
       border-radius: var(--radius);
-      box-shadow: 0 4px 16px var(--shadow-light);
-      padding: 2rem;
-      flex-grow: 1;
-      width: 100%;
+      box-shadow: 0 12px 30px var(--shadow-light);
       box-sizing: border-box;
     }
+
+    /* Deine Überschrift */
     h2 {
-      text-align: center;
-      margin-bottom: 2rem;
-      font-weight: 700;
       color: var(--primary-dark);
-      font-size: 1.8rem;
+      font-weight: 700;
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+      margin-top: 0;
+      text-align: center;
     }
+
+    /* Sternebewertung Style */
     .stars {
       display: flex;
       justify-content: center;
-      margin-bottom: 1rem;
       gap: 0.5rem;
+      margin-bottom: 1rem;
     }
     .star {
       font-size: 2.5rem;
       color: #ccc;
       cursor: pointer;
-      transition: color 0.2s;
       user-select: none;
+      transition: color 0.2s;
     }
     .star.selected {
       color: #ffca28;
     }
+
     label {
       font-weight: 700;
-      margin-top: 1rem;
-      display: block;
       color: var(--primary-dark);
+      display: block;
+      margin-top: 1rem;
     }
+
     textarea {
       width: 100%;
       padding: 0.8rem;
@@ -144,13 +166,16 @@
       font-family: var(--font-primary);
       color: var(--text-dark);
       box-sizing: border-box;
+      margin-top: 0.25rem;
     }
+
     .char-count {
-      text-align: right;
       font-size: 0.85rem;
       color: #666;
+      text-align: right;
       margin-top: 0.3rem;
     }
+
     button {
       margin-top: 1.5rem;
       background-color: var(--primary);
@@ -164,17 +189,20 @@
       width: 100%;
       transition: background-color 0.3s ease;
     }
+
     button:hover,
     button:focus {
       background-color: var(--primary-dark);
       outline: none;
     }
+
     .success {
       color: green;
       margin-top: 1rem;
       text-align: center;
       font-weight: 600;
     }
+
     footer {
       width: 100%;
       box-sizing: border-box;
@@ -188,7 +216,12 @@
       text-align: center;
       margin-top: auto;
       position: relative;
+      left: 50%;
+      right: 50%;
+      margin-left: -50vw;
+      margin-right: -50vw;
     }
+
     footer > div {
       max-width: 1200px;
       margin: 0 auto;
@@ -198,30 +231,34 @@
       gap: 2rem;
       text-align: left;
     }
+
     footer > div > div {
       flex: 1;
       min-width: 200px;
     }
+
     footer h4 {
       margin-bottom: 0.5rem;
       font-weight: 700;
       font-size: 1.1rem;
     }
+
     footer ul {
       list-style: none;
       padding: 0;
       line-height: 1.8;
     }
+
     footer ul li a {
       color: var(--white);
       text-decoration: underline;
       transition: color 0.3s ease;
     }
-    footer ul li a:hover,
-    footer ul li a:focus {
+
+    footer ul li a:hover {
       color: var(--accent);
-      outline: none;
     }
+
     footer small {
       display: block;
       margin-top: 2rem;
@@ -234,15 +271,18 @@
       #nav-toggle {
         display: block;
       }
+
       nav#nav-links {
         width: 100%;
         flex-direction: column;
         display: none;
         margin-top: 1rem;
       }
+
       nav#nav-links.show {
         display: flex;
       }
+
       nav#nav-links a {
         margin: 0.4rem 0;
         padding: 0.5rem 1rem;
@@ -250,14 +290,15 @@
         border-radius: 6px;
         display: block;
       }
+
       footer > div {
         flex-direction: column;
         align-items: flex-start;
       }
+
       footer > div > div {
         width: 100%;
       }
-      /* Wichtig: Kein flex-direction oder order für Header, so bleibt burger rechts! */
     }
   </style>
 </head>
@@ -268,7 +309,7 @@
     <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
   </header>
 
-  <main>
+  <main role="main">
     <h2>Bewertung abgeben</h2>
     <form id="review-form" novalidate>
       <label>Sternebewertung</label>
@@ -329,7 +370,7 @@
 
   async function updateNav() {
     const { data: { session } } = await supabase.auth.getSession();
-    const nav = document.getElementById("nav-links");
+    const nav = document.getElementById('nav-links');
     nav.innerHTML = session?.user ? `
       <a href="index.html">Start</a>
       <a href="profil.html">Mein Profil</a>
@@ -359,26 +400,26 @@
   updateNav();
 
   // Sternebewertung Logik
-  const stars = document.querySelectorAll(".star");
-  const ratingInput = document.getElementById("rating");
-  const message = document.getElementById("message");
+  const stars = document.querySelectorAll('.star');
+  const ratingInput = document.getElementById('rating');
+  const message = document.getElementById('message');
 
   stars.forEach((star, i) => {
-    star.addEventListener("click", () => {
+    star.addEventListener('click', () => {
       const value = parseInt(star.dataset.value);
       ratingInput.value = value;
       updateStars(value);
     });
-    star.addEventListener("keydown", (e) => {
-      if (e.key === "ArrowRight" || e.key === "ArrowUp") {
+    star.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
         e.preventDefault();
         const nextIndex = (i + 1) % stars.length;
         stars[nextIndex].focus();
-      } else if (e.key === "ArrowLeft" || e.key === "ArrowDown") {
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
         e.preventDefault();
         const prevIndex = (i - 1 + stars.length) % stars.length;
         stars[prevIndex].focus();
-      } else if (e.key === "Enter" || e.key === " ") {
+      } else if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         star.click();
       }
@@ -388,44 +429,44 @@
   function updateStars(value) {
     stars.forEach(s => {
       const starVal = parseInt(s.dataset.value);
-      s.classList.toggle("selected", starVal <= value);
-      s.setAttribute('aria-checked', starVal === value ? "true" : "false");
+      s.classList.toggle('selected', starVal <= value);
+      s.setAttribute('aria-checked', starVal === value ? 'true' : 'false');
       s.tabIndex = starVal === value ? 0 : -1;
     });
   }
 
-  document.getElementById("comment").addEventListener("input", e => {
-    document.getElementById("charCount").textContent = e.target.value.length;
-    message.textContent = "";
+  document.getElementById('comment').addEventListener('input', e => {
+    document.getElementById('charCount').textContent = e.target.value.length;
+    message.textContent = '';
   });
 
-  document.getElementById("review-form").addEventListener("submit", async (e) => {
+  document.getElementById('review-form').addEventListener('submit', async e => {
     e.preventDefault();
 
     const rating = parseInt(ratingInput.value);
-    const comment = document.getElementById("comment").value.trim();
+    const comment = document.getElementById('comment').value.trim();
 
     if (!rating || rating < 1 || rating > 5) {
-      message.textContent = "Bitte eine Bewertung zwischen 1 und 5 Sternen abgeben.";
+      message.textContent = 'Bitte eine Bewertung zwischen 1 und 5 Sternen abgeben.';
       return;
     }
     if (comment.length === 0) {
-      message.textContent = "Bitte einen Kommentar eingeben.";
+      message.textContent = 'Bitte einen Kommentar eingeben.';
       return;
     }
 
     const params = new URLSearchParams(window.location.search);
-    const toUser = params.get("id");
+    const toUser = params.get('id');
 
     const { data: { session } } = await supabase.auth.getSession();
     const user = session?.user;
 
     if (!user || !toUser) {
-      alert("Fehlende Daten – bitte einloggen oder Link prüfen.");
+      alert('Fehlende Daten – bitte einloggen oder Link prüfen.');
       return;
     }
 
-    const { error } = await supabase.from("reviews").insert({
+    const { error } = await supabase.from('reviews').insert({
       to_user_id: toUser,
       from_user_id: user.id,
       rating,
@@ -433,9 +474,9 @@
     });
 
     if (error) {
-      message.textContent = "Fehler beim Speichern.";
+      message.textContent = 'Fehler beim Speichern.';
     } else {
-      message.textContent = "✅ Bewertung gespeichert!";
+      message.textContent = '✅ Bewertung gespeichert!';
       setTimeout(() => {
         window.location.href = `vermieter-profil.html?id=${toUser}`;
       }, 1500);
