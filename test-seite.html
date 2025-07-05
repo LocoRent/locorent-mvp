@@ -43,6 +43,7 @@
     header {
       background-color: var(--primary);
       color: var(--white);
+      padding: 1.5rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -51,8 +52,7 @@
       top: 0;
       z-index: 1000;
       box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-      padding: 1.2rem 2rem;
-      height: 64px;
+      flex-wrap: nowrap;
     }
 
     header h1 {
@@ -64,15 +64,16 @@
 
     #nav-toggle {
       display: none;
+      font-size: 2rem;
       background: none;
       border: none;
-      font-size: 2rem;
       color: var(--white);
       cursor: pointer;
     }
 
     nav#nav-links {
       display: flex;
+      flex-wrap: wrap;
       gap: 1rem;
     }
 
@@ -82,6 +83,7 @@
       font-weight: 600;
       font-size: 1rem;
       position: relative;
+      transition: color 0.3s ease;
     }
 
     nav#nav-links a::after {
@@ -95,8 +97,15 @@
       transition: width 0.3s ease;
     }
 
-    nav#nav-links a:hover::after {
+    nav#nav-links a:hover::after,
+    nav#nav-links a:focus::after {
       width: 100%;
+    }
+
+    nav#nav-links a:hover,
+    nav#nav-links a:focus {
+      color: var(--accent);
+      outline: none;
     }
 
     main.container {
@@ -109,10 +118,12 @@
     }
 
     h2 {
-      text-align: center;
       color: var(--primary-dark);
+      font-weight: 700;
       font-size: 2rem;
-      margin: 0 0 1.5rem;
+      margin-bottom: 1.5rem;
+      margin-top: 0;
+      text-align: center;
     }
 
     .stars {
@@ -126,6 +137,8 @@
       font-size: 2.5rem;
       color: #ccc;
       cursor: pointer;
+      user-select: none;
+      transition: color 0.2s;
     }
 
     .star.selected {
@@ -135,8 +148,8 @@
     label {
       font-weight: 700;
       color: var(--primary-dark);
-      margin-top: 1rem;
       display: block;
+      margin-top: 1rem;
     }
 
     textarea {
@@ -145,16 +158,18 @@
       border-radius: 8px;
       border: 1px solid #ccc;
       font-size: 1rem;
+      resize: vertical;
       min-height: 120px;
       font-family: var(--font-primary);
       color: var(--text-dark);
+      margin-top: 0.25rem;
     }
 
     .char-count {
       font-size: 0.85rem;
+      color: #666;
       text-align: right;
       margin-top: 0.3rem;
-      color: #666;
     }
 
     button {
@@ -166,8 +181,15 @@
       font-size: 1rem;
       border-radius: 8px;
       cursor: pointer;
-      width: 100%;
       font-weight: 700;
+      width: 100%;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover,
+    button:focus {
+      background-color: var(--primary-dark);
+      outline: none;
     }
 
     .success {
@@ -178,68 +200,93 @@
     }
 
     footer {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 2rem 2rem 1rem;
+      border-radius: var(--radius);
       background-color: var(--primary);
       color: var(--white);
-      text-align: center;
-      padding: 2rem 1rem 1rem;
-      margin-top: auto;
+      box-shadow: 0 8px 32px rgba(46, 125, 50, 0.22);
       font-size: 0.92rem;
+      user-select: none;
+      text-align: center;
+      margin-top: auto;
     }
 
-    footer div {
+    footer > div {
       max-width: 1200px;
       margin: 0 auto;
       display: flex;
       flex-wrap: wrap;
-      gap: 2rem;
       justify-content: space-between;
+      gap: 2rem;
       text-align: left;
+    }
+
+    footer > div > div {
+      flex: 1;
+      min-width: 200px;
     }
 
     footer h4 {
       margin-bottom: 0.5rem;
+      font-weight: 700;
+      font-size: 1.1rem;
     }
 
     footer ul {
       list-style: none;
       padding: 0;
-      margin: 0;
+      line-height: 1.8;
     }
 
     footer ul li a {
       color: var(--white);
       text-decoration: underline;
+      transition: color 0.3s ease;
+    }
+
+    footer ul li a:hover {
+      color: var(--accent);
     }
 
     footer small {
       display: block;
       margin-top: 2rem;
+      text-align: center;
       opacity: 0.85;
     }
 
     @media (max-width: 720px) {
       header {
+        padding: 0.8rem 1.2rem;
         height: 64px;
-        padding: 0 1.2rem;
+        justify-content: space-between;
+        align-items: center;
       }
 
       header h1 {
         font-size: 1.6rem;
+        margin: 0;
       }
 
       #nav-toggle {
         display: block;
+        font-size: 2rem;
+        padding: 0;
+        margin: 0;
       }
 
       nav#nav-links {
-        display: none;
-        flex-direction: column;
-        background-color: var(--primary);
         position: absolute;
         top: 64px;
         left: 0;
         width: 100%;
-        padding: 1rem;
+        background-color: var(--primary);
+        display: none;
+        flex-direction: column;
+        padding: 0.5rem 1rem;
+        z-index: 1000;
       }
 
       nav#nav-links.show {
@@ -247,22 +294,32 @@
       }
 
       nav#nav-links a {
-        padding: 0.5rem;
-        background-color: rgba(255, 255, 255, 0.05);
+        margin: 0.2rem 0;
+        padding: 0.6rem 1rem;
+        background-color: rgba(255, 255, 255, 0.08);
         border-radius: 6px;
+        font-size: 1rem;
+        font-weight: 600;
+        text-align: left;
+        color: var(--white);
       }
 
-      footer div {
+      footer > div {
         flex-direction: column;
+        align-items: flex-start;
+      }
+
+      footer > div > div {
+        width: 100%;
       }
     }
   </style>
 </head>
 <body>
   <header>
-    <h1 onclick="location.href='index.html'" tabindex="0">Locorent</h1>
-    <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false">☰</button>
-    <nav id="nav-links" role="navigation"></nav>
+    <h1 onclick="location.href='index.html'" role="banner">Locorent</h1>
+    <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
+    <nav id="nav-links"></nav>
   </header>
 
   <main class="container">
@@ -278,10 +335,10 @@
       </div>
       <input type="hidden" id="rating" required />
       <label for="comment">Kommentar</label>
-      <textarea id="comment" maxlength="150" placeholder="Was möchtest du sagen? (max. 150 Zeichen)" required></textarea>
+      <textarea id="comment" maxlength="150" required></textarea>
       <div class="char-count"><span id="charCount">0</span>/150</div>
       <button type="submit">Bewertung speichern</button>
-      <div id="message" class="success" role="alert" aria-live="polite"></div>
+      <div id="message" class="success"></div>
     </form>
   </main>
 
@@ -292,79 +349,100 @@
         <ul>
           <li><a href="#">So funktioniert's</a></li>
           <li><a href="#">Werde zum Vermieter</a></li>
+          <li><a href="#">Beliebte Kategorien</a></li>
+          <li><a href="#">Tipps & Tricks</a></li>
         </ul>
       </div>
       <div>
-        <h4>Rechtliches</h4>
+        <h4>Wissenswertes</h4>
         <ul>
+          <li><a href="#">AGB &amp; Impressum</a></li>
           <li><a href="#">Datenschutz</a></li>
-          <li><a href="#">AGB</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Über uns</h4>
+        <ul>
+          <li><a href="#">Kontakt</a></li>
+          <li><a href="#">Folgen Sie uns</a></li>
+          <li><a href="#">Mission</a></li>
         </ul>
       </div>
     </div>
-    <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
+    <small>© 2025 Locorent – Mieten statt kaufen.</small>
   </footer>
 
   <script>
     const supabase = window.supabase.createClient(
       'https://flnjalgqtkqycsaymmbd.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
     );
-
-    async function init() {
-      const { data: { session } } = await supabase.auth.getSession();
-      userSession = session;
-      updateNav();
-    }
-
-    function updateNav() {
-      const nav = document.getElementById('nav-links');
-      nav.innerHTML = userSession?.user ? `
-        <a href="index.html">Start</a>
-        <a href="profil.html">Mein Profil</a>
-        <a href="#">Logout</a>
-      ` : `<a href="login.html">Einloggen</a>`;
-    }
 
     document.getElementById('nav-toggle').addEventListener('click', () => {
       const nav = document.getElementById('nav-links');
       nav.classList.toggle('show');
+      const expanded = nav.classList.contains('show');
+      document.getElementById('nav-toggle').setAttribute('aria-expanded', expanded);
     });
 
     const stars = document.querySelectorAll('.star');
     const ratingInput = document.getElementById('rating');
+    const message = document.getElementById('message');
+
     stars.forEach((star, i) => {
       star.addEventListener('click', () => {
-        const val = parseInt(star.dataset.value);
-        ratingInput.value = val;
-        stars.forEach(s => s.classList.toggle('selected', parseInt(s.dataset.value) <= val));
+        const value = parseInt(star.dataset.value);
+        ratingInput.value = value;
+        updateStars(value);
       });
     });
 
+    function updateStars(value) {
+      stars.forEach(s => {
+        s.classList.toggle('selected', parseInt(s.dataset.value) <= value);
+      });
+    }
+
     document.getElementById('comment').addEventListener('input', e => {
       document.getElementById('charCount').textContent = e.target.value.length;
-      document.getElementById('message').textContent = '';
+      message.textContent = '';
     });
 
     document.getElementById('review-form').addEventListener('submit', async e => {
       e.preventDefault();
       const rating = parseInt(ratingInput.value);
       const comment = document.getElementById('comment').value.trim();
+      if (!rating || rating < 1 || rating > 5) {
+        message.textContent = 'Bitte eine Bewertung zwischen 1 und 5 Sternen abgeben.';
+        return;
+      }
+      if (comment.length === 0) {
+        message.textContent = 'Bitte einen Kommentar eingeben.';
+        return;
+      }
       const params = new URLSearchParams(window.location.search);
       const toUser = params.get('id');
       const { data: { session } } = await supabase.auth.getSession();
       const user = session?.user;
-      if (!rating || !comment || !user || !toUser) return;
+      if (!user || !toUser) {
+        alert('Fehlende Daten – bitte einloggen oder Link prüfen.');
+        return;
+      }
       const { error } = await supabase.from('reviews').insert({
         to_user_id: toUser,
         from_user_id: user.id,
         rating,
         comment,
       });
-      document.getElementById('message').textContent = error ? 'Fehler beim Speichern' : '✅ Bewertung gespeichert!';
+      if (error) {
+        message.textContent = 'Fehler beim Speichern.';
+      } else {
+        message.textContent = '✅ Bewertung gespeichert!';
+        setTimeout(() => {
+          window.location.href = `vermieter-profil.html?id=${toUser}`;
+        }, 1500);
+      }
     });
-
-    init();
   </script>
 </body>
 </html>
