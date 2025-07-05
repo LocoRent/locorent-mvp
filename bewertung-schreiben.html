@@ -24,7 +24,9 @@
       --font-primary: 'Poppins', sans-serif;
     }
 
-    *, *::before, *::after { box-sizing: border-box; }
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
@@ -41,7 +43,7 @@
     header {
       background-color: var(--primary);
       color: var(--white);
-      padding: 1.5rem 2rem;
+      padding: 1rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -50,7 +52,7 @@
       top: 0;
       z-index: 1000;
       box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-      flex-wrap: nowrap;
+      flex-wrap: wrap;
     }
 
     header h1 {
@@ -64,7 +66,7 @@
       display: none;
       background: none;
       border: none;
-      font-size: 2rem;
+      font-size: 1.8rem;
       color: var(--white);
       cursor: pointer;
     }
@@ -116,7 +118,10 @@
     }
 
     @media (min-width: 721px) {
-      main.container { max-width: 1400px; padding: 2rem 3rem; }
+      main.container {
+        max-width: 1400px;
+        padding: 2rem 3rem;
+      }
     }
 
     h2 {
@@ -143,7 +148,9 @@
       transition: color 0.2s;
     }
 
-    .star.selected { color: #ffca28; }
+    .star.selected {
+      color: #ffca28;
+    }
 
     label {
       font-weight: 700;
@@ -162,6 +169,7 @@
       min-height: 120px;
       font-family: var(--font-primary);
       color: var(--text-dark);
+      box-sizing: border-box;
       margin-top: 0.25rem;
     }
 
@@ -201,6 +209,7 @@
 
     footer {
       width: 100%;
+      box-sizing: border-box;
       padding: 2rem 2rem 1rem;
       border-radius: var(--radius);
       background-color: var(--primary);
@@ -250,7 +259,9 @@
       transition: color 0.3s ease;
     }
 
-    footer ul li a:hover { color: var(--accent); }
+    footer ul li a:hover {
+      color: var(--accent);
+    }
 
     footer small {
       display: block;
@@ -261,11 +272,11 @@
 
     @media (max-width: 720px) {
       header {
-        flex-direction: row;
+        padding: 0.8rem 1.2rem;
+        height: 64px;
+        display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 1rem 1.25rem;
-        position: relative;
       }
 
       header h1 {
@@ -290,7 +301,6 @@
         z-index: 999;
         display: none;
         flex-direction: column;
-        margin-top: 0;
         padding: 0.5rem 1rem;
       }
 
@@ -299,10 +309,10 @@
       }
 
       nav#nav-links a {
-        margin: 0.3rem 0;
-        padding: 0.6rem 1rem;
+        margin: 0.2rem 0;
+        padding: 0.5rem 1rem;
         background-color: rgba(255, 255, 255, 0.08);
-        border-radius: 10px;
+        border-radius: 6px;
         font-size: 1rem;
         font-weight: 600;
         text-align: left;
@@ -326,7 +336,7 @@
 </head>
 <body>
   <header>
-    <h1 tabindex="0" onclick="location.href='index.html'">Locorent</h1>
+    <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
     <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
     <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
   </header>
@@ -343,9 +353,11 @@
         <span class="star" data-value="5" role="radio" aria-checked="false" tabindex="-1">★</span>
       </div>
       <input type="hidden" id="rating" required />
+
       <label for="comment">Kommentar</label>
-      <textarea id="comment" maxlength="150" placeholder="Was möchtest du sagen? (max. 150 Zeichen)" required></textarea>
+      <textarea id="comment" maxlength="150" placeholder="Was möchtest du sagen? (max. 150 Zeichen)" required aria-describedby="charCount"></textarea>
       <div class="char-count"><span id="charCount">0</span>/150</div>
+
       <button type="submit">Bewertung speichern</button>
       <div id="message" class="success" role="alert" aria-live="polite"></div>
     </form>
@@ -388,8 +400,6 @@
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
     );
 
-    let userSession = null;
-
     async function init() {
       const { data: { session } } = await supabase.auth.getSession();
       userSession = session;
@@ -420,9 +430,8 @@
     document.getElementById('nav-toggle').addEventListener('click', () => {
       const nav = document.getElementById('nav-links');
       nav.classList.toggle('show');
-      const toggle = document.getElementById('nav-toggle');
       const expanded = nav.classList.contains('show');
-      toggle.setAttribute('aria-expanded', expanded);
+      document.getElementById('nav-toggle').setAttribute('aria-expanded', expanded);
     });
 
     init();
@@ -469,12 +478,8 @@
 
     document.getElementById('review-form').addEventListener('submit', async e => {
       e.preventDefault();
-
       const rating = parseInt(ratingInput.value);
       const comment = document.getElementById('comment').value.trim();
-      const params = new URLSearchParams(window.location.search);
-      const toUser = params.get('id');
-
       if (!rating || rating < 1 || rating > 5) {
         message.textContent = 'Bitte eine Bewertung zwischen 1 und 5 Sternen abgeben.';
         return;
@@ -483,21 +488,20 @@
         message.textContent = 'Bitte einen Kommentar eingeben.';
         return;
       }
-
+      const params = new URLSearchParams(window.location.search);
+      const toUser = params.get('id');
       const { data: { session } } = await supabase.auth.getSession();
       const user = session?.user;
       if (!user || !toUser) {
         alert('Fehlende Daten – bitte einloggen oder Link prüfen.');
         return;
       }
-
       const { error } = await supabase.from('reviews').insert({
         to_user_id: toUser,
         from_user_id: user.id,
         rating,
         comment,
       });
-
       if (error) {
         message.textContent = 'Fehler beim Speichern.';
       } else {
