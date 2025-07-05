@@ -7,11 +7,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
+    /* --- Styles aus agb.html 1:1 übernommen --- */
     :root {
       --primary: #2e7d32;
       --primary-light: #66bb6a;
       --primary-dark: #1b5e20;
-      --background: #f1f8e9;
+      --background: linear-gradient(to bottom, #e8f5e9 0%, #ffffff 100%);
       --white: #fff;
       --text-dark: #0f2e13;
       --text-muted: #466843;
@@ -31,7 +32,7 @@
     body {
       margin: 0;
       font-family: var(--font-primary);
-      background: linear-gradient(to bottom, #e8f5e9 0%, #ffffff 100%);
+      background: var(--background);
       color: var(--text-dark);
       scroll-behavior: smooth;
       display: flex;
@@ -40,6 +41,7 @@
       overflow-x: hidden;
     }
 
+    /* Header Styles */
     header {
       background-color: var(--primary);
       color: var(--white);
@@ -60,6 +62,7 @@
       cursor: pointer;
       user-select: none;
       margin: 0;
+      /* order entfernt */
     }
 
     #nav-toggle {
@@ -69,12 +72,15 @@
       font-size: 1.8rem;
       color: var(--white);
       cursor: pointer;
+      margin: 0;
+      /* order entfernt */
     }
 
     nav#nav-links {
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
+      /* order entfernt */
     }
 
     nav#nav-links a {
@@ -108,8 +114,9 @@
       outline: none;
     }
 
+    /* Main-Container an agb.html angepasst */
     main {
-      max-width: 900px;
+      max-width: 900px; /* wie bei agb */
       margin: 2rem auto 4rem auto;
       padding: 2rem 1rem;
       background: var(--white);
@@ -118,6 +125,7 @@
       box-sizing: border-box;
     }
 
+    /* Überschrift */
     h2 {
       color: var(--primary-dark);
       font-weight: 700;
@@ -263,22 +271,31 @@
       opacity: 0.85;
     }
 
+    /* Mobile Styles – genau wie in agb.html */
     @media (max-width: 720px) {
+      header {
+        flex-direction: row; /* Wichtig, sonst zentriert sich der Burger */
+        justify-content: space-between;
+        align-items: center;
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+      }
+      /* order entfernt */
+      header h1 {
+      }
       #nav-toggle {
         display: block;
+        margin: 0;
       }
-
       nav#nav-links {
         width: 100%;
         flex-direction: column;
         display: none;
         margin-top: 1rem;
       }
-
       nav#nav-links.show {
         display: flex;
       }
-
       nav#nav-links a {
         margin: 0.4rem 0;
         padding: 0.5rem 1rem;
@@ -286,14 +303,16 @@
         border-radius: 6px;
         display: block;
       }
-
       footer > div {
         flex-direction: column;
         align-items: flex-start;
       }
-
       footer > div > div {
         width: 100%;
+      }
+      footer {
+        padding-left: 1rem;
+        padding-right: 1rem;
       }
     }
   </style>
@@ -335,14 +354,14 @@
           <li><a href="so-funktionierts.html">So funktioniert's</a></li>
           <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
           <li><a href="kategorien.html">Beliebte Kategorien</a></li>
-          <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
+          <li><a href="vermieter-tipps.html">Tipps &amp; Tricks für Vermieter</a></li>
           <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
         </ul>
       </div>
       <div>
         <h4>Wissenswertes</h4>
         <ul>
-          <li><a href="agb.html">AGB & Impressum</a></li>
+          <li><a href="agb.html">AGB &amp; Impressum</a></li>
           <li><a href="datenschutz.html">Datenschutz</a></li>
         </ul>
       </div>
@@ -358,134 +377,134 @@
     <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
   </footer>
 
-  <script>
-    const supabase = window.supabase.createClient(
-      'https://flnjalgqtkqycsaymmbd.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-    );
+<script>
+  const supabase = window.supabase.createClient(
+    'https://flnjalgqtkqycsaymmbd.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+  );
 
-    let userSession = null;
+  let userSession = null;
 
-    async function init() {
-      const { data: { session } } = await supabase.auth.getSession();
-      userSession = session;
-      updateNav();
-    }
+  async function init() {
+    const { data: { session } } = await supabase.auth.getSession();
+    userSession = session;
+    updateNav();
+  }
 
-    function updateNav() {
-      const nav = document.getElementById('nav-links');
-      nav.innerHTML = userSession?.user ? `
-        <a href="index.html">Start</a>
-        <a href="profil.html">Mein Profil</a>
-        <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-        <a href="favoriten.html">Meine Favoriten</a>
-        <a href="inserate.html">Meine Inserate</a>
-        <a href="#" onclick="logout(event)">Logout</a>
-      ` : `
-        <a href="index.html">Start</a>
-        <a href="login.html">Einloggen</a>
-      `;
-    }
+  function updateNav() {
+    const nav = document.getElementById('nav-links');
+    nav.innerHTML = userSession?.user ? `
+      <a href="index.html">Start</a>
+      <a href="profil.html">Mein Profil</a>
+      <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+      <a href="favoriten.html">Meine Favoriten</a>
+      <a href="inserate.html">Meine Inserate</a>
+      <a href="#" onclick="logout(event)">Logout</a>
+    ` : `
+      <a href="index.html">Start</a>
+      <a href="login.html">Einloggen</a>
+    `;
+  }
 
-    async function logout(event) {
-      event.preventDefault();
-      await supabase.auth.signOut();
-      window.location.href = "login.html";
-    }
+  async function logout(event) {
+    event.preventDefault();
+    await supabase.auth.signOut();
+    window.location.href = "login.html";
+  }
 
-    document.getElementById('nav-toggle').addEventListener('click', () => {
-      const nav = document.getElementById('nav-links');
-      nav.classList.toggle('show');
-      const toggle = document.getElementById('nav-toggle');
-      const expanded = nav.classList.contains('show');
-      toggle.setAttribute('aria-expanded', expanded);
+  document.getElementById('nav-toggle').addEventListener('click', () => {
+    const nav = document.getElementById('nav-links');
+    nav.classList.toggle('show');
+    const toggle = document.getElementById('nav-toggle');
+    const expanded = nav.classList.contains('show');
+    toggle.setAttribute('aria-expanded', expanded);
+  });
+
+  init();
+
+  // Sternebewertung Logik
+  const stars = document.querySelectorAll('.star');
+  const ratingInput = document.getElementById('rating');
+  const message = document.getElementById('message');
+
+  stars.forEach((star, i) => {
+    star.addEventListener('click', () => {
+      const value = parseInt(star.dataset.value);
+      ratingInput.value = value;
+      updateStars(value);
     });
-
-    init();
-
-    // Sternebewertung Logik
-    const stars = document.querySelectorAll('.star');
-    const ratingInput = document.getElementById('rating');
-    const message = document.getElementById('message');
-
-    stars.forEach((star, i) => {
-      star.addEventListener('click', () => {
-        const value = parseInt(star.dataset.value);
-        ratingInput.value = value;
-        updateStars(value);
-      });
-      star.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
-          e.preventDefault();
-          const nextIndex = (i + 1) % stars.length;
-          stars[nextIndex].focus();
-        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
-          e.preventDefault();
-          const prevIndex = (i - 1 + stars.length) % stars.length;
-          stars[prevIndex].focus();
-        } else if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          star.click();
-        }
-      });
-    });
-
-    function updateStars(value) {
-      stars.forEach(s => {
-        const starVal = parseInt(s.dataset.value);
-        s.classList.toggle('selected', starVal <= value);
-        s.setAttribute('aria-checked', starVal === value ? 'true' : 'false');
-        s.tabIndex = starVal === value ? 0 : -1;
-      });
-    }
-
-    document.getElementById('comment').addEventListener('input', e => {
-      document.getElementById('charCount').textContent = e.target.value.length;
-      message.textContent = '';
-    });
-
-    document.getElementById('review-form').addEventListener('submit', async e => {
-      e.preventDefault();
-
-      const rating = parseInt(ratingInput.value);
-      const comment = document.getElementById('comment').value.trim();
-
-      if (!rating || rating < 1 || rating > 5) {
-        message.textContent = 'Bitte eine Bewertung zwischen 1 und 5 Sternen abgeben.';
-        return;
-      }
-      if (comment.length === 0) {
-        message.textContent = 'Bitte einen Kommentar eingeben.';
-        return;
-      }
-
-      const params = new URLSearchParams(window.location.search);
-      const toUser = params.get('id');
-
-      const { data: { session } } = await supabase.auth.getSession();
-      const user = session?.user;
-
-      if (!user || !toUser) {
-        alert('Fehlende Daten – bitte einloggen oder Link prüfen.');
-        return;
-      }
-
-      const { error } = await supabase.from('reviews').insert({
-        to_user_id: toUser,
-        from_user_id: user.id,
-        rating,
-        comment,
-      });
-
-      if (error) {
-        message.textContent = 'Fehler beim Speichern.';
-      } else {
-        message.textContent = '✅ Bewertung gespeichert!';
-        setTimeout(() => {
-          window.location.href = `vermieter-profil.html?id=${toUser}`;
-        }, 1500);
+    star.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        const nextIndex = (i + 1) % stars.length;
+        stars[nextIndex].focus();
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        const prevIndex = (i - 1 + stars.length) % stars.length;
+        stars[prevIndex].focus();
+      } else if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        star.click();
       }
     });
-  </script>
+  });
+
+  function updateStars(value) {
+    stars.forEach(s => {
+      const starVal = parseInt(s.dataset.value);
+      s.classList.toggle('selected', starVal <= value);
+      s.setAttribute('aria-checked', starVal === value ? 'true' : 'false');
+      s.tabIndex = starVal === value ? 0 : -1;
+    });
+  }
+
+  document.getElementById('comment').addEventListener('input', e => {
+    document.getElementById('charCount').textContent = e.target.value.length;
+    message.textContent = '';
+  });
+
+  document.getElementById('review-form').addEventListener('submit', async e => {
+    e.preventDefault();
+
+    const rating = parseInt(ratingInput.value);
+    const comment = document.getElementById('comment').value.trim();
+
+    if (!rating || rating < 1 || rating > 5) {
+      message.textContent = 'Bitte eine Bewertung zwischen 1 und 5 Sternen abgeben.';
+      return;
+    }
+    if (comment.length === 0) {
+      message.textContent = 'Bitte einen Kommentar eingeben.';
+      return;
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    const toUser = params.get('id');
+
+    const { data: { session } } = await supabase.auth.getSession();
+    const user = session?.user;
+
+    if (!user || !toUser) {
+      alert('Fehlende Daten – bitte einloggen oder Link prüfen.');
+      return;
+    }
+
+    const { error } = await supabase.from('reviews').insert({
+      to_user_id: toUser,
+      from_user_id: user.id,
+      rating,
+      comment,
+    });
+
+    if (error) {
+      message.textContent = 'Fehler beim Speichern.';
+    } else {
+      message.textContent = '✅ Bewertung gespeichert!';
+      setTimeout(() => {
+        window.location.href = `vermieter-profil.html?id=${toUser}`;
+      }, 1500);
+    }
+  });
+</script>
 </body>
 </html>
