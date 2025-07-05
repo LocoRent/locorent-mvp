@@ -28,15 +28,17 @@
       box-sizing: border-box;
     }
 
-    body {
+    html, body {
       margin: 0;
+      padding: 0;
+      width: 100%;
+      overflow-x: hidden; /* Kein horizontales Scrollen mehr */
       font-family: var(--font-primary);
       background: var(--background);
       color: var(--text-dark);
-      scroll-behavior: smooth;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
     }
 
     header {
@@ -107,64 +109,77 @@
       outline: none;
     }
 
-    main {
-      width: 100vw;
-      max-width: 100vw;
-      margin: 2rem auto 4rem auto;
-      background: var(--white);
-      border-radius: var(--radius);
-      box-shadow: 0 4px 12px var(--shadow-light);
-      padding: 2rem 3rem;
-      flex-grow: 1;
-      box-sizing: border-box;
+    /* Responsive Nav - Hidden by default on small screens */
+    @media (max-width: 720px) {
+      #nav-toggle {
+        display: block;
+      }
+
+      nav#main-nav {
+        display: none;
+        flex-direction: column;
+        margin-top: 1rem;
+      }
+      nav#main-nav.show {
+        display: flex;
+      }
+
+      nav#main-nav a {
+        margin: 0.4rem 0;
+        padding: 0.5rem 1rem;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+        display: block;
+      }
     }
 
-    main h2 {
-      text-align: center;
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: var(--primary-dark);
-      margin-bottom: 2.5rem;
-      user-select: none;
+    main {
+      max-width: 1400px; /* Breiter als vorher für große Bildschirme */
+      margin: 3rem auto 4rem auto;
+      padding: 0 2rem;
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: 0 12px 30px var(--shadow-light);
+      flex-grow: 1;
+      overflow: hidden; /* Verhindert scrollbars */
     }
 
     .category-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 1.5rem;
-      max-width: 1200px;
-      margin: 0 auto;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
     }
 
     .result-card {
       background: var(--white);
       border-radius: var(--radius);
-      box-shadow: 0 4px 14px var(--shadow-light);
+      box-shadow: 0 2px 8px var(--shadow-light);
       cursor: pointer;
       display: flex;
       flex-direction: column;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
-      padding: 1.5rem;
+      padding: 1rem;
       height: 100%;
+      user-select: none;
     }
 
     .result-card:hover {
-      transform: translateY(-7px);
-      box-shadow: 0 10px 25px var(--shadow-strong);
+      transform: translateY(-5px);
+      box-shadow: 0 6px 20px var(--shadow-strong);
     }
 
     .result-card img {
       width: 100%;
-      height: 220px;
+      height: 220px; /* Etwas größer */
       object-fit: cover;
       border-radius: 12px;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
       flex-shrink: 0;
     }
 
     .result-card h3 {
       margin: 0 0 0.75rem 0;
-      font-size: 1.4rem;
+      font-size: 1.5rem; /* Größer */
       font-weight: 700;
       color: var(--primary-dark);
     }
@@ -172,7 +187,7 @@
     .result-card p {
       margin: 0.3rem 0;
       color: var(--text-muted);
-      font-size: 1rem;
+      font-size: 1rem; /* Größer */
       flex-grow: 0;
     }
 
@@ -185,16 +200,15 @@
 
     .result-card button {
       flex: 1;
-      padding: 0.7rem 0;
+      padding: 0.6rem 0;
       background: var(--primary);
       color: var(--white);
       border: none;
-      border-radius: 10px;
+      border-radius: 8px;
       cursor: pointer;
-      font-weight: 700;
+      font-weight: 600;
       font-size: 1.1rem;
       transition: background-color 0.3s ease;
-      user-select: none;
     }
 
     .result-card button:hover {
@@ -247,6 +261,7 @@
       margin-bottom: 0.5rem;
       font-weight: 700;
       font-size: 1.1rem;
+      user-select: none;
     }
 
     footer ul {
@@ -261,62 +276,17 @@
       transition: color 0.3s ease;
     }
 
-    footer ul li a:hover {
-      color: var(--primary-light);
+    footer ul li a:hover,
+    footer ul li a:focus-visible {
+      color: var(--highlight);
+      outline: none;
     }
 
     footer small {
       display: block;
       margin-top: 2rem;
       text-align: center;
-      opacity: 0.85;
-    }
-
-    @media (max-width: 900px) {
-      .category-grid {
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        max-width: 95vw;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .category-grid {
-        grid-template-columns: 1fr;
-        max-width: 95vw;
-      }
-    }
-
-    @media (max-width: 720px) {
-      #nav-toggle {
-        display: block;
-      }
-
-      nav#main-nav {
-        width: 100%;
-        flex-direction: column;
-        display: none;
-        margin-top: 1rem;
-      }
-
-      nav#main-nav.show {
-        display: flex;
-      }
-
-      nav#main-nav a {
-        margin: 0.4rem 0;
-        padding: 0.5rem 1rem;
-        background-color: rgba(255, 255, 255, 0.1);
-        border-radius: 6px;
-      }
-
-      footer > div {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      footer > div > div {
-        width: 100%;
-      }
+      user-select: none;
     }
   </style>
 </head>
@@ -406,12 +376,12 @@
         <a href="nachrichten-inbox.html">📨 Nachrichten</a>
         <a href="favoriten.html">Meine Favoriten</a>
         <a href="inserate.html">Meine Inserate</a>
-        <a href="#" onclick="logout(event)">Logout</a>
+        <a href="javascript:void(0);" onclick="logout(event)">Logout</a>
       `;
     } else {
       nav.innerHTML = `
+        <a href="index.html">Start</a>
         <a href="login.html">Einloggen</a>
-        <a href="register.html">Registrieren</a>
       `;
     }
   }
@@ -430,7 +400,6 @@
 
     if (error) {
       console.error("Fehler beim Laden der Favoriten:", error);
-      document.getElementById('favorites-list').innerHTML = "<p>Fehler beim Laden der Favoriten.</p>";
       return;
     }
 
@@ -459,7 +428,7 @@
       const card = document.createElement("div");
       card.className = "result-card";
       card.innerHTML = `
-        <img src="${listing.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" alt="${listing.title}" />
+        <img src="${listing.image_urls?.[0] || 'https://via.placeholder.com/400x220'}" alt="${listing.title}" />
         <h3>${listing.title}</h3>
         <p><strong>Kategorie:</strong> ${capitalize(listing.category) || 'Unbekannt'}</p>
         <p><strong>Preis pro Tag:</strong> ${listing.price_per_day || 'k. A.'} €</p>
@@ -497,5 +466,6 @@
   loadFavorites();
   updateNav();
 </script>
+
 </body>
 </html>
