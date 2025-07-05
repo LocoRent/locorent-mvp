@@ -46,11 +46,6 @@
       z-index: 1000;
       box-shadow: 0 10px 20px rgba(0,0,0,0.1);
       flex-wrap: wrap;
-      width: 100vw;
-      left: 50%;
-      right: 50%;
-      margin-left: -50vw;
-      margin-right: -50vw;
     }
     header h1 {
       font-size: 1.8rem;
@@ -181,7 +176,7 @@
       font-weight: 600;
     }
     footer {
-      width: 100vw;
+      width: 100%;
       box-sizing: border-box;
       padding: 2rem 2rem 1rem;
       border-radius: var(--radius);
@@ -193,10 +188,6 @@
       text-align: center;
       margin-top: auto;
       position: relative;
-      left: 50%;
-      right: 50%;
-      margin-left: -50vw;
-      margin-right: -50vw;
     }
     footer > div {
       max-width: 1200px;
@@ -260,7 +251,6 @@
         display: block;
       }
       header {
-        /* fix header full width and prevent horizontal scroll */
         padding-left: 1rem;
         padding-right: 1rem;
       }
