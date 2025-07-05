@@ -61,12 +61,12 @@
       color: var(--white);
       cursor: pointer;
     }
-    nav#nav-links {
+    nav#main-nav {
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
     }
-    nav#nav-links a {
+    nav#main-nav a {
       color: var(--white);
       text-decoration: none;
       font-weight: 600;
@@ -74,7 +74,7 @@
       position: relative;
       transition: color 0.3s ease;
     }
-    nav#nav-links a::after {
+    nav#main-nav a::after {
       content: '';
       position: absolute;
       left: 0;
@@ -84,12 +84,12 @@
       background-color: var(--accent);
       transition: width 0.3s ease;
     }
-    nav#nav-links a:hover::after,
-    nav#nav-links a:focus::after {
+    nav#main-nav a:hover::after,
+    nav#main-nav a:focus::after {
       width: 100%;
     }
-    nav#nav-links a:hover,
-    nav#nav-links a:focus {
+    nav#main-nav a:hover,
+    nav#main-nav a:focus {
       color: var(--accent);
       outline: none;
     }
@@ -234,16 +234,16 @@
       #nav-toggle {
         display: block;
       }
-      nav#nav-links {
+      nav#main-nav {
         width: 100%;
         flex-direction: column;
         display: none;
         margin-top: 1rem;
       }
-      nav#nav-links.show {
+      nav#main-nav.show {
         display: flex;
       }
-      nav#nav-links a {
+      nav#main-nav a {
         margin: 0.4rem 0;
         padding: 0.5rem 1rem;
         background-color: rgba(255, 255, 255, 0.1);
@@ -275,8 +275,8 @@
 <body>
   <header>
     <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
-    <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
-    <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
+    <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="main-nav">☰</button>
+    <nav id="main-nav" role="navigation" aria-label="Hauptnavigation"></nav>
   </header>
 
   <main>
@@ -340,7 +340,7 @@
 
   async function updateNav() {
     const { data: { session } } = await supabase.auth.getSession();
-    const nav = document.getElementById("nav-links");
+    const nav = document.getElementById("main-nav");
     nav.innerHTML = session?.user ? `
       <a href="index.html">Start</a>
       <a href="profil.html">Mein Profil</a>
@@ -360,7 +360,7 @@
   }
 
   document.getElementById('nav-toggle').addEventListener('click', () => {
-    const nav = document.getElementById('nav-links');
+    const nav = document.getElementById('main-nav');
     nav.classList.toggle('show');
     const toggle = document.getElementById('nav-toggle');
     const expanded = nav.classList.contains('show');
