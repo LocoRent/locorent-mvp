@@ -108,8 +108,8 @@
     }
 
     main {
-      max-width: 1200px;
-      margin: 2rem auto 4rem;
+      max-width: 95vw;
+      margin: 2rem auto 4rem auto;
       background: var(--white);
       border-radius: var(--radius);
       box-shadow: 0 4px 12px var(--shadow-light);
@@ -117,11 +117,11 @@
       flex-grow: 1;
     }
 
-    /* moderner grid für Favoriten */
+    /* moderner grid für Favoriten, mehr Karten nebeneinander */
     .category-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 2rem;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1.5rem;
     }
 
     .result-card {
@@ -344,13 +344,13 @@
   </div>
   <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
 </footer>
+
 <script>
   const supabase = window.supabase.createClient(
     'https://flnjalgqtkqycsaymmbd.supabase.co',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
   );
 
-  // Navigation Toggle Burger
   document.getElementById('nav-toggle').addEventListener('click', () => {
     const nav = document.getElementById('main-nav');
     const toggle = document.getElementById('nav-toggle');
@@ -365,12 +365,10 @@
     window.location.href = "login.html";
   }
 
-  // Hilfsfunktion für Text-Kapitalisierung
   function capitalize(str) {
     return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
   }
 
-  // Dynamische Navigation je nach Loginstatus
   async function updateNav() {
     const { data: { session } } = await supabase.auth.getSession();
     const nav = document.getElementById('main-nav');
@@ -392,7 +390,6 @@
     }
   }
 
-  // Favoriten laden
   async function loadFavorites() {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
@@ -416,7 +413,6 @@
       return;
     }
 
-    // Hole Details zu jedem Favoriten-Listing
     const favoriteListings = await Promise.all(favorites.map(async (favorite) => {
       const { data } = await supabase
         .from('listings')
@@ -429,7 +425,6 @@
     renderFavorites(favoriteListings);
   }
 
-  // Favoriten anzeigen
   function renderFavorites(listings) {
     const container = document.getElementById("favorites-list");
     container.innerHTML = "";
@@ -451,7 +446,6 @@
     });
   }
 
-  // Favorit entfernen
   async function removeFromFavorites(listingId, event) {
     event.preventDefault();
     event.stopPropagation();
@@ -474,7 +468,6 @@
     }
   }
 
-  // Starte alles
   loadFavorites();
   updateNav();
 </script>
