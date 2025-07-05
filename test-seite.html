@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bewertung abgeben – Locorent</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root {
+      --primary: #2e7d32;
+      --primary-light: #66bb6a;
+      --primary-dark: #1b5e20;
+      --background: linear-gradient(to bottom, #e8f5e9 0%, #ffffff 100%);
+      --white: #fff;
+      --text-dark: #0f2e13;
+      --text-muted: #466843;
+      --accent: #b9f6ca;
+      --highlight: #a5d6a7;
+      --radius: 18px;
+      --shadow-light: rgba(46, 125, 50, 0.08);
+      --shadow-strong: rgba(46, 125, 50, 0.25);
+      --transition: 0.4s ease;
+      --font-primary: 'Poppins', sans-serif;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font-primary);
+      background: var(--background);
+      color: var(--text-dark);
+      scroll-behavior: smooth;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    header {
+      background-color: var(--primary);
+      color: var(--white);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 700;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      padding: 1.2rem 2rem;
+      height: 64px;
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+      margin: 0;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    #nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 2rem;
+      color: var(--white);
+      cursor: pointer;
+    }
+
+    nav#nav-links {
+      display: flex;
+      gap: 1rem;
+    }
+
+    nav#nav-links a {
+      color: var(--white);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      position: relative;
+    }
+
+    nav#nav-links a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -4px;
+      width: 0;
+      height: 2px;
+      background-color: var(--accent);
+      transition: width 0.3s ease;
+    }
+
+    nav#nav-links a:hover::after {
+      width: 100%;
+    }
+
+    main.container {
+      max-width: 1100px;
+      margin: 2rem auto 4rem auto;
+      padding: 2rem 1rem;
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: 0 12px 30px var(--shadow-light);
+    }
+
+    h2 {
+      text-align: center;
+      color: var(--primary-dark);
+      font-size: 2rem;
+      margin: 0 0 1.5rem;
+    }
+
+    .stars {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .star {
+      font-size: 2.5rem;
+      color: #ccc;
+      cursor: pointer;
+    }
+
+    .star.selected {
+      color: #ffca28;
+    }
+
+    label {
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-top: 1rem;
+      display: block;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 0.8rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+      min-height: 120px;
+      font-family: var(--font-primary);
+      color: var(--text-dark);
+    }
+
+    .char-count {
+      font-size: 0.85rem;
+      text-align: right;
+      margin-top: 0.3rem;
+      color: #666;
+    }
+
+    button {
+      margin-top: 1.5rem;
+      background-color: var(--primary);
+      color: var(--white);
+      border: none;
+      padding: 0.8rem 1.5rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 100%;
+      font-weight: 700;
+    }
+
+    .success {
+      color: green;
+      margin-top: 1rem;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    footer {
+      background-color: var(--primary);
+      color: var(--white);
+      text-align: center;
+      padding: 2rem 1rem 1rem;
+      margin-top: auto;
+      font-size: 0.92rem;
+    }
+
+    footer div {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      justify-content: space-between;
+      text-align: left;
+    }
+
+    footer h4 {
+      margin-bottom: 0.5rem;
+    }
+
+    footer ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    footer ul li a {
+      color: var(--white);
+      text-decoration: underline;
+    }
+
+    footer small {
+      display: block;
+      margin-top: 2rem;
+      opacity: 0.85;
+    }
+
+    @media (max-width: 720px) {
+      header {
+        height: 64px;
+        padding: 0 1.2rem;
+      }
+
+      header h1 {
+        font-size: 1.6rem;
+      }
+
+      #nav-toggle {
+        display: block;
+      }
+
+      nav#nav-links {
+        display: none;
+        flex-direction: column;
+        background-color: var(--primary);
+        position: absolute;
+        top: 64px;
+        left: 0;
+        width: 100%;
+        padding: 1rem;
+      }
+
+      nav#nav-links.show {
+        display: flex;
+      }
+
+      nav#nav-links a {
+        padding: 0.5rem;
+        background-color: rgba(255, 255, 255, 0.05);
+        border-radius: 6px;
+      }
+
+      footer div {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 onclick="location.href='index.html'" tabindex="0">Locorent</h1>
+    <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false">☰</button>
+    <nav id="nav-links" role="navigation"></nav>
+  </header>
+
+  <main class="container">
+    <h2>Bewertung abgeben</h2>
+    <form id="review-form" novalidate>
+      <label>Sternebewertung</label>
+      <div class="stars" id="star-container">
+        <span class="star" data-value="1">★</span>
+        <span class="star" data-value="2">★</span>
+        <span class="star" data-value="3">★</span>
+        <span class="star" data-value="4">★</span>
+        <span class="star" data-value="5">★</span>
+      </div>
+      <input type="hidden" id="rating" required />
+      <label for="comment">Kommentar</label>
+      <textarea id="comment" maxlength="150" placeholder="Was möchtest du sagen? (max. 150 Zeichen)" required></textarea>
+      <div class="char-count"><span id="charCount">0</span>/150</div>
+      <button type="submit">Bewertung speichern</button>
+      <div id="message" class="success" role="alert" aria-live="polite"></div>
+    </form>
+  </main>
+
+  <footer>
+    <div>
+      <div>
+        <h4>Mieten &amp; Vermieten</h4>
+        <ul>
+          <li><a href="#">So funktioniert's</a></li>
+          <li><a href="#">Werde zum Vermieter</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Rechtliches</h4>
+        <ul>
+          <li><a href="#">Datenschutz</a></li>
+          <li><a href="#">AGB</a></li>
+        </ul>
+      </div>
+    </div>
+    <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
+  </footer>
+
+  <script>
+    const supabase = window.supabase.createClient(
+      'https://flnjalgqtkqycsaymmbd.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+    );
+
+    async function init() {
+      const { data: { session } } = await supabase.auth.getSession();
+      userSession = session;
+      updateNav();
+    }
+
+    function updateNav() {
+      const nav = document.getElementById('nav-links');
+      nav.innerHTML = userSession?.user ? `
+        <a href="index.html">Start</a>
+        <a href="profil.html">Mein Profil</a>
+        <a href="#">Logout</a>
+      ` : `<a href="login.html">Einloggen</a>`;
+    }
+
+    document.getElementById('nav-toggle').addEventListener('click', () => {
+      const nav = document.getElementById('nav-links');
+      nav.classList.toggle('show');
+    });
+
+    const stars = document.querySelectorAll('.star');
+    const ratingInput = document.getElementById('rating');
+    stars.forEach((star, i) => {
+      star.addEventListener('click', () => {
+        const val = parseInt(star.dataset.value);
+        ratingInput.value = val;
+        stars.forEach(s => s.classList.toggle('selected', parseInt(s.dataset.value) <= val));
+      });
+    });
+
+    document.getElementById('comment').addEventListener('input', e => {
+      document.getElementById('charCount').textContent = e.target.value.length;
+      document.getElementById('message').textContent = '';
+    });
+
+    document.getElementById('review-form').addEventListener('submit', async e => {
+      e.preventDefault();
+      const rating = parseInt(ratingInput.value);
+      const comment = document.getElementById('comment').value.trim();
+      const params = new URLSearchParams(window.location.search);
+      const toUser = params.get('id');
+      const { data: { session } } = await supabase.auth.getSession();
+      const user = session?.user;
+      if (!rating || !comment || !user || !toUser) return;
+      const { error } = await supabase.from('reviews').insert({
+        to_user_id: toUser,
+        from_user_id: user.id,
+        rating,
+        comment,
+      });
+      document.getElementById('message').textContent = error ? 'Fehler beim Speichern' : '✅ Bewertung gespeichert!';
+    });
+
+    init();
+  </script>
+</body>
+</html>
