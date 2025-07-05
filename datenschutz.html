@@ -2,22 +2,26 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Datenschutz – Locorent</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
-      --primary-color: #2e7d32;
-      --secondary-color: #a5d6a7;
-      --background-color: #f1f8e9;
-      --dark-color: #1b5e20;
-      --highlight-color: #66bb6a;
+      --primary: #2e7d32;
+      --primary-light: #66bb6a;
+      --primary-dark: #1b5e20;
+      --background: #f1f8e9;
       --white: #fff;
-      --gray-light: #f7f7f7;
-      --gray-dark: #333;
-      --border-radius: 12px;
-      --shadow-color: rgba(0, 0, 0, 0.1);
+      --text-dark: #0f2e13;
+      --text-muted: #466843;
+      --accent: #b9f6ca;
+      --highlight: #a5d6a7;
+      --radius: 18px;
+      --shadow-light: rgba(46, 125, 50, 0.08);
+      --shadow-strong: rgba(46, 125, 50, 0.25);
+      --transition: 0.4s ease;
+      --font-primary: 'Poppins', sans-serif;
     }
 
     *, *::before, *::after {
@@ -26,118 +30,143 @@
 
     body {
       margin: 0;
-      background: var(--background-color);
-      font-family: 'Poppins', sans-serif;
-      color: var(--gray-dark);
-      min-height: 100vh;
+      font-family: var(--font-primary);
+      background: linear-gradient(to bottom, #e8f5e9 0%, #ffffff 100%);
+      color: var(--text-dark);
+      scroll-behavior: smooth;
       display: flex;
       flex-direction: column;
-      line-height: 1.7;
+      min-height: 100vh;
+      overflow-x: hidden;
     }
 
     header {
-      background-color: var(--primary-color);
+      background-color: var(--primary);
       color: var(--white);
       padding: 1.5rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      font-weight: 700;
       position: sticky;
       top: 0;
       z-index: 1000;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      flex-wrap: wrap;
     }
 
     header h1 {
       font-size: 1.8rem;
+      cursor: pointer;
       user-select: none;
+      margin: 0;
     }
 
-    nav {
+    #nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.8rem;
+      color: var(--white);
+      cursor: pointer;
+    }
+
+    nav#nav-links {
       display: flex;
-      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
     }
 
-    nav a {
+    nav#nav-links a {
       color: var(--white);
       text-decoration: none;
-      margin-left: 1.5rem;
       font-weight: 600;
       font-size: 1rem;
       position: relative;
-      padding-bottom: 3px;
-      transition: border-bottom 0.3s ease;
+      transition: color 0.3s ease;
     }
 
-    nav a:hover,
-    nav a:focus {
-      border-bottom: 2px solid var(--highlight-color);
+    nav#nav-links a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -4px;
+      width: 0;
+      height: 2px;
+      background-color: var(--accent);
+      transition: width 0.3s ease;
+    }
+
+    nav#nav-links a:hover::after,
+    nav#nav-links a:focus::after {
+      width: 100%;
+    }
+
+    nav#nav-links a:hover,
+    nav#nav-links a:focus {
+      color: var(--accent);
       outline: none;
     }
 
     .container {
       max-width: 1100px;
-      margin: 4rem auto;
-      padding: 0 2rem;
-      flex-grow: 1;
-    }
-
-    .section-card {
+      margin: 2rem auto 4rem auto;
+      padding: 2rem 2rem 3rem 2rem;
       background: var(--white);
-      border-radius: var(--border-radius);
-      padding: 3rem 2rem;
-      margin-bottom: 2rem;
-      box-shadow: 0 15px 45px rgba(0,0,0,0.08);
-      transition: 0.3s ease;
+      border-radius: var(--radius);
+      box-shadow: 0 12px 30px var(--shadow-light);
+      color: #444;
+      line-height: 1.6;
     }
 
-    .section-card:hover {
-      transform: translateY(-6px);
+    h2 {
+      color: var(--primary-dark);
+      font-weight: 700;
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+      margin-top: 0;
+      text-align: center;
     }
 
-    .section-card h2 {
-      font-size: 2.2rem;
-      color: var(--primary-color);
-      margin-bottom: 1rem;
-    }
-
-    .section-card h3 {
-      color: var(--dark-color);
+    h3 {
+      color: var(--primary-dark);
       margin-top: 2rem;
       font-size: 1.4rem;
-    }
-
-    .section-card p, .section-card ul {
-      color: #444;
-      font-size: 1.05rem;
-    }
-
-    .section-card ul {
-      padding-left: 1.2rem;
-    }
-
-    .badge {
-      display: inline-block;
-      background: var(--highlight-color);
-      color: var(--dark-color);
       font-weight: 600;
-      padding: 0.3rem 0.7rem;
-      border-radius: 999px;
-      font-size: 0.85rem;
-      margin-bottom: 1.2rem;
+    }
+
+    ul {
+      padding-left: 1.4rem;
+      margin-top: 0.5rem;
+    }
+
+    ul li {
+      margin-bottom: 0.4rem;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: underline;
+    }
+
+    a:hover,
+    a:focus {
+      color: var(--primary-dark);
+      outline: none;
     }
 
     footer {
-      background-color: var(--primary-color);
-      color: var(--white);
+      width: 100%;
+      box-sizing: border-box;
       padding: 2rem 2rem 1rem;
-      border-radius: var(--border-radius);
-      margin: 2rem 0 0 0;
-      font-weight: 400;
-      user-select: none;
+      border-radius: var(--radius);
+      background-color: var(--primary);
+      color: var(--white);
       box-shadow: 0 8px 32px rgba(46, 125, 50, 0.22);
       font-size: 0.92rem;
-      letter-spacing: 0.02em;
-      width: 100vw;
+      user-select: none;
+      text-align: center;
+      margin-top: auto;
       position: relative;
       left: 50%;
       right: 50%;
@@ -152,6 +181,7 @@
       flex-wrap: wrap;
       justify-content: space-between;
       gap: 2rem;
+      text-align: left;
     }
 
     footer > div > div {
@@ -163,7 +193,6 @@
       margin-bottom: 0.5rem;
       font-weight: 700;
       font-size: 1.1rem;
-      user-select: none;
     }
 
     footer ul {
@@ -178,216 +207,221 @@
       transition: color 0.3s ease;
     }
 
-    footer ul li a:hover,
-    footer ul li a:focus-visible {
-      color: var(--highlight-color);
-      outline: none;
+    footer ul li a:hover {
+      color: var(--primary-light);
     }
 
     footer small {
       display: block;
       margin-top: 2rem;
       text-align: center;
-      user-select: none;
+      opacity: 0.85;
     }
 
-    @media (max-width: 900px) {
+    @media (max-width: 720px) {
+      #nav-toggle {
+        display: block;
+      }
+
+      nav#nav-links {
+        width: 100%;
+        flex-direction: column;
+        display: none;
+        margin-top: 1rem;
+      }
+
+      nav#nav-links.show {
+        display: flex;
+      }
+
+      nav#nav-links a {
+        margin: 0.4rem 0;
+        padding: 0.5rem 1rem;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+        display: block;
+      }
+
       footer > div {
         flex-direction: column;
-        align-items: center;
+        align-items: flex-start;
       }
+
       footer > div > div {
         width: 100%;
-        max-width: 320px;
-        margin-bottom: 1.5rem;
-      }
-    }
-
-    @media (max-width: 480px) {
-      header {
-        flex-direction: column;
-        gap: 1rem;
-        padding: 1rem;
-      }
-      footer {
-        margin: 1rem;
-        padding: 1.5rem;
-        font-size: 0.85rem;
       }
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>Locorent</h1>
-    <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
-  </header>
+<header>
+  <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
+  <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
+  <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
+</header>
 
-  <div class="container">
-    <div class="section-card">
-      <div class="badge">Stand: 2025</div>
-      <h2>Datenschutzerklärung</h2>
+<main class="container" role="main" tabindex="0">
+  <h2>Datenschutzerklärung</h2>
 
-      <h3>1. Einleitung – Datenschutz ist Vertrauenssache</h3>
-      <p>Der Schutz deiner persönlichen Daten ist uns besonders wichtig. Wir behandeln deine personenbezogenen Informationen streng vertraulich und entsprechend der gesetzlichen Datenschutzvorschriften, insbesondere der Datenschutz-Grundverordnung (DSGVO) sowie dieser Datenschutzerklärung. Hier erfährst du, welche Daten auf unserer Website <strong>www.locorent.de</strong> erfasst werden, wie wir sie nutzen und welche Rechte du hast.</p>
+  <h3>1. Einleitung – Datenschutz ist Vertrauenssache</h3>
+  <p>Der Schutz deiner persönlichen Daten ist uns besonders wichtig. Wir behandeln deine personenbezogenen Informationen streng vertraulich und entsprechend der gesetzlichen Datenschutzvorschriften, insbesondere der Datenschutz-Grundverordnung (DSGVO) sowie dieser Datenschutzerklärung. Hier erfährst du, welche Daten auf unserer Website <strong>www.locorent.de</strong> erfasst werden, wie wir sie nutzen und welche Rechte du hast.</p>
 
-      <h3>2. Verantwortliche Stelle</h3>
-      <p>Pascal Merten<br>Wilhelmsbader Straße 15<br>63477 Maintal<br>E-Mail: <a href="mailto:info@locorent.de">info@locorent.de</a></p>
+  <h3>2. Verantwortliche Stelle</h3>
+  <p>Pascal Merten<br>Wilhelmsbader Straße 15<br>63477 Maintal<br>E-Mail: <a href="mailto:info@locorent.de">info@locorent.de</a></p>
 
-      <h3>3. Welche Daten wir erfassen und warum</h3>
-      <p><strong>a) Beim Besuch der Website</strong><br>Beim Aufrufen unserer Website werden automatisch folgende Daten durch deinen Browser übermittelt und temporär gespeichert:</p>
+  <h3>3. Welche Daten wir erfassen und warum</h3>
+  <p><strong>a) Beim Besuch der Website</strong><br>Beim Aufrufen unserer Website werden automatisch folgende Daten durch deinen Browser übermittelt und temporär gespeichert:</p>
+  <ul>
+    <li>IP-Adresse (anonymisiert)</li>
+    <li>Datum und Uhrzeit des Zugriffs</li>
+    <li>Name und URL der abgerufenen Datei</li>
+    <li>Referrer-URL (die zuvor besuchte Seite)</li>
+    <li>Browsertyp, -version und verwendetes Betriebssystem</li>
+  </ul>
+  <p><strong>Zweck:</strong> Diese Daten dienen der technischen Bereitstellung, Systemsicherheit und statistischen Auswertung. Wir speichern sie in anonymisierter Form und führen keine Nutzerprofile daraus.</p>
+
+  <p><strong>b) Registrierung & Nutzung von Locorent</strong><br>Wenn du ein Nutzerkonto erstellst, erheben wir:</p>
+  <ul>
+    <li>Deine E-Mail-Adresse (Pflichtfeld)</li>
+    <li>Optional: Profilname, Standort, Beschreibung, Bild</li>
+    <li>Zeitpunkt der Registrierung</li>
+    <li>Informationen zu deinen Mietobjekten, Favoriten und Nachrichten</li>
+  </ul>
+  <p><strong>Zweck:</strong> Verwaltung deines Nutzerkontos, Anzeigen deiner Inserate, Kommunikation mit anderen Nutzern.</p>
+
+  <h3>4. Datenverarbeitung durch Supabase</h3>
+  <p>Für die technische Infrastruktur nutzen wir <strong>Supabase</strong>, ein DSGVO-konformes Open-Source-Backend mit Sitz in der EU. Deine Daten (z. B. Nutzerprofil, Inserate, Nachrichten) werden in sicheren europäischen Rechenzentren gespeichert.</p>
+  <ul>
+    <li><strong>Login & Authentifizierung:</strong> erfolgt verschlüsselt über Supabase Auth</li>
+    <li><strong>Datenbank-Hosting:</strong> Supabase PostgreSQL</li>
+    <li><strong>Speicherung:</strong> passwortgeschützt, Zugriff nur mit validiertem Token</li>
+  </ul>
+  <p>Weitere Infos findest du in der <a href="https://supabase.com/privacy" target="_blank" rel="noopener noreferrer">Supabase Datenschutzrichtlinie</a>.</p>
+
+  <h3>5. Keine Werbung, kein Tracking</h3>
+  <p>Locorent ist ein werbefreies Projekt.</p>
+  <ul>
+    <li>✅ Wir verwenden keine Tracker (z. B. Google Analytics, Facebook Pixel o. Ä.)</li>
+    <li>✅ Wir schalten keine Werbung und nutzen deine Daten nicht zu Marketingzwecken.</li>
+  </ul>
+
+  <h3>6. Cookies</h3>
+  <p>Wir verwenden ausschließlich technisch notwendige Cookies, z. B.:</p>
+  <ul>
+    <li>für das Login-Handling (Session-Token)</li>
+    <li>zur Speicherung deiner gewählten Sprache/Einstellungen</li>
+  </ul>
+  <p><strong>Hinweis:</strong> Diese Cookies sind für den Betrieb der Seite erforderlich und werden beim Schließen des Browsers automatisch gelöscht.</p>
+
+  <h3>7. Weitergabe von Daten</h3>
+  <p>Deine Daten werden <strong>nicht</strong> an Dritte verkauft oder zu Werbezwecken weitergegeben. Eine Übermittlung erfolgt nur:</p>
+  <ul>
+    <li>wenn du ausdrücklich eingewilligt hast</li>
+    <li>zur Vertragserfüllung (z. B. bei Mietabsprachen zwischen Nutzer:innen)</li>
+    <li>zur Erfüllung gesetzlicher Pflichten</li>
+  </ul>
+
+  <h3>8. Speicherdauer</h3>
+  <ul>
+    <li><strong>Profildaten:</strong> solange dein Konto besteht</li>
+    <li><strong>Nachrichten:</strong> bis zu deiner Löschung oder max. 1 Jahr nach Inaktivität</li>
+    <li><strong>IP-/Systemdaten:</strong> automatisch nach 30 Tagen gelöscht</li>
+  </ul>
+  <p>Du kannst dein Konto jederzeit selbstständig löschen – alle zugeordneten Daten werden dann vollständig entfernt.</p>
+
+  <h3>9. Sicherheit</h3>
+  <p>Unsere Website nutzt eine moderne SSL-Verschlüsselung (https), damit deine Daten sicher übertragen werden.  
+  Alle gespeicherten Daten in Supabase sind passwortgeschützt und rollenbasiert vor unberechtigtem Zugriff geschützt.</p>
+
+  <h3>10. Deine Rechte</h3>
+  <p>Du hast jederzeit das Recht auf:</p>
+  <ul>
+    <li>Auskunft über die gespeicherten Daten</li>
+    <li>Berichtigung falscher Daten</li>
+    <li>Löschung („Recht auf Vergessenwerden“)</li>
+    <li>Einschränkung der Verarbeitung</li>
+    <li>Widerspruch gegen die Verarbeitung</li>
+    <li>Datenübertragbarkeit (Art. 20 DSGVO)</li>
+    <li>Beschwerde bei einer Aufsichtsbehörde</li>
+  </ul>
+  <p>Für all das genügt eine formlose E-Mail an: <a href="mailto:info@locorent.de">info@locorent.de</a></p>
+
+  <h3>11. Minderjährigenschutz</h3>
+  <p>Die Nutzung von Locorent ist ausschließlich Personen über 18 Jahren erlaubt. Wir fordern keine Daten von Kindern an oder speichern sie wissentlich.</p>
+
+  <h3>12. Änderungen dieser Datenschutzerklärung</h3>
+  <p>Diese Erklärung kann bei rechtlichen Änderungen oder Erweiterung unseres Angebots angepasst werden. Die aktuelle Version findest du immer unter:<br><strong>www.locorent.de/datenschutz.html</strong></p>
+</main>
+
+<footer role="contentinfo">
+  <div>
+    <div>
+      <h4>Mieten &amp; Vermieten</h4>
       <ul>
-        <li>IP-Adresse (anonymisiert)</li>
-        <li>Datum und Uhrzeit des Zugriffs</li>
-        <li>Name und URL der abgerufenen Datei</li>
-        <li>Referrer-URL (die zuvor besuchte Seite)</li>
-        <li>Browsertyp, -version und verwendetes Betriebssystem</li>
+        <li><a href="so-funktionierts.html">So funktioniert's</a></li>
+        <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
+        <li><a href="kategorien.html">Beliebte Kategorien</a></li>
+        <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
+        <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
       </ul>
-      <p><strong>Zweck:</strong> Diese Daten dienen der technischen Bereitstellung, Systemsicherheit und statistischen Auswertung. Wir speichern sie in anonymisierter Form und führen keine Nutzerprofile daraus.</p>
-
-      <p><strong>b) Registrierung & Nutzung von Locorent</strong><br>Wenn du ein Nutzerkonto erstellst, erheben wir:</p>
+    </div>
+    <div>
+      <h4>Wissenswertes</h4>
       <ul>
-        <li>Deine E-Mail-Adresse (Pflichtfeld)</li>
-        <li>Optional: Profilname, Standort, Beschreibung, Bild</li>
-        <li>Zeitpunkt der Registrierung</li>
-        <li>Informationen zu deinen Mietobjekten, Favoriten und Nachrichten</li>
+        <li><a href="agb.html">AGB & Impressum</a></li>
+        <li><a href="datenschutz.html">Datenschutz</a></li>
       </ul>
-      <p><strong>Zweck:</strong> Verwaltung deines Nutzerkontos, Anzeigen deiner Inserate, Kommunikation mit anderen Nutzern.</p>
-
-      <h3>4. Datenverarbeitung durch Supabase</h3>
-      <p>Für die technische Infrastruktur nutzen wir <strong>Supabase</strong>, ein DSGVO-konformes Open-Source-Backend mit Sitz in der EU. Deine Daten (z. B. Nutzerprofil, Inserate, Nachrichten) werden in sicheren europäischen Rechenzentren gespeichert.</p>
+    </div>
+    <div>
+      <h4>Über uns</h4>
       <ul>
-        <li><strong>Login & Authentifizierung:</strong> erfolgt verschlüsselt über Supabase Auth</li>
-        <li><strong>Datenbank-Hosting:</strong> Supabase PostgreSQL</li>
-        <li><strong>Speicherung:</strong> passwortgeschützt, Zugriff nur mit validiertem Token</li>
+        <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
+        <li><a href="social-media.html">Folgen Sie uns</a></li>
+        <li><a href="mission.html">Unsere Mission</a></li>
       </ul>
-      <p>Weitere Infos findest du in der <a href="https://supabase.com/privacy" target="_blank">Supabase Datenschutzrichtlinie</a>.</p>
-
-      <h3>5. Keine Werbung, kein Tracking</h3>
-      <p>Locorent ist ein werbefreies Projekt.</p>
-      <ul>
-        <li>✅ Wir verwenden keine Tracker (z. B. Google Analytics, Facebook Pixel o. Ä.)</li>
-        <li>✅ Wir schalten keine Werbung und nutzen deine Daten nicht zu Marketingzwecken.</li>
-      </ul>
-
-      <h3>6. Cookies</h3>
-      <p>Wir verwenden ausschließlich technisch notwendige Cookies, z. B.:</p>
-      <ul>
-        <li>für das Login-Handling (Session-Token)</li>
-        <li>zur Speicherung deiner gewählten Sprache/Einstellungen</li>
-      </ul>
-      <p><strong>Hinweis:</strong> Diese Cookies sind für den Betrieb der Seite erforderlich und werden beim Schließen des Browsers automatisch gelöscht.</p>
-
-      <h3>7. Weitergabe von Daten</h3>
-      <p>Deine Daten werden <strong>nicht</strong> an Dritte verkauft oder zu Werbezwecken weitergegeben. Eine Übermittlung erfolgt nur:</p>
-      <ul>
-        <li>wenn du ausdrücklich eingewilligt hast</li>
-        <li>zur Vertragserfüllung (z. B. bei Mietabsprachen zwischen Nutzer:innen)</li>
-        <li>zur Erfüllung gesetzlicher Pflichten</li>
-      </ul>
-
-      <h3>8. Speicherdauer</h3>
-      <ul>
-        <li><strong>Profildaten:</strong> solange dein Konto besteht</li>
-        <li><strong>Nachrichten:</strong> bis zu deiner Löschung oder max. 1 Jahr nach Inaktivität</li>
-        <li><strong>IP-/Systemdaten:</strong> automatisch nach 30 Tagen gelöscht</li>
-      </ul>
-      <p>Du kannst dein Konto jederzeit selbstständig löschen – alle zugeordneten Daten werden dann vollständig entfernt.</p>
-
-      <h3>9. Sicherheit</h3>
-      <p>Unsere Website nutzt eine moderne SSL-Verschlüsselung (https), damit deine Daten sicher übertragen werden.  
-      Alle gespeicherten Daten in Supabase sind passwortgeschützt und rollenbasiert vor unberechtigtem Zugriff geschützt.</p>
-
-      <h3>10. Deine Rechte</h3>
-      <p>Du hast jederzeit das Recht auf:</p>
-      <ul>
-        <li>Auskunft über die gespeicherten Daten</li>
-        <li>Berichtigung falscher Daten</li>
-        <li>Löschung („Recht auf Vergessenwerden“)</li>
-        <li>Einschränkung der Verarbeitung</li>
-        <li>Widerspruch gegen die Verarbeitung</li>
-        <li>Datenübertragbarkeit (Art. 20 DSGVO)</li>
-        <li>Beschwerde bei einer Aufsichtsbehörde</li>
-      </ul>
-      <p>Für all das genügt eine formlose E-Mail an: <a href="mailto:info@locorent.de">info@locorent.de</a></p>
-
-      <h3>11. Minderjährigenschutz</h3>
-      <p>Die Nutzung von Locorent ist ausschließlich Personen über 18 Jahren erlaubt. Wir fordern keine Daten von Kindern an oder speichern sie wissentlich.</p>
-
-      <h3>12. Änderungen dieser Datenschutzerklärung</h3>
-      <p>Diese Erklärung kann bei rechtlichen Änderungen oder Erweiterung unseres Angebots angepasst werden. Die aktuelle Version findest du immer unter:<br><strong>www.locorent.de/datenschutz.html</strong></p>
     </div>
   </div>
+  <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
+</footer>
 
-  <footer role="contentinfo">
-    <div>
-      <div>
-        <h4>Mieten & Vermieten</h4>
-        <ul>
-          <li><a href="so-funktionierts.html">So funktioniert's</a></li>
-          <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
-          <li><a href="kategorien.html">Beliebte Kategorien</a></li>
-          <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
-          <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>Wissenswertes</h4>
-        <ul>
-          <li><a href="agb.html">AGB & Impressum</a></li>
-          <li><a href="datenschutz.html">Datenschutz</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>Über uns</h4>
-        <ul>
-          <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
-          <li><a href="social-media.html">Folgen Sie uns</a></li>
-          <li><a href="mission.html">Unsere Mission</a></li>
-        </ul>
-      </div>
-    </div>
-    <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
-  </footer>
+<script>
+  const supabase = window.supabase.createClient(
+    'https://flnjalgqtkqycsaymmbd.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+  );
 
-  <script>
-    const supabase = window.supabase.createClient(
-      'https://flnjalgqtkqycsaymmbd.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' // Ersetze durch deinen Public-Anon-Key
-    );
+  async function updateNav() {
+    const { data: { session } } = await supabase.auth.getSession();
+    const nav = document.getElementById("nav-links");
+    nav.innerHTML = session?.user ? `
+      <a href="index.html">Start</a>
+      <a href="profil.html">Mein Profil</a>
+      <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+      <a href="favoriten.html">Meine Favoriten</a>
+      <a href="inserate.html">Meine Inserate</a>
+      <a href="#" onclick="logout(event)">Logout</a>
+    ` : `
+      <a href="index.html">Start</a>
+      <a href="login.html">Einloggen</a>
+    `;
+  }
 
-    let userSession = null;
+  async function logout(event) {
+    event.preventDefault();
+    await supabase.auth.signOut();
+    window.location.href = "login.html";
+  }
 
-    async function init() {
-      const { data: { session } } = await supabase.auth.getSession();
-      userSession = session;
-      updateNav();
-    }
+  document.getElementById("nav-toggle").addEventListener("click", () => {
+    const nav = document.getElementById("nav-links");
+    nav.classList.toggle("show");
+    const expanded = nav.classList.contains("show");
+    document.getElementById("nav-toggle").setAttribute("aria-expanded", expanded);
+  });
 
-    function updateNav() {
-      const nav = document.getElementById('nav-links');
-      nav.innerHTML = userSession?.user ? `
-        <a href="index.html">Start</a>
-        <a href="profil.html">Mein Profil</a>
-        <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-        <a href="favoriten.html">Meine Favoriten</a>
-        <a href="inserate.html">Meine Inserate</a>
-        <a href="#" onclick="logout(event)">Logout</a>
-      ` : `
-        <a href="index.html">Start</a>
-        <a href="login.html">Einloggen</a>
-      `;
-    }
-
-    async function logout(event) {
-      event.preventDefault();
-      await supabase.auth.signOut();
-      window.location.href = "login.html";
-    }
-
-    init();
-  </script>
+  updateNav();
+</script>
 
 </body>
 </html>
