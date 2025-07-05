@@ -233,55 +233,56 @@
     }
 
     /* Mobile */
-    @media (max-width: 720px) {
-      header {
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        padding-left: 1.5rem;
-        padding-right: 1.5rem;
-      }
-      #nav-toggle {
-        display: block;
-        order: 2;
-        margin: 0;
-      }
-      header h1 {
-        order: 1;
-      }
-      nav#nav-links {
-        width: 100%;
-        flex-direction: column;
-        display: none;
-        margin-top: 1rem;
-        order: 3;
-      }
-      nav#nav-links.show {
-        display: flex;
-      }
-      nav#nav-links a {
-        margin: 0.4rem 0;
-        padding: 0.5rem 1rem;
-        background-color: rgba(255, 255, 255, 0.1);
-        border-radius: 6px;
-        display: block;
-      }
-      main {
-        margin: 2rem 1rem 3rem;
-        padding: 1.5rem;
-      }
-      footer > div {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      footer > div > div {
-        width: 100%;
-      }
-      footer {
-        padding-left: 1rem;
-        padding-right: 1rem;
-      }
-    }
+   @media (max-width: 720px) {
+  header {
+    flex-direction: row;         /* wichtig, sonst zentriert sich der Burger */
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+  header h1 {
+    order: 1;                   /* Logo links */
+  }
+  #nav-toggle {
+    display: block;
+    order: 2;                   /* Burger rechts */
+    margin: 0;
+  }
+  nav#nav-links {
+    width: 100%;
+    flex-direction: column;
+    display: none;
+    margin-top: 1rem;
+    order: 3;                   /* Navigation unter dem Header */
+  }
+  nav#nav-links.show {
+    display: flex;
+  }
+  nav#nav-links a {
+    margin: 0.4rem 0;
+    padding: 0.5rem 1rem;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    display: block;
+  }
+  main {
+    margin: 2rem 1rem 3rem;
+    padding: 1.5rem;
+  }
+  footer > div {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  footer > div > div {
+    width: 100%;
+  }
+  footer {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
   </style>
 </head>
 <body>
