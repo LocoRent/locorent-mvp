@@ -23,11 +23,7 @@
       --transition: 0.4s ease;
       --font-primary: 'Poppins', sans-serif;
     }
-
-    *, *::before, *::after {
-      box-sizing: border-box;
-    }
-
+    *, *::before, *::after { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: var(--font-primary);
@@ -39,7 +35,6 @@
       min-height: 100vh;
       overflow-x: hidden;
     }
-
     header {
       background-color: var(--primary);
       color: var(--white);
@@ -54,14 +49,12 @@
       box-shadow: 0 10px 20px rgba(0,0,0,0.1);
       flex-wrap: wrap;
     }
-
     header h1 {
       font-size: 1.8rem;
       cursor: pointer;
       user-select: none;
       margin: 0;
     }
-
     #nav-toggle {
       display: none;
       background: none;
@@ -70,13 +63,11 @@
       color: var(--white);
       cursor: pointer;
     }
-
     nav#nav-links {
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
     }
-
     nav#nav-links a {
       color: var(--white);
       text-decoration: none;
@@ -85,7 +76,6 @@
       position: relative;
       transition: color 0.3s ease;
     }
-
     nav#nav-links a::after {
       content: '';
       position: absolute;
@@ -96,12 +86,8 @@
       background-color: var(--accent);
       transition: width 0.3s ease;
     }
-
     nav#nav-links a:hover::after,
-    nav#nav-links a:focus::after {
-      width: 100%;
-    }
-
+    nav#nav-links a:focus::after { width: 100%; }
     nav#nav-links a:hover,
     nav#nav-links a:focus {
       color: var(--accent);
@@ -116,12 +102,8 @@
       border-radius: var(--radius);
       box-shadow: 0 12px 30px var(--shadow-light);
     }
-
     @media (min-width: 721px) {
-      main.container {
-        max-width: 1400px;
-        padding: 2rem 3rem;
-      }
+      main.container { max-width: 1400px; padding: 2rem 3rem; }
     }
 
     h2 {
@@ -146,9 +128,7 @@
       user-select: none;
       transition: color 0.2s;
     }
-    .star.selected {
-      color: #ffca28;
-    }
+    .star.selected { color: #ffca28; }
 
     label {
       font-weight: 700;
@@ -167,7 +147,6 @@
       min-height: 120px;
       font-family: var(--font-primary);
       color: var(--text-dark);
-      box-sizing: border-box;
       margin-top: 0.25rem;
     }
 
@@ -191,7 +170,6 @@
       width: 100%;
       transition: background-color 0.3s ease;
     }
-
     button:hover,
     button:focus {
       background-color: var(--primary-dark);
@@ -207,7 +185,6 @@
 
     footer {
       width: 100%;
-      box-sizing: border-box;
       padding: 2rem 2rem 1rem;
       border-radius: var(--radius);
       background-color: var(--primary);
@@ -223,7 +200,6 @@
       margin-left: -50vw;
       margin-right: -50vw;
     }
-
     footer > div {
       max-width: 1200px;
       margin: 0 auto;
@@ -233,34 +209,26 @@
       gap: 2rem;
       text-align: left;
     }
-
     footer > div > div {
       flex: 1;
       min-width: 200px;
     }
-
     footer h4 {
       margin-bottom: 0.5rem;
       font-weight: 700;
       font-size: 1.1rem;
     }
-
     footer ul {
       list-style: none;
       padding: 0;
       line-height: 1.8;
     }
-
     footer ul li a {
       color: var(--white);
       text-decoration: underline;
       transition: color 0.3s ease;
     }
-
-    footer ul li a:hover {
-      color: var(--accent);
-    }
-
+    footer ul li a:hover { color: var(--accent); }
     footer small {
       display: block;
       margin-top: 2rem;
@@ -269,21 +237,14 @@
     }
 
     @media (max-width: 720px) {
-      #nav-toggle {
-        display: block;
-      }
-
+      #nav-toggle { display: block; }
       nav#nav-links {
         width: 100%;
         flex-direction: column;
         display: none;
         margin-top: 1rem;
       }
-
-      nav#nav-links.show {
-        display: flex;
-      }
-
+      nav#nav-links.show { display: flex; }
       nav#nav-links a {
         margin: 0.4rem 0;
         padding: 0.5rem 1rem;
@@ -291,26 +252,17 @@
         border-radius: 6px;
         display: block;
       }
-
       footer > div {
         flex-direction: column;
         align-items: flex-start;
       }
-
-      footer > div > div {
-        width: 100%;
-      }
-
-      footer {
-        padding-left: 1rem;
-        padding-right: 1rem;
-      }
+      footer > div > div { width: 100%; }
     }
   </style>
 </head>
 <body>
   <header>
-    <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
+    <h1 tabindex="0" onclick="location.href='index.html'">Locorent</h1>
     <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
     <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
   </header>
@@ -327,11 +279,9 @@
         <span class="star" data-value="5" role="radio" aria-checked="false" tabindex="-1">★</span>
       </div>
       <input type="hidden" id="rating" required />
-
       <label for="comment">Kommentar</label>
-      <textarea id="comment" maxlength="150" placeholder="Was möchtest du sagen? (max. 150 Zeichen)" required aria-describedby="charCount"></textarea>
+      <textarea id="comment" maxlength="150" placeholder="Was möchtest du sagen? (max. 150 Zeichen)" required></textarea>
       <div class="char-count"><span id="charCount">0</span>/150</div>
-
       <button type="submit">Bewertung speichern</button>
       <div id="message" class="success" role="alert" aria-live="polite"></div>
     </form>
@@ -413,7 +363,6 @@
 
     init();
 
-    // Bewertung Logik
     const stars = document.querySelectorAll('.star');
     const ratingInput = document.getElementById('rating');
     const message = document.getElementById('message');
@@ -459,6 +408,8 @@
 
       const rating = parseInt(ratingInput.value);
       const comment = document.getElementById('comment').value.trim();
+      const params = new URLSearchParams(window.location.search);
+      const toUser = params.get('id');
 
       if (!rating || rating < 1 || rating > 5) {
         message.textContent = 'Bitte eine Bewertung zwischen 1 und 5 Sternen abgeben.';
@@ -469,12 +420,8 @@
         return;
       }
 
-      const params = new URLSearchParams(window.location.search);
-      const toUser = params.get('id');
-
       const { data: { session } } = await supabase.auth.getSession();
       const user = session?.user;
-
       if (!user || !toUser) {
         alert('Fehlende Daten – bitte einloggen oder Link prüfen.');
         return;
