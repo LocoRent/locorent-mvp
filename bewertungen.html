@@ -4,53 +4,64 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Bewertungen – Locorent</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
-      --primary-color: #2e7d32;
+      --primary: #2e7d32;
+      --primary-light: #66bb6a;
       --primary-dark: #1b5e20;
-      --background-color: #f1f8e9;
+      --background: #f1f8e9;
       --white: #fff;
-      --light-gray: #f5f5f5;
-      --border-radius: 12px;
-      --shadow-color: rgba(0, 0, 0, 0.12);
-      --max-width: 900px;
-      --star-yellow: #f5c518;
+      --text-dark: #0f2e13;
+      --text-muted: #466843;
+      --accent: #b9f6ca;
+      --highlight: #a5d6a7;
+      --radius: 18px;
+      --shadow-light: rgba(46, 125, 50, 0.08);
+      --shadow-strong: rgba(46, 125, 50, 0.25);
+      --transition: 0.4s ease;
+      --font-primary: 'Poppins', sans-serif;
     }
+
     *, *::before, *::after {
       box-sizing: border-box;
     }
+
     body {
-      font-family: 'Poppins', sans-serif;
-      background-color: var(--background-color);
-      color: #333;
-      min-height: 100vh;
       margin: 0;
+      font-family: var(--font-primary);
+      background: linear-gradient(to bottom, #e8f5e9 0%, #ffffff 100%);
+      color: var(--text-dark);
+      scroll-behavior: smooth;
       display: flex;
       flex-direction: column;
-      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
     }
+
     header {
-      background-color: var(--primary-color);
+      background-color: var(--primary);
       color: var(--white);
-      width: 100%;
       padding: 1.5rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      font-weight: 700;
       position: sticky;
       top: 0;
       z-index: 1000;
-      box-shadow: 0 2px 8px var(--shadow-color);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
       flex-wrap: wrap;
     }
+
     header h1 {
-      font-weight: 600;
       font-size: 1.8rem;
       cursor: pointer;
       user-select: none;
+      margin: 0;
     }
+
     #nav-toggle {
       display: none;
       background: none;
@@ -59,88 +70,119 @@
       color: var(--white);
       cursor: pointer;
     }
+
     nav#nav-links {
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
     }
+
     nav#nav-links a {
       color: var(--white);
-      margin-left: 1.5rem;
       text-decoration: none;
       font-weight: 600;
-      transition: border-bottom 0.3s ease;
-      user-select: none;
+      font-size: 1rem;
+      position: relative;
+      transition: color 0.3s ease;
     }
+
+    nav#nav-links a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -4px;
+      width: 0;
+      height: 2px;
+      background-color: var(--accent);
+      transition: width 0.3s ease;
+    }
+
+    nav#nav-links a:hover::after,
+    nav#nav-links a:focus::after {
+      width: 100%;
+    }
+
     nav#nav-links a:hover,
     nav#nav-links a:focus {
-      border-bottom: 2px solid var(--primary-dark);
+      color: var(--accent);
       outline: none;
     }
-    main {
-      max-width: var(--max-width);
+
+    .container {
+      max-width: 900px;
+      margin: 2rem auto 4rem auto;
+      padding: 0 1rem;
       background: var(--white);
-      border-radius: var(--border-radius);
-      box-shadow: 0 6px 20px var(--shadow-color);
-      padding: 2.5rem 3rem;
-      margin: 3rem 1rem 4rem;
-      width: 100%;
-      min-height: 60vh;
+      border-radius: var(--radius);
+      box-shadow: 0 12px 30px var(--shadow-light);
     }
+
     h2 {
-      margin-bottom: 2rem;
-      color: var(--primary-color);
+      color: var(--primary-dark);
       font-weight: 700;
-      font-size: 2.4rem;
-      user-select: none;
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      margin-top: 0;
+      text-align: center;
     }
+
     .controls {
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
       margin-bottom: 2rem;
       align-items: center;
+      justify-content: center;
     }
+
     label {
       font-weight: 600;
       color: var(--primary-dark);
     }
+
     select {
       padding: 0.4rem 0.8rem;
-      border-radius: var(--border-radius);
+      border-radius: var(--radius);
       border: 1.5px solid #ccc;
       font-size: 1rem;
       cursor: pointer;
       transition: border-color 0.3s ease;
     }
+
     select:focus {
-      border-color: var(--primary-color);
+      border-color: var(--primary);
       outline: none;
     }
+
     .review-list {
       display: flex;
       flex-direction: column;
       gap: 1.5rem;
     }
+
     .review-item {
-      background-color: var(--light-gray);
+      background-color: var(--accent);
       padding: 1.5rem 2rem;
-      border-radius: var(--border-radius);
+      border-radius: var(--radius);
       box-shadow: inset 0 0 8px rgba(0,0,0,0.05);
       display: flex;
       gap: 1.5rem;
       align-items: flex-start;
       transition: transform 0.2s ease;
+      color: var(--text-dark);
+      user-select: none;
     }
+
     .review-item:hover {
       transform: translateY(-3px);
       box-shadow: 0 6px 18px rgba(0,0,0,0.12);
     }
+
     .avatar {
       flex-shrink: 0;
       width: 60px;
       height: 60px;
-      background-color: #bbb;
+      background-color: var(--primary-dark);
       border-radius: 50%;
       display: flex;
       justify-content: center;
@@ -148,115 +190,137 @@
       font-weight: 700;
       font-size: 1.4rem;
       color: var(--white);
-      user-select: none;
     }
+
     .review-content {
       flex: 1;
     }
+
     .review-rating {
-      color: var(--star-yellow);
+      color: #ffca28;
       font-weight: 700;
       margin-bottom: 0.3rem;
-      user-select: none;
       font-size: 1.3rem;
     }
+
     .stars {
-      display: inline-block;
       font-size: 1.3rem;
-      color: var(--star-yellow);
-      user-select: none;
+      color: #ffca28;
     }
+
     .review-text {
       font-size: 1rem;
       line-height: 1.6;
       margin-bottom: 0.4rem;
     }
+
     .review-meta {
       font-size: 0.85rem;
-      color: #666;
-      user-select: none;
+      color: var(--text-muted);
     }
+
     .back-btn {
       margin-top: 3rem;
-      background-color: var(--primary-color);
+      background-color: var(--primary);
       color: var(--white);
       border: none;
       padding: 1rem 1.8rem;
-      border-radius: var(--border-radius);
+      border-radius: var(--radius);
       cursor: pointer;
       font-weight: 700;
       font-size: 1.1rem;
       transition: background-color 0.3s ease;
       user-select: none;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 220px;
     }
-    .back-btn:hover,
-    .back-btn:focus {
+
+    .back-btn:hover, .back-btn:focus {
       background-color: var(--primary-dark);
       outline: none;
     }
+
     footer {
       width: 100%;
-      background-color: var(--primary-color);
+      box-sizing: border-box;
+      padding: 2rem 2rem 1rem;
+      border-radius: var(--radius);
+      background-color: var(--primary);
       color: var(--white);
-      padding: 2rem 0;
-      box-shadow: 0 -2px 12px var(--shadow-color);
+      box-shadow: 0 8px 32px rgba(46, 125, 50, 0.22);
+      font-size: 0.92rem;
       user-select: none;
+      text-align: center;
+      margin-top: auto;
+      position: relative;
+      left: 50%;
+      right: 50%;
+      margin-left: -50vw;
+      margin-right: -50vw;
     }
+
     footer > div {
-      max-width: var(--max-width);
+      max-width: 1200px;
       margin: 0 auto;
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
       gap: 2rem;
-      padding: 0 1rem;
+      text-align: left;
     }
-    footer section {
+
+    footer > div > div {
       flex: 1;
       min-width: 200px;
     }
+
     footer h4 {
-      margin-bottom: 0.75rem;
-      font-weight: 600;
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+      font-size: 1.1rem;
     }
+
     footer ul {
       list-style: none;
-      line-height: 1.7;
-      padding-left: 0;
+      padding: 0;
+      line-height: 1.8;
     }
+
     footer ul li a {
       color: var(--white);
       text-decoration: underline;
-      font-weight: 400;
-      cursor: pointer;
       transition: color 0.3s ease;
     }
+
     footer ul li a:hover {
-      color: var(--primary-dark);
-    }
-    footer .copyright {
-      margin-top: 2rem;
-      text-align: center;
-      font-size: 0.9rem;
+      color: var(--primary-light);
     }
 
-    @media (max-width: 768px) {
-      header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
+    footer small {
+      display: block;
+      margin-top: 2rem;
+      text-align: center;
+      opacity: 0.85;
+    }
+
+    @media (max-width: 720px) {
       #nav-toggle {
         display: block;
       }
+
       nav#nav-links {
         width: 100%;
         flex-direction: column;
         display: none;
         margin-top: 1rem;
       }
+
       nav#nav-links.show {
         display: flex;
       }
+
       nav#nav-links a {
         margin: 0.4rem 0;
         padding: 0.5rem 1rem;
@@ -264,14 +328,14 @@
         border-radius: 6px;
         display: block;
       }
-      .review-item {
+
+      footer > div {
         flex-direction: column;
-        align-items: stretch;
+        align-items: flex-start;
       }
-      .avatar {
-        width: 50px;
-        height: 50px;
-        font-size: 1.1rem;
+
+      footer > div > div {
+        width: 100%;
       }
     }
   </style>
@@ -284,7 +348,7 @@
   <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
 </header>
 
-<main>
+<main class="container" role="main">
   <h2>Bewertungen</h2>
 
   <div class="controls">
@@ -305,8 +369,8 @@
 
 <footer role="contentinfo">
   <div>
-    <section aria-labelledby="footer-rent-title">
-      <h4 id="footer-rent-title">Mieten &amp; Vermieten</h4>
+    <div>
+      <h4>Mieten &amp; Vermieten</h4>
       <ul>
         <li><a href="so-funktionierts.html">So funktioniert's</a></li>
         <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
@@ -314,31 +378,30 @@
         <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
         <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
       </ul>
-    </section>
-    <section aria-labelledby="footer-info-title">
-      <h4 id="footer-info-title">Wissenswertes</h4>
+    </div>
+    <div>
+      <h4>Wissenswertes</h4>
       <ul>
         <li><a href="agb.html">AGB & Impressum</a></li>
         <li><a href="datenschutz.html">Datenschutz</a></li>
       </ul>
-    </section>
-    <section aria-labelledby="footer-about-title">
-      <h4 id="footer-about-title">Über uns</h4>
+    </div>
+    <div>
+      <h4>Über uns</h4>
       <ul>
         <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
         <li><a href="social-media.html">Folgen Sie uns</a></li>
+        <li><a href="mission.html">Unsere Mission</a></li>
       </ul>
-    </section>
+    </div>
   </div>
-  <div class="copyright">
-    © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
-  </div>
+  <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
 </footer>
 
 <script>
   const supabase = window.supabase.createClient(
     'https://flnjalgqtkqycsaymmbd.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' // Truncated for security
   );
 
   async function updateNav() {
@@ -368,14 +431,14 @@
 
   function renderStars(rating) {
     let stars = "";
-    for(let i = 1; i <= 5; i++) {
+    for (let i = 1; i <= 5; i++) {
       stars += i <= rating ? "★" : "☆";
     }
     return `<span class="stars" aria-label="${rating} von 5 Sternen">${stars}</span>`;
   }
 
   function renderReviews(list) {
-    if(list.length === 0) {
+    if (list.length === 0) {
       document.getElementById("review-list").innerHTML = "<p>Keine Bewertungen gefunden.</p>";
       return;
     }
@@ -406,7 +469,7 @@
       .select("rating, comment, from_user_id, created_at, from_user:from_user_id(name)")
       .eq("to_user_id", userId)
       .order("created_at", { ascending: false });
-    if(error || !Array.isArray(data)) {
+    if (error || !Array.isArray(data)) {
       document.getElementById("review-list").innerHTML = "<p>Keine Bewertungen gefunden.</p>";
       return;
     }
@@ -416,12 +479,12 @@
 
   function sortReviews(criteria) {
     let sorted = [...reviews];
-    if(criteria === "highest") {
-      sorted.sort((a,b) => b.rating - a.rating);
-    } else if(criteria === "lowest") {
-      sorted.sort((a,b) => a.rating - b.rating);
+    if (criteria === "highest") {
+      sorted.sort((a, b) => b.rating - a.rating);
+    } else if (criteria === "lowest") {
+      sorted.sort((a, b) => a.rating - b.rating);
     } else {
-      sorted.sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+      sorted.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
     }
     renderReviews(sorted);
   }
