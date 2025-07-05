@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AGB & Impressum – Locorent</title>
+  <title>Locorent – Nachhaltig mieten in Deutschland</title>
+  <meta name="description" content="Finde und vermiete nachhaltige Mietobjekte in deiner Nähe bei Locorent." />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
@@ -108,60 +109,168 @@
       outline: none;
     }
 
-    .container {
-      max-width: 900px;
-      margin: 2rem auto 4rem auto;
-      padding: 0 1rem;
-      background: var(--white);
+    .hero {
+      background-color: var(--white);
+      padding: 3rem 2rem;
       border-radius: var(--radius);
-      box-shadow: 0 12px 30px var(--shadow-light);
-    }
-
-    h2 {
-      color: var(--primary-dark);
-      font-weight: 700;
-      font-size: 2rem;
-      margin-bottom: 1rem;
-      margin-top: 0;
-    }
-
-    h3 {
+      box-shadow: 0 12px 30px rgba(46,125,50,0.1);
       margin-top: 2rem;
-      color: var(--primary);
-      font-weight: 600;
-      font-size: 1.3rem;
+      text-align: center;
     }
 
-    p, ul {
-      color: var(--text-muted);
+    .hero h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--primary-dark);
+    }
+
+    form.search-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+
+    form.search-form input,
+    form.search-form select,
+    form.search-form button {
+      padding: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
       font-size: 1rem;
-      line-height: 1.6;
+      flex: 1;
+      min-width: 200px;
     }
 
-    ul {
-      padding-left: 1.2rem;
+    form.search-form button {
+      background-color: var(--primary);
+      color: var(--white);
+      font-weight: 700;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
     }
 
-    a {
-      color: var(--primary);
-      text-decoration: underline;
-    }
-
-    a:hover, a:focus {
-      color: var(--accent);
+    form.search-form button:hover,
+    form.search-form button:focus {
+      background-color: var(--accent);
       outline: none;
     }
 
-    .badge {
-      display: inline-block;
-      background-color: var(--accent);
-      color: var(--primary-dark);
-      font-weight: 600;
-      padding: 0.3rem 0.7rem;
-      border-radius: 999px;
-      font-size: 0.85rem;
+    #suggestions {
+      position: absolute;
+      top: calc(100% + 5px);
+      left: 0;
+      right: 0;
+      max-height: 140px;
+      overflow-y: auto;
+      background: var(--white);
+      z-index: 10;
+      border: 1px solid #ccc;
+      border-top: none;
+      border-radius: 0 0 8px 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+
+    #suggestions div {
+      padding: 0.5rem;
+      cursor: pointer;
+    }
+
+    #suggestions div:hover,
+    #suggestions div:focus {
+      background-color: #e0f2f1;
+      outline: none;
+    }
+
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .result-card {
+      background-color: var(--white);
+      border-radius: var(--radius);
+      padding: 1rem;
+      box-shadow: 0 12px 30px rgba(46,125,50,0.1);
+      margin-bottom: 1.5rem;
+      transition: transform 0.3s ease;
+    }
+
+    .result-card:hover,
+    .result-card:focus-within {
+      transform: translateY(-3px);
+      box-shadow: 0 20px 48px rgba(46,125,50,0.15);
+      outline: none;
+    }
+
+    .result-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 12px;
       margin-bottom: 1rem;
+    }
+
+    .result-card button {
+      margin-top: 0.5rem;
+      padding: 0.6rem;
+      width: 100%;
+      background-color: var(--primary);
+      color: var(--white);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: background-color 0.3s ease;
+    }
+
+    .result-card button:hover,
+    .result-card button:focus {
+      background-color: var(--accent);
+      outline: none;
+    }
+
+    .more-link {
+      text-align: right;
+      margin-top: 0.5rem;
+    }
+
+    .btn-more {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25em;
+      font-weight: 700;
+      color: var(--primary);
+      text-decoration: none;
+      border: 2px solid var(--primary);
+      padding: 0.25em 0.75em;
+      border-radius: 24px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      font-size: 0.9rem;
       user-select: none;
+    }
+
+    .btn-more span {
+      display: inline-block;
+      font-size: 1.2rem;
+      transition: transform 0.3s ease;
+    }
+
+    .btn-more:hover,
+    .btn-more:focus {
+      background-color: var(--primary);
+      color: var(--white);
+      text-decoration: none;
+      outline: none;
+    }
+
+    .btn-more:hover span {
+      transform: translateX(5px);
     }
 
     footer {
@@ -175,12 +284,7 @@
       font-size: 0.92rem;
       user-select: none;
       text-align: center;
-      margin-top: auto;
-      position: relative;
-      left: 50%;
-      right: 50%;
-      margin-left: -50vw;
-      margin-right: -50vw;
+      margin-top: 2rem;
     }
 
     footer > div {
@@ -261,146 +365,3 @@
       }
     }
   </style>
-</head>
-<body>
-  <header>
-    <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
-    <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
-    <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
-  </header>
-
-  <main class="container" role="main">
-    <div class="badge">Stand: 2025</div>
-    <h2>Allgemeine Geschäftsbedingungen (AGB)</h2>
-
-    <h3>1. Geltungsbereich</h3>
-    <p>Diese AGB gelten für die Nutzung der Plattform <strong>Locorent</strong> unter <a href="https://www.locorent.de">www.locorent.de</a>. Locorent stellt die Infrastruktur bereit, um Gegenstände zwischen privaten Nutzer:innen zu vermieten. Verträge kommen nur zwischen den Parteien zustande.</p>
-
-    <h3>2. Registrierung</h3>
-    <p>Eine Registrierung ist notwendig. Die Daten müssen korrekt sein. Das Konto ist nicht übertragbar.</p>
-
-    <h3>3. Leistungen</h3>
-    <p>Locorent bietet die Plattform – nicht die Artikel. Wir haften nicht für Richtigkeit, Qualität oder Zustand der Mietobjekte.</p>
-
-    <h3>4. Zustandekommen von Verträgen</h3>
-    <p>Ein Mietvertrag entsteht erst, wenn der/die Vermieter:in eine Anfrage aktiv annimmt.</p>
-
-    <h3>5. Pflichten der Nutzer:innen</h3>
-    <ul>
-      <li>Keine illegalen Inhalte oder Objekte</li>
-      <li>Keine Rechte Dritter verletzen</li>
-      <li>Keine Fakes, Betrug oder automatisierte Bots</li>
-    </ul>
-
-    <h3>6. Haftung</h3>
-    <p>Locorent haftet nur bei Vorsatz oder grober Fahrlässigkeit. Schäden zwischen Mietparteien müssen direkt geregelt werden.</p>
-
-    <h3>7. Kündigung</h3>
-    <p>Jede:r kann sein/ihr Konto jederzeit löschen. Bei Missbrauch behalten wir uns die Sperrung vor.</p>
-
-    <h3>8. Datenschutz</h3>
-    <p>Infos findest du in der <a href="datenschutz.html">Datenschutzerklärung</a>.</p>
-
-    <h3>9. Rechtliches</h3>
-    <p>Es gilt deutsches Recht. Gerichtsstand ist Maintal. Sollte eine Klausel unwirksam sein, bleibt der Rest bestehen.</p>
-
-    <div class="badge" style="margin-top:3rem;">Impressum</div>
-    <h2>Angaben gemäß § 5 TMG</h2>
-
-    <p><strong>Betreiber der Website:</strong><br>
-    Pascal Merten<br>
-    Wilhelmsbader Straße 15<br>
-    63477 Maintal<br>
-    Deutschland</p>
-
-    <p><strong>Kontakt:</strong><br>
-    E-Mail: <a href="mailto:info@locorent.de">info@locorent.de</a></p>
-
-    <p><strong>Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV:</strong><br>
-    Pascal Merten, Anschrift wie oben.</p>
-
-    <h3>Haftungsausschluss</h3>
-    <p>Diese Website wird derzeit rein privat und nicht kommerziell betrieben. Keine Werbung, kein Verkauf, keine Einnahmen.</p>
-
-    <h3>Urheberrecht</h3>
-    <p>Alle Inhalte sind urheberrechtlich geschützt. Vervielfältigung oder Weiterverbreitung nur mit ausdrücklicher Genehmigung.</p>
-  </main>
-
-  <footer role="contentinfo">
-    <div>
-      <div>
-        <h4>Mieten &amp; Vermieten</h4>
-        <ul>
-          <li><a href="so-funktionierts.html">So funktioniert's</a></li>
-          <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
-          <li><a href="kategorien.html">Beliebte Kategorien</a></li>
-          <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
-          <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>Wissenswertes</h4>
-        <ul>
-          <li><a href="agb.html">AGB & Impressum</a></li>
-          <li><a href="datenschutz.html">Datenschutz</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>Über uns</h4>
-        <ul>
-          <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
-          <li><a href="social-media.html">Folgen Sie uns</a></li>
-          <li><a href="mission.html">Unsere Mission</a></li>
-        </ul>
-      </div>
-    </div>
-    <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
-  </footer>
-
-  <script>
-    const supabase = window.supabase.createClient(
-      'https://flnjalgqtkqycsaymmbd.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-    );
-
-    let userSession = null;
-
-    async function init() {
-      const { data: { session } } = await supabase.auth.getSession();
-      userSession = session;
-      updateNav();
-    }
-
-    function updateNav() {
-      const nav = document.getElementById('nav-links');
-      nav.innerHTML = userSession?.user ? `
-        <a href="index.html">Start</a>
-        <a href="profil.html">Mein Profil</a>
-        <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-        <a href="favoriten.html">Meine Favoriten</a>
-        <a href="inserate.html">Meine Inserate</a>
-        <a href="#" onclick="logout(event)">Logout</a>
-      ` : `
-        <a href="index.html">Start</a>
-        <a href="login.html">Einloggen</a>
-      `;
-    }
-
-    async function logout(event) {
-      event.preventDefault();
-      await supabase.auth.signOut();
-      window.location.href = "login.html";
-    }
-
-    document.getElementById('nav-toggle').addEventListener('click', () => {
-      const nav = document.getElementById('nav-links');
-      nav.classList.toggle('show');
-      const toggle = document.getElementById('nav-toggle');
-      const expanded = nav.classList.contains('show');
-      toggle.setAttribute('aria-expanded', expanded);
-    });
-
-    init();
-  </script>
-</body>
-</html>
