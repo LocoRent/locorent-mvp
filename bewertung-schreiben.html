@@ -7,7 +7,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    /* --- Alles aus agb.html Styles übernommen --- */
     :root {
       --primary: #2e7d32;
       --primary-light: #66bb6a;
@@ -24,11 +23,9 @@
       --transition: 0.4s ease;
       --font-primary: 'Poppins', sans-serif;
     }
-
     *, *::before, *::after {
       box-sizing: border-box;
     }
-
     body {
       margin: 0;
       font-family: var(--font-primary);
@@ -40,7 +37,6 @@
       min-height: 100vh;
       overflow-x: hidden;
     }
-
     header {
       background-color: var(--primary);
       color: var(--white);
@@ -55,14 +51,13 @@
       box-shadow: 0 10px 20px rgba(0,0,0,0.1);
       flex-wrap: wrap;
     }
-
     header h1 {
       font-size: 1.8rem;
       cursor: pointer;
       user-select: none;
       margin: 0;
+      order: 1;
     }
-
     #nav-toggle {
       display: none;
       background: none;
@@ -70,14 +65,15 @@
       font-size: 1.8rem;
       color: var(--white);
       cursor: pointer;
+      order: 2;
+      margin: 0;
     }
-
     nav#nav-links {
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
+      order: 3;
     }
-
     nav#nav-links a {
       color: var(--white);
       text-decoration: none;
@@ -86,7 +82,6 @@
       position: relative;
       transition: color 0.3s ease;
     }
-
     nav#nav-links a::after {
       content: '';
       position: absolute;
@@ -97,30 +92,25 @@
       background-color: var(--accent);
       transition: width 0.3s ease;
     }
-
     nav#nav-links a:hover::after,
     nav#nav-links a:focus::after {
       width: 100%;
     }
-
     nav#nav-links a:hover,
     nav#nav-links a:focus {
       color: var(--accent);
       outline: none;
     }
-
-    /* Hauptcontainer ersetzen wir hier mit eigenem Main-Style */
     main {
-      max-width: 900px; /* wie bei agb */
+      max-width: 900px;
       margin: 2rem auto 4rem auto;
       padding: 2rem 1rem;
       background: var(--white);
       border-radius: var(--radius);
       box-shadow: 0 12px 30px var(--shadow-light);
       box-sizing: border-box;
+      flex-grow: 1;
     }
-
-    /* Deine Überschrift */
     h2 {
       color: var(--primary-dark);
       font-weight: 700;
@@ -129,8 +119,6 @@
       margin-top: 0;
       text-align: center;
     }
-
-    /* Sternebewertung Style */
     .stars {
       display: flex;
       justify-content: center;
@@ -147,14 +135,12 @@
     .star.selected {
       color: #ffca28;
     }
-
     label {
       font-weight: 700;
       color: var(--primary-dark);
       display: block;
       margin-top: 1rem;
     }
-
     textarea {
       width: 100%;
       padding: 0.8rem;
@@ -168,14 +154,12 @@
       box-sizing: border-box;
       margin-top: 0.25rem;
     }
-
     .char-count {
       font-size: 0.85rem;
       color: #666;
       text-align: right;
       margin-top: 0.3rem;
     }
-
     button {
       margin-top: 1.5rem;
       background-color: var(--primary);
@@ -189,20 +173,17 @@
       width: 100%;
       transition: background-color 0.3s ease;
     }
-
     button:hover,
     button:focus {
       background-color: var(--primary-dark);
       outline: none;
     }
-
     .success {
       color: green;
       margin-top: 1rem;
       text-align: center;
       font-weight: 600;
     }
-
     footer {
       width: 100%;
       box-sizing: border-box;
@@ -221,7 +202,6 @@
       margin-left: -50vw;
       margin-right: -50vw;
     }
-
     footer > div {
       max-width: 1200px;
       margin: 0 auto;
@@ -231,58 +211,61 @@
       gap: 2rem;
       text-align: left;
     }
-
     footer > div > div {
       flex: 1;
       min-width: 200px;
     }
-
     footer h4 {
       margin-bottom: 0.5rem;
       font-weight: 700;
       font-size: 1.1rem;
     }
-
     footer ul {
       list-style: none;
       padding: 0;
       line-height: 1.8;
     }
-
     footer ul li a {
       color: var(--white);
       text-decoration: underline;
       transition: color 0.3s ease;
     }
-
     footer ul li a:hover {
       color: var(--accent);
     }
-
     footer small {
       display: block;
       margin-top: 2rem;
       text-align: center;
       opacity: 0.85;
     }
-
     /* Mobile */
     @media (max-width: 720px) {
+      header {
+        flex-direction: row;         /* wichtig, sonst zentriert sich der Burger */
+        justify-content: space-between;
+        align-items: center;
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+      }
+      header h1 {
+        order: 1;                   /* Logo links */
+      }
       #nav-toggle {
         display: block;
+        order: 2;                   /* Burger rechts */
+        margin: 0;
       }
-
       nav#nav-links {
         width: 100%;
         flex-direction: column;
         display: none;
         margin-top: 1rem;
+        order: 3;                   /* Navigation unter dem Header */
       }
-
       nav#nav-links.show {
         display: flex;
       }
-
       nav#nav-links a {
         margin: 0.4rem 0;
         padding: 0.5rem 1rem;
@@ -290,14 +273,20 @@
         border-radius: 6px;
         display: block;
       }
-
+      main {
+        margin: 2rem 1rem 3rem;
+        padding: 1.5rem;
+      }
       footer > div {
         flex-direction: column;
         align-items: flex-start;
       }
-
       footer > div > div {
         width: 100%;
+      }
+      footer {
+        padding-left: 1rem;
+        padding-right: 1rem;
       }
     }
   </style>
@@ -362,126 +351,126 @@
     <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
   </footer>
 
-<script>
-  const supabase = window.supabase.createClient(
-    'https://flnjalgqtkqycsaymmbd.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-  );
+  <script>
+    const supabase = window.supabase.createClient(
+      'https://flnjalgqtkqycsaymmbd.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+    );
 
-  async function updateNav() {
-    const { data: { session } } = await supabase.auth.getSession();
-    const nav = document.getElementById('nav-links');
-    nav.innerHTML = session?.user ? `
-      <a href="index.html">Start</a>
-      <a href="profil.html">Mein Profil</a>
-      <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-      <a href="favoriten.html">Meine Favoriten</a>
-      <a href="inserate.html">Meine Inserate</a>
-      <a href="#" onclick="logout(event)">Logout</a>
-    ` : `
-      <a href="index.html">Start</a>
-      <a href="login.html">Einloggen</a>
-    `;
-  }
+    async function updateNav() {
+      const { data: { session } } = await supabase.auth.getSession();
+      const nav = document.getElementById('nav-links');
+      nav.innerHTML = session?.user ? `
+        <a href="index.html">Start</a>
+        <a href="profil.html">Mein Profil</a>
+        <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+        <a href="favoriten.html">Meine Favoriten</a>
+        <a href="inserate.html">Meine Inserate</a>
+        <a href="#" onclick="logout(event)">Logout</a>
+      ` : `
+        <a href="index.html">Start</a>
+        <a href="login.html">Einloggen</a>
+      `;
+    }
 
-  function logout(event) {
-    event.preventDefault();
-    supabase.auth.signOut().then(() => window.location.href = "login.html");
-  }
+    function logout(event) {
+      event.preventDefault();
+      supabase.auth.signOut().then(() => window.location.href = "login.html");
+    }
 
-  document.getElementById('nav-toggle').addEventListener('click', () => {
-    const nav = document.getElementById('nav-links');
-    nav.classList.toggle('show');
-    const toggle = document.getElementById('nav-toggle');
-    const expanded = nav.classList.contains('show');
-    toggle.setAttribute('aria-expanded', expanded);
-  });
-
-  updateNav();
-
-  // Sternebewertung Logik
-  const stars = document.querySelectorAll('.star');
-  const ratingInput = document.getElementById('rating');
-  const message = document.getElementById('message');
-
-  stars.forEach((star, i) => {
-    star.addEventListener('click', () => {
-      const value = parseInt(star.dataset.value);
-      ratingInput.value = value;
-      updateStars(value);
+    document.getElementById('nav-toggle').addEventListener('click', () => {
+      const nav = document.getElementById('nav-links');
+      nav.classList.toggle('show');
+      const toggle = document.getElementById('nav-toggle');
+      const expanded = nav.classList.contains('show');
+      toggle.setAttribute('aria-expanded', expanded);
     });
-    star.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
-        e.preventDefault();
-        const nextIndex = (i + 1) % stars.length;
-        stars[nextIndex].focus();
-      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
-        e.preventDefault();
-        const prevIndex = (i - 1 + stars.length) % stars.length;
-        stars[prevIndex].focus();
-      } else if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        star.click();
+
+    updateNav();
+
+    // Sternebewertung Logik
+    const stars = document.querySelectorAll('.star');
+    const ratingInput = document.getElementById('rating');
+    const message = document.getElementById('message');
+
+    stars.forEach((star, i) => {
+      star.addEventListener('click', () => {
+        const value = parseInt(star.dataset.value);
+        ratingInput.value = value;
+        updateStars(value);
+      });
+      star.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+          e.preventDefault();
+          const nextIndex = (i + 1) % stars.length;
+          stars[nextIndex].focus();
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+          e.preventDefault();
+          const prevIndex = (i - 1 + stars.length) % stars.length;
+          stars[prevIndex].focus();
+        } else if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          star.click();
+        }
+      });
+    });
+
+    function updateStars(value) {
+      stars.forEach(s => {
+        const starVal = parseInt(s.dataset.value);
+        s.classList.toggle('selected', starVal <= value);
+        s.setAttribute('aria-checked', starVal === value ? 'true' : 'false');
+        s.tabIndex = starVal === value ? 0 : -1;
+      });
+    }
+
+    document.getElementById('comment').addEventListener('input', e => {
+      document.getElementById('charCount').textContent = e.target.value.length;
+      message.textContent = '';
+    });
+
+    document.getElementById('review-form').addEventListener('submit', async e => {
+      e.preventDefault();
+
+      const rating = parseInt(ratingInput.value);
+      const comment = document.getElementById('comment').value.trim();
+
+      if (!rating || rating < 1 || rating > 5) {
+        message.textContent = 'Bitte eine Bewertung zwischen 1 und 5 Sternen abgeben.';
+        return;
+      }
+      if (comment.length === 0) {
+        message.textContent = 'Bitte einen Kommentar eingeben.';
+        return;
+      }
+
+      const params = new URLSearchParams(window.location.search);
+      const toUser = params.get('id');
+
+      const { data: { session } } = await supabase.auth.getSession();
+      const user = session?.user;
+
+      if (!user || !toUser) {
+        alert('Fehlende Daten – bitte einloggen oder Link prüfen.');
+        return;
+      }
+
+      const { error } = await supabase.from('reviews').insert({
+        to_user_id: toUser,
+        from_user_id: user.id,
+        rating,
+        comment,
+      });
+
+      if (error) {
+        message.textContent = 'Fehler beim Speichern.';
+      } else {
+        message.textContent = '✅ Bewertung gespeichert!';
+        setTimeout(() => {
+          window.location.href = `vermieter-profil.html?id=${toUser}`;
+        }, 1500);
       }
     });
-  });
-
-  function updateStars(value) {
-    stars.forEach(s => {
-      const starVal = parseInt(s.dataset.value);
-      s.classList.toggle('selected', starVal <= value);
-      s.setAttribute('aria-checked', starVal === value ? 'true' : 'false');
-      s.tabIndex = starVal === value ? 0 : -1;
-    });
-  }
-
-  document.getElementById('comment').addEventListener('input', e => {
-    document.getElementById('charCount').textContent = e.target.value.length;
-    message.textContent = '';
-  });
-
-  document.getElementById('review-form').addEventListener('submit', async e => {
-    e.preventDefault();
-
-    const rating = parseInt(ratingInput.value);
-    const comment = document.getElementById('comment').value.trim();
-
-    if (!rating || rating < 1 || rating > 5) {
-      message.textContent = 'Bitte eine Bewertung zwischen 1 und 5 Sternen abgeben.';
-      return;
-    }
-    if (comment.length === 0) {
-      message.textContent = 'Bitte einen Kommentar eingeben.';
-      return;
-    }
-
-    const params = new URLSearchParams(window.location.search);
-    const toUser = params.get('id');
-
-    const { data: { session } } = await supabase.auth.getSession();
-    const user = session?.user;
-
-    if (!user || !toUser) {
-      alert('Fehlende Daten – bitte einloggen oder Link prüfen.');
-      return;
-    }
-
-    const { error } = await supabase.from('reviews').insert({
-      to_user_id: toUser,
-      from_user_id: user.id,
-      rating,
-      comment,
-    });
-
-    if (error) {
-      message.textContent = 'Fehler beim Speichern.';
-    } else {
-      message.textContent = '✅ Bewertung gespeichert!';
-      setTimeout(() => {
-        window.location.href = `vermieter-profil.html?id=${toUser}`;
-      }, 1500);
-    }
-  });
-</script>
+  </script>
 </body>
 </html>
