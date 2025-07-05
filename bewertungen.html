@@ -31,6 +31,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    overflow-x: hidden;
   }
   header {
     background-color: var(--primary-color);
@@ -43,11 +44,11 @@
     position: sticky;
     top: 0;
     z-index: 1000;
-    box-shadow: 0 2px 8px var(--shadow-color);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
     flex-wrap: wrap;
   }
   header h1 {
-    font-weight: 600;
+    font-weight: 700;
     font-size: 1.8rem;
     cursor: pointer;
     user-select: none;
@@ -57,7 +58,7 @@
     display: none;
     background: none;
     border: none;
-    font-size: 2rem;
+    font-size: 1.8rem;
     color: var(--white);
     cursor: pointer;
   }
@@ -68,12 +69,12 @@
   }
   nav#nav-links a {
     color: var(--white);
-    margin-left: 1.5rem;
+    margin-left: 1rem;
     text-decoration: none;
     font-weight: 600;
-    transition: border-bottom 0.3s ease;
-    user-select: none;
+    font-size: 1rem;
     position: relative;
+    transition: color 0.3s ease;
   }
   nav#nav-links a::after {
     content: '';
@@ -85,15 +86,20 @@
     background-color: var(--accent);
     transition: width 0.3s ease;
   }
-  nav#nav-links a:hover, nav#nav-links a:focus {
-    border-bottom: 2px solid var(--accent);
+  nav#nav-links a:hover::after,
+  nav#nav-links a:focus::after {
+    width: 100%;
+  }
+  nav#nav-links a:hover,
+  nav#nav-links a:focus {
+    color: var(--accent);
     outline: none;
   }
   main {
     max-width: var(--max-width);
     background: var(--white);
     border-radius: var(--border-radius);
-    box-shadow: 0 6px 20px var(--shadow-color);
+    box-shadow: 0 12px 30px rgba(46, 125, 50, 0.08);
     padding: 2.5rem 3rem;
     margin: 3rem 1rem 4rem;
     width: 100%;
@@ -210,7 +216,7 @@
     background-color: var(--primary-color);
     color: var(--white);
     padding: 2rem 0;
-    box-shadow: 0 -2px 12px var(--shadow-color);
+    box-shadow: 0 -2px 12px rgba(46, 125, 50, 0.22);
     user-select: none;
   }
   footer > div {
