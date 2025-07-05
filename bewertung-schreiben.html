@@ -43,7 +43,7 @@
     header {
       background-color: var(--primary);
       color: var(--white);
-      padding: 1rem 2rem;
+      padding: 1.5rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -52,21 +52,21 @@
       top: 0;
       z-index: 1000;
       box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
     }
 
     header h1 {
       font-size: 1.8rem;
+      margin: 0;
       cursor: pointer;
       user-select: none;
-      margin: 0;
     }
 
     #nav-toggle {
       display: none;
+      font-size: 2rem;
       background: none;
       border: none;
-      font-size: 1.8rem;
       color: var(--white);
       cursor: pointer;
     }
@@ -272,24 +272,15 @@
 
     @media (max-width: 720px) {
       header {
-        padding: 0.8rem 1.2rem;
-        height: 64px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        padding: 1rem 1.2rem;
       }
 
       header h1 {
         font-size: 1.6rem;
-        margin: 0;
-        line-height: 1;
       }
 
       #nav-toggle {
         display: block;
-        font-size: 2rem;
-        margin: 0;
-        padding: 0;
       }
 
       nav#nav-links {
@@ -298,10 +289,10 @@
         left: 0;
         width: 100%;
         background-color: var(--primary);
-        z-index: 999;
         display: none;
         flex-direction: column;
         padding: 0.5rem 1rem;
+        z-index: 1000;
       }
 
       nav#nav-links.show {
@@ -310,12 +301,13 @@
 
       nav#nav-links a {
         margin: 0.2rem 0;
-        padding: 0.5rem 1rem;
+        padding: 0.6rem 1rem;
         background-color: rgba(255, 255, 255, 0.08);
         border-radius: 6px;
         font-size: 1rem;
         font-weight: 600;
         text-align: left;
+        color: var(--white);
       }
 
       footer > div {
@@ -325,11 +317,6 @@
 
       footer > div > div {
         width: 100%;
-      }
-
-      footer {
-        padding-left: 1rem;
-        padding-right: 1rem;
       }
     }
   </style>
@@ -353,11 +340,9 @@
         <span class="star" data-value="5" role="radio" aria-checked="false" tabindex="-1">★</span>
       </div>
       <input type="hidden" id="rating" required />
-
       <label for="comment">Kommentar</label>
       <textarea id="comment" maxlength="150" placeholder="Was möchtest du sagen? (max. 150 Zeichen)" required aria-describedby="charCount"></textarea>
       <div class="char-count"><span id="charCount">0</span>/150</div>
-
       <button type="submit">Bewertung speichern</button>
       <div id="message" class="success" role="alert" aria-live="polite"></div>
     </form>
@@ -399,6 +384,8 @@
       'https://flnjalgqtkqycsaymmbd.supabase.co',
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
     );
+
+    let userSession = null;
 
     async function init() {
       const { data: { session } } = await supabase.auth.getSession();
