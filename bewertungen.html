@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="de">
 <head>
 <meta charset="UTF-8" />
@@ -17,6 +17,7 @@
     --shadow-color: rgba(0, 0, 0, 0.12);
     --max-width: 900px;
     --star-yellow: #f5c518;
+    --accent: #a5d6a7;
   }
   *, *::before, *::after {
     box-sizing: border-box;
@@ -50,12 +51,13 @@
     font-size: 1.8rem;
     cursor: pointer;
     user-select: none;
+    margin: 0;
   }
   #nav-toggle {
     display: none;
     background: none;
     border: none;
-    font-size: 1.8rem;
+    font-size: 2rem;
     color: var(--white);
     cursor: pointer;
   }
@@ -71,9 +73,20 @@
     font-weight: 600;
     transition: border-bottom 0.3s ease;
     user-select: none;
+    position: relative;
+  }
+  nav#nav-links a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -4px;
+    width: 0;
+    height: 2px;
+    background-color: var(--accent);
+    transition: width 0.3s ease;
   }
   nav#nav-links a:hover, nav#nav-links a:focus {
-    border-bottom: 2px solid var(--primary-dark);
+    border-bottom: 2px solid var(--accent);
     outline: none;
   }
   main {
@@ -225,8 +238,10 @@
     cursor: pointer;
     transition: color 0.3s ease;
   }
-  footer ul li a:hover {
+  footer ul li a:hover,
+  footer ul li a:focus {
     color: var(--primary-dark);
+    outline: none;
   }
   footer .copyright {
     margin-top: 2rem;
@@ -243,6 +258,7 @@
     }
     #nav-toggle {
       display: block;
+      margin-left: auto;
     }
     nav#nav-links {
       width: 100%;
@@ -254,18 +270,12 @@
       display: flex;
     }
     nav#nav-links a {
+      margin-left: 0;
       margin: 0.4rem 0;
       padding: 0.5rem 1rem;
       background-color: rgba(255, 255, 255, 0.1);
       border-radius: 6px;
       display: block;
-    }
-    nav#nav-links a:hover, nav#nav-links a:focus {
-      border-bottom: none;
-      color: var(--primary-dark);
-      outline: none;
-      background-color: var(--white);
-      color: var(--primary-dark);
     }
     .review-item {
       flex-direction: column;
@@ -275,6 +285,13 @@
       width: 50px;
       height: 50px;
       font-size: 1.1rem;
+    }
+    footer > div {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    footer > div > div {
+      width: 100%;
     }
   }
 </style>
@@ -434,11 +451,11 @@
   });
 
   document.getElementById("nav-toggle").addEventListener("click", () => {
-    const nav = document.getElementById("nav-links");
-    nav.classList.toggle("show");
-    const toggle = document.getElementById("nav-toggle");
-    const expanded = nav.classList.contains("show");
-    toggle.setAttribute("aria-expanded", expanded);
+    const nav = document.getElementById('nav-links');
+    nav.classList.toggle('show');
+    const toggle = document.getElementById('nav-toggle');
+    const expanded = nav.classList.contains('show');
+    toggle.setAttribute('aria-expanded', expanded);
   });
 
   updateNav();
@@ -447,5 +464,3 @@
 
 </body>
 </html>
-
-
