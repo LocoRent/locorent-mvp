@@ -108,6 +108,30 @@
       outline: none;
     }
 
+    /* Responsive Nav - Hidden by default on small screens */
+    @media (max-width: 720px) {
+      #nav-toggle {
+        display: block;
+      }
+
+      nav#nav-links {
+        display: none;
+        flex-direction: column;
+        margin-top: 1rem;
+      }
+      nav#nav-links.show {
+        display: flex;
+      }
+
+      nav#nav-links a {
+        margin: 0.4rem 0;
+        padding: 0.5rem 1rem;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+        display: block;
+      }
+    }
+
     main {
       max-width: 1100px;
       margin: 3rem auto 4rem auto;
@@ -146,7 +170,7 @@
       text-align: left;
       font-size: 1.1rem;
       font-weight: 600;
-      color: var(--dark-color);
+      color: var(--primary-dark);
       cursor: pointer;
       transition: background-color var(--transition) ease;
       display: flex;
@@ -256,42 +280,6 @@
       text-align: center;
       user-select: none;
     }
-
-    @media (max-width: 720px) {
-      #nav-toggle {
-        display: block;
-      }
-
-      nav#nav-links {
-        width: 100%;
-        flex-direction: column;
-        display: none;
-        margin-top: 1rem;
-      }
-
-      nav#nav-links.show {
-        display: flex;
-      }
-
-      nav#nav-links a {
-        margin: 0.4rem 0;
-        padding: 0.5rem 1rem;
-        background-color: rgba(255, 255, 255, 0.1);
-        border-radius: 6px;
-        display: block;
-      }
-
-      footer > div {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      footer > div > div {
-        width: 100%;
-        max-width: 320px;
-        margin-bottom: 1.5rem;
-      }
-    }
   </style>
 </head>
 <body>
@@ -397,9 +385,7 @@
       </ul>
     </div>
   </div>
-  <div class="copyright">
-    © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
-  </div>
+  <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
 </footer>
 
 <script>
@@ -437,6 +423,15 @@
     window.location.href = "login.html";
   }
 
+  // Burger Menü toggle
+  document.getElementById('nav-toggle').addEventListener('click', () => {
+    const nav = document.getElementById('nav-links');
+    nav.classList.toggle('show');
+    const expanded = nav.classList.contains('show');
+    document.getElementById('nav-toggle').setAttribute('aria-expanded', expanded);
+  });
+
+  // Accordion functionality
   document.querySelectorAll('.accordion-header').forEach(header => {
     header.addEventListener('click', () => {
       const expanded = header.getAttribute('aria-expanded') === 'true';
