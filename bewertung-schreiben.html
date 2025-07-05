@@ -62,7 +62,6 @@
       cursor: pointer;
       user-select: none;
       margin: 0;
-      /* order entfernt */
     }
 
     #nav-toggle {
@@ -73,14 +72,12 @@
       color: var(--white);
       cursor: pointer;
       margin: 0;
-      /* order entfernt */
     }
 
     nav#nav-links {
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
-      /* order entfernt */
     }
 
     nav#nav-links a {
@@ -114,9 +111,8 @@
       outline: none;
     }
 
-    /* Main-Container an agb.html angepasst */
     main {
-      max-width: 900px; /* wie bei agb */
+      max-width: 900px;
       margin: 2rem auto 4rem auto;
       padding: 2rem 1rem;
       background: var(--white);
@@ -125,7 +121,6 @@
       box-sizing: border-box;
     }
 
-    /* Überschrift */
     h2 {
       color: var(--primary-dark);
       font-weight: 700;
@@ -271,17 +266,13 @@
       opacity: 0.85;
     }
 
-    /* Mobile Styles – genau wie in agb.html */
     @media (max-width: 720px) {
       header {
-        flex-direction: row; /* Wichtig, sonst zentriert sich der Burger */
+        flex-direction: row;
         justify-content: space-between;
         align-items: center;
         padding-left: 1.5rem;
         padding-right: 1.5rem;
-      }
-      /* order entfernt */
-      header h1 {
       }
       #nav-toggle {
         display: block;
