@@ -36,10 +36,10 @@
     header {
       background-color: var(--primary);
       color: var(--white);
-      padding: 1rem 1.5rem;
+      padding: 1rem 2rem; /* weniger Höhe */
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      justify-content: space-between; /* Logo links, Menü rechts */
+      align-items: center; /* vertikal zentriert */
       font-weight: 700;
       position: sticky;
       top: 0;
@@ -52,7 +52,6 @@
       cursor: pointer;
       user-select: none;
       margin: 0;
-      order: 1;
     }
     #nav-toggle {
       display: none;
@@ -61,13 +60,12 @@
       font-size: 1.8rem;
       color: var(--white);
       cursor: pointer;
-      order: 2;
+      /* Rechts ausgerichtet durch justify-content auf header */
     }
     nav#nav-links {
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
-      order: 3;
     }
     nav#nav-links a {
       color: var(--white);
@@ -242,7 +240,6 @@
         flex-direction: column;
         display: none;
         margin-top: 1rem;
-        order: 3;
       }
       nav#nav-links.show {
         display: flex;
