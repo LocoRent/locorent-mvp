@@ -69,7 +69,6 @@
       font-size: 1.8rem;
       color: var(--white);
       cursor: pointer;
-      margin: 0;
     }
 
     nav#nav-links {
@@ -109,14 +108,20 @@
       outline: none;
     }
 
-    main {
-      max-width: 900px;
+    main.container {
+      max-width: 1100px;
       margin: 2rem auto 4rem auto;
       padding: 2rem 1rem;
       background: var(--white);
       border-radius: var(--radius);
       box-shadow: 0 12px 30px var(--shadow-light);
-      box-sizing: border-box;
+    }
+
+    @media (min-width: 721px) {
+      main.container {
+        max-width: 1400px;
+        padding: 2rem 3rem;
+      }
     }
 
     h2 {
@@ -134,7 +139,6 @@
       gap: 0.5rem;
       margin-bottom: 1rem;
     }
-
     .star {
       font-size: 2.5rem;
       color: #ccc;
@@ -142,7 +146,6 @@
       user-select: none;
       transition: color 0.2s;
     }
-
     .star.selected {
       color: #ffca28;
     }
@@ -266,17 +269,8 @@
     }
 
     @media (max-width: 720px) {
-      header {
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        padding-left: 1.5rem;
-        padding-right: 1.5rem;
-      }
-
       #nav-toggle {
         display: block;
-        margin: 0;
       }
 
       nav#nav-links {
@@ -312,14 +306,6 @@
         padding-right: 1rem;
       }
     }
-
-    /* Erweiterung für Desktop */
-    @media (min-width: 721px) {
-      main {
-        max-width: 1200px;
-        padding: 2rem 3rem;
-      }
-    }
   </style>
 </head>
 <body>
@@ -329,7 +315,7 @@
     <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
   </header>
 
-  <main role="main">
+  <main class="container" role="main">
     <h2>Bewertung abgeben</h2>
     <form id="review-form" novalidate>
       <label>Sternebewertung</label>
@@ -359,14 +345,14 @@
           <li><a href="so-funktionierts.html">So funktioniert's</a></li>
           <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
           <li><a href="kategorien.html">Beliebte Kategorien</a></li>
-          <li><a href="vermieter-tipps.html">Tipps &amp; Tricks für Vermieter</a></li>
+          <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
           <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
         </ul>
       </div>
       <div>
         <h4>Wissenswertes</h4>
         <ul>
-          <li><a href="agb.html">AGB &amp; Impressum</a></li>
+          <li><a href="agb.html">AGB & Impressum</a></li>
           <li><a href="datenschutz.html">Datenschutz</a></li>
         </ul>
       </div>
@@ -420,11 +406,14 @@
     document.getElementById('nav-toggle').addEventListener('click', () => {
       const nav = document.getElementById('nav-links');
       nav.classList.toggle('show');
-      document.getElementById('nav-toggle').setAttribute('aria-expanded', nav.classList.contains('show'));
+      const toggle = document.getElementById('nav-toggle');
+      const expanded = nav.classList.contains('show');
+      toggle.setAttribute('aria-expanded', expanded);
     });
 
     init();
 
+    // Bewertung Logik
     const stars = document.querySelectorAll('.star');
     const ratingInput = document.getElementById('rating');
     const message = document.getElementById('message');
@@ -475,7 +464,6 @@
         message.textContent = 'Bitte eine Bewertung zwischen 1 und 5 Sternen abgeben.';
         return;
       }
-
       if (comment.length === 0) {
         message.textContent = 'Bitte einen Kommentar eingeben.';
         return;
@@ -483,6 +471,7 @@
 
       const params = new URLSearchParams(window.location.search);
       const toUser = params.get('id');
+
       const { data: { session } } = await supabase.auth.getSession();
       const user = session?.user;
 
