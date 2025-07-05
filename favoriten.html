@@ -121,8 +121,10 @@
 
     .category-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 1.5rem;
+      max-width: 1200px;
+      margin: 0 auto;
     }
 
     .result-card {
@@ -258,6 +260,20 @@
       margin-top: 2rem;
       text-align: center;
       opacity: 0.85;
+    }
+
+    @media (max-width: 900px) {
+      .category-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        max-width: 95vw;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .category-grid {
+        grid-template-columns: 1fr;
+        max-width: 95vw;
+      }
     }
 
     @media (max-width: 720px) {
