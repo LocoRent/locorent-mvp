@@ -288,7 +288,7 @@
 <body>
 
 <header>
-  <h1 tabindex="0" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
+  <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
   <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
   <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
 </header>
@@ -298,7 +298,6 @@
   <p class="subtext">Bleib auf dem Laufenden & werde Teil der Community 🚀</p>
 
   <div class="social-grid">
-    <!-- Instagram -->
     <div class="social-card">
       <div class="social-icon" style="background:#E1306C;">
         <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/instagram.svg" alt="Instagram" />
@@ -307,8 +306,6 @@
       <p>Fotos, Storys & Highlights rund ums Mieten.</p>
       <a href="https://www.instagram.com/locorent" target="_blank">Jetzt folgen</a>
     </div>
-
-    <!-- Facebook -->
     <div class="social-card">
       <div class="social-icon" style="background:#1877F2;">
         <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/facebook.svg" alt="Facebook" />
@@ -317,8 +314,6 @@
       <p>News, Events & Gruppen rund um Locorent.</p>
       <a href="https://www.facebook.com/locorent" target="_blank">Fan werden</a>
     </div>
-
-    <!-- TikTok -->
     <div class="social-card">
       <div class="social-icon" style="background:#000;">
         <svg viewBox="0 0 256 256" fill="white" xmlns="http://www.w3.org/2000/svg">
@@ -329,8 +324,6 @@
       <p>Kreative Videos, Trends & lustige Momente.</p>
       <a href="https://www.tiktok.com/@locorent" target="_blank">Ansehen</a>
     </div>
-
-    <!-- Kontakt -->
     <div class="social-card">
       <div class="social-icon" style="background:#43a047;">
         <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
@@ -379,9 +372,8 @@
 <script>
   const supabase = window.supabase.createClient(
     'https://flnjalgqtkqycsaymmbd.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
   );
-
 
   let userSession = null;
 
@@ -413,17 +405,21 @@
   async function logout(event) {
     event.preventDefault();
     await supabase.auth.signOut();
-    window.location.href = "login.html";
+    location.href = "login.html";
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('nav-toggle')?.addEventListener('click', () => {
-      const nav = document.getElementById('nav-links');
-      nav.classList.toggle('show');
-      const expanded = nav.classList.contains('show');
-      document.getElementById('nav-toggle').setAttribute('aria-expanded', expanded);
-    });
     init();
+
+    const toggle = document.getElementById('nav-toggle');
+    const nav = document.getElementById('nav-links');
+
+    if (toggle && nav) {
+      toggle.addEventListener('click', () => {
+        nav.classList.toggle('show');
+        toggle.setAttribute('aria-expanded', nav.classList.contains('show'));
+      });
+    }
   });
 </script>
 
