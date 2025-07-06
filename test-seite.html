@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Login – Locorent</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
+  <title>Mietobjekt – Locorent</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
@@ -20,7 +20,6 @@
       --radius: 18px;
       --shadow-light: rgba(46, 125, 50, 0.08);
       --shadow-strong: rgba(46, 125, 50, 0.25);
-      --transition: 0.4s ease;
       --font-primary: 'Poppins', sans-serif;
     }
 
@@ -132,123 +131,162 @@
         display: block;
       }
 
-      footer > div {
+      header {
         flex-direction: column;
         align-items: flex-start;
-      }
-
-      footer > div > div {
-        width: 100%;
       }
     }
 
     main {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 2rem 1rem;
-    }
-
-    .container {
+      max-width: 1200px;
       background: var(--white);
       border-radius: var(--radius);
-      box-shadow: 0 8px 24px var(--shadow-light);
-      max-width: 400px;
+      box-shadow: 0 6px 18px var(--shadow-light);
+      padding: 2rem;
+      margin: 3rem auto 4rem;
+      display: flex;
+      gap: 2rem;
+      width: calc(100% - 2rem);
+      flex-wrap: wrap;
+      align-items: flex-start;
+    }
+
+    .gallery {
+      flex: 2 1 600px;
+      min-width: 320px;
+    }
+
+    .main-image {
       width: 100%;
-      padding: 2.5rem 2rem 3rem;
-      text-align: center;
-    }
-
-    h2 {
-      font-weight: 700;
-      font-size: 2rem;
-      margin-bottom: 1rem;
-      color: var(--primary-dark);
-    }
-
-    form {
-      margin-top: 1.5rem;
-      text-align: left;
-    }
-
-    label {
-      display: block;
-      margin-top: 1rem;
-      font-weight: 600;
-      font-size: 1rem;
-      color: var(--primary-dark);
-    }
-
-    input {
-      width: 100%;
-      padding: 0.75rem 1rem;
-      margin-top: 0.5rem;
-      border: 1px solid #ccc;
+      height: 420px;
+      object-fit: cover;
       border-radius: var(--radius);
-      font-size: 1rem;
-    }
-
-    button {
-      width: 100%;
-      padding: 1rem;
-      margin-top: 1.5rem;
-      border: none;
-      border-radius: var(--radius);
-      font-weight: 700;
-      background: linear-gradient(90deg, var(--primary), var(--primary-light));
-      color: var(--white);
-      font-size: 1.2rem;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+      transition: transform 0.3s ease;
       cursor: pointer;
     }
 
-    button:hover {
-      background: linear-gradient(90deg, var(--primary-light), var(--primary));
-      transform: scale(1.05);
+    .main-image:hover {
+      transform: scale(1.03);
     }
 
-    .forgot {
+    .thumbnails {
+      display: flex;
+      gap: 0.75rem;
       margin-top: 1rem;
-      text-align: right;
-      font-size: 0.9rem;
+      overflow-x: auto;
+      padding-bottom: 6px;
     }
 
-    .forgot a {
+    .thumbnails img {
+      width: 110px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 3px solid transparent;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      transition: border-color 0.3s ease;
+      flex-shrink: 0;
+    }
+
+    .thumbnails img.active {
+      border-color: var(--primary);
+      box-shadow: 0 0 10px var(--primary);
+    }
+
+    .content {
+      flex: 1 1 320px;
+      min-width: 280px;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .content h2 {
+      font-size: 2.2rem;
+      color: var(--primary);
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .content p {
+      line-height: 1.5;
+      font-size: 1rem;
+      color: #444;
+    }
+
+    .content p strong {
+      color: var(--primary-dark);
+    }
+
+    .content .description {
+      white-space: pre-wrap;
+      background: #f5f5f5;
+      padding: 1rem;
+      border-radius: var(--radius);
+      box-shadow: inset 0 0 8px rgba(0,0,0,0.05);
+      max-height: 220px;
+      overflow-y: auto;
+    }
+
+    button {
+      padding: 1rem;
+      background-color: var(--primary);
+      color: var(--white);
+      border: none;
+      border-radius: var(--radius);
+      font-weight: 700;
+      font-size: 1.1rem;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(46,125,50,0.6);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      margin-top: 0.5rem;
+      user-select: none;
+    }
+
+    button:hover {
+      background-color: var(--primary-dark);
+      box-shadow: 0 6px 14px rgba(27,94,32,0.8);
+    }
+
+    .vendor-info {
+      background: #f5f5f5;
+      padding: 1.5rem;
+      border-radius: var(--radius);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      font-size: 1rem;
+      color: #444;
+      line-height: 1.5;
+      margin-top: 2rem;
+      flex: 1 1 320px;
+      min-width: 280px;
+    }
+
+    .vendor-info h3 {
+      color: var(--primary);
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+
+    .vendor-info a {
       color: var(--primary);
       text-decoration: underline;
-    }
-
-    .message {
-      margin-top: 1rem;
-      text-align: center;
       font-weight: 600;
+      cursor: pointer;
+      transition: color 0.3s ease;
     }
 
-    .message.error {
-      color: #d32f2f;
-    }
-
-    .message.success {
-      color: var(--primary);
+    .vendor-info a:hover {
+      color: var(--primary-dark);
     }
 
     footer {
       width: 100%;
-      box-sizing: border-box;
-      padding: 2rem 2rem 1rem;
-      border-radius: var(--radius);
       background-color: var(--primary);
       color: var(--white);
-      box-shadow: 0 8px 32px rgba(46, 125, 50, 0.22);
-      font-size: 0.92rem;
-      user-select: none;
-      text-align: center;
-      margin-top: auto;
-      position: relative;
-      left: 50%;
-      right: 50%;
-      margin-left: -50vw;
-      margin-right: -50vw;
+      padding: 2rem 1rem;
+      box-shadow: 0 -2px 12px var(--shadow-light);
     }
 
     footer > div {
@@ -258,98 +296,76 @@
       flex-wrap: wrap;
       justify-content: space-between;
       gap: 2rem;
-      text-align: left;
-    }
-
-    footer > div > div {
-      flex: 1;
-      min-width: 200px;
     }
 
     footer h4 {
-      margin-bottom: 0.5rem;
-      font-weight: 700;
-      font-size: 1.1rem;
+      margin-bottom: 0.75rem;
+      font-weight: 600;
     }
 
     footer ul {
       list-style: none;
-      padding: 0;
-      line-height: 1.8;
+      padding-left: 0;
+      line-height: 1.7;
     }
 
     footer ul li a {
       color: var(--white);
       text-decoration: underline;
-      transition: color 0.3s ease;
+      font-weight: 400;
     }
 
     footer ul li a:hover {
-      color: var(--primary-light);
+      color: var(--accent);
     }
 
-    footer small {
-      display: block;
+    footer .copyright {
       margin-top: 2rem;
       text-align: center;
+      font-size: 0.9rem;
       opacity: 0.85;
     }
   </style>
 </head>
 <body>
-
 <header>
   <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
   <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
   <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
 </header>
 
-<main>
-  <div class="container">
-    <h2>Login</h2>
-    <form id="login-form">
-      <label for="email">E-Mail</label>
-      <input type="email" id="email" required autocomplete="email" />
-      <label for="password">Passwort</label>
-      <input type="password" id="password" required autocomplete="current-password" />
-      <div class="forgot">
-        <a href="reset-password.html">Passwort vergessen?</a>
-      </div>
-      <button type="submit">Einloggen</button>
-      <div id="message" class="message"></div>
-    </form>
-  </div>
-</main>
+<main id="listing-details" aria-live="polite" aria-busy="true">Lade Inserat...</main>
 
 <footer role="contentinfo">
   <div>
-    <div>
-      <h4>Mieten &amp; Vermieten</h4>
+    <section aria-labelledby="footer-rent-title">
+      <h4 id="footer-rent-title">Mieten &amp; Vermieten</h4>
       <ul>
         <li><a href="so-funktionierts.html">So funktioniert's</a></li>
         <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
         <li><a href="kategorien.html">Beliebte Kategorien</a></li>
-        <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
+        <li><a href="vermieter-tipps.html">Tipps &amp; Tricks für Vermieter</a></li>
         <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
       </ul>
-    </div>
-    <div>
-      <h4>Wissenswertes</h4>
+    </section>
+    <section aria-labelledby="footer-info-title">
+      <h4 id="footer-info-title">Wissenswertes</h4>
       <ul>
-        <li><a href="agb.html">AGB & Impressum</a></li>
+        <li><a href="agb.html">AGB &amp; Impressum</a></li>
         <li><a href="datenschutz.html">Datenschutz</a></li>
       </ul>
-    </div>
-    <div>
-      <h4>Über uns</h4>
+    </section>
+    <section aria-labelledby="footer-about-title">
+      <h4 id="footer-about-title">Über uns</h4>
       <ul>
         <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
         <li><a href="social-media.html">Folgen Sie uns</a></li>
-        <li><a href="mission.html">Unsere Mission</a></li>
       </ul>
-    </div>
+    </section>
   </div>
-  <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
+  <div class="copyright" aria-label="Copyright">
+    © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
+  </div>
 </footer>
 
 <script>
@@ -358,63 +374,141 @@
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
   );
 
+  let currentUser = null;
+  let listingOwnerId = null;
+  let isFavorite = false;
 
   async function updateNav() {
     const { data: { session } } = await supabase.auth.getSession();
-    const nav = document.getElementById("nav-links");
-    nav.innerHTML = session?.user ? `
-      <a href="index.html">Start</a>
-      <a href="profil.html">Mein Profil</a>
-      <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-      <a href="favoriten.html">Meine Favoriten</a>
-      <a href="inserate.html">Meine Inserate</a>
-      <a href="#" onclick="logout(event)">Logout</a>
-    ` : `
-      <a href="index.html">Start</a>
-      <a href="login.html">Einloggen</a>
-      <a href="register.html">Registrieren</a>
-    `;
+    const nav = document.getElementById('nav-links');
+
+    if (session?.user) {
+      nav.innerHTML = `
+        <a href="index.html">Start</a>
+        <a href="profil.html">Mein Profil</a>
+        <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+        <a href="favoriten.html">Meine Favoriten</a>
+        <a href="inserate.html">Meine Inserate</a>
+        <a href="#" onclick="logout()">Logout</a>
+      `;
+      currentUser = session.user;
+    } else {
+      nav.innerHTML = `
+        <a href="login.html">Einloggen</a>
+        <a href="register.html">Registrieren</a>
+      `;
+    }
   }
 
-  async function logout(event) {
-    event.preventDefault();
+  async function logout() {
     await supabase.auth.signOut();
     window.location.href = "login.html";
   }
 
-  document.getElementById("nav-toggle").addEventListener("click", () => {
-    const nav = document.getElementById("nav-links");
-    nav.classList.toggle("show");
-    const expanded = nav.classList.contains("show");
-    document.getElementById("nav-toggle").setAttribute("aria-expanded", expanded);
+  document.getElementById('nav-toggle').addEventListener('click', () => {
+    const nav = document.getElementById('nav-links');
+    nav.classList.toggle('show');
+    const toggle = document.getElementById('nav-toggle');
+    const expanded = nav.classList.contains('show');
+    toggle.setAttribute('aria-expanded', expanded);
   });
+
+  function capitalize(str) {
+    return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
+  }
+
+  function formatDate(dateStr) {
+    if (!dateStr) return 'Unbekannt';
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('de-DE', { year: 'numeric', month: 'long', day: 'numeric' });
+  }
+
+  async function incrementViews(listingId) {
+    const { data, error } = await supabase.from('listings').select('views').eq('id', listingId).single();
+    if (!data) return;
+    await supabase.from('listings').update({ views: (data.views || 0) + 1 }).eq('id', listingId);
+  }
+
+  async function loadListing() {
+    const { data: { session } } = await supabase.auth.getSession();
+    currentUser = session?.user || null;
+
+    const params = new URLSearchParams(location.search);
+    const listingId = params.get('id');
+
+    const { data: listing, error } = await supabase.from('listings').select('*').eq('id', listingId).single();
+    if (!listing) return document.getElementById('listing-details').innerHTML = "Fehler beim Laden.";
+
+    listingOwnerId = listing.user_id;
+    const { data: profile } = await supabase.from('profiles').select('name, city, bio').eq('id', listing.user_id).single();
+    await incrementViews(listingId);
+
+    const images = listing.image_urls || [listing.image_url] || [];
+    const thumbs = images.map((url, i) =>
+      `<img src="${url}" class="${i === 0 ? 'active' : ''}" alt="Bild ${i}" onclick="switchImage('${url}', this)">`
+    ).join('');
+
+    document.getElementById('listing-details').innerHTML = `
+      <div class="gallery">
+        <img src="${images[0] || 'https://via.placeholder.com/600x400?text=Kein+Bild'}" class="main-image" id="mainImage" />
+        ${images.length > 1 ? `<div class="thumbnails">${thumbs}</div>` : ''}
+      </div>
+      <div class="content">
+        <h2>${listing.title}</h2>
+        <p><strong>Kategorie:</strong> ${capitalize(listing.category)}</p>
+        <p><strong>Preis pro Tag:</strong> ${listing.price_per_day} €</p>
+        <p><strong>Ort:</strong> ${listing.location || '–'}</p>
+        <p><strong>Online seit:</strong> ${formatDate(listing.created_at)}</p>
+        <p><strong>Beschreibung:</strong></p>
+        <p class="description">${listing.description || 'Keine Beschreibung.'}</p>
+        <button onclick="goToChat()">Nachricht an Vermieter</button>
+        ${currentUser ? `<button id="add-to-favorites" onclick="toggleFavorite('${listing.id}')">Lade Favoritenstatus...</button>` : ''}
+      </div>
+      <div class="vendor-info">
+        <h3>Vermieter</h3>
+        <p><strong>Name:</strong> <a href="vermieter-profil.html?id=${listing.user_id}">${profile?.name || '–'}</a></p>
+        <p><strong>Ort:</strong> ${profile?.city || '–'}</p>
+        <p><strong>Über mich:</strong> ${profile?.bio || '–'}</p>
+      </div>
+    `;
+
+    if (currentUser) updateFavoriteButton(listing.id);
+  }
+
+  function switchImage(url, el) {
+    document.getElementById("mainImage").src = url;
+    document.querySelectorAll(".thumbnails img").forEach(img => img.classList.remove("active"));
+    el.classList.add("active");
+  }
+
+  async function updateFavoriteButton(listingId) {
+    const { data } = await supabase.from('favorites').select('*').eq('user_id', currentUser.id).eq('listing_id', listingId).maybeSingle();
+    isFavorite = !!data;
+    document.getElementById("add-to-favorites").textContent = isFavorite ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufügen";
+  }
+
+  async function toggleFavorite(listingId) {
+    if (!currentUser) return alert("Bitte einloggen.");
+    const btn = document.getElementById("add-to-favorites");
+    if (isFavorite) {
+      await supabase.from('favorites').delete().eq('user_id', currentUser.id).eq('listing_id', listingId);
+      isFavorite = false;
+      btn.textContent = "Zu Favoriten hinzufügen";
+    } else {
+      await supabase.from('favorites').insert({ user_id: currentUser.id, listing_id: listingId });
+      isFavorite = true;
+      btn.textContent = "Aus Favoriten entfernen";
+    }
+  }
+
+  function goToChat() {
+    if (!currentUser) return alert("Bitte einloggen.");
+    const listingId = new URLSearchParams(location.search).get('id');
+    window.location.href = `nachrichten.html?listing_id=${listingId}&with=${listingOwnerId}`;
+  }
 
   updateNav();
-
-  document.getElementById('login-form').addEventListener('submit', async function (e) {
-    e.preventDefault();
-    const email = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value;
-    const messageDiv = document.getElementById('message');
-    messageDiv.textContent = '';
-    messageDiv.className = 'message';
-
-    try {
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) {
-        messageDiv.textContent = '❌ ' + error.message;
-        messageDiv.classList.add('error');
-      } else {
-        messageDiv.textContent = '✅ Login erfolgreich!';
-        messageDiv.classList.add('success');
-        setTimeout(() => window.location.href = 'index.html', 1000);
-      }
-    } catch (err) {
-      messageDiv.textContent = '❌ Fehler: ' + err.message;
-      messageDiv.classList.add('error');
-    }
-  });
+  loadListing();
 </script>
-
 </body>
 </html>
