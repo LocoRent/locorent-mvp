@@ -9,81 +9,123 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
-      --primary-color: #2e7d32;
-      --secondary-color: #a5d6a7;
-      --background-color: #f1f8e9;
-      --dark-color: #1b5e20;
-      --highlight-color: #66bb6a;
+      --primary: #2e7d32;
+      --primary-light: #66bb6a;
+      --primary-dark: #1b5e20;
+      --background: #f1f8e9;
       --white: #fff;
-      --gray-light: #f7f7f7;
-      --gray-dark: #333;
-      --border-radius: 12px;
-      --shadow-color: rgba(0, 0, 0, 0.1);
+      --text-dark: #0f2e13;
+      --text-muted: #466843;
+      --accent: #b9f6ca;
+      --highlight: #a5d6a7;
+      --radius: 18px;
+      --shadow-light: rgba(46, 125, 50, 0.08);
+      --shadow-strong: rgba(46, 125, 50, 0.25);
+      --transition: 0.4s ease;
+      --font-primary: 'Poppins', sans-serif;
     }
 
-    * {
+    *, *::before, *::after {
+      box-sizing: border-box;
+      max-width: 100%;
+      word-wrap: break-word;
+    }
+
+    html, body {
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Poppins', sans-serif;
-      background-color: var(--background-color);
-      color: var(--gray-dark);
-      line-height: 1.6;
-      min-height: 100vh;
+      width: 100%;
+      font-family: var(--font-primary);
+      background: linear-gradient(to bottom, #e8f5e9 0%, #ffffff 100%);
+      color: var(--text-dark);
+      scroll-behavior: smooth;
       display: flex;
       flex-direction: column;
+      min-height: 100vh;
     }
 
     header {
-      background-color: var(--primary-color);
+      background-color: var(--primary);
       color: var(--white);
       padding: 1.5rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      font-weight: 700;
       position: sticky;
       top: 0;
       z-index: 1000;
+      flex-wrap: wrap;
     }
 
-    nav a {
+    header h1 {
+      font-size: 1.8rem;
+      cursor: pointer;
+      user-select: none;
+      margin: 0;
+    }
+
+    #nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.8rem;
       color: var(--white);
-      margin-left: 1.5rem;
+      cursor: pointer;
+    }
+
+    nav#nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    nav#nav-links a {
+      color: var(--white);
       text-decoration: none;
       font-weight: 600;
       font-size: 1rem;
+      position: relative;
+      transition: color 0.3s ease;
     }
 
-    nav a:hover,
-    nav a:focus {
-      border-bottom: 2px solid var(--highlight-color);
+    nav#nav-links a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -4px;
+      width: 0;
+      height: 2px;
+      background-color: var(--accent);
+      transition: width 0.3s ease;
+    }
+
+    nav#nav-links a:hover::after,
+    nav#nav-links a:focus::after {
+      width: 100%;
+    }
+
+    nav#nav-links a:hover,
+    nav#nav-links a:focus {
+      color: var(--accent);
       outline: none;
     }
 
     main {
-      flex-grow: 1;
-      max-width: 900px;
-      margin: 3rem auto 4rem;
-      padding: 0 1rem;
+      max-width: 1080px;
+      width: 100%;
+      margin: 2rem auto 4rem auto;
+      padding: 1rem;
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: 0 12px 30px var(--shadow-light);
     }
 
     h1.page-title {
-      font-size: 2.8rem;
+      font-size: 2.4rem;
       font-weight: 700;
-      color: var(--primary-color);
+      color: var(--primary-dark);
       text-align: center;
-      margin-bottom: 3rem;
-      letter-spacing: 0.08em;
-    }
-
-    .card {
-      background-color: var(--white);
-      border-radius: var(--border-radius);
-      padding: 2rem 2.5rem;
-      box-shadow: 0 2px 12px var(--shadow-color);
       margin-bottom: 2.5rem;
     }
 
@@ -93,63 +135,52 @@
       margin-bottom: 2rem;
       align-items: flex-start;
     }
-    .step:last-child {
-      margin-bottom: 0;
-    }
 
     .step-icon {
-      font-size: 2.8rem;
-      color: var(--highlight-color);
+      font-size: 2rem;
+      color: var(--primary);
       flex-shrink: 0;
       user-select: none;
     }
 
     .step-content h2 {
-      font-size: 1.6rem;
+      font-size: 1.4rem;
       font-weight: 600;
-      margin-bottom: 0.5rem;
-      color: var(--primary-color);
+      color: var(--primary);
+      margin-bottom: 0.3rem;
     }
 
     .step-content p {
-      font-size: 1.1rem;
-      color: var(--gray-dark);
-      line-height: 1.5;
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      line-height: 1.6;
     }
 
-    /* Footer - exakt von deiner Index-Seite */
     footer {
-      padding: 2rem;
-      text-align: center;
-      background-color: var(--primary-color);
+      width: 100%;
+      box-sizing: border-box;
+      padding: 2rem 2rem 1rem;
+      border-radius: var(--radius);
+      background-color: var(--primary);
       color: var(--white);
-      border-radius: var(--border-radius);
-      margin-top: 2rem;
+      font-size: 0.92rem;
+      text-align: center;
+      margin-top: auto;
     }
 
-    footer a {
-      color: white;
-      text-decoration: underline;
-    }
-
-    footer > div:first-child {
+    footer > div {
+      max-width: 1200px;
+      margin: 0 auto;
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
       gap: 2rem;
-      max-width: 1100px;
-      margin: 0 auto;
       text-align: left;
-    }
-
-    footer > div:first-child > div {
-      flex: 1;
-      min-width: 200px;
     }
 
     footer h4 {
       margin-bottom: 0.5rem;
-      font-weight: 600;
+      font-weight: 700;
       font-size: 1.1rem;
     }
 
@@ -159,125 +190,131 @@
       line-height: 1.8;
     }
 
-    footer ul li {
-      margin-bottom: 0.3rem;
+    footer ul li a {
+      color: var(--white);
+      text-decoration: underline;
+      transition: color 0.3s ease;
     }
 
-    footer ul li a:hover,
-    footer ul li a:focus {
-      text-decoration: none;
-      color: var(--highlight-color);
-      outline: none;
+    footer ul li a:hover {
+      color: var(--accent);
     }
 
-    footer > div:last-child {
+    footer small {
+      display: block;
       margin-top: 2rem;
-      font-size: 0.9rem;
-      user-select: none;
+      text-align: center;
+      opacity: 0.85;
     }
 
-    @media (max-width: 768px) {
-      header {
+    @media (max-width: 720px) {
+      #nav-toggle {
+        display: block;
+      }
+
+      nav#nav-links {
+        width: 100%;
+        flex-direction: column;
+        display: none;
+        margin-top: 1rem;
+      }
+
+      nav#nav-links.show {
+        display: flex;
+      }
+
+      nav#nav-links a {
+        margin: 0.4rem 0;
+        padding: 0.5rem 1rem;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+      }
+
+      footer > div {
         flex-direction: column;
         align-items: flex-start;
-      }
-
-      nav a {
-        margin-left: 0;
-        margin-top: 0.5rem;
-      }
-
-      footer > div:first-child {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1.5rem;
-      }
-
-      footer > div:first-child > div {
-        min-width: 100%;
       }
     }
   </style>
 </head>
 <body>
+  <header>
+    <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
+    <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
+    <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
+  </header>
 
-<header>
-  <h1>Locorent</h1>
-  <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
-</header>
+  <main role="main">
+    <h1 class="page-title">So funktioniert’s</h1>
 
-<main>
-  <h1 class="page-title">So funktioniert’s</h1>
+    <section>
+      <div class="step">
+        <div class="step-icon">🔍</div>
+        <div class="step-content">
+          <h2>Artikel finden</h2>
+          <p>Durchsuche unser breites Angebot an Mietobjekten – von Fahrzeugen über Werkzeuge bis hin zu Freizeitartikeln. Nutze die praktische Suchfunktion mit Filtern, um schnell und gezielt das zu finden, was du benötigst.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-icon">✉️</div>
+        <div class="step-content">
+          <h2>Mietanfrage stellen</h2>
+          <p>Kontaktiere den Vermieter unkompliziert über unsere Chatfunktion. Kläre alle Details zur Verfügbarkeit, Mietdauer und Übergabe direkt und persönlich.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-icon">🤝</div>
+        <div class="step-content">
+          <h2>Übergabe organisieren</h2>
+          <p>Vereinbare einen Übergabetermin direkt mit dem Vermieter. So kannst du dein Mietobjekt stressfrei und ohne Missverständnisse nutzen.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-icon">🔄</div>
+        <div class="step-content">
+          <h2>Rückgabe & Bewertung</h2>
+          <p>Bring den Artikel zum vereinbarten Zeitpunkt zurück und hinterlasse eine Bewertung, um anderen Nutzern bei der Entscheidung zu helfen und Vertrauen in der Community zu stärken.</p>
+        </div>
+      </div>
+    </section>
 
-  <section class="card" aria-labelledby="mieter-title" tabindex="0">
-    <div class="step">
-      <div class="step-icon" aria-hidden="true">🔍</div>
-      <div class="step-content">
-        <h2 id="mieter-title">Artikel finden</h2>
-        <p>Durchsuche unser breites Angebot an Mietobjekten – von Fahrzeugen über Werkzeuge bis hin zu Freizeitartikeln. Nutze die praktische Suchfunktion mit Filtern, um schnell und gezielt das zu finden, was du benötigst.</p>
+    <section style="margin-top: 3rem;">
+      <div class="step">
+        <div class="step-icon">📦</div>
+        <div class="step-content">
+          <h2>Ungenutztes Potenzial nutzen</h2>
+          <p>Vermiete deine ungenutzten Gegenstände und verdiene damit Geld. So trägst du aktiv zur Nachhaltigkeit bei und nutzt deine Ressourcen sinnvoll.</p>
+        </div>
       </div>
-    </div>
-    <div class="step">
-      <div class="step-icon" aria-hidden="true">✉️</div>
-      <div class="step-content">
-        <h2>Mietanfrage stellen</h2>
-        <p>Kontaktiere den Vermieter unkompliziert über unsere Chatfunktion. Kläre alle Details zur Verfügbarkeit, Mietdauer und Übergabe direkt und persönlich.</p>
+      <div class="step">
+        <div class="step-icon">📸</div>
+        <div class="step-content">
+          <h2>Artikel inserieren</h2>
+          <p>Erstelle dein Inserat mit hochwertigen Fotos, einer klaren Beschreibung und einem fairen Preis, um Interessenten zu überzeugen.</p>
+        </div>
       </div>
-    </div>
-    <div class="step">
-      <div class="step-icon" aria-hidden="true">🤝</div>
-      <div class="step-content">
-        <h2>Übergabe organisieren</h2>
-        <p>Vereinbare einen Übergabetermin direkt mit dem Vermieter. So kannst du dein Mietobjekt stressfrei und ohne Missverständnisse nutzen.</p>
+      <div class="step">
+        <div class="step-icon">💬</div>
+        <div class="step-content">
+          <h2>Mietanfragen verwalten</h2>
+          <p>Verwalte deine Anfragen komfortabel und kommuniziere direkt mit potenziellen Mietern. Du entscheidest, an wen du vermietest.</p>
+        </div>
       </div>
-    </div>
-    <div class="step">
-      <div class="step-icon" aria-hidden="true">🔄</div>
-      <div class="step-content">
-        <h2>Rückgabe & Bewertung</h2>
-        <p>Bring den Artikel zum vereinbarten Zeitpunkt zurück und hinterlasse eine Bewertung, um anderen Nutzern bei der Entscheidung zu helfen und Vertrauen in der Community zu stärken.</p>
+      <div class="step">
+        <div class="step-icon">👤</div>
+        <div class="step-content">
+          <h2>Vertrauenswürdiges Profil</h2>
+          <p>Ein vollständiges Profil mit Foto und Bewertungen erhöht deine Sichtbarkeit und die Chance auf erfolgreiche Vermietungen.</p>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
+  </main>
 
-  <section class="card" aria-labelledby="vermieter-title" tabindex="0">
-    <div class="step">
-      <div class="step-icon" aria-hidden="true">📦</div>
-      <div class="step-content">
-        <h2 id="vermieter-title">Ungenutztes Potenzial nutzen</h2>
-        <p>Vermiete deine ungenutzten Gegenstände und verdiene damit Geld. So trägst du aktiv zur Nachhaltigkeit bei und nutzt deine Ressourcen sinnvoll.</p>
-      </div>
-    </div>
-    <div class="step">
-      <div class="step-icon" aria-hidden="true">📸</div>
-      <div class="step-content">
-        <h2>Artikel inserieren</h2>
-        <p>Erstelle dein Inserat mit hochwertigen Fotos, einer klaren Beschreibung und einem fairen Preis, um Interessenten zu überzeugen.</p>
-      </div>
-    </div>
-    <div class="step">
-      <div class="step-icon" aria-hidden="true">💬</div>
-      <div class="step-content">
-        <h2>Mietanfragen verwalten</h2>
-        <p>Verwalte deine Anfragen komfortabel und kommuniziere direkt mit potenziellen Mietern. Du entscheidest, an wen du vermietest.</p>
-      </div>
-    </div>
-    <div class="step">
-      <div class="step-icon" aria-hidden="true">👤</div>
-      <div class="step-content">
-        <h2>Vertrauenswürdiges Profil</h2>
-        <p>Ein vollständiges Profil mit Foto und Bewertungen erhöht deine Sichtbarkeit und die Chance auf erfolgreiche Vermietungen.</p>
-      </div>
-    </div>
-  </section>
-</main>
-
-<footer role="contentinfo">
-  <div>
-    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2rem;">
-      <div style="flex: 1; min-width: 200px;">
-        <h4 style="margin-bottom: 0.5rem;">Mieten & Vermieten</h4>
-        <ul style="list-style: none; padding: 0; line-height: 1.8;">
+  <footer role="contentinfo">
+    <div>
+      <div>
+        <h4>Mieten &amp; Vermieten</h4>
+        <ul>
           <li><a href="so-funktionierts.html">So funktioniert's</a></li>
           <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
           <li><a href="kategorien.html">Beliebte Kategorien</a></li>
@@ -285,64 +322,68 @@
           <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
         </ul>
       </div>
-      <div style="flex: 1; min-width: 200px;">
-        <h4 style="margin-bottom: 0.5rem;">Wissenswertes</h4>
-        <ul style="list-style: none; padding: 0; line-height: 1.8;">
+      <div>
+        <h4>Wissenswertes</h4>
+        <ul>
           <li><a href="agb.html">AGB & Impressum</a></li>
           <li><a href="datenschutz.html">Datenschutz</a></li>
         </ul>
       </div>
-      <div style="flex: 1; min-width: 200px;">
-        <h4 style="margin-bottom: 0.5rem;">Über uns</h4>
-        <ul style="list-style: none; padding: 0; line-height: 1.8;">
+      <div>
+        <h4>Über uns</h4>
+        <ul>
           <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
           <li><a href="social-media.html">Folgen Sie uns</a></li>
           <li><a href="mission.html">Unsere Mission</a></li>
         </ul>
       </div>
     </div>
-  </div>
-  <div style="margin-top: 2rem; text-align: center; font-size: 0.9rem;">
-    © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
-  </div>
-</footer>
+    <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
+  </footer>
 
-<script>
-  const supabase = window.supabase.createClient(
-    'https://flnjalgqtkqycsaymmbd.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-  );
+  <script>
+    const supabase = window.supabase.createClient(
+      'https://flnjalgqtkqycsaymmbd.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+    );
 
-  let userSession = null;
+    let userSession = null;
 
-  async function init() {
-    const { data: { session } } = await supabase.auth.getSession();
-    userSession = session;
-    updateNav();
-  }
+    async function init() {
+      const { data: { session } } = await supabase.auth.getSession();
+      userSession = session;
+      updateNav();
+    }
 
-  function updateNav() {
-    const nav = document.getElementById('nav-links');
-    nav.innerHTML = userSession?.user ? `
-      <a href="index.html">Start</a>
-      <a href="profil.html">Mein Profil</a>
-      <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-      <a href="favoriten.html">Meine Favoriten</a>
-      <a href="inserate.html">Meine Inserate</a>
-      <a href="#" onclick="logout(event)">Logout</a>
-    ` : `
-      <a href="index.html">Start</a>
-      <a href="login.html">Einloggen</a>
-    `;
-  }
+    function updateNav() {
+      const nav = document.getElementById('nav-links');
+      nav.innerHTML = userSession?.user ? `
+        <a href="index.html">Start</a>
+        <a href="profil.html">Mein Profil</a>
+        <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+        <a href="favoriten.html">Meine Favoriten</a>
+        <a href="inserate.html">Meine Inserate</a>
+        <a href="#" onclick="logout(event)">Logout</a>
+      ` : `
+        <a href="index.html">Start</a>
+        <a href="login.html">Einloggen</a>
+      `;
+    }
 
-  async function logout(event) {
-    event.preventDefault();
-    await supabase.auth.signOut();
-    window.location.href = "login.html";
-  }
+    async function logout(event) {
+      event.preventDefault();
+      await supabase.auth.signOut();
+      window.location.href = "login.html";
+    }
 
-  init();
-</script>
+    document.getElementById('nav-toggle').addEventListener('click', () => {
+      const nav = document.getElementById('nav-links');
+      nav.classList.toggle('show');
+      const toggle = document.getElementById('nav-toggle');
+      toggle.setAttribute('aria-expanded', nav.classList.contains('show'));
+    });
+
+    init();
+  </script>
 </body>
 </html>
