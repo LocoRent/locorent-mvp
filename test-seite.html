@@ -72,13 +72,13 @@
       cursor: pointer;
     }
 
-    nav#main-nav {
+    nav#nav-links {
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
     }
 
-    nav#main-nav a {
+    nav#nav-links a {
       color: var(--white);
       text-decoration: none;
       font-weight: 600;
@@ -87,7 +87,7 @@
       transition: color 0.3s ease;
     }
 
-    nav#main-nav a::after {
+    nav#nav-links a::after {
       content: '';
       position: absolute;
       left: 0;
@@ -98,13 +98,13 @@
       transition: width 0.3s ease;
     }
 
-    nav#main-nav a:hover::after,
-    nav#main-nav a:focus::after {
+    nav#nav-links a:hover::after,
+    nav#nav-links a:focus::after {
       width: 100%;
     }
 
-    nav#main-nav a:hover,
-    nav#main-nav a:focus {
+    nav#nav-links a:hover,
+    nav#nav-links a:focus {
       color: var(--accent);
       outline: none;
     }
@@ -114,40 +114,24 @@
         display: block;
       }
 
-      nav#main-nav {
+      nav#nav-links {
         width: 100%;
-        display: none;
         flex-direction: column;
+        display: none;
         margin-top: 1rem;
-        padding: 0;
-        background-color: var(--primary-dark);
-        border-radius: 0 0 var(--radius) var(--radius);
-        overflow: hidden;
       }
 
-      nav#main-nav.show {
+      nav#nav-links.show {
         display: flex;
       }
 
-      nav#main-nav a {
-        padding: 1rem 1.5rem;
-        background-color: var(--primary-dark);
-        color: var(--white);
-        text-decoration: none;
-        font-weight: 600;
-        font-size: 1rem;
+      nav#nav-links a {
+        margin: 0.4rem 0;
+        padding: 0.5rem 1rem;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
         display: block;
-        width: 100%;
-        border-bottom: 1px solid rgba(255,255,255,0.1);
-        box-sizing: border-box;
-        transition: background-color 0.3s ease;
-      }
-
-      nav#main-nav a:hover,
-      nav#main-nav a:focus {
-        background-color: var(--primary);
-        color: var(--accent);
-        outline: none;
+        color: var(--white);
       }
     }
 
@@ -313,8 +297,8 @@
 
 <header>
   <h1 tabindex="0" onclick="location.href='index.html'">Locorent</h1>
-  <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="main-nav">☰</button>
-  <nav id="main-nav" role="navigation" aria-label="Hauptnavigation"></nav>
+  <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
+  <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
 </header>
 
 <main>
@@ -360,7 +344,7 @@
   );
 
   document.getElementById('nav-toggle').addEventListener('click', () => {
-    const nav = document.getElementById('main-nav');
+    const nav = document.getElementById('nav-links');
     nav.classList.toggle('show');
     const expanded = nav.classList.contains('show');
     document.getElementById('nav-toggle').setAttribute('aria-expanded', expanded);
@@ -374,7 +358,7 @@
 
   async function updateNav() {
     const { data: { session } } = await supabase.auth.getSession();
-    const nav = document.getElementById('main-nav');
+    const nav = document.getElementById('nav-links');
     nav.innerHTML = session?.user ? `
       <a href="index.html">Start</a>
       <a href="profil.html">Mein Profil</a>
@@ -464,4 +448,3 @@
 
 </body>
 </html>
-
