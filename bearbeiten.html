@@ -314,6 +314,7 @@
       }
     }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.1/dist/browser-image-compression.min.js"></script>
 </head>
 <body>
   <header>
@@ -452,39 +453,50 @@
   });
 
   async function handleFiles(files) {
-    const gallery = document.getElementById("preview-gallery");
+  const container = document.getElementById("preview-gallery");
 
-    for (let file of files) {
-      if (imageUrls.length >= 2) {
-        alert("Du kannst nur 2 Bilder hochladen.");
-        break;
-      }
+  for (let file of files) {
+    if (uploadedImageUrls.length >= 2) break;
+    if (!file.type.startsWith("image/")) continue;
 
-      if (file.size > 2 * 1024 * 1024) {
-        alert(`"${file.name}" ist zu groß. Maximalgröße: 2 MB`);
+    try {
+      const compressedFile = await imageCompression(file, {
+        maxSizeMB: 0.02,
+        maxWidthOrHeight: 800,
+        useWebWorker: true
+      });
+
+      const compressedSizeKB = (compressedFile.size / 1024).toFixed(1);
+
+      if (compressedFile.size > 2 * 1024 * 1024) {
+        alert("Komprimiertes Bild ist noch zu groß (max. 2 MB).");
         continue;
       }
 
-      if (!file.type.startsWith("image/")) continue;
+      const tempBox = document.createElement("div");
+      tempBox.className = "preview-box";
+      tempBox.innerHTML = `<div class="img-wrapper"><div class="loader"></div><small>${compressedSizeKB} KB</small></div>`;
+      container.appendChild(tempBox);
 
-      const loader = document.createElement("div");
-      loader.className = "preview-box";
-      loader.innerHTML = `<div class="loader" aria-label="Lädt"></div>`;
-      gallery.appendChild(loader);
-
-      const filePath = `${listingId}_${Date.now()}_${file.name.replace(/\s+/g, '-')}`;
-      const { error } = await supabase.storage.from('listing-images').upload(filePath, file);
+      const path = `listing-images/${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
+      const { error } = await supabase.storage.from('listing-images').upload(path, compressedFile);
 
       if (!error) {
-        const { data } = supabase.storage.from('listing-images').getPublicUrl(filePath);
-        imageUrls.push(data.publicUrl);
+        const { data } = supabase.storage.from('listing-images').getPublicUrl(path);
+        uploadedImageUrls.push(data.publicUrl);
       } else {
-        alert("Upload fehlgeschlagen: " + error.message);
+        alert("Upload-Fehler: " + error.message);
       }
 
-      renderGallery();
+    } catch (err) {
+      console.error("Fehler bei Bildverarbeitung:", err);
+      alert("Fehler beim Verarbeiten des Bildes.");
     }
   }
+
+  renderPreviews();
+}
+
 
   document.getElementById('location').addEventListener('input', async (e) => {
     const value = e.target.value.trim();
