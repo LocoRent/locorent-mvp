@@ -169,7 +169,70 @@
       margin-bottom: 1rem;
       user-select: none;
     }
+ .hero {
+      background: linear-gradient(rgba(46, 125, 50, 0.85), rgba(46, 125, 50, 0.85)), url('https://images.pexels.com/photos/3730760/pexels-photo-3730760.jpeg') center/cover no-repeat;
+      color: white;
+      border-radius: var(--radius);
+      padding: 4rem 2rem;
+      text-align: center;
+      animation: fadeIn 1.5s ease;
+    }
 
+    .hero h2 {
+      font-size: 2.6rem;
+      margin-bottom: 1rem;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .tips-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+      animation: fadeInUp 1s ease-in-out;
+    }
+
+    .tip-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 2rem;
+      box-shadow: 0 20px 50px var(--shadow-light);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tip-card:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 24px 60px var(--shadow-strong);
+    }
+
+    .tip-card::before {
+      content: '✔';
+      position: absolute;
+      font-size: 4.5rem;
+      top: -20px;
+      right: 20px;
+      color: var(--highlight);
+      opacity: 0.12;
+    }
+
+    .tip-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 0.8rem;
+      color: var(--primary-dark);
+    }
+
+    .tip-card p {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
     footer {
       width: 100%;
       box-sizing: border-box;
