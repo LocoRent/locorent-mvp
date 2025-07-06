@@ -206,17 +206,21 @@
   const listingId = urlParams.get('listing_id');
   const chatWith = urlParams.get('with');
   let currentUser = null;
-  let partnerName = "", partnerAvatar = "", channel;
+  let partnerName = "", partnerAvatar = "", channel, userProfile = null;
+  let isSending = false;
 
   async function init() {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return window.location.href = "login.html";
     currentUser = user;
 
-    const [{ data: partner }, { data: listing }] = await Promise.all([
+    const [{ data: partner }, { data: listing }, { data: profile }] = await Promise.all([
       supabase.from('profiles').select('name, avatar_url').eq('id', chatWith).single(),
-      supabase.from('listings').select('title, price_per_day, image_urls').eq('id', listingId).single()
+      supabase.from('listings').select('title, price_per_day, image_urls').eq('id', listingId).single(),
+      supabase.from('profiles').select('name, location').eq('id', user.id).single()
     ]);
+
+    userProfile = profile;
 
     partnerName = partner?.name || "Unbekannt";
     partnerAvatar = partner?.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(partnerName)}&background=66bb6a&color=fff`;
@@ -275,6 +279,24 @@
     const input = document.getElementById('message-input');
     const content = input.value.trim();
     if (!content) return;
+
+    if (currentUser.id === chatWith) {
+      alert("Du kannst dir selbst keine Nachrichten schreiben.");
+      return;
+    }
+
+    if (!userProfile?.name || !userProfile?.location) {
+      alert("Bitte fülle dein Profil aus (Name und Wohnort), bevor du Nachrichten senden kannst.");
+      return;
+    }
+
+    if (isSending) {
+      alert("Bitte warte einen Moment, bevor du erneut sendest.");
+      return;
+    }
+
+    isSending = true;
+    setTimeout(() => { isSending = false; }, 3000); // 3 Sekunden Cooldown
 
     const { data, error } = await supabase
       .from('messages')
