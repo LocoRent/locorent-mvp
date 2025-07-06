@@ -600,7 +600,6 @@ async function handleFiles(files) {
   renderPreviews();
 }
 
-
 document.getElementById("save-btn").addEventListener("click", async () => {
   const { data: sd } = await supabase.auth.getSession();
   const user = sd?.session?.user;
