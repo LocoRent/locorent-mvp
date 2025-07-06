@@ -217,7 +217,7 @@
     const [{ data: partner }, { data: listing }, { data: profile }] = await Promise.all([
       supabase.from('profiles').select('name, avatar_url').eq('id', chatWith).single(),
       supabase.from('listings').select('title, price_per_day, image_urls').eq('id', listingId).single(),
-      supabase.from('profiles').select('name, location').eq('id', user.id).single()
+      supabase.from('profiles').select('name, city').eq('id', user.id).single()
     ]);
 
     userProfile = profile;
