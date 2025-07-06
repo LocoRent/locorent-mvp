@@ -24,19 +24,18 @@
       --font-primary: 'Poppins', sans-serif;
     }
 
-    *, *::before, *::after {
-      box-sizing: border-box;
-    }
+    *, *::before, *::after { box-sizing: border-box; }
 
     body {
       margin: 0;
       font-family: var(--font-primary);
       background: linear-gradient(to bottom, #e8f5e9 0%, #ffffff 100%);
       color: var(--text-dark);
+      scroll-behavior: smooth;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
-      scroll-behavior: smooth;
+      overflow-x: hidden;
     }
 
     header {
@@ -46,16 +45,19 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      font-weight: 700;
       position: sticky;
       top: 0;
       z-index: 1000;
-      flex-wrap: wrap;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      width: 100%;
     }
 
     header h1 {
       font-size: 1.8rem;
       cursor: pointer;
       user-select: none;
+      margin: 0;
     }
 
     #nav-toggle {
@@ -71,6 +73,8 @@
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
+      justify-content: center;
+      width: 100%;
     }
 
     nav#nav-links a {
@@ -80,6 +84,10 @@
       font-size: 1rem;
       position: relative;
       transition: color 0.3s ease;
+      min-width: 120px;
+      text-align: center;
+      display: inline-block;
+      padding-bottom: 3px;
     }
 
     nav#nav-links a::after {
@@ -93,58 +101,65 @@
       transition: width 0.3s ease;
     }
 
-    nav#nav-links a:hover::after {
+    nav#nav-links a:hover::after,
+    nav#nav-links a:focus::after {
       width: 100%;
     }
 
-    nav#nav-links a:hover {
+    nav#nav-links a:hover,
+    nav#nav-links a:focus {
       color: var(--accent);
+      outline: none;
     }
 
     @media (max-width: 720px) {
-      #nav-toggle {
-        display: block;
-      }
+      #nav-toggle { display: block; }
 
       nav#nav-links {
-        width: 100%;
-        flex-direction: column;
         display: none;
+        flex-direction: column;
         margin-top: 1rem;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background-color: var(--primary);
+        padding: 1rem;
+        z-index: 1000;
       }
 
-      nav#nav-links.show {
-        display: flex;
-      }
+      nav#nav-links.show { display: flex; }
 
       nav#nav-links a {
         margin: 0.4rem 0;
         padding: 0.5rem 1rem;
         background-color: rgba(255, 255, 255, 0.1);
         border-radius: 6px;
-        display: block;
+        text-align: left;
       }
     }
 
     main {
       max-width: 1100px;
       margin: 3rem auto;
-      padding: 2rem;
-      flex-grow: 1;
+      padding: 0 2rem 4rem;
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: 0 12px 30px var(--shadow-light);
+      text-align: center;
     }
 
     h2 {
-      text-align: center;
       font-size: 2.4rem;
       color: var(--primary-dark);
-      margin-bottom: 0.5rem;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
     }
 
     .subtext {
-      text-align: center;
       font-size: 1.2rem;
-      color: var(--text-muted);
       margin-bottom: 2.5rem;
+      color: var(--text-muted);
     }
 
     .social-grid {
@@ -158,7 +173,6 @@
       border-radius: var(--radius);
       padding: 2rem;
       box-shadow: 0 8px 24px var(--shadow-light);
-      text-align: center;
       transition: var(--transition);
     }
 
@@ -186,13 +200,13 @@
 
     .social-card h3 {
       font-size: 1.4rem;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.6rem;
     }
 
     .social-card p {
       font-size: 1rem;
-      color: var(--text-muted);
       margin-bottom: 1rem;
+      color: #4e944f;
     }
 
     .social-card a {
@@ -207,7 +221,7 @@
     }
 
     .social-card a:hover {
-      background: var(--primary-light);
+      background: var(--highlight);
     }
 
     footer {
@@ -276,7 +290,7 @@
 <body>
 
 <header>
-  <h1 onclick="location.href='index.html'" style="cursor:pointer;">Locorent</h1>
+  <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
   <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
   <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
 </header>
@@ -306,9 +320,8 @@
 
     <div class="social-card">
       <div class="social-icon" style="background:#000;">
-        <svg viewBox="0 0 256 256" fill="white" xmlns="http://www.w3.org/2000/svg">
-          <path d="M204.8 76.8a76.8 76.8 0 01-38.4-10.24v76.8c0 35.84-28.16 66.56-64 68.48A68.03 68.03 0 0167.36 140.8a68.15 68.15 0 0158.24-67.84V102.4a38.4 38.4 0 00-25.6 72.96A38.4 38.4 0 00160 140.8V0h44.8a76.8 76.8 0 010 76.8z"/>
-        </svg>
+        <svg viewBox="0 0 256 256" fill=\"white\" xmlns=\"http://www.w3.org/2000/svg\">
+          <path d=\"M204.8 76.8a76.8 76.8 0 01-38.4-10.24v76.8c0 35.84-28.16 66.56-64 68.48A68.03 68.03 0 0167.36 140.8a68.15 68.15 0 0158.24-67.84V102.4a38.4 38.4 0 00-25.6 72.96A38.4 38.4 0 00160 140.8V0h44.8a76.8 76.8 0 010 76.8z\"/>\n        </svg>
       </div>
       <h3>TikTok</h3>
       <p>Kreative Videos, Trends & lustige Momente.</p>
@@ -331,7 +344,7 @@
 <footer role="contentinfo">
   <div>
     <div>
-      <h4>Mieten & Vermieten</h4>
+      <h4>Mieten &amp; Vermieten</h4>
       <ul>
         <li><a href="so-funktionierts.html">So funktioniert's</a></li>
         <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
@@ -398,7 +411,8 @@
   document.getElementById('nav-toggle').addEventListener('click', () => {
     const nav = document.getElementById('nav-links');
     nav.classList.toggle('show');
-    document.getElementById('nav-toggle').setAttribute('aria-expanded', nav.classList.contains('show'));
+    const expanded = nav.classList.contains('show');
+    document.getElementById('nav-toggle').setAttribute('aria-expanded', expanded);
   });
 
   init();
