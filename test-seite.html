@@ -20,6 +20,7 @@
       --radius: 18px;
       --shadow-light: rgba(46, 125, 50, 0.08);
       --shadow-strong: rgba(46, 125, 50, 0.25);
+      --transition: 0.4s ease;
       --font-primary: 'Poppins', sans-serif;
     }
 
@@ -27,15 +28,17 @@
       box-sizing: border-box;
     }
 
-    body {
+    html, body {
       margin: 0;
+      padding: 0;
+      width: 100%;
+      overflow-x: hidden;
       font-family: var(--font-primary);
-      background: linear-gradient(to bottom, #e8f5e9 0%, #ffffff 100%);
+      background: var(--background);
       color: var(--text-dark);
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
-      overflow-x: hidden;
     }
 
     header {
@@ -115,6 +118,7 @@
         display: none;
         flex-direction: column;
         margin-top: 1rem;
+        width: 100%;
       }
 
       nav#main-nav.show {
@@ -122,16 +126,20 @@
       }
 
       nav#main-nav a {
-        margin: 0.4rem 0;
-        padding: 0.5rem 1rem;
+        margin: 0;
+        padding: 0.75rem 1.5rem;
         background-color: rgba(255, 255, 255, 0.1);
-        border-radius: 6px;
+        border-radius: 0;
+        display: block;
+        width: 100%; /* 👉 Balken geht bis zum Rand */
+        box-sizing: border-box;
       }
     }
 
     main {
       width: 100vw;
       margin: 2rem 0 4rem;
+      padding: 0;
       flex-grow: 1;
     }
 
@@ -139,7 +147,9 @@
       font-size: 2rem;
       font-weight: 700;
       color: var(--primary);
-      margin: 0 0 1.5rem 1rem;
+      margin-bottom: 1.5rem;
+      margin-left: 1rem;
+      margin-top: 0;
     }
 
     .category-grid {
@@ -150,18 +160,21 @@
     }
 
     .result-card {
-      background-color: var(--white);
+      background: var(--white);
       border-radius: var(--radius);
-      padding: 1.25rem;
-      box-shadow: 0 12px 30px var(--shadow-light);
-      transition: transform 0.3s ease;
+      box-shadow: 0 2px 8px var(--shadow-light);
+      cursor: pointer;
       display: flex;
       flex-direction: column;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      padding: 1rem;
+      height: 100%;
+      user-select: none;
     }
 
     .result-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 20px 48px var(--shadow-strong);
+      transform: translateY(-5px);
+      box-shadow: 0 6px 20px var(--shadow-strong);
     }
 
     .result-card img {
@@ -169,70 +182,71 @@
       height: 180px;
       object-fit: cover;
       border-radius: 12px;
-      margin-bottom: 1.2rem;
+      margin-bottom: 1rem;
     }
 
     .result-card h3 {
-      margin: 0 0 0.6rem;
+      margin: 0 0 0.75rem 0;
       font-size: 1.35rem;
+      font-weight: 700;
       color: var(--primary-dark);
     }
 
     .result-card p {
       margin: 0.3rem 0;
-      font-size: 1.1rem;
       color: var(--text-muted);
+      font-size: 1rem;
     }
 
     .btn-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
       margin-top: auto;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: nowrap;
     }
 
     .result-card button {
-      padding: 0.85rem;
-      background-color: var(--primary);
+      flex: 1;
+      padding: 0.6rem 0;
+      background: var(--primary);
       color: var(--white);
       border: none;
-      border-radius: 12px;
+      border-radius: 8px;
       cursor: pointer;
-      font-weight: 700;
-      font-size: 1rem;
+      font-weight: 600;
+      font-size: 1.1rem;
       transition: background-color 0.3s ease;
     }
 
     .result-card button:hover {
-      background-color: var(--accent);
+      background: var(--primary-light);
       color: var(--primary-dark);
     }
 
-    .result-card .remove-btn {
+    .result-card button:last-child {
       background: #c62828;
     }
 
-    .result-card .remove-btn:hover {
+    .result-card button:last-child:hover {
       background: #b71c1c;
     }
 
     footer {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 2rem 2rem 1rem;
-      border-radius: var(--radius);
       background-color: var(--primary);
       color: var(--white);
+      padding: 2rem 2rem 1rem;
+      border-radius: var(--radius);
+      margin-top: auto;
       box-shadow: 0 8px 32px rgba(46, 125, 50, 0.22);
       font-size: 0.92rem;
-      user-select: none;
-      text-align: center;
-      margin-top: auto;
+      width: 100vw;
       position: relative;
       left: 50%;
       right: 50%;
       margin-left: -50vw;
       margin-right: -50vw;
+      user-select: none;
+      text-align: center;
     }
 
     footer > div {
@@ -269,7 +283,7 @@
     }
 
     footer ul li a:hover {
-      color: var(--accent);
+      color: var(--highlight);
     }
 
     footer small {
@@ -281,25 +295,48 @@
   </style>
 </head>
 <body>
-  <header>
-    <h1 onclick="location.href='index.html'">Locorent</h1>
-    <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="main-nav">☰</button>
-    <nav id="main-nav" role="navigation"></nav>
-  </header>
 
-  <main>
-    <h2>Meine Favoriten</h2>
-    <div id="favorites-list" class="category-grid">Lade Favoriten...</div>
-  </main>
+<header>
+  <h1 tabindex="0" onclick="location.href='index.html'">Locorent</h1>
+  <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="main-nav">☰</button>
+  <nav id="main-nav" role="navigation" aria-label="Hauptnavigation"></nav>
+</header>
 
-  <footer role="contentinfo">
+<main>
+  <h2>Meine Favoriten</h2>
+  <div id="favorites-list" class="category-grid">Lade Favoriten…</div>
+</main>
+
+<footer>
+  <div>
     <div>
-      <div><h4>Mieten &amp; Vermieten</h4><ul><li><a href="so-funktionierts.html">So funktioniert's</a></li><li><a href="vermieter-werden.html">Werde zum Vermieter</a></li><li><a href="kategorien.html">Beliebte Kategorien</a></li><li><a href="vermieter-tipps.html">Tipps & Tricks</a></li><li><a href="hilfe-faq.html">Hilfe</a></li></ul></div>
-      <div><h4>Wissenswertes</h4><ul><li><a href="agb.html">AGB &amp; Impressum</a></li><li><a href="datenschutz.html">Datenschutz</a></li></ul></div>
-      <div><h4>Über uns</h4><ul><li><a href="kontakt.html">Kontakt</a></li><li><a href="social-media.html">Social Media</a></li><li><a href="mission.html">Unsere Mission</a></li></ul></div>
+      <h4>Mieten &amp; Vermieten</h4>
+      <ul>
+        <li><a href="so-funktionierts.html">So funktioniert's</a></li>
+        <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
+        <li><a href="kategorien.html">Beliebte Kategorien</a></li>
+        <li><a href="vermieter-tipps.html">Tipps &amp; Tricks für Vermieter</a></li>
+        <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
+      </ul>
     </div>
-    <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
-  </footer>
+    <div>
+      <h4>Wissenswertes</h4>
+      <ul>
+        <li><a href="agb.html">AGB &amp; Impressum</a></li>
+        <li><a href="datenschutz.html">Datenschutz</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Über uns</h4>
+      <ul>
+        <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
+        <li><a href="social-media.html">Folgen Sie uns</a></li>
+        <li><a href="mission.html">Unsere Mission</a></li>
+      </ul>
+    </div>
+  </div>
+  <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
+</footer>
 
 <script>
   const supabase = window.supabase.createClient(
@@ -307,101 +344,108 @@
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
   );
 
+  document.getElementById('nav-toggle').addEventListener('click', () => {
+    const nav = document.getElementById('main-nav');
+    nav.classList.toggle('show');
+    const expanded = nav.classList.contains('show');
+    document.getElementById('nav-toggle').setAttribute('aria-expanded', expanded);
+  });
 
-    document.getElementById('nav-toggle').addEventListener('click', () => {
-      const nav = document.getElementById('main-nav');
-      nav.classList.toggle('show');
-      const expanded = nav.classList.contains('show');
-      document.getElementById('nav-toggle').setAttribute('aria-expanded', expanded);
-    });
+  async function logout(event) {
+    event.preventDefault();
+    await supabase.auth.signOut();
+    window.location.href = "login.html";
+  }
 
-    async function logout(event) {
-      event.preventDefault();
-      await supabase.auth.signOut();
+  async function updateNav() {
+    const { data: { session } } = await supabase.auth.getSession();
+    const nav = document.getElementById('main-nav');
+    nav.innerHTML = session?.user ? `
+      <a href="index.html">Start</a>
+      <a href="profil.html">Mein Profil</a>
+      <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+      <a href="favoriten.html">Meine Favoriten</a>
+      <a href="inserate.html">Meine Inserate</a>
+      <a href="#" onclick="logout(event)">Logout</a>
+    ` : `
+      <a href="index.html">Start</a>
+      <a href="login.html">Einloggen</a>
+    `;
+  }
+
+  async function loadFavorites() {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
       window.location.href = "login.html";
+      return;
     }
 
-    async function updateNav() {
-      const { data: { session } } = await supabase.auth.getSession();
-      const nav = document.getElementById('main-nav');
-      nav.innerHTML = session?.user ? `
-        <a href="index.html">Start</a>
-        <a href="profil.html">Mein Profil</a>
-        <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-        <a href="favoriten.html">Meine Favoriten</a>
-        <a href="inserate.html">Meine Inserate</a>
-        <a href="#" onclick="logout(event)">Logout</a>
-      ` : `
-        <a href="index.html">Start</a>
-        <a href="login.html">Einloggen</a>
+    const { data: favorites, error } = await supabase
+      .from('favorites')
+      .select('listing_id')
+      .eq('user_id', user.id);
+
+    if (error || !favorites.length) {
+      document.getElementById('favorites-list').innerHTML = "<p>Du hast noch keine Favoriten.</p>";
+      return;
+    }
+
+    const favoriteListings = await Promise.all(favorites.map(async (favorite) => {
+      const { data } = await supabase
+        .from('listings')
+        .select('*')
+        .eq('id', favorite.listing_id)
+        .single();
+      return data;
+    }));
+
+    renderFavorites(favoriteListings);
+  }
+
+  function renderFavorites(listings) {
+    const container = document.getElementById("favorites-list");
+    container.innerHTML = "";
+
+    listings.forEach(listing => {
+      const card = document.createElement("div");
+      card.className = "result-card";
+      card.innerHTML = `
+        <img src="${listing.image_urls?.[0] || 'https://via.placeholder.com/400x220'}" alt="${listing.title}" />
+        <h3>${listing.title}</h3>
+        <p><strong>Kategorie:</strong> ${capitalize(listing.category) || 'Unbekannt'}</p>
+        <p><strong>Preis pro Tag:</strong> ${listing.price_per_day || 'k. A.'} €</p>
+        <div class="btn-group">
+          <button onclick="window.location.href='mietobjekt.html?id=${listing.id}'">Details ansehen</button>
+          <button onclick="removeFromFavorites('${listing.id}', event)">Favorit entfernen</button>
+        </div>
       `;
-    }
+      container.appendChild(card);
+    });
+  }
 
-    async function loadFavorites() {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        window.location.href = "login.html";
-        return;
-      }
+  async function removeFromFavorites(listingId, event) {
+    event.preventDefault();
+    event.stopPropagation();
 
-      const { data: favorites } = await supabase
-        .from('favorites')
-        .select('listing_id')
-        .eq('user_id', user.id);
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
 
-      if (!favorites?.length) {
-        document.getElementById('favorites-list').innerHTML = "<p>Du hast noch keine Favoriten.</p>";
-        return;
-      }
+    await supabase
+      .from('favorites')
+      .delete()
+      .eq('user_id', user.id)
+      .eq('listing_id', listingId);
 
-      const listings = await Promise.all(favorites.map(async (f) => {
-        const { data } = await supabase
-          .from('listings')
-          .select('*')
-          .eq('id', f.listing_id)
-          .single();
-        return data;
-      }));
+    setTimeout(loadFavorites, 300);
+  }
 
-      renderFavorites(listings);
-    }
+  function capitalize(str) {
+    return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
+  }
 
-    function renderFavorites(listings) {
-      const container = document.getElementById("favorites-list");
-      container.innerHTML = "";
+  loadFavorites();
+  updateNav();
+</script>
 
-      listings.forEach(listing => {
-        const card = document.createElement("div");
-        card.className = "result-card";
-        card.innerHTML = `
-          <img src="${listing.image_urls?.[0] || 'https://via.placeholder.com/400x220'}" alt="${listing.title}" />
-          <h3>${listing.title}</h3>
-          <p><strong>Kategorie:</strong> ${capitalize(listing.category) || 'Unbekannt'}</p>
-          <p><strong>Preis pro Tag:</strong> ${listing.price_per_day || 'k. A.'} €</p>
-          <div class="btn-group">
-            <button onclick="window.location.href='mietobjekt.html?id=${listing.id}'">Details ansehen</button>
-            <button class="remove-btn" onclick="removeFromFavorites('${listing.id}', event)">Favorit entfernen</button>
-          </div>
-        `;
-        container.appendChild(card);
-      });
-    }
-
-    async function removeFromFavorites(id, event) {
-      event.preventDefault();
-      const { data: { user } } = await supabase.auth.getUser();
-      await supabase.from('favorites').delete().eq('user_id', user.id).eq('listing_id', id);
-      event.target.innerText = "Entfernt...";
-      event.target.disabled = true;
-      setTimeout(loadFavorites, 300);
-    }
-
-    function capitalize(str) {
-      return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
-    }
-
-    updateNav();
-    loadFavorites();
-  </script>
 </body>
 </html>
