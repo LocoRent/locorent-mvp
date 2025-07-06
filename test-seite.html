@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Werde Vermieter:in – Locorent</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+  <style>
+    :root {
+      --primary-color: #2e7d32;
+      --secondary-color: #a5d6a7;
+      --background-color: #f1f8e9;
+      --dark-color: #1b5e20;
+      --highlight-color: #66bb6a;
+      --white: #fff;
+      --gray-light: #f7f7f7;
+      --gray-dark: #333;
+      --border-radius: 12px;
+      --shadow-color: rgba(0, 0, 0, 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--background-color);
+      color: var(--gray-dark);
+      line-height: 1.7;
+    }
+
+    header {
+      background-color: var(--primary-color);
+      color: var(--white);
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    header h1 {
+      font-size: 1.6rem;
+    }
+
+    header nav a {
+      color: var(--white);
+      margin-left: 1.5rem;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    header nav a:hover,
+    header nav a:focus {
+      border-bottom: 2px solid var(--highlight-color);
+      outline: none;
+    }
+
+    .cta-btn {
+      background-color: var(--highlight-color);
+      color: var(--white);
+      padding: 0.9rem 1.8rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+      display: inline-block;
+      margin-top: 1rem;
+    }
+
+    .cta-btn:hover,
+    .cta-btn:focus {
+      background-color: #4caf50;
+      outline: none;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .section {
+      background-color: var(--white);
+      padding: 2rem;
+      border-radius: var(--border-radius);
+      box-shadow: 0 2px 12px var(--shadow-color);
+      margin-bottom: 3rem;
+    }
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .feature {
+      text-align: center;
+    }
+
+    .feature img {
+      width: 64px;
+      margin-bottom: 0.5rem;
+    }
+
+    .gallery {
+      display: flex;
+      gap: 1.5rem;
+      overflow-x: auto;
+      padding-bottom: 1rem;
+    }
+
+    .gallery-item {
+      min-width: 220px;
+      background-color: var(--white);
+      border-radius: var(--border-radius);
+      box-shadow: 0 2px 8px var(--shadow-color);
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+    }
+
+    .stats {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    .stat {
+      flex: 1;
+      min-width: 150px;
+    }
+
+    .stat h3 {
+      font-size: 2rem;
+      color: var(--primary-color);
+    }
+
+    .faq {
+      max-width: 800px;
+      margin: 2rem auto 0;
+    }
+
+    .faq-item {
+      border-bottom: 1px solid #ddd;
+    }
+
+    .faq-question {
+      width: 100%;
+      padding: 1rem;
+      font-size: 1rem;
+      font-weight: 600;
+      text-align: left;
+      background: none;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      color: var(--gray-dark);
+      position: relative;
+    }
+
+    .faq-question::after {
+      content: "›";
+      position: absolute;
+      right: 1rem;
+      transform: rotate(0deg);
+      transition: transform 0.3s;
+    }
+
+    .faq-item.open .faq-question::after {
+      transform: rotate(90deg);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease;
+      background-color: #f9f9f9;
+      padding: 0 1rem;
+    }
+
+    .faq-item.open .faq-answer {
+      max-height: 400px;
+      padding: 1rem;
+    }
+
+    footer {
+      padding: 2rem;
+      text-align: center;
+      background-color: var(--primary-color);
+      color: var(--white);
+      border-radius: var(--border-radius);
+      margin-top: 2rem;
+    }
+
+    footer a {
+      color: var(--white);
+      text-decoration: underline;
+    }
+
+    footer > div {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    footer > div > div {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    footer h4 {
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    footer ul {
+      list-style: none;
+      padding: 0;
+      line-height: 1.8;
+    }
+
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .features {
+        grid-template-columns: 1fr;
+      }
+
+      .gallery {
+        flex-wrap: wrap;
+      }
+
+      .gallery-item {
+        min-width: 100%;
+      }
+
+      footer > div {
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Locorent</h1>
+  <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
+</header>
+<main>
+  <section class="section" style="text-align:center;">
+    <h2>Werde Vermieter:in auf Locorent</h2>
+    <p>Verdiene Geld mit Dingen, die du nicht täglich brauchst – einfach, sicher und nachhaltig.</p>
+    <div style="max-width: 400px; margin: 2rem auto;">
+      <lottie-player
+        src="https://assets10.lottiefiles.com/packages/lf20_jcikwtux.json"
+        background="transparent"
+        speed="1"
+        style="width: 100%; height: 250px;"
+        loop
+        autoplay>
+      </lottie-player>
+    </div>
+    <a href="register.html" class="cta-btn">Jetzt kostenlos starten</a>
+  </section>
+
+  <section class="section">
+    <h2>So wirst du Vermieter:in – in 3 Schritten</h2>
+    <div class="features">
+      <div class="feature">
+        <img src="https://cdn-icons-png.flaticon.com/512/706/706797.png" alt="Konto erstellen" />
+        <h3>Konto erstellen</h3>
+        <p>Registriere dich kostenlos in unter 2 Minuten.</p>
+      </div>
+      <div class="feature">
+        <img src="https://cdn-icons-png.flaticon.com/512/753/753318.png" alt="Artikel hinzufügen" />
+        <h3>Artikel hochladen</h3>
+        <p>Fotos, Beschreibung, Preis – alles ganz einfach.</p>
+      </div>
+      <div class="feature">
+        <img src="https://cdn-icons-png.flaticon.com/512/1256/1256650.png" alt="Vermieten" />
+        <h3>Vermieten & verdienen</h3>
+        <p>Erhalte Anfragen und teile, was du besitzt.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Beispiele aus der Community</h2>
+    <div id="community-gallery" class="gallery">
+      <p>⏳ Lade Inserate…</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Locorent in Zahlen</h2>
+    <div class="stats">
+      <div id="stats-mieter" class="stat"><h3>–</h3><p>aktive Mieter:innen</p></div>
+      <div id="stats-inserate" class="stat"><h3>–</h3><p>verfügbare Artikel</p></div>
+      <div class="stat"><h3>0 €</h3><p>Fixkosten für Vermieter:innen</p></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 style="text-align:center;">Das Wichtigste auf einen Blick</h2>
+    <div class="faq">
+      <div class="faq-item">
+        <button class="faq-question">Welche Kosten entstehen für mich?</button>
+        <div class="faq-answer">
+          <p>Locorent ist für Vermieter:innen komplett kostenlos. Keine Anmeldegebühren, keine Fixkosten – du kannst sorgenfrei starten.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">Wie funktioniert die Absprache zur Übergabe?</button>
+        <div class="faq-answer">
+          <p>Du kommunizierst über den Locorent-Chat direkt mit Mieter:innen und vereinbarst Übergaben individuell.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">Wie sind meine Artikel geschützt?</button>
+        <div class="faq-answer">
+          <p>Momentan liegt die Verantwortung bei den Nutzenden. Eine Versicherungslösung ist geplant.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">Was kann ich verlangen?</button>
+        <div class="faq-answer">
+          <p>Du legst die Preise selbst fest. Du kannst dich an ähnlichen Inseraten orientieren.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">Welche Vorteile habe ich?</button>
+        <div class="faq-answer">
+          <p>Nachhaltiges Einkommen, Reichweite, Community-Zugang – alles ohne Risiko.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer role="contentinfo">
+  <div>
+    <div>
+      <h4>Mieten & Vermieten</h4>
+      <ul>
+        <li><a href="so-funktionierts.html">So funktioniert's</a></li>
+        <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
+        <li><a href="kategorien.html">Beliebte Kategorien</a></li>
+        <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
+        <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Wissenswertes</h4>
+      <ul>
+        <li><a href="agb.html">AGB & Impressum</a></li>
+        <li><a href="datenschutz.html">Datenschutz</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Über uns</h4>
+      <ul>
+        <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
+        <li><a href="social-media.html">Folgen Sie uns</a></li>
+        <li><a href="mission.html">Unsere Mission</a></li>
+      </ul>
+    </div>
+  </div>
+  <div style="margin-top: 2rem; font-size: 0.9rem;">
+    © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
+  </div>
+</footer>
+
+<script>
+  const supabase = window.supabase.createClient(
+    'https://flnjalgqtkqycsaymmbd.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+  );
+
+  let userSession = null;
+
+  async function init() {
+    const { data: { session } } = await supabase.auth.getSession();
+    userSession = session;
+    updateNav();
+    loadCommunityListings();
+    loadPlatformStats();
+  }
+
+  function updateNav() {
+    const nav = document.getElementById('nav-links');
+    nav.innerHTML = userSession?.user ? `
+      <a href="index.html">Start</a>
+      <a href="profil.html">Mein Profil</a>
+      <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+      <a href="favoriten.html">Meine Favoriten</a>
+      <a href="inserate.html">Meine Inserate</a>
+      <a href="#" onclick="logout(event)">Logout</a>
+    ` : `
+      <a href="index.html">Start</a>
+      <a href="login.html">Einloggen</a>
+    `;
+  }
+
+  async function logout(event) {
+    event.preventDefault();
+    await supabase.auth.signOut();
+    window.location.href = "login.html";
+  }
+
+  async function loadCommunityListings() {
+    const container = document.getElementById("community-gallery");
+    container.innerHTML = "";
+
+    const { data, error } = await supabase
+      .from('listings')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(4);
+
+    if (error || !data.length) {
+      container.innerHTML = "<p>Keine Inserate verfügbar.</p>";
+      return;
+    }
+
+    for (const item of data) {
+      const img = item.image_urls?.[0] || "https://via.placeholder.com/300x150?text=Kein+Bild";
+      const card = document.createElement("div");
+      card.className = "gallery-item";
+      card.innerHTML = `
+        <img src="${img}" alt="${item.title}" />
+        <p><strong>${item.title}</strong><br>${item.price_per_day || "k. A."} €/Tag</p>
+      `;
+      container.appendChild(card);
+    }
+  }
+
+  async function loadPlatformStats() {
+    const mieterRes = await supabase
+      .from('profiles')
+      .select('id', { count: 'exact', head: true });
+
+    const listingsRes = await supabase
+      .from('listings')
+      .select('id', { count: 'exact', head: true });
+
+    if (mieterRes?.count >= 0) {
+      document.querySelector("#stats-mieter h3").textContent = `${mieterRes.count}+`;
+    }
+
+    if (listingsRes?.count >= 0) {
+      document.querySelector("#stats-inserate h3").textContent = `${listingsRes.count}+`;
+    }
+  }
+
+  document.querySelectorAll('.faq-question').forEach(button => {
+    button.addEventListener('click', () => {
+      const item = button.parentElement;
+      item.classList.toggle('open');
+    });
+  });
+
+  init();
+</script>
+
+</body>
+</html>
