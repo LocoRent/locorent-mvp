@@ -3,192 +3,235 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Mietobjekt ansehen – Locorent</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
+  <title>Mietobjekt – Locorent</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
-      --primary: #2e7d32;
-      --primary-light: #66bb6a;
+      --primary-color: #2e7d32;
       --primary-dark: #1b5e20;
-      --background: #f1f8e9;
+      --accent: #66bb6a;
+      --background-color: #f1f8e9;
       --white: #fff;
-      --text-dark: #0f2e13;
-      --text-muted: #466843;
-      --accent: #b9f6ca;
-      --radius: 18px;
-      --font-primary: 'Poppins', sans-serif;
+      --light-gray: #f5f5f5;
+      --border-radius: 18px;
+      --shadow-color: rgba(0, 0, 0, 0.1);
+      --max-width: 1200px;
+      --font-family: 'Poppins', sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
     body {
-      margin: 0;
-      font-family: var(--font-primary);
-      background: var(--background);
-      color: var(--text-dark);
+      font-family: var(--font-family);
+      background-color: var(--background-color);
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     header {
-      background-color: var(--primary);
+      background-color: var(--primary-color);
       color: var(--white);
+      width: 100%;
       padding: 1.5rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-weight: 700;
       position: sticky;
       top: 0;
       z-index: 1000;
+      box-shadow: 0 2px 8px var(--shadow-color);
+      flex-wrap: wrap;
     }
 
     header h1 {
+      font-weight: 600;
       font-size: 1.8rem;
       cursor: pointer;
+      margin: 0;
     }
 
-    nav a {
-      margin-left: 1rem;
+    #nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    #nav-links a {
       color: var(--white);
       text-decoration: none;
       font-weight: 600;
+      font-size: 1rem;
+      position: relative;
+      transition: color 0.3s ease;
+    }
+
+    #nav-links a:hover {
+      color: var(--accent);
     }
 
     main {
-      max-width: 1000px;
-      margin: 2rem auto;
+      max-width: var(--max-width);
       background: var(--white);
-      border-radius: var(--radius);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      padding: 2rem;
-    }
-
-    .gallery {
+      border-radius: var(--border-radius);
+      box-shadow: 0 6px 18px var(--shadow-color);
+      padding: 2rem 3rem;
+      margin: 3rem 1rem 4rem;
       display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-      margin-bottom: 2rem;
-    }
-
-    .gallery img {
+      gap: 2rem;
       width: 100%;
-      max-width: 300px;
-      height: 200px;
-      object-fit: cover;
-      border-radius: 10px;
-    }
-
-    .details h2 {
-      margin-top: 0;
-      font-size: 2rem;
-    }
-
-    .price {
-      font-size: 1.3rem;
-      font-weight: bold;
-      color: var(--primary-dark);
-    }
-
-    .info {
-      margin-top: 1rem;
-      font-size: 1rem;
-    }
-
-    .info p {
-      margin: 0.4rem 0;
-    }
-
-    .description {
-      margin-top: 2rem;
-      line-height: 1.6;
-    }
-
-    .actions {
-      margin-top: 2rem;
-    }
-
-    .actions button {
-      padding: 0.8rem 1.5rem;
-      background: var(--primary);
-      color: var(--white);
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      font-size: 1rem;
+      flex-wrap: wrap;
+      align-items: flex-start;
     }
 
     footer {
-      background-color: var(--primary);
+      width: 100%;
+      background-color: var(--primary-color);
       color: var(--white);
       padding: 2rem;
+      box-shadow: 0 -2px 12px var(--shadow-color);
+      font-size: 0.92rem;
+      user-select: none;
       text-align: center;
-      margin-top: 3rem;
+      margin-top: auto;
+    }
+
+    footer > div {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 2rem;
+      text-align: left;
+    }
+
+    footer section {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    footer h4 {
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    footer ul {
+      list-style: none;
+      padding: 0;
+      line-height: 1.8;
+    }
+
+    footer ul li a {
+      color: var(--white);
+      text-decoration: underline;
+      transition: color 0.3s ease;
+    }
+
+    footer ul li a:hover {
+      color: var(--accent);
+    }
+
+    .copyright {
+      margin-top: 2rem;
+      text-align: center;
+      opacity: 0.85;
+    }
+
+    @media (max-width: 720px) {
+      #nav-links {
+        flex-direction: column;
+        margin-top: 1rem;
+      }
+
+      #nav-links a {
+        margin: 0.4rem 0;
+        padding: 0.5rem 1rem;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+      }
+
+      footer > div {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      footer section {
+        width: 100%;
+      }
     }
   </style>
 </head>
 <body>
 
 <header>
-  <h1 onclick="location.href='index.html'">Locorent</h1>
-  <nav>
+  <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
+  <nav id="nav-links" role="navigation" aria-label="Hauptnavigation">
     <a href="index.html">Start</a>
-    <a href="inserate.html">Inserate</a>
-    <a href="profil.html">Profil</a>
+    <a href="profil.html">Mein Profil</a>
+    <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+    <a href="favoriten.html">Meine Favoriten</a>
+    <a href="inserate.html">Meine Inserate</a>
+    <a href="#" onclick="logout(event)">Logout</a>
   </nav>
 </header>
 
-<main>
-  <div class="gallery" id="image-gallery">
-    <!-- Bilder werden per JS geladen -->
-    <img src="https://via.placeholder.com/300x200?text=Bild+1" alt="Beispielbild">
-  </div>
+<main id="listing-details" aria-live="polite" aria-busy="true">Lade Inserat...</main>
 
-  <div class="details">
-    <h2 id="title">Titel des Mietobjekts</h2>
-    <div class="price" id="price">25 € / Tag</div>
-    <div class="info">
-      <p><strong>Kategorie:</strong> <span id="category">Fahrräder</span></p>
-      <p><strong>Standort:</strong> <span id="location">Berlin, Deutschland</span></p>
-    </div>
-    <div class="description" id="description">
-      <p>Hier steht die ausführliche Beschreibung des Mietobjekts. Was kann es? Für wen ist es geeignet? Gibt es Besonderheiten?</p>
-    </div>
-    <div class="actions">
-      <button onclick="alert('Kontaktformular folgt')">Kontaktieren</button>
-    </div>
+<footer role="contentinfo">
+  <div>
+    <section aria-labelledby="footer-rent-title">
+      <h4 id="footer-rent-title">Mieten &amp; Vermieten</h4>
+      <ul>
+        <li><a href="so-funktionierts.html">So funktioniert's</a></li>
+        <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
+        <li><a href="kategorien.html">Beliebte Kategorien</a></li>
+        <li><a href="vermieter-tipps.html">Tipps &amp; Tricks für Vermieter</a></li>
+        <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
+      </ul>
+    </section>
+    <section aria-labelledby="footer-info-title">
+      <h4 id="footer-info-title">Wissenswertes</h4>
+      <ul>
+        <li><a href="agb.html">AGB &amp; Impressum</a></li>
+        <li><a href="datenschutz.html">Datenschutz</a></li>
+      </ul>
+    </section>
+    <section aria-labelledby="footer-about-title">
+      <h4 id="footer-about-title">Über uns</h4>
+      <ul>
+        <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
+        <li><a href="social-media.html">Folgen Sie uns</a></li>
+        <li><a href="mission.html">Unsere Mission</a></li>
+      </ul>
+    </section>
   </div>
-</main>
-
-<footer>
-  <p>© 2025 Locorent – Gemeinsam nachhaltig mieten.</p>
+  <div class="copyright" aria-label="Copyright">
+    © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
+  </div>
 </footer>
 
 <script>
-  // Platzhalterdaten für ein Demo-Objekt
-  const listing = {
-    title: "E-Bike Mountain Pro 500",
-    price_per_day: 28,
-    category: "Fahrrad",
-    city: "München",
-    images: [
-      "https://via.placeholder.com/300x200?text=Bild+1",
-      "https://via.placeholder.com/300x200?text=Bild+2"
-    ],
-    description: "Robustes E-Bike für Stadt und Gelände mit 120 km Reichweite, Helme inklusive."
-  };
-
-  document.getElementById("title").textContent = listing.title;
-  document.getElementById("price").textContent = `${listing.price_per_day} € / Tag`;
-  document.getElementById("category").textContent = listing.category;
-  document.getElementById("location").textContent = listing.city;
-  document.getElementById("description").innerHTML = `<p>${listing.description}</p>`;
-
-  const gallery = document.getElementById("image-gallery");
-  gallery.innerHTML = '';
-  listing.images.forEach(src => {
-    const img = document.createElement("img");
-    img.src = src;
-    img.alt = listing.title;
-    gallery.appendChild(img);
+  document.getElementById('nav-toggle')?.addEventListener('click', () => {
+    const nav = document.getElementById('main-nav');
+    nav.classList.toggle('show');
+    const expanded = nav.classList.contains('show');
+    document.getElementById('nav-toggle').setAttribute('aria-expanded', expanded);
   });
+
+  async function logout(event) {
+    event.preventDefault();
+    await supabase.auth.signOut();
+    window.location.href = "login.html";
+  }
 </script>
 
 </body>
