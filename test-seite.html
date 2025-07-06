@@ -32,6 +32,7 @@
       background-color: var(--background-color);
       color: var(--gray-dark);
       line-height: 1.7;
+      scroll-behavior: smooth;
     }
 
     header {
@@ -44,23 +45,49 @@
       position: sticky;
       top: 0;
       z-index: 1000;
+      flex-wrap: wrap;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
     }
 
     header h1 {
       font-size: 1.6rem;
+      cursor: pointer;
+      user-select: none;
     }
 
-    header nav a {
+    #nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.8rem;
       color: var(--white);
-      margin-left: 1.5rem;
+      cursor: pointer;
+    }
+
+    nav#nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    nav#nav-links a {
+      color: var(--white);
       text-decoration: none;
       font-weight: 600;
+      font-size: 1rem;
+      position: relative;
     }
 
-    header nav a:hover,
-    header nav a:focus {
+    nav#nav-links a:hover,
+    nav#nav-links a:focus {
       border-bottom: 2px solid var(--highlight-color);
       outline: none;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 2rem auto;
+      padding: 0 1rem;
     }
 
     .cta-btn {
@@ -84,12 +111,6 @@
       outline: none;
     }
 
-    main {
-      max-width: 1100px;
-      margin: 2rem auto;
-      padding: 0 1rem;
-    }
-
     .section {
       background-color: var(--white);
       padding: 2rem;
@@ -97,6 +118,7 @@
       box-shadow: 0 2px 12px var(--shadow-color);
       margin-bottom: 3rem;
     }
+
     .features {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -242,21 +264,27 @@
     }
 
     @media (max-width: 768px) {
-      header {
+      #nav-toggle {
+        display: block;
+      }
+
+      nav#nav-links {
+        width: 100%;
         flex-direction: column;
-        align-items: flex-start;
+        display: none;
+        margin-top: 1rem;
       }
 
-      .features {
-        grid-template-columns: 1fr;
+      nav#nav-links.show {
+        display: flex;
       }
 
-      .gallery {
-        flex-wrap: wrap;
-      }
-
-      .gallery-item {
-        min-width: 100%;
+      nav#nav-links a {
+        margin: 0.4rem 0;
+        padding: 0.5rem 1rem;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+        display: block;
       }
 
       footer > div {
@@ -269,9 +297,11 @@
 <body>
 
 <header>
-  <h1>Locorent</h1>
+  <h1 onclick="location.href='index.html'" role="banner" aria-label="Locorent Startseite" tabindex="0">Locorent</h1>
+  <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
   <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
 </header>
+
 <main>
   <section class="section" style="text-align:center;">
     <h2>Werde Vermieter:in auf Locorent</h2>
@@ -288,7 +318,6 @@
     </div>
     <a href="register.html" class="cta-btn">Jetzt kostenlos starten</a>
   </section>
-
   <section class="section">
     <h2>So wirst du Vermieter:in – in 3 Schritten</h2>
     <div class="features">
@@ -332,31 +361,31 @@
       <div class="faq-item">
         <button class="faq-question">Welche Kosten entstehen für mich?</button>
         <div class="faq-answer">
-          <p>Locorent ist für Vermieter:innen komplett kostenlos. Keine Anmeldegebühren, keine Fixkosten – du kannst sorgenfrei starten.</p>
+          <p>Locorent ist für Vermieter:innen komplett kostenlos. Es gibt keine Anmeldegebühren, keine Fixkosten und keine weiteren Zahlungen – du kannst völlig sorgenfrei vermieten.</p>
         </div>
       </div>
       <div class="faq-item">
         <button class="faq-question">Wie funktioniert die Absprache zur Übergabe?</button>
         <div class="faq-answer">
-          <p>Du kommunizierst über den Locorent-Chat direkt mit Mieter:innen und vereinbarst Übergaben individuell.</p>
+          <p>Du kannst über den integrierten Locorent-Chat direkt mit Mieter:innen kommunizieren und individuell einen Abholzeitpunkt sowie -ort vereinbaren.</p>
         </div>
       </div>
       <div class="faq-item">
         <button class="faq-question">Wie sind meine Artikel geschützt?</button>
         <div class="faq-answer">
-          <p>Momentan liegt die Verantwortung bei den Nutzenden. Eine Versicherungslösung ist geplant.</p>
+          <p>Aktuell liegt die Verantwortung für Kaution oder Absicherung bei den Nutzenden. Eine integrierte Versicherungslösung ist bereits in Planung.</p>
         </div>
       </div>
       <div class="faq-item">
-        <button class="faq-question">Was kann ich verlangen?</button>
+        <button class="faq-question">Was kann ich für die Vermietung verlangen?</button>
         <div class="faq-answer">
-          <p>Du legst die Preise selbst fest. Du kannst dich an ähnlichen Inseraten orientieren.</p>
+          <p>Den Mietpreis bestimmst du selbst. Orientiere dich gern an ähnlichen Inseraten in deiner Umgebung – du kannst Preise jederzeit anpassen.</p>
         </div>
       </div>
       <div class="faq-item">
-        <button class="faq-question">Welche Vorteile habe ich?</button>
+        <button class="faq-question">Welche Vorteile habe ich als Anbieter?</button>
         <div class="faq-answer">
-          <p>Nachhaltiges Einkommen, Reichweite, Community-Zugang – alles ohne Risiko.</p>
+          <p>Du profitierst von nachhaltigem Einkommen, erreichst neue Kund:innen aus deiner Region und nutzt ein wachsendes Netzwerk mit fairen Bedingungen.</p>
         </div>
       </div>
     </div>
@@ -443,7 +472,7 @@
       .order('created_at', { ascending: false })
       .limit(4);
 
-    if (error || !data.length) {
+    if (error || !data?.length) {
       container.innerHTML = "<p>Keine Inserate verfügbar.</p>";
       return;
     }
@@ -483,6 +512,13 @@
       const item = button.parentElement;
       item.classList.toggle('open');
     });
+  });
+
+  document.getElementById("nav-toggle").addEventListener("click", () => {
+    const nav = document.getElementById("nav-links");
+    nav.classList.toggle("show");
+    const expanded = nav.classList.contains("show");
+    document.getElementById("nav-toggle").setAttribute("aria-expanded", expanded);
   });
 
   init();
