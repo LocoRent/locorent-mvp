@@ -53,6 +53,7 @@
       z-index: 1000;
       box-shadow: 0 10px 20px rgba(0,0,0,0.1);
       flex-wrap: wrap;
+      width: 100%;
     }
 
     header h1 {
@@ -127,6 +128,7 @@
         top: 0;
         background-color: var(--primary);
         padding: 1rem;
+        z-index: 1000;
       }
 
       nav#nav-links.show {
@@ -300,14 +302,7 @@
 <header>
   <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
   <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
-  <nav id="nav-links" role="navigation" aria-label="Hauptnavigation">
-    <a href="index.html">Start</a>
-    <a href="profil.html">Mein Profil</a>
-    <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-    <a href="favoriten.html">Meine Favoriten</a>
-    <a href="inserate.html">Meine Inserate</a>
-    <a href="#" onclick="logout(event)">Logout</a>
-  </nav>
+  <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
 </header>
 
 <main>
@@ -443,7 +438,6 @@
     window.location.href = "login.html";
   }
 
-  // Burger Menu toggle
   document.getElementById('nav-toggle').addEventListener('click', () => {
     const nav = document.getElementById('nav-links');
     nav.classList.toggle('show');
@@ -451,23 +445,9 @@
     document.getElementById('nav-toggle').setAttribute('aria-expanded', expanded);
   });
 
-  // Accordion functionality
-  document.querySelectorAll('.accordion-header').forEach(header => {
-    header.addEventListener('click', () => {
-      const expanded = header.getAttribute('aria-expanded') === 'true';
-      document.querySelectorAll('.accordion-header').forEach(h => {
-        h.setAttribute('aria-expanded', 'false');
-        document.getElementById(h.getAttribute('aria-controls')).setAttribute('aria-hidden', 'true');
-      });
-      if (!expanded) {
-        header.setAttribute('aria-expanded', 'true');
-        document.getElementById(header.getAttribute('aria-controls')).setAttribute('aria-hidden', 'false');
-      }
-    });
-  });
-
   init();
 </script>
 
 </body>
 </html>
+
