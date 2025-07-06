@@ -18,114 +18,124 @@
       --accent: #b9f6ca;
       --highlight: #a5d6a7;
       --radius: 18px;
-      --shadow-light: rgba(46,125,50,0.08);
-      --shadow-strong: rgba(46,125,50,0.25);
-      --transition: 0.4s ease;
+      --shadow-light: rgba(46, 125, 50, 0.08);
+      --shadow-strong: rgba(46, 125, 50, 0.25);
       --font-primary: 'Poppins', sans-serif;
     }
-    *,*::before,*::after{box-sizing:border-box;}
+    *, *::before, *::after { box-sizing: border-box; }
     body {
-      margin:0;font-family:var(--font-primary);background:linear-gradient(#e8f5e9,#fff);
-      color:var(--text-dark);display:flex;flex-direction:column;min-height:100vh;
+      margin: 0; font-family: var(--font-primary);
+      background: linear-gradient(#e8f5e9, #fff); color: var(--text-dark);
+      display: flex; flex-direction: column; min-height: 100vh; overflow-x:hidden;
     }
     header {
-      background-color:var(--primary);color:var(--white);padding:1.5rem 2rem;
-      display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:1000;
-      box-shadow:0 10px 20px rgba(0,0,0,0.1);flex-wrap:wrap;
+      background: var(--primary); color: var(--white); padding: 1.5rem 2rem;
+      display: flex; justify-content: space-between; align-items: center;
+      position: sticky; top: 0; z-index: 1000; box-shadow: 0 10px 20px rgba(0,0,0,0.1); flex-wrap:wrap;
     }
-    header h1{font-size:1.8rem;margin:0;cursor:pointer;}
-    #nav-toggle{display:none;background:none;border:none;font-size:1.8rem;color:var(--white);cursor:pointer;}
-    nav#nav-links{display:flex;gap:1rem;}
-    nav#nav-links a{color:var(--white);text-decoration:none;font-weight:600;position:relative;}
-    nav#nav-links a::after{content:'';position:absolute;left:0;bottom:-4px;width:0;height:2px;background:var(--accent);transition:width .3s;}
-    nav#nav-links a:hover::after{width:100%;}
-    main {
-      max-width:1100px;margin:2rem auto;padding:2rem;background:var(--white);
-      border-radius:var(--radius);box-shadow:0 12px 30px var(--shadow-light);line-height:1.6;color:#444;flex-grow:1;
+    header h1 { font-size: 1.8rem; cursor: pointer; margin:0; }
+    #nav-toggle { display:none; background:none; border:none; font-size:1.8rem; color:var(--white); cursor:pointer; }
+    nav#nav-links { display:flex; gap:1rem; }
+    nav#nav-links a { color:var(--white); text-decoration:none; font-weight:600; position:relative; }
+    nav#nav-links a::after {
+      content:''; position:absolute; left:0; bottom:-4px; width:0; height:2px; background:var(--accent); transition:0.3s;
     }
-    h2{color:var(--primary-dark);text-align:center;margin-top:0;}
-    h3{color:var(--primary-dark);margin-top:2rem;}
-    ul{padding-left:1.4rem;}
+    nav#nav-links a:hover::after { width:100%; }
+    .container {
+      max-width:1100px; margin:2rem auto; padding:2rem;
+      background:var(--white); border-radius:var(--radius);
+      box-shadow:0 12px 30px var(--shadow-light); flex-grow:1;
+    }
     footer {
-      padding:2rem;background-color:var(--primary);color:var(--white);
-      box-shadow:0 8px 32px rgba(46,125,50,.22);font-size:.92rem;text-align:center;margin-top:auto;
+      padding:2rem; background-color:var(--primary); color:var(--white);
+      box-shadow:0 8px 32px rgba(46,125,50,0.22); font-size:0.92rem; text-align:center; margin-top:auto;
     }
-    footer>div {
-      max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;gap:2rem;flex-wrap:wrap;text-align:left;
-    }
-    footer h4{margin-bottom:.5rem;}
-    footer ul{list-style:none;padding:0;}
-    footer ul li a{color:var(--white);text-decoration:underline;}
-    footer ul li a:hover{color:var(--primary-light);}
-    footer small{display:block;margin-top:2rem;opacity:.85;}
+    footer>div { max-width:1200px; margin:0 auto; display:flex; justify-content:space-between; gap:2rem; flex-wrap:wrap; text-align:left; }
+    footer h4 { margin-bottom:0.5rem; }
+    footer ul { list-style:none; padding:0; }
+    footer ul li a { color:var(--white); text-decoration:underline; }
+    footer ul li a:hover { color:var(--primary-light); }
+    footer small { display:block; margin-top:2rem; opacity:0.85; }
+
     @media(max-width:720px){
       #nav-toggle{display:block;}
-      nav#nav-links{display:none;flex-direction:column;width:100%;margin-top:1rem;}
+      nav#nav-links{display:none;width:100%;flex-direction:column;margin-top:1rem;}
       nav#nav-links.show{display:flex;}
       footer>div{flex-direction:column;}
-      h2{text-align:left;font-size:1.6rem;}
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1 onclick="location.href='index.html'">Locorent</h1>
-    <button id="nav-toggle">☰</button>
-    <nav id="nav-links"></nav>
-  </header>
+<header>
+  <h1 onclick="location.href='index.html'">Locorent</h1>
+  <button id="nav-toggle">☰</button>
+  <nav id="nav-links"></nav>
+</header>
 
-  <main>
-    <h2>Tipps & Tricks für Vermieter</h2>
+<main class="container">
+  <section class="hero">
+    <h2>Deine Vermietung. Auf einem neuen Level.</h2>
+    <p>Unsere Profi-Tipps bringen dir mehr Buchungen, bessere Bewertungen und entspanntes Vermieten mit Stil.</p>
+  </section>
 
-    <h3>1. Setze auf starke Bilder</h3>
-    <p>Verkaufe mit dem ersten Eindruck! Helle, scharfe und detailreiche Fotos machen den Unterschied.</p>
-
-    <h3>2. Qualität = Vertrauen</h3>
-    <p>Reinige, prüfe und pflege deine Artikel – so sicherst du dir wiederkehrende Mieter:innen.</p>
-
-    <h3>3. Bewertungen boosten</h3>
-    <p>Bitte nach jeder Miete aktiv um eine Bewertung – viele Sterne bringen mehr Sichtbarkeit.</p>
-
-    <h3>4. Flexible Übergaben</h3>
-    <p>Abends oder am Wochenende – je flexibler du bist, desto mehr Anfragen bekommst du.</p>
-
-    <h3>5. Antworte wie ein Profi</h3>
-    <p>Je schneller deine Antwort, desto höher deine Chancen auf die nächste Buchung!</p>
-  </main>
-
-  <footer>
-    <div>
-      <div>
-        <h4>Mieten & Vermieten</h4>
-        <ul>
-          <li><a href="so-funktionierts.html">So funktioniert's</a></li>
-          <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
-          <li><a href="kategorien.html">Beliebte Kategorien</a></li>
-          <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
-          <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>Wissenswertes</h4>
-        <ul>
-          <li><a href="agb.html">AGB & Impressum</a></li>
-          <li><a href="datenschutz.html">Datenschutz</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>Über uns</h4>
-        <ul>
-          <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
-          <li><a href="social-media.html">Folgen Sie uns</a></li>
-          <li><a href="mission.html">Unsere Mission</a></li>
-        </ul>
-      </div>
+  <section class="tips-grid">
+    <div class="tip-card">
+      <h3>1. Setze auf starke Bilder</h3>
+      <p>Verkaufe mit dem ersten Eindruck! Helle, scharfe und detailreiche Fotos machen den Unterschied.</p>
     </div>
-    <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
-  </footer>
+    <div class="tip-card">
+      <h3>2. Qualität = Vertrauen</h3>
+      <p>Reinige, prüfe und pflege deine Artikel – so sicherst du dir wiederkehrende Mieter:innen.</p>
+    </div>
+    <div class="tip-card">
+      <h3>3. Bewertungen boosten</h3>
+      <p>Bitte nach jeder Miete aktiv um eine Bewertung – viele Sterne bringen mehr Sichtbarkeit.</p>
+    </div>
+    <div class="tip-card">
+      <h3>4. Flexible Übergaben</h3>
+      <p>Abends oder am Wochenende – je flexibler du bist, desto mehr Anfragen bekommst du.</p>
+    </div>
+    <div class="tip-card">
+      <h3>5. Antworte wie ein Profi</h3>
+      <p>Je schneller deine Antwort, desto höher deine Chancen auf die nächste Buchung!</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div>
+    <div>
+      <h4>Mieten & Vermieten</h4>
+      <ul>
+        <li><a href="so-funktionierts.html">So funktioniert's</a></li>
+        <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
+        <li><a href="kategorien.html">Beliebte Kategorien</a></li>
+        <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
+        <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Wissenswertes</h4>
+      <ul>
+        <li><a href="agb.html">AGB & Impressum</a></li>
+        <li><a href="datenschutz.html">Datenschutz</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Über uns</h4>
+      <ul>
+        <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
+        <li><a href="social-media.html">Folgen Sie uns</a></li>
+        <li><a href="mission.html">Unsere Mission</a></li>
+      </ul>
+    </div>
+  </div>
+  <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
+</footer>
 
 <script>
 const supabase=window.supabase.createClient('https://flnjalgqtkqycsaymmbd.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q');async function init(){const{data:{session}}=await supabase.auth.getSession();document.getElementById('nav-links').innerHTML=session?.user?`<a href="index.html">Start</a><a href="profil.html">Mein Profil</a><a href="#" onclick="logout(event)">Logout</a>`:`<a href="index.html">Start</a><a href="login.html">Einloggen</a>`;}async function logout(e){e.preventDefault();await supabase.auth.signOut();location.href='login.html'};init();document.getElementById('nav-toggle').onclick=()=>document.getElementById('nav-links').classList.toggle('show');
 </script>
+
 </body>
 </html>
