@@ -577,30 +577,6 @@ async function handleFiles(files) {
         alert("Komprimiertes Bild ist noch zu groß (max. 2 MB).");
         continue;
       }
-
-      const tempBox = document.createElement("div");
-      tempBox.className = "preview-box";
-      tempBox.innerHTML = `<div class="img-wrapper"><div class="loader"></div><div style="position:absolute;bottom:2px;left:4px;font-size:11px;background:white;padding:2px 4px;border-radius:4px;">${compressedSizeKB} KB</div></div>`;
-      container.appendChild(tempBox);
-
-      const path = `listing-images/${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
-      const { error } = await supabase.storage.from('listing-images').upload(path, compressedFile);
-      if (!error) {
-        const { data } = supabase.storage.from('listing-images').getPublicUrl(path);
-        uploadedImageUrls.push(data.publicUrl);
-      } else {
-        alert("Upload-Fehler: " + error.message);
-      }
-
-    } catch (err) {
-      console.error("Fehler bei Bildverarbeitung:", err);
-      alert("Fehler beim Verarbeiten des Bildes.");
-    }
-  }
-
-  renderPreviews();
-}
-
 }
 
 function renderPreviews() {
