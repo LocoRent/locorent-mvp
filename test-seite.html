@@ -37,6 +37,7 @@
       display: flex;
       flex-direction: column;
       min-height: 100vh;
+      overflow-x: hidden;
     }
 
     header {
@@ -50,12 +51,14 @@
       position: sticky;
       top: 0;
       z-index: 1000;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
       flex-wrap: wrap;
     }
 
     header h1 {
       font-size: 1.8rem;
       cursor: pointer;
+      user-select: none;
       margin: 0;
     }
 
@@ -80,6 +83,7 @@
       font-weight: 600;
       font-size: 1rem;
       position: relative;
+      transition: color 0.3s ease;
     }
 
     nav#nav-links a::after {
@@ -93,12 +97,15 @@
       transition: width 0.3s ease;
     }
 
-    nav#nav-links a:hover::after {
+    nav#nav-links a:hover::after,
+    nav#nav-links a:focus::after {
       width: 100%;
     }
 
-    nav#nav-links a:hover {
+    nav#nav-links a:hover,
+    nav#nav-links a:focus {
       color: var(--accent);
+      outline: none;
     }
 
     @media (max-width: 720px) {
@@ -107,8 +114,8 @@
       }
 
       nav#nav-links {
-        flex-direction: column;
         width: 100%;
+        flex-direction: column;
         display: none;
         margin-top: 1rem;
       }
@@ -118,9 +125,11 @@
       }
 
       nav#nav-links a {
+        margin: 0.4rem 0;
         padding: 0.5rem 1rem;
-        background-color: rgba(255,255,255,0.1);
+        background-color: rgba(255, 255, 255, 0.1);
         border-radius: 6px;
+        display: block;
       }
 
       footer > div {
@@ -205,6 +214,7 @@
       border-radius: 30px;
       font-weight: 600;
       display: inline-block;
+      transition: 0.3s;
     }
 
     .social-card a:hover {
@@ -278,7 +288,7 @@
 <body>
 
 <header>
-  <h1 onclick="location.href='index.html'">Locorent</h1>
+  <h1 tabindex="0" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
   <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
   <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
 </header>
@@ -286,7 +296,9 @@
 <main>
   <h1>Folge uns!</h1>
   <p class="subtext">Bleib auf dem Laufenden & werde Teil der Community 🚀</p>
+
   <div class="social-grid">
+    <!-- Instagram -->
     <div class="social-card">
       <div class="social-icon" style="background:#E1306C;">
         <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/instagram.svg" alt="Instagram" />
@@ -295,6 +307,8 @@
       <p>Fotos, Storys & Highlights rund ums Mieten.</p>
       <a href="https://www.instagram.com/locorent" target="_blank">Jetzt folgen</a>
     </div>
+
+    <!-- Facebook -->
     <div class="social-card">
       <div class="social-icon" style="background:#1877F2;">
         <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/facebook.svg" alt="Facebook" />
@@ -303,6 +317,8 @@
       <p>News, Events & Gruppen rund um Locorent.</p>
       <a href="https://www.facebook.com/locorent" target="_blank">Fan werden</a>
     </div>
+
+    <!-- TikTok -->
     <div class="social-card">
       <div class="social-icon" style="background:#000;">
         <svg viewBox="0 0 256 256" fill="white" xmlns="http://www.w3.org/2000/svg">
@@ -313,6 +329,8 @@
       <p>Kreative Videos, Trends & lustige Momente.</p>
       <a href="https://www.tiktok.com/@locorent" target="_blank">Ansehen</a>
     </div>
+
+    <!-- Kontakt -->
     <div class="social-card">
       <div class="social-icon" style="background:#43a047;">
         <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
@@ -364,6 +382,7 @@
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
   );
 
+
   let userSession = null;
 
   async function init() {
@@ -398,15 +417,12 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    const navToggle = document.getElementById('nav-toggle');
-    const navLinks = document.getElementById('nav-links');
-
-    navToggle.addEventListener('click', () => {
-      navLinks.classList.toggle('show');
-      const expanded = navLinks.classList.contains('show');
-      navToggle.setAttribute('aria-expanded', expanded);
+    document.getElementById('nav-toggle')?.addEventListener('click', () => {
+      const nav = document.getElementById('nav-links');
+      nav.classList.toggle('show');
+      const expanded = nav.classList.contains('show');
+      document.getElementById('nav-toggle').setAttribute('aria-expanded', expanded);
     });
-
     init();
   });
 </script>
