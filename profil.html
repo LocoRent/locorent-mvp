@@ -567,7 +567,7 @@
       </article>
     `).join('');
 
-    document.getElementById('show-all-reviews').href = `bewertungen.html?id=${userId}`;
+  document.getElementById('show-all-reviews').href = 'bewertungen.html?id=' + user.id;
   }
 
   async function loadStats(userId) {
