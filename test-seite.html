@@ -16,7 +16,7 @@
       --text-dark: #0f2e13;
       --text-muted: #466843;
       --accent: #b9f6ca;
-      --highlight: #a5d6a7;
+      --highlight: #2e7d32; /* angepasst */
       --radius: 18px;
       --shadow-light: rgba(46, 125, 50, 0.08);
       --shadow-strong: rgba(46, 125, 50, 0.25);
@@ -140,7 +140,7 @@
 
   .category-card {
     background: var(--white);
-    border-radius: var(--border-radius);
+    border-radius: var(--radius);
     box-shadow: 0 12px 28px rgba(46, 125, 50, 0.1);
     cursor: pointer;
     text-decoration: none;
@@ -167,7 +167,7 @@
     position: relative;
     width: 100%;
     height: 220px;
-    border-radius: var(--border-radius);
+    border-radius: var(--radius);
     overflow: hidden;
     margin-bottom: 1.8rem;
     box-shadow: 0 10px 22px rgba(46, 125, 50, 0.1);
@@ -181,7 +181,7 @@
     object-position: center center;
     transition: transform 0.5s ease;
     will-change: transform;
-    border-radius: var(--border-radius);
+    border-radius: var(--radius);
     display: block;
   }
 
@@ -197,7 +197,7 @@
     mix-blend-mode: multiply;
     pointer-events: none;
     transition: background 0.5s ease;
-    border-radius: var(--border-radius);
+    border-radius: var(--radius);
   }
 
   .category-card:hover .image-overlay,
@@ -208,7 +208,7 @@
   .category-card h3 {
     font-weight: 800;
     font-size: 2rem;
-    color: var(--dark-color);
+    color: var(--text-dark);
     margin-bottom: 0.7rem;
     line-height: 1.1;
   }
@@ -228,13 +228,13 @@
     bottom: 28px;
     left: 50%;
     transform: translateX(-50%) translateY(10px);
-    background: var(--highlight-color);
+    background: var(--highlight);
     color: var(--white);
     padding: 0.75rem 2.2rem;
     font-weight: 600;
     font-size: 1.15rem;
     border-radius: 40px;
-    box-shadow: 0 7px 18px rgba(102, 187, 106, 0.48);
+    box-shadow: 0 7px 18px rgba(46, 125, 50, 0.48);
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1), transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
@@ -260,7 +260,6 @@
     stroke-linecap: round;
     stroke-linejoin: round;
   }
-
 
     footer {
       width: 100%;
