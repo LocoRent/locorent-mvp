@@ -9,113 +9,104 @@
   <style>
     :root {
       --primary: #2e7d32;
-      --light: #e8f5e9;
-      --white: #ffffff;
-      --dark: #1b5e20;
-      --accent: #81c784;
-      --radius: 16px;
-      --shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+      --primary-light: #66bb6a;
+      --background: #f1f8e9;
+      --white: #fff;
+      --text-dark: #0f2e13;
+      --text-muted: #466843;
+      --accent: #b9f6ca;
+      --radius: 18px;
+      --shadow-light: rgba(46, 125, 50, 0.08);
+      --shadow-strong: rgba(46, 125, 50, 0.25);
+      --font: 'Poppins', sans-serif;
     }
 
-    html {
+    * {
       box-sizing: border-box;
-      scroll-behavior: smooth;
-    }
-
-    *, *::before, *::after {
-      box-sizing: inherit;
-    }
-
-    body {
       margin: 0;
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(180deg, var(--light), var(--white));
-      color: #333;
-      line-height: 1.7;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
+      padding: 0;
+    }
+
+    html, body {
+      font-family: var(--font);
+      background: linear-gradient(to bottom, #e8f5e9, #ffffff);
+      color: var(--text-dark);
+      scroll-behavior: smooth;
       overflow-x: hidden;
-      touch-action: manipulation;
     }
 
     header {
       background: var(--primary);
-      padding: 1.5rem 2rem;
       color: var(--white);
+      padding: 1.5rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
       position: sticky;
       top: 0;
-      z-index: 100;
+      z-index: 1000;
     }
 
     header h1 {
       font-size: 1.8rem;
-      margin: 0;
-      font-weight: 700;
       cursor: pointer;
     }
 
     #nav-toggle {
       display: none;
-      font-size: 1.8rem;
       background: none;
       border: none;
+      font-size: 1.8rem;
       color: var(--white);
       cursor: pointer;
     }
 
-    nav {
+    nav#nav-links {
       display: flex;
-      flex-wrap: wrap;
-      gap: 1.2rem;
+      gap: 1rem;
     }
 
-    nav a {
+    nav#nav-links a {
       color: var(--white);
       text-decoration: none;
-      font-weight: 500;
+      font-weight: 600;
+      font-size: 1rem;
       position: relative;
     }
 
-    nav a::after {
-      content: "";
+    nav#nav-links a::after {
+      content: '';
       position: absolute;
+      left: 0;
+      bottom: -4px;
       width: 0;
       height: 2px;
-      bottom: -5px;
-      left: 0;
-      background: var(--accent);
-      transition: 0.3s;
+      background-color: var(--accent);
+      transition: width 0.3s ease;
     }
 
-    nav a:hover::after {
+    nav#nav-links a:hover::after {
       width: 100%;
     }
 
     main {
-      max-width: 1100px;
-      margin: 4rem auto;
-      padding: 0 2rem;
-      flex: 1;
-    }
-
-    .contact-section {
-      display: flex;
-      flex-wrap: wrap;
+      max-width: 1080px;
+      margin: 3rem auto;
+      padding: 1rem;
       background: var(--white);
       border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow: hidden;
+      box-shadow: 0 12px 30px var(--shadow-light);
     }
 
-    .contact-info {
+    .contact-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+    }
+
+    .contact-info, .contact-form {
       flex: 1;
-      padding: 2.5rem;
-      background-color: var(--light);
-      color: var(--dark);
+      min-width: 280px;
     }
 
     .contact-info h2 {
@@ -124,18 +115,13 @@
     }
 
     .contact-info p {
-      margin-bottom: 1rem;
+      margin-bottom: 0.8rem;
     }
 
     .contact-info a {
-      color: var(--dark);
-      font-weight: 500;
-    }
-
-    .contact-form {
-      flex: 1;
-      padding: 2.5rem;
-      background: var(--white);
+      color: var(--primary);
+      font-weight: 600;
+      text-decoration: underline;
     }
 
     form {
@@ -144,17 +130,17 @@
     }
 
     label {
-      margin-top: 1rem;
       font-weight: 500;
+      margin-top: 1rem;
     }
 
     input, textarea {
-      padding: 0.9rem 1rem;
+      margin-top: 0.3rem;
+      padding: 0.9rem;
       border: 1px solid #ccc;
       border-radius: var(--radius);
-      margin-top: 0.5rem;
-      font-family: 'Poppins', sans-serif;
       font-size: 1rem;
+      font-family: var(--font);
     }
 
     textarea {
@@ -167,35 +153,34 @@
       background: var(--primary);
       color: var(--white);
       border: none;
-      padding: 0.9rem 1.6rem;
+      padding: 1rem;
       font-size: 1.1rem;
       font-weight: 600;
       border-radius: var(--radius);
       cursor: pointer;
-      transition: background 0.3s ease;
     }
 
     button:hover {
-      background: var(--dark);
-    }
-
-    #form-success {
-      display: none;
-      margin-top: 1rem;
-      color: var(--primary);
-      font-weight: 600;
+      background: var(--primary-light);
     }
 
     footer {
       background-color: var(--primary);
       color: var(--white);
       padding: 2rem 2rem 1rem;
+      margin-top: 3rem;
       font-size: 0.92rem;
+      width: 100vw;
+      position: relative;
+      left: 50%;
+      right: 50%;
+      margin-left: -50vw;
+      margin-right: -50vw;
     }
 
     footer > div {
-      max-width: 1100px;
-      margin: auto;
+      max-width: 1200px;
+      margin: 0 auto;
       display: flex;
       flex-wrap: wrap;
       gap: 2rem;
@@ -208,7 +193,8 @@
 
     footer h4 {
       margin-bottom: 0.5rem;
-      font-weight: 600;
+      font-weight: 700;
+      font-size: 1.1rem;
     }
 
     footer ul {
@@ -229,26 +215,29 @@
     }
 
     @media (max-width: 768px) {
-      .contact-section {
-        flex-direction: column;
-      }
-
-      nav {
-        flex-direction: column;
-        align-items: flex-start;
-        display: none;
-      }
-
-      nav.show {
-        display: flex;
-      }
-
       #nav-toggle {
         display: block;
       }
 
-      nav a {
-        padding: 0.5rem 0;
+      nav#nav-links {
+        flex-direction: column;
+        display: none;
+        margin-top: 1rem;
+      }
+
+      nav#nav-links.show {
+        display: flex;
+      }
+
+      nav#nav-links a {
+        margin: 0.5rem 0;
+        padding: 0.5rem 1rem;
+        background: rgba(255,255,255,0.1);
+        border-radius: 6px;
+      }
+
+      .contact-wrapper {
+        flex-direction: column;
       }
 
       footer > div {
@@ -262,12 +251,12 @@
 
   <header>
     <h1 onclick="location.href='index.html'">Locorent</h1>
-    <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false">☰</button>
+    <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
     <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
   </header>
 
   <main>
-    <div class="contact-section">
+    <div class="contact-wrapper">
       <div class="contact-info">
         <h2>Kontaktiere uns</h2>
         <p>Du hast Fragen, Feedback oder möchtest einfach nur Hallo sagen? Schreib uns gerne über das Formular oder direkt per E-Mail.</p>
@@ -288,7 +277,6 @@
           <textarea id="message" name="message" required></textarea>
 
           <button type="submit">Nachricht senden</button>
-          <p id="form-success">✅ Nachricht erfolgreich gesendet! Wir melden uns bald.</p>
         </form>
       </div>
     </div>
@@ -337,6 +325,9 @@
       const { data: { session } } = await supabase.auth.getSession();
       userSession = session;
       updateNav();
+      if (userSession?.user?.email) {
+        document.getElementById("email").value = userSession.user.email;
+      }
     }
 
     function updateNav() {
@@ -363,10 +354,6 @@
       nav.classList.toggle('show');
       const expanded = nav.classList.contains('show');
       document.getElementById('nav-toggle').setAttribute('aria-expanded', expanded);
-    });
-
-    document.querySelector("form").addEventListener("submit", function() {
-      document.getElementById("form-success").style.display = "block";
     });
 
     init();
