@@ -4,86 +4,154 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Folge uns – Locorent</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
-      --primary-color: #2e7d32;
-      --secondary-color: #a5d6a7;
-      --background-color: #f1f8e9;
-      --dark-color: #1b5e20;
-      --highlight-color: #66bb6a;
+      --primary: #2e7d32;
+      --primary-light: #66bb6a;
+      --primary-dark: #1b5e20;
+      --background: #f1f8e9;
       --white: #fff;
-      --gray-dark: #333;
-      --border-radius: 12px;
-      --shadow-color: rgba(0, 0, 0, 0.1);
+      --text-dark: #0f2e13;
+      --text-muted: #466843;
+      --accent: #b9f6ca;
+      --highlight: #a5d6a7;
+      --radius: 18px;
+      --shadow-light: rgba(46, 125, 50, 0.08);
+      --shadow-strong: rgba(46, 125, 50, 0.25);
+      --transition: 0.4s ease;
+      --font-primary: 'Poppins', sans-serif;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
+    *, *::before, *::after {
       box-sizing: border-box;
     }
 
     body {
-      font-family: 'Poppins', sans-serif;
-      background: var(--background-color);
-      color: var(--dark-color);
-      min-height: 100vh;
+      margin: 0;
+      font-family: var(--font-primary);
+      background: linear-gradient(to bottom, #e8f5e9 0%, #ffffff 100%);
+      color: var(--text-dark);
+      scroll-behavior: smooth;
       display: flex;
       flex-direction: column;
+      min-height: 100vh;
+      overflow-x: hidden;
     }
 
     header {
-      background-color: var(--primary-color);
+      background-color: var(--primary);
       color: var(--white);
       padding: 1.5rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      font-weight: 700;
       position: sticky;
       top: 0;
       z-index: 1000;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      flex-wrap: wrap;
     }
 
     header h1 {
       font-size: 1.8rem;
+      cursor: pointer;
       user-select: none;
+      margin: 0;
     }
 
-    nav {
+    #nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.8rem;
+      color: var(--white);
+      cursor: pointer;
+    }
+
+    nav#nav-links {
       display: flex;
-      align-items: center;
       flex-wrap: wrap;
+      gap: 1rem;
     }
 
-    nav a {
+    nav#nav-links a {
       color: var(--white);
       text-decoration: none;
-      margin-left: 1.5rem;
       font-weight: 600;
       font-size: 1rem;
       position: relative;
-      padding-bottom: 3px;
-      transition: border-bottom 0.3s ease;
+      transition: color 0.3s ease;
     }
 
-    nav a:hover,
-    nav a:focus {
-      border-bottom: 2px solid var(--highlight-color);
+    nav#nav-links a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -4px;
+      width: 0;
+      height: 2px;
+      background-color: var(--accent);
+      transition: width 0.3s ease;
+    }
+
+    nav#nav-links a:hover::after,
+    nav#nav-links a:focus::after {
+      width: 100%;
+    }
+
+    nav#nav-links a:hover,
+    nav#nav-links a:focus {
+      color: var(--accent);
       outline: none;
     }
 
+    @media (max-width: 720px) {
+      #nav-toggle {
+        display: block;
+      }
+
+      nav#nav-links {
+        width: 100%;
+        flex-direction: column;
+        display: none;
+        margin-top: 1rem;
+      }
+
+      nav#nav-links.show {
+        display: flex;
+      }
+
+      nav#nav-links a {
+        margin: 0.4rem 0;
+        padding: 0.5rem 1rem;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+        display: block;
+      }
+
+      footer > div {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      footer > div > div {
+        width: 100%;
+      }
+    }
+
     main {
+      max-width: 1100px;
+      margin: 3rem auto;
+      padding: 2rem;
       flex-grow: 1;
-      padding: 3rem 1.5rem;
-      max-width: 1200px;
-      margin: 0 auto;
       text-align: center;
     }
 
     h1 {
-      font-size: 2.8rem;
+      font-size: 2.6rem;
       margin-bottom: 1rem;
     }
 
@@ -97,12 +165,11 @@
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
       gap: 2rem;
-      margin-top: 1rem;
     }
 
     .social-card {
       background: var(--white);
-      border-radius: var(--border-radius);
+      border-radius: var(--radius);
       padding: 2rem;
       box-shadow: 0 8px 24px rgba(0,0,0,0.1);
       transition: 0.3s ease;
@@ -121,11 +188,9 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background-color: #c8e6c9;
     }
 
-    .social-icon svg,
-    .social-icon img {
+    .social-icon img, .social-icon svg {
       width: 32px;
       height: 32px;
     }
@@ -144,7 +209,7 @@
     .social-card a {
       text-decoration: none;
       padding: 0.6rem 1.2rem;
-      background: var(--primary-color);
+      background: var(--primary);
       color: white;
       border-radius: 30px;
       font-weight: 600;
@@ -153,21 +218,26 @@
     }
 
     .social-card a:hover {
-      background: var(--highlight-color);
+      background: var(--primary-light);
     }
 
     footer {
-      background-color: var(--primary-color);
-      color: var(--white);
+      width: 100%;
+      box-sizing: border-box;
       padding: 2rem 2rem 1rem;
+      border-radius: var(--radius);
+      background-color: var(--primary);
+      color: var(--white);
+      box-shadow: 0 8px 32px rgba(46, 125, 50, 0.22);
       font-size: 0.92rem;
-      width: 100vw;
+      user-select: none;
+      text-align: center;
+      margin-top: auto;
       position: relative;
       left: 50%;
       right: 50%;
       margin-left: -50vw;
       margin-right: -50vw;
-      box-shadow: 0 8px 32px rgba(46, 125, 50, 0.22);
     }
 
     footer > div {
@@ -177,6 +247,7 @@
       flex-wrap: wrap;
       justify-content: space-between;
       gap: 2rem;
+      text-align: left;
     }
 
     footer > div > div {
@@ -203,37 +274,23 @@
     }
 
     footer ul li a:hover {
-      color: var(--highlight-color);
+      color: var(--accent);
     }
 
     footer small {
       display: block;
       margin-top: 2rem;
       text-align: center;
-    }
-
-    @media (max-width: 600px) {
-      header {
-        flex-direction: column;
-        gap: 1rem;
-      }
-
-      nav {
-        justify-content: center;
-        flex-wrap: wrap;
-      }
-
-      .social-grid {
-        grid-template-columns: 1fr;
-      }
+      opacity: 0.85;
     }
   </style>
 </head>
 <body>
 
 <header>
-  <h1>Locorent</h1>
-  <nav id="nav-links"></nav>
+  <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
+  <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
+  <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
 </header>
 
 <main>
@@ -249,7 +306,6 @@
       <p>Fotos, Storys & Highlights rund ums Mieten.</p>
       <a href="https://www.instagram.com/locorent" target="_blank">Jetzt folgen</a>
     </div>
-
     <div class="social-card">
       <div class="social-icon" style="background:#1877F2;">
         <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/facebook.svg" alt="Facebook" />
@@ -258,10 +314,8 @@
       <p>News, Events & Gruppen rund um Locorent.</p>
       <a href="https://www.facebook.com/locorent" target="_blank">Fan werden</a>
     </div>
-
     <div class="social-card">
       <div class="social-icon" style="background:#000;">
-        <!-- TikTok SVG als Inline-Fallback -->
         <svg viewBox="0 0 256 256" fill="white" xmlns="http://www.w3.org/2000/svg">
           <path d="M204.8 76.8a76.8 76.8 0 01-38.4-10.24v76.8c0 35.84-28.16 66.56-64 68.48A68.03 68.03 0 0167.36 140.8a68.15 68.15 0 0158.24-67.84V102.4a38.4 38.4 0 00-25.6 72.96A38.4 38.4 0 00160 140.8V0h44.8a76.8 76.8 0 010 76.8z"/>
         </svg>
@@ -270,7 +324,6 @@
       <p>Kreative Videos, Trends & lustige Momente.</p>
       <a href="https://www.tiktok.com/@locorent" target="_blank">Ansehen</a>
     </div>
-
     <div class="social-card">
       <div class="social-icon" style="background:#43a047;">
         <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
@@ -287,7 +340,7 @@
 <footer role="contentinfo">
   <div>
     <div>
-      <h4>Mieten & Vermieten</h4>
+      <h4>Mieten &amp; Vermieten</h4>
       <ul>
         <li><a href="so-funktionierts.html">So funktioniert's</a></li>
         <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
@@ -309,6 +362,7 @@
         <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
         <li><a href="social-media.html">Folgen Sie uns</a></li>
         <li><a href="mission.html">Unsere Mission</a></li>
+        <li><a href="nachhaltigkeit.html">Nachhaltigkeit</a></li>
       </ul>
     </div>
   </div>
@@ -320,6 +374,7 @@
     'https://flnjalgqtkqycsaymmbd.supabase.co',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
   );
+
 
   let userSession = null;
 
@@ -337,6 +392,7 @@
       <a href="nachrichten-inbox.html">📨 Nachrichten</a>
       <a href="favoriten.html">Meine Favoriten</a>
       <a href="inserate.html">Meine Inserate</a>
+      <a href="social-media.html">Folge uns</a>
       <a href="#" onclick="logout(event)">Logout</a>
     ` : `
       <a href="index.html">Start</a>
@@ -347,10 +403,22 @@
   async function logout(event) {
     event.preventDefault();
     await supabase.auth.signOut();
-    window.location.href = "login.html";
+    location.href = "login.html";
   }
 
-  init();
+  document.addEventListener('DOMContentLoaded', () => {
+    init();
+
+    const toggle = document.getElementById('nav-toggle');
+    const nav = document.getElementById('nav-links');
+
+    if (toggle && nav) {
+      toggle.addEventListener('click', () => {
+        nav.classList.toggle('show');
+        toggle.setAttribute('aria-expanded', nav.classList.contains('show'));
+      });
+    }
+  });
 </script>
 
 </body>
