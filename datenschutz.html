@@ -26,6 +26,8 @@
 
     *, *::before, *::after {
       box-sizing: border-box;
+      max-width: 100%;
+      word-wrap: break-word;
     }
 
     body {
@@ -109,9 +111,10 @@
     }
 
     .container {
-      max-width: 1100px;
+      max-width: 1080px;
+      width: 100%;
       margin: 2rem auto 4rem auto;
-      padding: 2rem 2rem 3rem 2rem;
+      padding: 2rem 1.2rem 3rem 1.2rem;
       background: var(--white);
       border-radius: var(--radius);
       box-shadow: 0 12px 30px var(--shadow-light);
@@ -263,7 +266,6 @@
 
 <main class="container" role="main" tabindex="0">
   <h2>Datenschutzerklärung</h2>
-
   <h3>1. Einleitung – Datenschutz ist Vertrauenssache</h3>
   <p>Der Schutz deiner persönlichen Daten ist uns besonders wichtig. Wir behandeln deine personenbezogenen Informationen streng vertraulich und entsprechend der gesetzlichen Datenschutzvorschriften, insbesondere der Datenschutz-Grundverordnung (DSGVO) sowie dieser Datenschutzerklärung. Hier erfährst du, welche Daten auf unserer Website <strong>www.locorent.de</strong> erfasst werden, wie wir sie nutzen und welche Rechte du hast.</p>
 
@@ -352,6 +354,8 @@
 
   <h3>12. Änderungen dieser Datenschutzerklärung</h3>
   <p>Diese Erklärung kann bei rechtlichen Änderungen oder Erweiterung unseres Angebots angepasst werden. Die aktuelle Version findest du immer unter:<br><strong>www.locorent.de/datenschutz.html</strong></p>
+
+
 </main>
 
 <footer role="contentinfo">
