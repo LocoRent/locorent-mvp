@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Folge uns – Locorent</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
@@ -14,6 +14,7 @@
       --background: #f1f8e9;
       --white: #fff;
       --text-dark: #0f2e13;
+      --text-muted: #466843;
       --accent: #b9f6ca;
       --highlight: #a5d6a7;
       --radius: 18px;
@@ -30,11 +31,13 @@
     body {
       margin: 0;
       font-family: var(--font-primary);
-      background: var(--background);
+      background: linear-gradient(to bottom, #e8f5e9 0%, #ffffff 100%);
       color: var(--text-dark);
+      scroll-behavior: smooth;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
+      overflow-x: hidden;
     }
 
     header {
@@ -49,7 +52,7 @@
       top: 0;
       z-index: 1000;
       box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-      width: 100%;
+      flex-wrap: wrap;
     }
 
     header h1 {
@@ -72,8 +75,6 @@
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
-      justify-content: center;
-      width: 100%;
     }
 
     nav#nav-links a {
@@ -83,10 +84,6 @@
       font-size: 1rem;
       position: relative;
       transition: color 0.3s ease;
-      min-width: 120px;
-      text-align: center;
-      display: inline-block;
-      padding-bottom: 3px;
     }
 
     nav#nav-links a::after {
@@ -117,16 +114,10 @@
       }
 
       nav#nav-links {
-        display: none;
-        flex-direction: column;
-        margin-top: 1rem;
-        position: absolute;
-        top: 0;
-        left: 0;
         width: 100%;
-        background-color: var(--primary);
-        padding: 1rem;
-        z-index: 1000;
+        flex-direction: column;
+        display: none;
+        margin-top: 1rem;
       }
 
       nav#nav-links.show {
@@ -138,27 +129,34 @@
         padding: 0.5rem 1rem;
         background-color: rgba(255, 255, 255, 0.1);
         border-radius: 6px;
-        text-align: left;
+        display: block;
+      }
+
+      footer > div {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      footer > div > div {
+        width: 100%;
       }
     }
 
     main {
+      max-width: 1100px;
+      margin: 3rem auto 4rem auto;
+      padding: 2rem;
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: 0 12px 30px var(--shadow-light);
       flex-grow: 1;
-      padding: 3rem 1.5rem;
-      max-width: 1200px;
-      margin: 0 auto;
+    }
+
+    h2 {
       text-align: center;
-    }
-
-    h1 {
-      font-size: 2.8rem;
-      margin-bottom: 1rem;
-    }
-
-    .subtext {
-      font-size: 1.2rem;
-      margin-bottom: 2.5rem;
-      color: #388e3c;
+      font-size: 2.4rem;
+      margin-bottom: 2rem;
+      color: var(--primary-dark);
     }
 
     .social-grid {
@@ -172,13 +170,14 @@
       background: var(--white);
       border-radius: var(--radius);
       padding: 2rem;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      box-shadow: 0 8px 24px var(--shadow-light);
       transition: 0.3s ease;
+      text-align: center;
     }
 
     .social-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+      transform: translateY(-6px);
+      box-shadow: 0 12px 30px var(--shadow-strong);
     }
 
     .social-icon {
@@ -192,36 +191,36 @@
       background-color: #c8e6c9;
     }
 
-    .social-icon svg,
-    .social-icon img {
+    .social-icon img,
+    .social-icon svg {
       width: 32px;
       height: 32px;
     }
 
     .social-card h3 {
-      font-size: 1.4rem;
-      margin-bottom: 0.6rem;
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+      color: var(--primary-dark);
     }
 
     .social-card p {
       font-size: 1rem;
-      margin-bottom: 1rem;
-      color: #4e944f;
+      color: var(--text-muted);
     }
 
     .social-card a {
-      text-decoration: none;
-      padding: 0.6rem 1.2rem;
-      background: var(--primary);
-      color: white;
-      border-radius: 30px;
-      font-weight: 600;
       display: inline-block;
-      transition: 0.3s;
+      margin-top: 1rem;
+      background: var(--primary);
+      color: var(--white);
+      padding: 0.6rem 1.4rem;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: 600;
     }
 
     .social-card a:hover {
-      background: var(--highlight);
+      background: var(--primary-light);
     }
 
     footer {
@@ -261,7 +260,6 @@
     footer h4 {
       margin-bottom: 0.5rem;
       font-weight: 700;
-      user-select: none;
       font-size: 1.1rem;
     }
 
@@ -277,34 +275,29 @@
       transition: color 0.3s ease;
     }
 
-    footer ul li a:hover,
-    footer ul li a:focus-visible {
+    footer ul li a:hover {
       color: var(--accent);
-      outline: none;
     }
 
     footer small {
       display: block;
       margin-top: 2rem;
       text-align: center;
-      user-select: none;
+      opacity: 0.85;
     }
   </style>
 </head>
 <body>
 
 <header>
-  <h1 tabindex="0" onclick="location.href='index.html'" style="cursor:pointer">Locorent</h1>
+  <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
   <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
   <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
 </header>
 
 <main>
-  <h1>Folge uns!</h1>
-  <p class="subtext">Bleib auf dem Laufenden & werde Teil der Community 🚀</p>
-
+  <h2>Folge uns!</h2>
   <div class="social-grid">
-    <!-- Instagram -->
     <div class="social-card">
       <div class="social-icon" style="background:#E1306C;">
         <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/instagram.svg" alt="Instagram" />
@@ -314,7 +307,6 @@
       <a href="https://www.instagram.com/locorent" target="_blank">Jetzt folgen</a>
     </div>
 
-    <!-- Facebook -->
     <div class="social-card">
       <div class="social-icon" style="background:#1877F2;">
         <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/facebook.svg" alt="Facebook" />
@@ -324,19 +316,16 @@
       <a href="https://www.facebook.com/locorent" target="_blank">Fan werden</a>
     </div>
 
-    <!-- TikTok -->
     <div class="social-card">
       <div class="social-icon" style="background:#000;">
-        <svg viewBox="0 0 256 256" fill="white" xmlns="http://www.w3.org/2000/svg">
-          <path d="M204.8 76.8a76.8 76.8 0 01-38.4-10.24v76.8c0 35.84-28.16 66.56-64 68.48A68.03 68.03 0 0167.36 140.8a68.15 68.15 0 0158.24-67.84V102.4a38.4 38.4 0 00-25.6 72.96A38.4 38.4 0 00160 140.8V0h44.8a76.8 76.8 0 010 76.8z"/>
-        </svg>
+        <svg viewBox="0 0 256 256" fill=\"white\" xmlns=\"http://www.w3.org/2000/svg\">
+          <path d=\"M204.8 76.8a76.8 76.8 0 01-38.4-10.24v76.8c0 35.84-28.16 66.56-64 68.48A68.03 68.03 0 0167.36 140.8a68.15 68.15 0 0158.24-67.84V102.4a38.4 38.4 0 00-25.6 72.96A38.4 38.4 0 00160 140.8V0h44.8a76.8 76.8 0 010 76.8z\"/>\n        </svg>
       </div>
       <h3>TikTok</h3>
       <p>Kreative Videos, Trends & lustige Momente.</p>
       <a href="https://www.tiktok.com/@locorent" target="_blank">Ansehen</a>
     </div>
 
-    <!-- Kontakt -->
     <div class="social-card">
       <div class="social-icon" style="background:#43a047;">
         <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
