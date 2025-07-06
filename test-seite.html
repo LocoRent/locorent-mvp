@@ -144,40 +144,40 @@
 
     main {
       max-width: 1100px;
-      margin: 3rem auto 4rem auto;
+      margin: 3rem auto;
       padding: 2rem;
-      background: var(--white);
-      border-radius: var(--radius);
-      box-shadow: 0 12px 30px var(--shadow-light);
       flex-grow: 1;
+      text-align: center;
     }
 
-    h2 {
-      text-align: center;
-      font-size: 2.4rem;
-      margin-bottom: 2rem;
-      color: var(--primary-dark);
+    h1 {
+      font-size: 2.6rem;
+      margin-bottom: 1rem;
+    }
+
+    .subtext {
+      font-size: 1.2rem;
+      margin-bottom: 2.5rem;
+      color: #388e3c;
     }
 
     .social-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
       gap: 2rem;
-      margin-top: 1rem;
     }
 
     .social-card {
       background: var(--white);
       border-radius: var(--radius);
       padding: 2rem;
-      box-shadow: 0 8px 24px var(--shadow-light);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
       transition: 0.3s ease;
-      text-align: center;
     }
 
     .social-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 12px 30px var(--shadow-strong);
+      transform: translateY(-8px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.15);
     }
 
     .social-icon {
@@ -188,35 +188,33 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background-color: #c8e6c9;
     }
 
-    .social-icon img,
-    .social-icon svg {
+    .social-icon img, .social-icon svg {
       width: 32px;
       height: 32px;
     }
 
     .social-card h3 {
-      font-size: 1.3rem;
-      margin-bottom: 0.5rem;
-      color: var(--primary-dark);
+      font-size: 1.4rem;
+      margin-bottom: 0.6rem;
     }
 
     .social-card p {
       font-size: 1rem;
-      color: var(--text-muted);
+      margin-bottom: 1rem;
+      color: #4e944f;
     }
 
     .social-card a {
-      display: inline-block;
-      margin-top: 1rem;
-      background: var(--primary);
-      color: var(--white);
-      padding: 0.6rem 1.4rem;
-      border-radius: 30px;
       text-decoration: none;
+      padding: 0.6rem 1.2rem;
+      background: var(--primary);
+      color: white;
+      border-radius: 30px;
       font-weight: 600;
+      display: inline-block;
+      transition: 0.3s;
     }
 
     .social-card a:hover {
@@ -296,7 +294,9 @@
 </header>
 
 <main>
-  <h2>Folge uns!</h2>
+  <h1>Folge uns!</h1>
+  <p class="subtext">Bleib auf dem Laufenden & werde Teil der Community 🚀</p>
+
   <div class="social-grid">
     <div class="social-card">
       <div class="social-icon" style="background:#E1306C;">
@@ -306,7 +306,6 @@
       <p>Fotos, Storys & Highlights rund ums Mieten.</p>
       <a href="https://www.instagram.com/locorent" target="_blank">Jetzt folgen</a>
     </div>
-
     <div class="social-card">
       <div class="social-icon" style="background:#1877F2;">
         <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/facebook.svg" alt="Facebook" />
@@ -315,7 +314,6 @@
       <p>News, Events & Gruppen rund um Locorent.</p>
       <a href="https://www.facebook.com/locorent" target="_blank">Fan werden</a>
     </div>
-
     <div class="social-card">
       <div class="social-icon" style="background:#000;">
         <svg viewBox="0 0 256 256" fill=\"white\" xmlns=\"http://www.w3.org/2000/svg\">
@@ -325,12 +323,10 @@
       <p>Kreative Videos, Trends & lustige Momente.</p>
       <a href="https://www.tiktok.com/@locorent" target="_blank">Ansehen</a>
     </div>
-
     <div class="social-card">
       <div class="social-icon" style="background:#43a047;">
-        <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
-          <path d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2zm-1.4 3.25l-6.6 4.13L5.4 7.25a.5.5 0 01.6-.8L12 10.87l6-3.62a.5.5 0 01.6.8z"/>
-        </svg>
+        <svg viewBox="0 0 24 24" fill=\"white\" xmlns=\"http://www.w3.org/2000/svg\">
+          <path d=\"M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2zm-1.4 3.25l-6.6 4.13L5.4 7.25a.5.5 0 01.6-.8L12 10.87l6-3.62a.5.5 0 01.6.8z\"/>\n        </svg>
       </div>
       <h3>Kontakt</h3>
       <p>Du hast Fragen oder Feedback?</p>
@@ -342,7 +338,7 @@
 <footer role="contentinfo">
   <div>
     <div>
-      <h4>Mieten & Vermieten</h4>
+      <h4>Mieten &amp; Vermieten</h4>
       <ul>
         <li><a href="so-funktionierts.html">So funktioniert's</a></li>
         <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
