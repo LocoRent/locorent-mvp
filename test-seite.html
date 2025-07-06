@@ -84,7 +84,7 @@
       font-size: 1rem;
       position: relative;
       transition: color 0.3s ease;
-      min-width: 120px;  /* gleiche Mindestbreite wie auf anderen Seiten */
+      min-width: 120px;  /* Die gleiche Mindestbreite wie auf anderen Seiten */
       text-align: center;
       display: inline-block;
       padding-bottom: 3px;
@@ -133,7 +133,7 @@
         background-color: rgba(255, 255, 255, 0.1);
         border-radius: 6px;
         display: block;
-        min-width: auto;
+        min-width: 120px;
         text-align: left;
       }
     }
@@ -411,7 +411,7 @@
 
   function updateNav() {
     const nav = document.getElementById('nav-links');
-    nav.innerHTML = userSession?.user ? `
+    nav.innerHTML = userSession?.user ? ` 
       <a href="index.html">Start</a>
       <a href="profil.html">Mein Profil</a>
       <a href="nachrichten-inbox.html">📨 Nachrichten</a>
