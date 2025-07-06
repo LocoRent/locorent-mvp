@@ -2,19 +2,24 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <title>Kontakt – Locorent</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --primary: #2e7d32;
-      --light: #e8f5e9;
-      --white: #ffffff;
-      --dark: #1b5e20;
-      --accent: #81c784;
+      --primary-light: #66bb6a;
+      --primary-dark: #1b5e20;
+      --background: #f1f8e9;
+      --white: #fff;
+      --text-dark: #0f2e13;
+      --text-muted: #466843;
+      --accent: #b9f6ca;
+      --highlight: #a5d6a7;
       --radius: 16px;
       --shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+      --font-primary: 'Poppins', sans-serif;
     }
 
     *, *::before, *::after {
@@ -23,32 +28,34 @@
 
     body {
       margin: 0;
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(180deg, var(--light), var(--white));
-      color: #333;
-      line-height: 1.7;
+      font-family: var(--font-primary);
+      background: linear-gradient(to bottom, var(--background), #ffffff);
+      color: var(--text-dark);
       display: flex;
       flex-direction: column;
       min-height: 100vh;
     }
 
     header {
-      background: var(--primary);
-      padding: 1.5rem 2rem;
+      background-color: var(--primary);
       color: var(--white);
+      padding: 1.5rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      font-weight: 700;
       position: sticky;
       top: 0;
-      z-index: 100;
+      z-index: 1000;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
       flex-wrap: wrap;
     }
 
     header h1 {
       font-size: 1.8rem;
-      margin: 0;
       cursor: pointer;
+      user-select: none;
+      margin: 0;
     }
 
     #nav-toggle {
@@ -69,23 +76,28 @@
     nav#nav-links a {
       color: var(--white);
       text-decoration: none;
-      font-weight: 500;
+      font-weight: 600;
+      font-size: 1rem;
       position: relative;
     }
 
     nav#nav-links a::after {
-      content: "";
+      content: '';
       position: absolute;
+      left: 0;
+      bottom: -4px;
       width: 0;
       height: 2px;
-      bottom: -5px;
-      left: 0;
-      background: var(--accent);
-      transition: 0.3s;
+      background-color: var(--accent);
+      transition: width 0.3s ease;
     }
 
     nav#nav-links a:hover::after {
       width: 100%;
+    }
+
+    nav#nav-links a:hover {
+      color: var(--accent);
     }
 
     main {
@@ -107,22 +119,13 @@
     .contact-info {
       flex: 1;
       padding: 2.5rem;
-      background-color: var(--light);
-      color: var(--dark);
+      background-color: var(--background);
+      color: var(--primary-dark);
     }
 
     .contact-info h2 {
       font-size: 2rem;
       margin-bottom: 1rem;
-    }
-
-    .contact-info p {
-      margin-bottom: 1rem;
-    }
-
-    .contact-info a {
-      color: var(--dark);
-      font-weight: 500;
     }
 
     .contact-form {
@@ -146,7 +149,7 @@
       border: 1px solid #ccc;
       border-radius: var(--radius);
       margin-top: 0.5rem;
-      font-family: 'Poppins', sans-serif;
+      font-family: var(--font-primary);
       font-size: 1rem;
     }
 
@@ -169,23 +172,24 @@
     }
 
     button:hover {
-      background: var(--dark);
+      background: var(--primary-light);
     }
 
     footer {
       background-color: var(--primary);
       color: var(--white);
       padding: 2rem 2rem 1rem;
-      margin-top: 3rem;
       font-size: 0.92rem;
+      margin-top: auto;
     }
 
     footer > div {
-      max-width: 1100px;
-      margin: auto;
+      max-width: 1200px;
+      margin: 0 auto;
       display: flex;
       flex-wrap: wrap;
       gap: 2rem;
+      text-align: left;
     }
 
     footer > div > div {
@@ -195,7 +199,8 @@
 
     footer h4 {
       margin-bottom: 0.5rem;
-      font-weight: 600;
+      font-weight: 700;
+      font-size: 1.1rem;
     }
 
     footer ul {
@@ -209,30 +214,25 @@
       text-decoration: underline;
     }
 
+    footer ul li a:hover {
+      color: var(--accent);
+    }
+
     footer small {
       display: block;
       text-align: center;
       margin-top: 2rem;
     }
 
-    .form-disabled {
-      opacity: 0.5;
-      pointer-events: none;
-    }
-
-    @media (max-width: 768px) {
-      .contact-section {
-        flex-direction: column;
-      }
-
+    @media (max-width: 720px) {
       #nav-toggle {
         display: block;
       }
 
       nav#nav-links {
-        display: none;
-        flex-direction: column;
         width: 100%;
+        flex-direction: column;
+        display: none;
         margin-top: 1rem;
       }
 
@@ -241,6 +241,7 @@
       }
 
       nav#nav-links a {
+        margin: 0.4rem 0;
         padding: 0.5rem 1rem;
         background-color: rgba(255, 255, 255, 0.1);
         border-radius: 6px;
@@ -249,137 +250,126 @@
 
       footer > div {
         flex-direction: column;
-        text-align: center;
+        align-items: flex-start;
+      }
+
+      footer > div > div {
+        width: 100%;
       }
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1 onclick="location.href='index.html'">Locorent</h1>
-    <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
-    <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
-  </header>
+<header>
+  <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
+  <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
+  <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
+</header>
 
-  <main>
-    <div class="contact-section">
-      <div class="contact-info">
-        <h2>Kontaktiere uns</h2>
-        <p>Du hast Fragen, Feedback oder möchtest einfach nur Hallo sagen? Schreib uns gerne über das Formular oder direkt per E-Mail.</p>
-        <p><strong>E-Mail:</strong> <a href="mailto:info@locorent.de">info@locorent.de</a></p>
-        <p>Wir melden uns in der Regel innerhalb von 24 Stunden bei dir.</p>
-      </div>
-
-      <div class="contact-form">
-        <form name="kontaktformular" method="POST" data-netlify="true" id="kontaktformular">
-          <input type="hidden" name="form-name" value="kontaktformular" />
-          <label for="name">Name *</label>
-          <input type="text" id="name" name="name" required />
-
-          <label for="email">E-Mail *</label>
-          <input type="email" id="email" name="email" required />
-
-          <label for="message">Nachricht *</label>
-          <textarea id="message" name="message" required></textarea>
-
-          <button type="submit">Nachricht senden</button>
-        </form>
-        <p id="form-warning" style="display:none; color: red; font-weight: 600; margin-top: 1rem;">
-          Bitte melde dich an, um das Formular nutzen zu können.
-        </p>
-      </div>
+<main>
+  <div class="contact-section">
+    <div class="contact-info">
+      <h2>Kontaktiere uns</h2>
+      <p>Du hast Fragen, Feedback oder möchtest einfach nur Hallo sagen? Schreib uns gerne über das Formular oder direkt per E-Mail.</p>
+      <p><strong>E-Mail:</strong> <a href="mailto:info@locorent.de">info@locorent.de</a></p>
+      <p>Wir melden uns in der Regel innerhalb von 24 Stunden bei dir.</p>
     </div>
-  </main>
 
-  <footer>
+    <div class="contact-form">
+      <form name="kontaktformular" method="POST" data-netlify="true">
+        <input type="hidden" name="form-name" value="kontaktformular" />
+        <label for="name">Name *</label>
+        <input type="text" id="name" name="name" required />
+
+        <label for="email">E-Mail *</label>
+        <input type="email" id="email" name="email" required />
+
+        <label for="message">Nachricht *</label>
+        <textarea id="message" name="message" required></textarea>
+
+        <button type="submit">Nachricht senden</button>
+      </form>
+    </div>
+  </div>
+</main>
+
+<footer role="contentinfo">
+  <div>
     <div>
-      <div>
-        <h4>Mieten & Vermieten</h4>
-        <ul>
-          <li><a href="so-funktionierts.html">So funktioniert's</a></li>
-          <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
-          <li><a href="kategorien.html">Beliebte Kategorien</a></li>
-          <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
-          <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>Wissenswertes</h4>
-        <ul>
-          <li><a href="agb.html">AGB & Impressum</a></li>
-          <li><a href="datenschutz.html">Datenschutz</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>Über uns</h4>
-        <ul>
-          <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
-          <li><a href="social-media.html">Folgen Sie uns</a></li>
-          <li><a href="mission.html">Unsere Mission</a></li>
-        </ul>
-      </div>
+      <h4>Mieten & Vermieten</h4>
+      <ul>
+        <li><a href="so-funktionierts.html">So funktioniert's</a></li>
+        <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
+        <li><a href="kategorien.html">Beliebte Kategorien</a></li>
+        <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
+        <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
+      </ul>
     </div>
-    <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
-  </footer>
+    <div>
+      <h4>Wissenswertes</h4>
+      <ul>
+        <li><a href="agb.html">AGB & Impressum</a></li>
+        <li><a href="datenschutz.html">Datenschutz</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Über uns</h4>
+      <ul>
+        <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
+        <li><a href="social-media.html">Folgen Sie uns</a></li>
+        <li><a href="mission.html">Unsere Mission</a></li>
+      </ul>
+    </div>
+  </div>
+  <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
+</footer>
 
-  <script>
-    const supabase = window.supabase.createClient(
-      'https://flnjalgqtkqycsaymmbd.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-    );
+<script>
+  const supabase = window.supabase.createClient(
+    'https://flnjalgqtkqycsaymmbd.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+  );
 
-    let userSession = null;
+  let userSession = null;
 
-    async function init() {
-      const { data: { session } } = await supabase.auth.getSession();
-      userSession = session;
-      updateNav();
-      handleFormAccess();
-    }
+  async function init() {
+    const { data: { session } } = await supabase.auth.getSession();
+    userSession = session;
+    updateNav();
+  }
 
-    function updateNav() {
-      const nav = document.getElementById('nav-links');
-      nav.innerHTML = userSession?.user
-        ? `<a href="index.html">Start</a>
-           <a href="profil.html">Mein Profil</a>
-           <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-           <a href="favoriten.html">Meine Favoriten</a>
-           <a href="inserate.html">Meine Inserate</a>
-           <a href="#" onclick="logout(event)">Logout</a>`
-        : `<a href="index.html">Start</a>
-           <a href="login.html">Einloggen</a>`;
-    }
+  function updateNav() {
+    const nav = document.getElementById('nav-links');
+    nav.innerHTML = userSession?.user ? `
+      <a href="index.html">Start</a>
+      <a href="profil.html">Mein Profil</a>
+      <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+      <a href="favoriten.html">Meine Favoriten</a>
+      <a href="inserate.html">Meine Inserate</a>
+      <a href="social-media.html">Folge uns</a>
+      <a href="#" onclick="logout(event)">Logout</a>
+    ` : `
+      <a href="index.html">Start</a>
+      <a href="login.html">Einloggen</a>
+    `;
+  }
 
-    function handleFormAccess() {
-      const form = document.getElementById('kontaktformular');
-      const emailField = document.getElementById('email');
-      const warning = document.getElementById('form-warning');
+  async function logout(event) {
+    event.preventDefault();
+    await supabase.auth.signOut();
+    window.location.href = "login.html";
+  }
 
-      if (userSession?.user) {
-        emailField.value = userSession.user.email;
-        emailField.readOnly = true;
-      } else {
-        form.classList.add('form-disabled');
-        warning.style.display = 'block';
-      }
-    }
+  document.getElementById('nav-toggle').addEventListener('click', () => {
+    const nav = document.getElementById('nav-links');
+    nav.classList.toggle('show');
+    const expanded = nav.classList.contains('show');
+    document.getElementById('nav-toggle').setAttribute('aria-expanded', expanded);
+  });
 
-    async function logout(event) {
-      event.preventDefault();
-      await supabase.auth.signOut();
-      window.location.href = "login.html";
-    }
-
-    document.getElementById('nav-toggle').addEventListener('click', () => {
-      const nav = document.getElementById('nav-links');
-      nav.classList.toggle('show');
-      const expanded = nav.classList.contains('show');
-      document.getElementById('nav-toggle').setAttribute('aria-expanded', expanded);
-    });
-
-    init();
-  </script>
+  init();
+</script>
 
 </body>
 </html>
