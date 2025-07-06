@@ -7,7 +7,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    /* Deine bestehenden CSS-Styles (unverändert) */
     :root {
       --primary: #2e7d32;
       --primary-light: #66bb6a;
@@ -110,35 +109,51 @@
     }
 
     .container {
-      max-width: 1100px;
-      margin: 2rem auto 4rem auto;
-      padding: 2rem 2rem 3rem 2rem;
+      max-width: 800px;
+      margin: 3rem auto;
+      padding: 3rem 2rem;
       background: var(--white);
       border-radius: var(--radius);
       box-shadow: 0 12px 30px var(--shadow-light);
-      color: #444;
-      line-height: 1.6;
+      text-align: center;
+      line-height: 1.8;
     }
 
     h2 {
       color: var(--primary-dark);
-      font-weight: 700;
-      font-size: 2rem;
+      font-size: 2.2rem;
       margin-bottom: 1.5rem;
-      margin-top: 0;
-      text-align: center;
+    }
+
+    .kontakt-text {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      margin-bottom: 2.5rem;
+    }
+
+    .email-box {
+      display: inline-block;
+      background: var(--highlight);
+      color: var(--primary-dark);
+      padding: 1rem 2rem;
+      border-radius: var(--radius);
+      font-weight: 600;
+      font-size: 1.1rem;
+      box-shadow: 0 4px 12px var(--shadow-light);
+      transition: all 0.3s ease;
+    }
+
+    .email-box:hover {
+      background: var(--primary-light);
+      color: var(--white);
     }
 
     footer {
       width: 100%;
-      box-sizing: border-box;
       padding: 2rem 2rem 1rem;
-      border-radius: var(--radius);
       background-color: var(--primary);
       color: var(--white);
-      box-shadow: 0 8px 32px rgba(46, 125, 50, 0.22);
       font-size: 0.92rem;
-      user-select: none;
       text-align: center;
       margin-top: auto;
       position: relative;
@@ -188,7 +203,6 @@
     footer small {
       display: block;
       margin-top: 2rem;
-      text-align: center;
       opacity: 0.85;
     }
 
@@ -226,8 +240,11 @@
       }
 
       h2 {
-        font-size: 1.5rem;
-        text-align: left;
+        font-size: 1.6rem;
+      }
+
+      .kontakt-text {
+        font-size: 1rem;
       }
     }
   </style>
@@ -242,33 +259,13 @@
 
 <main class="container" role="main" tabindex="0">
   <h2>Kontaktiere uns</h2>
-  <p style="text-align:center; font-size:1.1rem; color:var(--text-muted); line-height:1.7;">
+  <p class="kontakt-text">
     Du hast Fragen, Feedback oder möchtest einfach nur Hallo sagen?<br>
-    Schreib uns gerne über das Formular oder direkt per E-Mail.<br><br>
-    <strong>E-Mail:</strong> <a href="mailto:info@locorent.de">info@locorent.de</a><br>
+    Schreib uns gerne direkt per E-Mail.<br><br>
     Wir melden uns in der Regel innerhalb von 24 Stunden bei dir.
   </p>
 
-  <form action="https://formsubmit.io/send/info@locorent.de" method="POST" style="margin-top: 2rem;">
-    <input type="hidden" name="_redirect" value="https://www.locorent.de/danke.html">
-    <input type="text" name="_formsubmit_id" style="display:none">
-
-    <label for="name">Name (optional)</label><br>
-    <input type="text" id="name" name="name" style="width:100%; padding:0.6rem; border-radius:8px; margin-bottom:1rem; border:1px solid #ccc;"><br>
-
-    <label for="email">E-Mail *</label><br>
-    <input type="email" id="email" name="email" required style="width:100%; padding:0.6rem; border-radius:8px; margin-bottom:1rem; border:1px solid #ccc;"><br>
-
-    <label for="betreff">Betreff</label><br>
-    <input type="text" id="betreff" name="betreff" style="width:100%; padding:0.6rem; border-radius:8px; margin-bottom:1rem; border:1px solid #ccc;"><br>
-
-    <label for="nachricht">Nachricht *</label><br>
-    <textarea id="nachricht" name="nachricht" rows="6" required style="width:100%; padding:0.6rem; border-radius:8px; margin-bottom:1rem; border:1px solid #ccc;"></textarea><br>
-
-    <button type="submit" style="background-color: var(--primary); color:white; padding:0.7rem 1.5rem; border:none; border-radius:12px; cursor:pointer; font-weight:600;">
-      Absenden
-    </button>
-  </form>
+  <a href="mailto:info@locorent.de" class="email-box">📧 info@locorent.de</a>
 </main>
 
 <footer role="contentinfo">
@@ -307,7 +304,6 @@
     'https://flnjalgqtkqycsaymmbd.supabase.co',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
   );
-
 
   async function updateNav() {
     const { data: { session } } = await supabase.auth.getSession();
