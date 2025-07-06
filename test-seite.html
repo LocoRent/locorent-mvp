@@ -4,39 +4,44 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Login – Locorent</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
-      --primary-color: #2e7d32;
-      --secondary-color: #a5d6a7;
-      --background-color: #f1f8e9;
-      --dark-color: #1b5e20;
-      --highlight-color: #66bb6a;
+      --primary: #2e7d32;
+      --primary-light: #66bb6a;
+      --primary-dark: #1b5e20;
+      --background: #f1f8e9;
       --white: #fff;
-      --gray-light: #f7f7f7;
-      --gray-dark: #333;
-      --border-radius: 12px;
-      --shadow-color: rgba(0, 0, 0, 0.1);
+      --text-dark: #0f2e13;
+      --text-muted: #466843;
+      --accent: #b9f6ca;
+      --highlight: #a5d6a7;
+      --radius: 18px;
+      --shadow-light: rgba(46, 125, 50, 0.08);
+      --shadow-strong: rgba(46, 125, 50, 0.25);
+      --transition: 0.4s ease;
+      --font-primary: 'Poppins', sans-serif;
     }
 
-    * {
+    *, *::before, *::after {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
     }
 
     body {
-      font-family: 'Poppins', sans-serif;
-      background-color: var(--background-color);
-      color: var(--gray-dark);
-      min-height: 100vh;
+      margin: 0;
+      font-family: var(--font-primary);
+      background: linear-gradient(to bottom, #e8f5e9 0%, #ffffff 100%);
+      color: var(--text-dark);
+      scroll-behavior: smooth;
       display: flex;
       flex-direction: column;
+      min-height: 100vh;
+      overflow-x: hidden;
     }
 
     header {
-      background-color: var(--primary-color);
+      background-color: var(--primary);
       color: var(--white);
       padding: 1.5rem 2rem;
       display: flex;
@@ -46,7 +51,7 @@
       position: sticky;
       top: 0;
       z-index: 1000;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
       flex-wrap: wrap;
     }
 
@@ -88,7 +93,7 @@
       bottom: -4px;
       width: 0;
       height: 2px;
-      background-color: var(--secondary-color);
+      background-color: var(--accent);
       transition: width 0.3s ease;
     }
 
@@ -99,7 +104,7 @@
 
     nav#nav-links a:hover,
     nav#nav-links a:focus {
-      color: var(--secondary-color);
+      color: var(--accent);
       outline: none;
     }
 
@@ -138,8 +143,8 @@
 
     .container {
       background: var(--white);
-      border-radius: var(--border-radius);
-      box-shadow: 0 8px 24px var(--shadow-color);
+      border-radius: var(--radius);
+      box-shadow: 0 8px 24px var(--shadow-light);
       max-width: 400px;
       width: 100%;
       padding: 2.5rem 2rem 3rem;
@@ -148,9 +153,9 @@
 
     h2 {
       font-weight: 700;
-      font-size: 2.2rem;
+      font-size: 2rem;
       margin-bottom: 1rem;
-      color: var(--primary-color);
+      color: var(--primary-dark);
     }
 
     form {
@@ -163,7 +168,7 @@
       margin-top: 1rem;
       font-weight: 600;
       font-size: 1rem;
-      color: var(--dark-color);
+      color: var(--primary-dark);
     }
 
     input {
@@ -171,18 +176,16 @@
       padding: 0.75rem 1rem;
       margin-top: 0.5rem;
       border: 1px solid #ccc;
-      border-radius: var(--border-radius);
+      border-radius: var(--radius);
       font-size: 1rem;
       outline: none;
-      color: var(--gray-dark);
-      background: var(--gray-light);
-      box-shadow: inset 0 0 6px var(--secondary-color);
-      transition: box-shadow 0.3s ease, border-color 0.3s ease;
+      background: #f7f7f7;
+      box-shadow: inset 0 0 6px var(--highlight);
     }
 
     input:focus {
-      box-shadow: 0 0 10px var(--primary-color);
-      border-color: var(--primary-color);
+      box-shadow: 0 0 10px var(--primary);
+      border-color: var(--primary);
     }
 
     .password-wrapper {
@@ -197,7 +200,6 @@
       cursor: pointer;
       color: #666;
       font-size: 1rem;
-      user-select: none;
     }
 
     button {
@@ -205,20 +207,19 @@
       padding: 1rem;
       margin-top: 1.5rem;
       border: none;
-      border-radius: var(--border-radius);
+      border-radius: var(--radius);
       font-weight: 700;
-      background: linear-gradient(90deg, var(--primary-color), var(--highlight-color));
+      background: linear-gradient(90deg, var(--primary), var(--primary-light));
       color: var(--white);
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       cursor: pointer;
       box-shadow: 0 4px 12px rgba(46, 125, 50, 0.7);
       transition: background 0.3s ease, transform 0.2s ease;
     }
 
     button:hover {
-      background: linear-gradient(90deg, var(--highlight-color), var(--primary-color));
+      background: linear-gradient(90deg, var(--primary-light), var(--primary));
       transform: scale(1.05);
-      box-shadow: 0 6px 16px rgba(102, 187, 106, 0.9);
     }
 
     .forgot {
@@ -228,7 +229,7 @@
     }
 
     .forgot a {
-      color: var(--primary-color);
+      color: var(--primary);
       text-decoration: underline;
     }
 
@@ -243,49 +244,7 @@
     }
 
     .message.success {
-      color: var(--primary-color);
-    }
-
-    footer {
-      padding: 2rem;
-      background-color: var(--primary-color);
-      color: var(--white);
-      border-radius: var(--border-radius);
-      margin-top: 3rem;
-    }
-
-    footer > div {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 2rem;
-    }
-
-    footer h4 {
-      margin-bottom: 0.5rem;
-    }
-
-    footer ul {
-      list-style: none;
-      padding: 0;
-      line-height: 1.8;
-    }
-
-    footer ul li a {
-      color: var(--white);
-      text-decoration: underline;
-    }
-
-    footer .copyright {
-      margin-top: 2rem;
-      text-align: center;
-      font-size: 0.9rem;
-    }
-
-    @media (max-width: 768px) {
-      footer > div {
-        flex-direction: column;
-      }
+      color: var(--primary);
     }
   </style>
 </head>
@@ -294,11 +253,7 @@
 <header>
   <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
   <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
-  <nav id="nav-links" role="navigation" aria-label="Hauptnavigation">
-    <a href="index.html">Startseite</a>
-    <a href="login.html">Einloggen</a>
-    <a href="register.html">Registrieren</a>
-  </nav>
+  <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
 </header>
 
 <main>
@@ -323,38 +278,6 @@
     </form>
   </div>
 </main>
-
-<footer>
-  <div>
-    <div>
-      <h4>Mieten &amp; Vermieten</h4>
-      <ul>
-        <li><a href="so-funktionierts.html">So funktioniert's</a></li>
-        <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
-        <li><a href="kategorien.html">Beliebte Kategorien</a></li>
-        <li><a href="vermieter-tipps.html">Tipps &amp; Tricks für Vermieter</a></li>
-        <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
-      </ul>
-    </div>
-    <div>
-      <h4>Wissenswertes</h4>
-      <ul>
-        <li><a href="agb.html">AGB &amp; Impressum</a></li>
-        <li><a href="datenschutz.html">Datenschutz</a></li>
-      </ul>
-    </div>
-    <div>
-      <h4>Über uns</h4>
-      <ul>
-        <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
-        <li><a href="social-media.html">Folgen Sie uns</a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="copyright">
-    © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
-  </div>
-</footer>
 
 <script>
   const supabase = window.supabase.createClient(
@@ -387,7 +310,7 @@
         }, 1000);
       }
     } catch (err) {
-      messageDiv.textContent = '❌ Unerwarteter Fehler: ' + err.message;
+      messageDiv.textContent = '❌ Fehler: ' + err.message;
       messageDiv.classList.add('error');
     }
   });
@@ -397,12 +320,36 @@
     pwField.type = pwField.type === 'password' ? 'text' : 'password';
   }
 
+  async function updateNav() {
+    const { data: { session } } = await supabase.auth.getSession();
+    const nav = document.getElementById("nav-links");
+    nav.innerHTML = session?.user ? `
+      <a href="index.html">Start</a>
+      <a href="profil.html">Mein Profil</a>
+      <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+      <a href="favoriten.html">Meine Favoriten</a>
+      <a href="inserate.html">Meine Inserate</a>
+      <a href="#" onclick="logout(event)">Logout</a>
+    ` : `
+      <a href="index.html">Start</a>
+      <a href="login.html">Einloggen</a>
+    `;
+  }
+
+  async function logout(event) {
+    event.preventDefault();
+    await supabase.auth.signOut();
+    window.location.href = "login.html";
+  }
+
   document.getElementById("nav-toggle").addEventListener("click", () => {
     const nav = document.getElementById("nav-links");
     nav.classList.toggle("show");
     const expanded = nav.classList.contains("show");
     document.getElementById("nav-toggle").setAttribute("aria-expanded", expanded);
   });
+
+  updateNav();
 </script>
 
 </body>
