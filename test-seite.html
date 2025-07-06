@@ -3,10 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Werde Vermieter:in – Locorent</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <title>Beliebte Kategorien – Locorent</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
   <style>
     :root {
       --primary-color: #2e7d32;
@@ -21,18 +20,20 @@
       --shadow-color: rgba(0, 0, 0, 0.1);
     }
 
-    * {
-      margin: 0;
-      padding: 0;
+    *, *::before, *::after {
       box-sizing: border-box;
     }
 
     body {
+      margin: 0;
+      padding: 0;
+      background: var(--background-color);
       font-family: 'Poppins', sans-serif;
-      background-color: var(--background-color);
       color: var(--gray-dark);
-      line-height: 1.7;
-      scroll-behavior: smooth;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.6;
     }
 
     header {
@@ -46,13 +47,13 @@
       top: 0;
       z-index: 1000;
       flex-wrap: wrap;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
     }
 
     header h1 {
-      font-size: 1.6rem;
-      cursor: pointer;
+      font-size: 1.8rem;
       user-select: none;
+      cursor: pointer;
     }
 
     #nav-toggle {
@@ -76,6 +77,7 @@
       font-weight: 600;
       font-size: 1rem;
       position: relative;
+      padding-bottom: 3px;
     }
 
     nav#nav-links a:hover,
@@ -84,186 +86,7 @@
       outline: none;
     }
 
-    main {
-      max-width: 1100px;
-      margin: 2rem auto;
-      padding: 0 1rem;
-    }
-
-    .cta-btn {
-      background-color: var(--highlight-color);
-      color: var(--white);
-      padding: 0.9rem 1.8rem;
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 1rem;
-      cursor: pointer;
-      text-decoration: none;
-      transition: background-color 0.3s ease;
-      display: inline-block;
-      margin-top: 1rem;
-    }
-
-    .cta-btn:hover,
-    .cta-btn:focus {
-      background-color: #4caf50;
-      outline: none;
-    }
-
-    .section {
-      background-color: var(--white);
-      padding: 2rem;
-      border-radius: var(--border-radius);
-      box-shadow: 0 2px 12px var(--shadow-color);
-      margin-bottom: 3rem;
-    }
-
-    .features {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 2rem;
-      margin-top: 2rem;
-    }
-
-    .feature {
-      text-align: center;
-    }
-
-    .feature img {
-      width: 64px;
-      margin-bottom: 0.5rem;
-    }
-
-    .gallery {
-      display: flex;
-      gap: 1.5rem;
-      overflow-x: auto;
-      padding-bottom: 1rem;
-    }
-
-    .gallery-item {
-      min-width: 220px;
-      background-color: var(--white);
-      border-radius: var(--border-radius);
-      box-shadow: 0 2px 8px var(--shadow-color);
-      overflow: hidden;
-      text-align: center;
-    }
-
-    .gallery-item img {
-      width: 100%;
-      height: 150px;
-      object-fit: cover;
-    }
-
-    .stats {
-      display: flex;
-      justify-content: space-around;
-      flex-wrap: wrap;
-      gap: 1.5rem;
-      text-align: center;
-      margin-top: 1rem;
-    }
-
-    .stat {
-      flex: 1;
-      min-width: 150px;
-    }
-
-    .stat h3 {
-      font-size: 2rem;
-      color: var(--primary-color);
-    }
-
-    .faq {
-      max-width: 800px;
-      margin: 2rem auto 0;
-    }
-
-    .faq-item {
-      border-bottom: 1px solid #ddd;
-    }
-
-    .faq-question {
-      width: 100%;
-      padding: 1rem;
-      font-size: 1rem;
-      font-weight: 600;
-      text-align: left;
-      background: none;
-      border: none;
-      outline: none;
-      cursor: pointer;
-      color: var(--gray-dark);
-      position: relative;
-    }
-
-    .faq-question::after {
-      content: "›";
-      position: absolute;
-      right: 1rem;
-      transform: rotate(0deg);
-      transition: transform 0.3s;
-    }
-
-    .faq-item.open .faq-question::after {
-      transform: rotate(90deg);
-    }
-
-    .faq-answer {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.4s ease;
-      background-color: #f9f9f9;
-      padding: 0 1rem;
-    }
-
-    .faq-item.open .faq-answer {
-      max-height: 400px;
-      padding: 1rem;
-    }
-
-    footer {
-      padding: 2rem;
-      text-align: center;
-      background-color: var(--primary-color);
-      color: var(--white);
-      border-radius: var(--border-radius);
-      margin-top: 2rem;
-    }
-
-    footer a {
-      color: var(--white);
-      text-decoration: underline;
-    }
-
-    footer > div {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 2rem;
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-
-    footer > div > div {
-      flex: 1;
-      min-width: 200px;
-    }
-
-    footer h4 {
-      margin-bottom: 0.5rem;
-      font-weight: 600;
-    }
-
-    footer ul {
-      list-style: none;
-      padding: 0;
-      line-height: 1.8;
-    }
-
-    @media (max-width: 768px) {
+    @media (max-width: 720px) {
       #nav-toggle {
         display: block;
       }
@@ -287,242 +110,381 @@
         display: block;
       }
 
-      footer > div {
+      header {
         flex-direction: column;
-        gap: 1.5rem;
+        align-items: flex-start;
+        gap: 0.8rem;
       }
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 2rem auto 5rem;
+      padding: 0 2rem;
+      text-align: center;
+      flex-grow: 1;
+    }
+
+    .hero-section {
+      background: var(--white);
+      border-radius: var(--border-radius);
+      padding: 3rem 2rem 4rem;
+      color: var(--dark-color);
+      max-width: 900px;
+      margin: 0 auto 3rem;
+      box-shadow: 0 2px 10px var(--shadow-color);
+      font-weight: 400;
+      font-size: 1.15rem;
+      line-height: 1.7;
+    }
+
+    .hero-section h2 {
+      font-weight: 800;
+      font-size: 2.8rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-section p {
+      margin-bottom: 1.25rem;
+    }
+
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2.8rem;
+      justify-items: stretch;
+    }
+
+    .category-card {
+      background: var(--white);
+      border-radius: var(--border-radius);
+      box-shadow: 0 12px 28px rgba(46, 125, 50, 0.1);
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.4rem 1.4rem 3.6rem;
+      min-height: 520px;
+      transition: box-shadow 0.35s ease, transform 0.35s ease;
+      position: relative;
+    }
+
+    .category-card:hover,
+    .category-card:focus {
+      box-shadow: 0 28px 60px rgba(46, 125, 50, 0.3);
+      transform: translateY(-14px);
+      outline: none;
+    }
+
+    .category-image-wrapper {
+      position: relative;
+      width: 100%;
+      height: 220px;
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      margin-bottom: 1.8rem;
+      box-shadow: 0 10px 22px rgba(46, 125, 50, 0.1);
+      flex-shrink: 0;
+    }
+
+    .category-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      transition: transform 0.5s ease;
+      border-radius: var(--border-radius);
+    }
+
+    .category-card:hover .category-image,
+    .category-card:focus .category-image {
+      transform: scale(1.08);
+    }
+
+    .image-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(46, 125, 50, 0.22);
+      mix-blend-mode: multiply;
+      pointer-events: none;
+      transition: background 0.5s ease;
+      border-radius: var(--border-radius);
+    }
+
+    .category-card:hover .image-overlay,
+    .category-card:focus .image-overlay {
+      background: rgba(46, 125, 50, 0.38);
+    }
+
+    .category-card h3 {
+      font-weight: 800;
+      font-size: 2rem;
+      color: var(--dark-color);
+      margin-bottom: 0.7rem;
+    }
+
+    .category-card p {
+      font-weight: 400;
+      color: #4f6d42;
+      font-size: 1.06rem;
+      line-height: 1.55;
+      margin-bottom: 2.4rem;
+      text-align: center;
+      padding: 0 0.5rem;
+    }
+
+    .category-cta {
+      position: absolute;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      background: var(--highlight-color);
+      color: var(--white);
+      padding: 0.75rem 2.2rem;
+      font-weight: 600;
+      font-size: 1.15rem;
+      border-radius: 40px;
+      box-shadow: 0 7px 18px rgba(102, 187, 106, 0.48);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease, transform 0.35s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      user-select: none;
+    }
+
+    .category-card:hover .category-cta,
+    .category-card:focus .category-cta {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .category-cta svg {
+      width: 26px;
+      height: 26px;
+      stroke: var(--white);
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
     }
   </style>
 </head>
 <body>
+  <header>
+    <h1 onclick="location.href='index.html'" role="banner" aria-label="Locorent Startseite" tabindex="0">Locorent</h1>
+    <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
+    <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
+  </header>
 
-<header>
-  <h1 onclick="location.href='index.html'" role="banner" aria-label="Locorent Startseite" tabindex="0">Locorent</h1>
-  <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
-  <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
-</header>
-
-<main>
-  <section class="section" style="text-align:center;">
-    <h2>Werde Vermieter:in auf Locorent</h2>
-    <p>Verdiene Geld mit Dingen, die du nicht täglich brauchst – einfach, sicher und nachhaltig.</p>
-    <div style="max-width: 400px; margin: 2rem auto;">
-      <lottie-player
-        src="https://assets10.lottiefiles.com/packages/lf20_jcikwtux.json"
-        background="transparent"
-        speed="1"
-        style="width: 100%; height: 250px;"
-        loop
-        autoplay>
-      </lottie-player>
-    </div>
-    <a href="register.html" class="cta-btn">Jetzt kostenlos starten</a>
-  </section>
-  <section class="section">
-    <h2>So wirst du Vermieter:in – in 3 Schritten</h2>
-    <div class="features">
-      <div class="feature">
-        <img src="https://cdn-icons-png.flaticon.com/512/706/706797.png" alt="Konto erstellen" />
-        <h3>Konto erstellen</h3>
-        <p>Registriere dich kostenlos in unter 2 Minuten.</p>
-      </div>
-      <div class="feature">
-        <img src="https://cdn-icons-png.flaticon.com/512/753/753318.png" alt="Artikel hinzufügen" />
-        <h3>Artikel hochladen</h3>
-        <p>Fotos, Beschreibung, Preis – alles ganz einfach.</p>
-      </div>
-      <div class="feature">
-        <img src="https://cdn-icons-png.flaticon.com/512/1256/1256650.png" alt="Vermieten" />
-        <h3>Vermieten & verdienen</h3>
-        <p>Erhalte Anfragen und teile, was du besitzt.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <h2>Beispiele aus der Community</h2>
-    <div id="community-gallery" class="gallery">
-      <p>⏳ Lade Inserate…</p>
-    </div>
-  </section>
-
-  <section class="section">
-    <h2>Locorent in Zahlen</h2>
-    <div class="stats">
-      <div id="stats-mieter" class="stat"><h3>–</h3><p>aktive Mieter:innen</p></div>
-      <div id="stats-inserate" class="stat"><h3>–</h3><p>verfügbare Artikel</p></div>
-      <div class="stat"><h3>0 €</h3><p>Fixkosten für Vermieter:innen</p></div>
-    </div>
-  </section>
-
-  <section class="section">
-    <h2 style="text-align:center;">Das Wichtigste auf einen Blick</h2>
-    <div class="faq">
-      <div class="faq-item">
-        <button class="faq-question">Welche Kosten entstehen für mich?</button>
-        <div class="faq-answer">
-          <p>Locorent ist für Vermieter:innen komplett kostenlos. Es gibt keine Anmeldegebühren, keine Fixkosten und keine weiteren Zahlungen – du kannst völlig sorgenfrei vermieten.</p>
+  <main>
+    <section class="hero-section" aria-label="Introtext zu beliebten Kategorien">
+      <h2>Unsere beliebtesten Mietartikel und alles, was du darüber wissen musst</h2>
+      <p>Locorent ist die nachhaltige Mietplattform für Alltagsgegenstände und besondere Artikel aus deiner Region. Unsere Mission: Weniger besitzen, mehr erleben.</p>
+      <p>Mit Locorent kannst du einfach und schnell Mieter:in oder Vermieter:in werden. So handelst du nachhaltig, senkst deinen Konsum und CO₂-Verbrauch und sparst Geld – oder verdienst sogar welches.</p>
+      <p>Damit du ganz leicht einsteigen kannst, findest du hier eine Auswahl der beliebtesten Produktkategorien auf Locorent.</p>
+    </section>
+    <div class="category-grid" aria-label="Beliebte Kategorien">
+      <a href="search_results.html?category=fahrzeuge" class="category-card" aria-label="Fahrzeuge mieten">
+        <div class="category-image-wrapper">
+          <img src="https://images.pexels.com/photos/164634/pexels-photo-164634.jpeg" alt="Mercedes-Benz in einer Reihe geparkt" class="category-image" loading="lazy" />
+          <div class="image-overlay"></div>
         </div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-question">Wie funktioniert die Absprache zur Übergabe?</button>
-        <div class="faq-answer">
-          <p>Du kannst über den integrierten Locorent-Chat direkt mit Mieter:innen kommunizieren und individuell einen Abholzeitpunkt sowie -ort vereinbaren.</p>
-        </div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-question">Wie sind meine Artikel geschützt?</button>
-        <div class="faq-answer">
-          <p>Aktuell liegt die Verantwortung für Kaution oder Absicherung bei den Nutzenden. Eine integrierte Versicherungslösung ist bereits in Planung.</p>
-        </div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-question">Was kann ich für die Vermietung verlangen?</button>
-        <div class="faq-answer">
-          <p>Den Mietpreis bestimmst du selbst. Orientiere dich gern an ähnlichen Inseraten in deiner Umgebung – du kannst Preise jederzeit anpassen.</p>
-        </div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-question">Welche Vorteile habe ich als Anbieter?</button>
-        <div class="faq-answer">
-          <p>Du profitierst von nachhaltigem Einkommen, erreichst neue Kund:innen aus deiner Region und nutzt ein wachsendes Netzwerk mit fairen Bedingungen.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-</main>
+        <h3>Fahrzeuge</h3>
+        <p>PKWs, Motorräder und mehr – mobil bleiben leicht gemacht.</p>
+        <span class="category-cta">Hier klicken → <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span>
+      </a>
 
-<footer role="contentinfo">
-  <div>
+      <a href="search_results.html?category=transporter" class="category-card" aria-label="Transporter mieten">
+        <div class="category-image-wrapper">
+          <img src="https://images.pexels.com/photos/3593923/pexels-photo-3593923.jpeg" alt="Transportfahrzeuge auf der Straße" class="category-image" loading="lazy" />
+          <div class="image-overlay"></div>
+        </div>
+        <h3>Transporter</h3>
+        <p>Für den großen Umzug oder den Wocheneinkauf.</p>
+        <span class="category-cta">Hier klicken → <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span>
+      </a>
+
+      <a href="search_results.html?category=boote" class="category-card" aria-label="Boote mieten">
+        <div class="category-image-wrapper">
+          <img src="https://images.pexels.com/photos/1295036/pexels-photo-1295036.jpeg" alt="Boot auf dem Wasser von oben" class="category-image" loading="lazy" />
+          <div class="image-overlay"></div>
+        </div>
+        <h3>Boote</h3>
+        <p>Für entspannte Tage auf dem Wasser.</p>
+        <span class="category-cta">Hier klicken → <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span>
+      </a>
+
+      <a href="search_results.html?category=fahrrad" class="category-card" aria-label="Fahrräder & E-Bikes mieten">
+        <div class="category-image-wrapper">
+          <img src="https://images.pexels.com/photos/2270328/pexels-photo-2270328.jpeg" alt="Mann sitzt neben seinem Fahrrad" class="category-image" loading="lazy" />
+          <div class="image-overlay"></div>
+        </div>
+        <h3>Fahrräder & E-Bikes</h3>
+        <p>Aktiv und nachhaltig unterwegs.</p>
+        <span class="category-cta">Hier klicken → <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span>
+      </a>
+
+      <a href="search_results.html?category=werkzeuge" class="category-card" aria-label="Werkzeuge mieten">
+        <div class="category-image-wrapper">
+          <img src="https://images.pexels.com/photos/909256/pexels-photo-909256.jpeg" alt="Werkzeuge hängen an einer Werkbank" class="category-image" loading="lazy" />
+          <div class="image-overlay"></div>
+        </div>
+        <h3>Werkzeuge</h3>
+        <p>Vom Bohrer bis zur Säge – alles für dein Projekt.</p>
+        <span class="category-cta">Hier klicken → <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span>
+      </a>
+
+      <a href="search_results.html?category=maschinen" class="category-card" aria-label="Maschinen & Baugeräte mieten">
+        <div class="category-image-wrapper">
+          <img src="https://images.pexels.com/photos/13039119/pexels-photo-13039119.jpeg" alt="Mann schneidet Metall mit Baugerät" class="category-image" loading="lazy" />
+          <div class="image-overlay"></div>
+        </div>
+        <h3>Maschinen & Baugeräte</h3>
+        <p>Professionelle Geräte für den Bau.</p>
+        <span class="category-cta">Hier klicken → <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span>
+      </a>
+
+      <a href="search_results.html?category=party" class="category-card" aria-label="Party & Event mieten">
+        <div class="category-image-wrapper">
+          <img src="https://images.pexels.com/photos/919734/pexels-photo-919734.jpeg" alt="Laptop und Audiomixer auf Party" class="category-image" loading="lazy" />
+          <div class="image-overlay"></div>
+        </div>
+        <h3>Party & Event</h3>
+        <p>Alles für die perfekte Feier.</p>
+        <span class="category-cta">Hier klicken → <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span>
+      </a>
+
+      <a href="search_results.html?category=technik" class="category-card" aria-label="Technik mieten">
+        <div class="category-image-wrapper">
+          <img src="https://images.pexels.com/photos/123335/pexels-photo-123335.jpeg" alt="Frau mit VR-Brille" class="category-image" loading="lazy" />
+          <div class="image-overlay"></div>
+        </div>
+        <h3>Technik</h3>
+        <p>Beamer, Kameras, Soundsysteme und mehr.</p>
+        <span class="category-cta">Hier klicken → <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span>
+      </a>
+
+      <a href="search_results.html?category=haushalt" class="category-card" aria-label="Haushalt & Möbel mieten">
+        <div class="category-image-wrapper">
+          <img src="https://images.pexels.com/photos/4107286/pexels-photo-4107286.jpeg" alt="Frau in heller Wohnung mit Reinigungsutensilien" class="category-image" loading="lazy" />
+          <div class="image-overlay"></div>
+        </div>
+        <h3>Haushalt & Möbel</h3>
+        <p>Alles, was dein Zuhause braucht.</p>
+        <span class="category-cta">Hier klicken → <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span>
+      </a>
+
+      <a href="search_results.html?category=garten" class="category-card" aria-label="Garten mieten">
+        <div class="category-image-wrapper">
+          <img src="https://images.pexels.com/photos/1301856/pexels-photo-1301856.jpeg" alt="Person arbeitet im Garten mit Schaufel" class="category-image" loading="lazy" />
+          <div class="image-overlay"></div>
+        </div>
+        <h3>Garten</h3>
+        <p>Geräte und Möbel für draußen.</p>
+        <span class="category-cta">Hier klicken → <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span>
+      </a>
+
+      <a href="search_results.html?category=freizeit" class="category-card" aria-label="Freizeit & Sport mieten">
+        <div class="category-image-wrapper">
+          <img src="https://images.pexels.com/photos/209977/pexels-photo-209977.jpeg" alt="Tennisball liegt auf Tennisschläger" class="category-image" loading="lazy" />
+          <div class="image-overlay"></div>
+        </div>
+        <h3>Freizeit & Sport</h3>
+        <p>Für Spaß und Bewegung in der Freizeit.</p>
+        <span class="category-cta">Hier klicken → <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span>
+      </a>
+
+      <a href="search_results.html?category=baby" class="category-card" aria-label="Baby & Kind mieten">
+        <div class="category-image-wrapper">
+          <img src="https://images.pexels.com/photos/32747057/pexels-photo-32747057.jpeg" alt="Kind spielt mit Bausteinen im Kinderzimmer" class="category-image" loading="lazy" />
+          <div class="image-overlay"></div>
+        </div>
+        <h3>Baby & Kind</h3>
+        <p>Alles für die Kleinsten – flexibel und günstig.</p>
+        <span class="category-cta">Hier klicken → <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span>
+      </a>
+    </div>
+  </main>
+
+  <footer role="contentinfo">
     <div>
-      <h4>Mieten & Vermieten</h4>
-      <ul>
-        <li><a href="so-funktionierts.html">So funktioniert's</a></li>
-        <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
-        <li><a href="kategorien.html">Beliebte Kategorien</a></li>
-        <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
-        <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
-      </ul>
+      <div>
+        <h4>Mieten & Vermieten</h4>
+        <ul>
+          <li><a href="so-funktionierts.html">So funktioniert's</a></li>
+          <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
+          <li><a href="kategorien.html">Beliebte Kategorien</a></li>
+          <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
+          <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Wissenswertes</h4>
+        <ul>
+          <li><a href="agb.html">AGB & Impressum</a></li>
+          <li><a href="datenschutz.html">Datenschutz</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Über uns</h4>
+        <ul>
+          <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
+          <li><a href="social-media.html">Folgen Sie uns</a></li>
+          <li><a href="mission.html">Unsere Mission</a></li>
+        </ul>
+      </div>
     </div>
-    <div>
-      <h4>Wissenswertes</h4>
-      <ul>
-        <li><a href="agb.html">AGB & Impressum</a></li>
-        <li><a href="datenschutz.html">Datenschutz</a></li>
-      </ul>
-    </div>
-    <div>
-      <h4>Über uns</h4>
-      <ul>
-        <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
-        <li><a href="social-media.html">Folgen Sie uns</a></li>
-        <li><a href="mission.html">Unsere Mission</a></li>
-      </ul>
-    </div>
-  </div>
-  <div style="margin-top: 2rem; font-size: 0.9rem;">
-    © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
-  </div>
-</footer>
+    <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
+  </footer>
 
-<script>
-  const supabase = window.supabase.createClient(
-    'https://flnjalgqtkqycsaymmbd.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-  );
+  <script>
+    const supabase = window.supabase.createClient(
+      'https://flnjalgqtkqycsaymmbd.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+    );
 
-  let userSession = null;
+    let userSession = null;
 
-  async function init() {
-    const { data: { session } } = await supabase.auth.getSession();
-    userSession = session;
-    updateNav();
-    loadCommunityListings();
-    loadPlatformStats();
-  }
-
-  function updateNav() {
-    const nav = document.getElementById('nav-links');
-    nav.innerHTML = userSession?.user ? `
-      <a href="index.html">Start</a>
-      <a href="profil.html">Mein Profil</a>
-      <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-      <a href="favoriten.html">Meine Favoriten</a>
-      <a href="inserate.html">Meine Inserate</a>
-      <a href="#" onclick="logout(event)">Logout</a>
-    ` : `
-      <a href="index.html">Start</a>
-      <a href="login.html">Einloggen</a>
-    `;
-  }
-
-  async function logout(event) {
-    event.preventDefault();
-    await supabase.auth.signOut();
-    window.location.href = "login.html";
-  }
-
-  async function loadCommunityListings() {
-    const container = document.getElementById("community-gallery");
-    container.innerHTML = "";
-
-    const { data, error } = await supabase
-      .from('listings')
-      .select('*')
-      .order('created_at', { ascending: false })
-      .limit(4);
-
-    if (error || !data?.length) {
-      container.innerHTML = "<p>Keine Inserate verfügbar.</p>";
-      return;
+    async function init() {
+      const { data: { session } } = await supabase.auth.getSession();
+      userSession = session;
+      updateNav();
     }
 
-    for (const item of data) {
-      const img = item.image_urls?.[0] || "https://via.placeholder.com/300x150?text=Kein+Bild";
-      const card = document.createElement("div");
-      card.className = "gallery-item";
-      card.innerHTML = `
-        <img src="${img}" alt="${item.title}" />
-        <p><strong>${item.title}</strong><br>${item.price_per_day || "k. A."} €/Tag</p>
+    function updateNav() {
+      const nav = document.getElementById('nav-links');
+      nav.innerHTML = userSession?.user ? `
+        <a href="index.html">Start</a>
+        <a href="profil.html">Mein Profil</a>
+        <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+        <a href="favoriten.html">Meine Favoriten</a>
+        <a href="inserate.html">Meine Inserate</a>
+        <a href="#" onclick="logout(event)">Logout</a>
+      ` : `
+        <a href="index.html">Start</a>
+        <a href="login.html">Einloggen</a>
       `;
-      container.appendChild(card);
-    }
-  }
-
-  async function loadPlatformStats() {
-    const mieterRes = await supabase
-      .from('profiles')
-      .select('id', { count: 'exact', head: true });
-
-    const listingsRes = await supabase
-      .from('listings')
-      .select('id', { count: 'exact', head: true });
-
-    if (mieterRes?.count >= 0) {
-      document.querySelector("#stats-mieter h3").textContent = `${mieterRes.count}+`;
     }
 
-    if (listingsRes?.count >= 0) {
-      document.querySelector("#stats-inserate h3").textContent = `${listingsRes.count}+`;
+    async function logout(event) {
+      event.preventDefault();
+      await supabase.auth.signOut();
+      window.location.href = "login.html";
     }
-  }
 
-  document.querySelectorAll('.faq-question').forEach(button => {
-    button.addEventListener('click', () => {
-      const item = button.parentElement;
-      item.classList.toggle('open');
+    document.getElementById("nav-toggle").addEventListener("click", () => {
+      const nav = document.getElementById("nav-links");
+      nav.classList.toggle("show");
+      const expanded = nav.classList.contains("show");
+      document.getElementById("nav-toggle").setAttribute("aria-expanded", expanded);
     });
-  });
 
-  document.getElementById("nav-toggle").addEventListener("click", () => {
-    const nav = document.getElementById("nav-links");
-    nav.classList.toggle("show");
-    const expanded = nav.classList.contains("show");
-    document.getElementById("nav-toggle").setAttribute("aria-expanded", expanded);
-  });
-
-  init();
-</script>
-
+    init();
+  </script>
 </body>
 </html>
+
