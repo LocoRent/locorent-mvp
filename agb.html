@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
   <title>AGB & Impressum – Locorent</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -29,12 +29,8 @@
     }
 
     html, body {
-      max-width: 100%;
-      overflow-x: hidden;
-    }
-
-    body {
       margin: 0;
+      padding: 0;
       font-family: var(--font-primary);
       background: linear-gradient(to bottom, #e8f5e9 0%, #ffffff 100%);
       color: var(--text-dark);
@@ -42,6 +38,7 @@
       display: flex;
       flex-direction: column;
       min-height: 100vh;
+      overflow-x: hidden;
     }
 
     header {
@@ -113,9 +110,10 @@
     }
 
     .container {
-      max-width: 900px;
+      max-width: 1080px;
+      width: 100%;
       margin: 2rem auto 4rem auto;
-      padding: 0 1rem;
+      padding: 1rem 1.2rem;
       background: var(--white);
       border-radius: var(--radius);
       box-shadow: 0 12px 30px var(--shadow-light);
@@ -180,11 +178,6 @@
       user-select: none;
       text-align: center;
       margin-top: auto;
-      position: relative;
-      left: 50%;
-      right: 50%;
-      margin-left: -50vw;
-      margin-right: -50vw;
     }
 
     footer > div {
@@ -255,6 +248,10 @@
         display: block;
       }
 
+      .container {
+        padding: 1rem 1rem;
+      }
+
       footer > div {
         flex-direction: column;
         align-items: flex-start;
@@ -276,35 +273,58 @@
   <main class="container" role="main">
     <div class="badge">Stand: 2025</div>
     <h2>Allgemeine Geschäftsbedingungen (AGB)</h2>
+
     <h3>1. Geltungsbereich</h3>
-    <p>Diese AGB gelten für die Nutzung der Plattform <strong>Locorent</strong> unter <a href="https://www.locorent.de">www.locorent.de</a>.</p>
+    <p>Diese AGB gelten für die Nutzung der Plattform <strong>Locorent</strong> unter <a href="https://www.locorent.de">www.locorent.de</a>. Locorent stellt die Infrastruktur bereit, um Gegenstände zwischen privaten Nutzer:innen zu vermieten. Verträge kommen nur zwischen den Parteien zustande.</p>
+
     <h3>2. Registrierung</h3>
-    <p>Eine Registrierung ist notwendig. Die Daten müssen korrekt sein.</p>
+    <p>Eine Registrierung ist notwendig. Die Daten müssen korrekt sein. Das Konto ist nicht übertragbar.</p>
+
     <h3>3. Leistungen</h3>
-    <p>Locorent bietet die Plattform – nicht die Artikel.</p>
+    <p>Locorent bietet die Plattform – nicht die Artikel. Wir haften nicht für Richtigkeit, Qualität oder Zustand der Mietobjekte.</p>
+
     <h3>4. Zustandekommen von Verträgen</h3>
-    <p>Ein Mietvertrag entsteht erst durch aktive Annahme.</p>
+    <p>Ein Mietvertrag entsteht erst, wenn der/die Vermieter:in eine Anfrage aktiv annimmt.</p>
+
     <h3>5. Pflichten der Nutzer:innen</h3>
     <ul>
-      <li>Keine illegalen Inhalte</li>
-      <li>Keine Rechteverletzung</li>
-      <li>Kein Betrug oder Bots</li>
+      <li>Keine illegalen Inhalte oder Objekte</li>
+      <li>Keine Rechte Dritter verletzen</li>
+      <li>Keine Fakes, Betrug oder automatisierte Bots</li>
     </ul>
+
     <h3>6. Haftung</h3>
-    <p>Locorent haftet nur bei Vorsatz oder grober Fahrlässigkeit.</p>
+    <p>Locorent haftet nur bei Vorsatz oder grober Fahrlässigkeit. Schäden zwischen Mietparteien müssen direkt geregelt werden.</p>
+
     <h3>7. Kündigung</h3>
-    <p>Konto kann jederzeit gelöscht werden.</p>
+    <p>Jede:r kann sein/ihr Konto jederzeit löschen. Bei Missbrauch behalten wir uns die Sperrung vor.</p>
+
     <h3>8. Datenschutz</h3>
-    <p>Infos in der <a href="datenschutz.html">Datenschutzerklärung</a>.</p>
+    <p>Infos findest du in der <a href="datenschutz.html">Datenschutzerklärung</a>.</p>
+
     <h3>9. Rechtliches</h3>
-    <p>Deutsches Recht. Gerichtsstand ist Maintal.</p>
+    <p>Es gilt deutsches Recht. Gerichtsstand ist Maintal. Sollte eine Klausel unwirksam sein, bleibt der Rest bestehen.</p>
 
     <div class="badge" style="margin-top:3rem;">Impressum</div>
     <h2>Angaben gemäß § 5 TMG</h2>
-    <p><strong>Betreiber:</strong><br> Pascal Merten<br> Wilhelmsbader Straße 15<br> 63477 Maintal</p>
-    <p><strong>Kontakt:</strong><br> <a href="mailto:info@locorent.de">info@locorent.de</a></p>
-    <p><strong>Haftungsausschluss:</strong><br> Private Website, keine Einnahmen.</p>
-    <p><strong>Urheberrecht:</strong><br> Keine Nutzung ohne Genehmigung.</p>
+
+    <p><strong>Betreiber der Website:</strong><br>
+    Pascal Merten<br>
+    Wilhelmsbader Straße 15<br>
+    63477 Maintal<br>
+    Deutschland</p>
+
+    <p><strong>Kontakt:</strong><br>
+    E-Mail: <a href="mailto:info@locorent.de">info@locorent.de</a></p>
+
+    <p><strong>Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV:</strong><br>
+    Pascal Merten, Anschrift wie oben.</p>
+
+    <h3>Haftungsausschluss</h3>
+    <p>Diese Website wird derzeit rein privat und nicht kommerziell betrieben. Keine Werbung, kein Verkauf, keine Einnahmen.</p>
+
+    <h3>Urheberrecht</h3>
+    <p>Alle Inhalte sind urheberrechtlich geschützt. Vervielfältigung oder Weiterverbreitung nur mit ausdrücklicher Genehmigung.</p>
   </main>
 
   <footer role="contentinfo">
@@ -376,7 +396,9 @@
     document.getElementById('nav-toggle').addEventListener('click', () => {
       const nav = document.getElementById('nav-links');
       nav.classList.toggle('show');
-      document.getElementById('nav-toggle').setAttribute('aria-expanded', nav.classList.contains('show'));
+      const toggle = document.getElementById('nav-toggle');
+      const expanded = nav.classList.contains('show');
+      toggle.setAttribute('aria-expanded', expanded);
     });
 
     init();
