@@ -338,6 +338,7 @@
       }
     }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.1/dist/browser-image-compression.min.js"></script>
 </head>
 <body>
 
@@ -556,29 +557,50 @@ document.getElementById("dropzone").addEventListener("click", () => {
 
 async function handleFiles(files) {
   const container = document.getElementById("preview-gallery");
+
   for (let file of files) {
     if (uploadedImageUrls.length >= 2) break;
     if (!file.type.startsWith("image/")) continue;
-    if (file.size > 2 * 1024 * 1024) {
-      alert("Bilder dürfen maximal 2 MB groß sein.");
-      continue;
-    }
 
-    const tempBox = document.createElement("div");
-    tempBox.className = "preview-box";
-    tempBox.innerHTML = '<div class="img-wrapper"><div class="loader"></div></div>';
-    container.appendChild(tempBox);
+    try {
+      // Komprimiere das Bild auf max. 0.02 MB = 20 KB
+      const compressedFile = await imageCompression(file, {
+        maxSizeMB: 0.02,
+        maxWidthOrHeight: 800,
+        useWebWorker: true
+      });
 
-    const path = `listing-images/${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
-    const { error } = await supabase.storage.from('listing-images').upload(path, file);
-    if (!error) {
-      const { data } = supabase.storage.from('listing-images').getPublicUrl(path);
-      uploadedImageUrls.push(data.publicUrl);
-    } else {
-      alert("Upload-Fehler: " + error.message);
+      // Zeige Hinweis zur tatsächlichen Größe
+      const compressedSizeKB = (compressedFile.size / 1024).toFixed(1);
+
+      if (compressedFile.size > 2 * 1024 * 1024) {
+        alert("Komprimiertes Bild ist noch zu groß (max. 2 MB).");
+        continue;
+      }
+
+      const tempBox = document.createElement("div");
+      tempBox.className = "preview-box";
+      tempBox.innerHTML = `<div class="img-wrapper"><div class="loader"></div><div style="position:absolute;bottom:2px;left:4px;font-size:11px;background:white;padding:2px 4px;border-radius:4px;">${compressedSizeKB} KB</div></div>`;
+      container.appendChild(tempBox);
+
+      const path = `listing-images/${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
+      const { error } = await supabase.storage.from('listing-images').upload(path, compressedFile);
+      if (!error) {
+        const { data } = supabase.storage.from('listing-images').getPublicUrl(path);
+        uploadedImageUrls.push(data.publicUrl);
+      } else {
+        alert("Upload-Fehler: " + error.message);
+      }
+
+    } catch (err) {
+      console.error("Fehler bei Bildverarbeitung:", err);
+      alert("Fehler beim Verarbeiten des Bildes.");
     }
-    renderPreviews();
   }
+
+  renderPreviews();
+}
+
 }
 
 function renderPreviews() {
