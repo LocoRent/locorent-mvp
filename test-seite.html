@@ -570,30 +570,36 @@ async function handleFiles(files) {
         useWebWorker: true
       });
 
-      // Zeige Hinweis zur tatsächlichen Größe
       const compressedSizeKB = (compressedFile.size / 1024).toFixed(1);
 
       if (compressedFile.size > 2 * 1024 * 1024) {
         alert("Komprimiertes Bild ist noch zu groß (max. 2 MB).");
         continue;
       }
-}
 
-function renderPreviews() {
-  const container = document.getElementById("preview-gallery");
-  container.innerHTML = '';
-  uploadedImageUrls.forEach((url, i) => {
-    const div = document.createElement("div");
-    div.className = "preview-box";
-    div.innerHTML = `<div class="img-wrapper"><img src="${url}" alt="Bild ${i}"></div><button class="remove-btn" onclick="removeImage(${i})">×</button>`;
-    container.appendChild(div);
-  });
-}
+      const tempBox = document.createElement("div");
+      tempBox.className = "preview-box";
+      tempBox.innerHTML = `<div class="img-wrapper"><div class="loader"></div><small>${compressedSizeKB} KB</small></div>`;
+      container.appendChild(tempBox);
 
-function removeImage(i) {
-  uploadedImageUrls.splice(i, 1);
+      const path = `listing-images/${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
+      const { error } = await supabase.storage.from('listing-images').upload(path, compressedFile);
+
+      if (!error) {
+        const { data } = supabase.storage.from('listing-images').getPublicUrl(path);
+        uploadedImageUrls.push(data.publicUrl);
+      } else {
+        alert("Upload-Fehler: " + error.message);
+      }
+    } catch (err) {
+      console.error("Fehler bei Bildverarbeitung:", err);
+      alert("Fehler beim Verarbeiten des Bildes.");
+    }
+  }
+
   renderPreviews();
 }
+
 
 document.getElementById("save-btn").addEventListener("click", async () => {
   const { data: sd } = await supabase.auth.getSession();
