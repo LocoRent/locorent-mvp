@@ -20,7 +20,15 @@
       --max-width: 1000px;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      overflow-x: hidden;
+    }
 
     body {
       font-family: 'Poppins', sans-serif;
@@ -198,20 +206,14 @@
     footer {
       background-color: var(--primary-color);
       color: var(--white);
-      padding: 2rem 2rem 1rem;
-      border-radius: var(--border-radius);
-      margin: 2rem 0 0 0;
+      padding: 2rem;
       font-weight: 400;
       user-select: none;
       box-shadow: 0 8px 32px rgba(46, 125, 50, 0.22);
       font-size: 0.92rem;
       letter-spacing: 0.02em;
-      width: 100vw;
-      position: relative;
-      left: 50%;
-      right: 50%;
-      margin-left: -50vw;
-      margin-right: -50vw;
+      width: 100%;
+      box-sizing: border-box;
     }
 
     footer > div {
@@ -410,8 +412,6 @@
       <a href="nachrichten-inbox.html">📨 Nachrichten</a>
       <a href="favoriten.html">Meine Favoriten</a>
       <a href="inserate.html">Meine Inserate</a>
-      <a href="social-media.html">Folge uns</a>
-      <a href="mission.html">Unsere Mission</a>
       <a href="#" onclick="logout(event)">Logout</a>
     ` : `
       <a href="index.html">Start</a>
