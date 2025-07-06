@@ -75,7 +75,6 @@
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
-      width: 100%;  /* Ensures the background spans the entire width */
     }
 
     nav#nav-links a {
@@ -96,7 +95,7 @@
       position: absolute;
       left: 0;
       bottom: -4px;
-      width: 100%;
+      width: 0;
       height: 2px;
       background-color: var(--accent);
       transition: width 0.3s ease;
@@ -122,7 +121,6 @@
         display: none;
         flex-direction: column;
         margin-top: 1rem;
-        width: 100%;  /* Ensure the mobile menu spans the full width */
       }
 
       nav#nav-links.show {
@@ -296,14 +294,7 @@
 <header>
   <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
   <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
-  <nav id="nav-links" role="navigation" aria-label="Hauptnavigation">
-    <a href="index.html">Start</a>
-    <a href="profil.html">Mein Profil</a>
-    <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-    <a href="favoriten.html">Meine Favoriten</a>
-    <a href="inserate.html">Meine Inserate</a>
-    <a href="#" onclick="logout(event)">Logout</a>
-  </nav>
+  <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
 </header>
 
 <main>
@@ -467,4 +458,3 @@
 
 </body>
 </html>
-
