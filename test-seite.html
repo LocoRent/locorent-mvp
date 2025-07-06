@@ -7,6 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
+    /* Deine bestehenden CSS-Styles (unverändert) */
     :root {
       --primary: #2e7d32;
       --primary-light: #66bb6a;
@@ -241,9 +242,17 @@
 
 <main class="container" role="main" tabindex="0">
   <h2>Kontaktiere uns</h2>
-  <p>Du hast Fragen oder Feedback? Nutze einfach das Formular unten – wir melden uns so schnell wie möglich bei dir.</p>
+  <p style="text-align:center; font-size:1.1rem; color:var(--text-muted); line-height:1.7;">
+    Du hast Fragen, Feedback oder möchtest einfach nur Hallo sagen?<br>
+    Schreib uns gerne über das Formular oder direkt per E-Mail.<br><br>
+    <strong>E-Mail:</strong> <a href="mailto:info@locorent.de">info@locorent.de</a><br>
+    Wir melden uns in der Regel innerhalb von 24 Stunden bei dir.
+  </p>
 
-  <form id="kontaktformular" style="margin-top: 2rem;">
+  <form action="https://formsubmit.io/send/info@locorent.de" method="POST" style="margin-top: 2rem;">
+    <input type="hidden" name="_redirect" value="https://www.locorent.de/danke.html">
+    <input type="text" name="_formsubmit_id" style="display:none">
+
     <label for="name">Name (optional)</label><br>
     <input type="text" id="name" name="name" style="width:100%; padding:0.6rem; border-radius:8px; margin-bottom:1rem; border:1px solid #ccc;"><br>
 
@@ -259,7 +268,6 @@
     <button type="submit" style="background-color: var(--primary); color:white; padding:0.7rem 1.5rem; border:none; border-radius:12px; cursor:pointer; font-weight:600;">
       Absenden
     </button>
-    <p id="status" style="margin-top:1rem; font-weight:500;"></p>
   </form>
 </main>
 
@@ -300,6 +308,7 @@
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
   );
 
+
   async function updateNav() {
     const { data: { session } } = await supabase.auth.getSession();
     const nav = document.getElementById("nav-links");
@@ -330,34 +339,6 @@
   });
 
   updateNav();
-
-  document.getElementById("kontaktformular").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const status = document.getElementById("status");
-    const name = document.getElementById("name").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const betreff = document.getElementById("betreff").value.trim();
-    const nachricht = document.getElementById("nachricht").value.trim();
-
-    if (!email || !nachricht) {
-      status.textContent = "Bitte fülle alle Pflichtfelder aus.";
-      status.style.color = "red";
-      return;
-    }
-
-    const { error } = await supabase
-      .from('kontaktanfragen')
-      .insert([{ name, email, betreff, nachricht, eingegangen_am: new Date() }]);
-
-    if (error) {
-      status.textContent = "Fehler beim Absenden. Bitte versuche es später erneut.";
-      status.style.color = "red";
-    } else {
-      status.textContent = "Danke für deine Nachricht! Wir melden uns bald.";
-      status.style.color = "green";
-      document.getElementById("kontaktformular").reset();
-    }
-  });
 </script>
 
 </body>
