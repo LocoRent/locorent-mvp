@@ -1,117 +1,361 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Beliebte Kategorien – Locorent</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<style>
-  :root {
-    --primary-color: #2e7d32;
-    --secondary-color: #a5d6a7;
-    --background-color: #f1f8e9;
-    --dark-color: #1b5e20;
-    --highlight-color: #66bb6a;
-    --white: #fff;
-    --gray-light: #f7f7f7;
-    --gray-dark: #333;
-    --border-radius: 12px;
-    --shadow-color: rgba(0, 0, 0, 0.1);
-  }
-
-  *, *::before, *::after {
-    box-sizing: border-box;
-  }
-
-  body {
-    margin: 0; padding: 0;
-    background: var(--background-color);
-    font-family: 'Poppins', sans-serif;
-    color: var(--gray-dark);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    line-height: 1.6;
-  }
-
-  header {
-    background-color: var(--primary-color);
-    color: var(--white);
-    padding: 1.5rem 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    flex-wrap: wrap;
-  }
-
-  header h1 {
-    font-size: 1.8rem;
-    user-select: none;
-    cursor: pointer;
-    margin: 0;
-  }
-
-  #nav-toggle {
-    display: none;
-    background: none;
-    border: none;
-    font-size: 1.8rem;
-    color: var(--white);
-    cursor: pointer;
-  }
-
-  nav {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-
-  nav a {
-    color: var(--white);
-    text-decoration: none;
-    margin-left: 1.5rem;
-    font-weight: 600;
-    font-size: 1rem;
-    position: relative;
-    padding-bottom: 3px;
-    transition: border-bottom 0.3s ease;
-  }
-
-  nav a:hover,
-  nav a:focus {
-    border-bottom: 2px solid var(--highlight-color);
-    outline: none;
-  }
-
-  @media (max-width: 720px) {
-    #nav-toggle {
-      display: block;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Beliebte Kategorien – Locorent</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root {
+      --primary-color: #2e7d32;
+      --secondary-color: #a5d6a7;
+      --background-color: #f1f8e9;
+      --dark-color: #1b5e20;
+      --highlight-color: #66bb6a;
+      --white: #fff;
+      --gray-light: #f7f7f7;
+      --gray-dark: #333;
+      --border-radius: 12px;
+      --shadow-color: rgba(0, 0, 0, 0.1);
     }
 
-    nav#nav-links {
-      flex-direction: column;
-      display: none;
-      margin-top: 1rem;
-      width: 100%;
+    *, *::before, *::after {
+      box-sizing: border-box;
     }
 
-    nav#nav-links.show {
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--background-color);
+      font-family: 'Poppins', sans-serif;
+      color: var(--gray-dark);
+      min-height: 100vh;
       display: flex;
+      flex-direction: column;
+      line-height: 1.6;
     }
 
-    nav#nav-links a {
-      margin: 0.4rem 0;
-      padding: 0.5rem 1rem;
-      background-color: rgba(255, 255, 255, 0.1);
-      border-radius: 6px;
+    header {
+      background-color: var(--primary-color);
+      color: var(--white);
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      flex-wrap: wrap;
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+      user-select: none;
+      cursor: pointer;
+      margin: 0;
+    }
+
+    #nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.8rem;
+      color: var(--white);
+      cursor: pointer;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      color: var(--white);
+      text-decoration: none;
+      margin-left: 1.5rem;
+      font-weight: 600;
+      font-size: 1rem;
+      position: relative;
+      padding-bottom: 3px;
+      transition: border-bottom 0.3s ease;
+    }
+
+    nav a:hover,
+    nav a:focus {
+      border-bottom: 2px solid var(--highlight-color);
+      outline: none;
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 2rem auto 5rem;
+      padding: 0 2rem;
+      text-align: center;
+      flex-grow: 1;
+    }
+
+    .hero-section {
+      background: var(--white);
+      border-radius: var(--border-radius);
+      padding: 3rem 2rem 4rem;
+      color: var(--dark-color);
+      max-width: 900px;
+      margin: 0 auto 3rem;
+      box-shadow: 0 2px 10px var(--shadow-color);
+      font-weight: 400;
+      font-size: 1.15rem;
+      line-height: 1.7;
+    }
+
+    .hero-section h2 {
+      font-weight: 800;
+      font-size: 2.8rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-section p {
+      margin-bottom: 1.25rem;
+    }
+
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2.8rem;
+      justify-items: stretch;
+    }
+
+    .category-card {
+      background: var(--white);
+      border-radius: var(--border-radius);
+      box-shadow: 0 12px 28px rgba(46, 125, 50, 0.1);
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.4rem 1.4rem 3.6rem;
+      min-height: 520px;
+      transition: box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1), transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    .category-card:hover,
+    .category-card:focus {
+      box-shadow: 0 28px 60px rgba(46, 125, 50, 0.3);
+      transform: translateY(-14px);
+      outline: none;
+    }
+
+    .category-image-wrapper {
+      position: relative;
+      width: 100%;
+      height: 220px;
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      margin-bottom: 1.8rem;
+      box-shadow: 0 10px 22px rgba(46, 125, 50, 0.1);
+      flex-shrink: 0;
+    }
+
+    .category-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center center;
+      transition: transform 0.5s ease;
+      will-change: transform;
+      border-radius: var(--border-radius);
       display: block;
     }
-  }
-</style>
+
+    .category-card:hover .category-image,
+    .category-card:focus .category-image {
+      transform: scale(1.08);
+    }
+
+    .image-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(46, 125, 50, 0.22);
+      mix-blend-mode: multiply;
+      pointer-events: none;
+      transition: background 0.5s ease;
+      border-radius: var(--border-radius);
+    }
+
+    .category-card:hover .image-overlay,
+    .category-card:focus .image-overlay {
+      background: rgba(46, 125, 50, 0.38);
+    }
+
+    .category-card h3 {
+      font-weight: 800;
+      font-size: 2rem;
+      color: var(--dark-color);
+      margin-bottom: 0.7rem;
+      line-height: 1.1;
+    }
+
+    .category-card p {
+      font-weight: 400;
+      color: #4f6d42;
+      font-size: 1.06rem;
+      line-height: 1.55;
+      margin-bottom: 2.4rem;
+      text-align: center;
+      padding: 0 0.5rem;
+    }
+
+    .category-cta {
+      position: absolute;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      background: var(--highlight-color);
+      color: var(--white);
+      padding: 0.75rem 2.2rem;
+      font-weight: 600;
+      font-size: 1.15rem;
+      border-radius: 40px;
+      box-shadow: 0 7px 18px rgba(102, 187, 106, 0.48);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1), transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      user-select: none;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .category-card:hover .category-cta,
+    .category-card:focus .category-cta {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .category-cta svg {
+      width: 26px;
+      height: 26px;
+      stroke: var(--white);
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    footer {
+      background-color: var(--primary-color);
+      color: var(--white);
+      padding: 2rem 2rem 1rem;
+      border-radius: var(--border-radius);
+      margin: 2rem 0 0 0;
+      font-weight: 400;
+      user-select: none;
+      box-shadow: 0 8px 32px rgba(46, 125, 50, 0.22);
+      font-size: 0.92rem;
+      letter-spacing: 0.02em;
+      width: 100vw;
+      position: relative;
+      left: 50%;
+      right: 50%;
+      margin-left: -50vw;
+      margin-right: -50vw;
+    }
+
+    footer > div {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+
+    footer > div > div {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    footer h4 {
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+      font-size: 1.1rem;
+      user-select: none;
+    }
+
+    footer ul {
+      list-style: none;
+      padding: 0;
+      line-height: 1.8;
+    }
+
+    footer ul li a {
+      color: var(--white);
+      text-decoration: underline;
+      transition: color 0.3s ease;
+    }
+
+    footer ul li a:hover,
+    footer ul li a:focus-visible {
+      color: var(--highlight-color);
+      outline: none;
+    }
+
+    footer small {
+      display: block;
+      margin-top: 2rem;
+      text-align: center;
+      user-select: none;
+    }
+
+    @media (max-width: 480px) {
+      header {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+      }
+
+      .category-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      footer {
+        margin: 1rem;
+        padding: 1.5rem;
+        font-size: 0.85rem;
+      }
+    }
+
+    @media (max-width: 720px) {
+      #nav-toggle {
+        display: block;
+      }
+
+      nav#nav-links {
+        flex-direction: column;
+        display: none;
+        margin-top: 1rem;
+        width: 100%;
+      }
+
+      nav#nav-links.show {
+        display: flex;
+      }
+
+      nav#nav-links a {
+        margin: 0.4rem 0;
+        padding: 0.5rem 1rem;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+        display: block;
+      }
+    }
+  </style>
 </head>
 <body>
   <header>
@@ -119,149 +363,9 @@
     <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
     <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
   </header>
-  <main>
-    <section class="hero-section" aria-label="Introtext zu beliebten Kategorien">
-      <h2>Unsere beliebtesten Mietartikel und alles, was du darüber wissen musst</h2>
-      <p>Locorent ist die nachhaltige Mietplattform für Alltagsgegenstände und besondere Artikel aus deiner Region. Unsere Mission: Weniger besitzen, mehr erleben.</p>
-      <p>Mit Locorent kannst du einfach und schnell Mieter:in oder Vermieter:in werden. So handelst du nachhaltig, senkst deinen Konsum und CO₂-Verbrauch und sparst Geld – oder verdienst sogar welches.</p>
-      <p>Damit du ganz leicht einsteigen kannst, findest du hier eine Auswahl der beliebtesten Produktkategorien auf Locorent.</p>
-    </section>
 
-    <div class="category-grid" aria-label="Beliebte Kategorien">
-      <a href="search_results.html?category=fahrzeuge" class="category-card" tabindex="0" aria-label="Fahrzeuge mieten">
-        <div class="category-image-wrapper">
-          <img src="https://images.pexels.com/photos/164634/pexels-photo-164634.jpeg" alt="Mercedes-Benz in einer Reihe geparkt" class="category-image" loading="lazy" />
-          <div class="image-overlay"></div>
-        </div>
-        <h3>Fahrzeuge</h3>
-        <p>PKWs, Motorräder und mehr – mobil bleiben leicht gemacht.</p>
-        <span class="category-cta" aria-hidden="true">Hier klicken →
-          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
-        </span>
-      </a>
-      <a href="search_results.html?category=transporter" class="category-card" tabindex="0" aria-label="Transporter mieten">
-        <div class="category-image-wrapper">
-          <img src="https://images.pexels.com/photos/3593923/pexels-photo-3593923.jpeg" alt="Transportfahrzeuge auf der Straße" class="category-image" loading="lazy" />
-          <div class="image-overlay"></div>
-        </div>
-        <h3>Transporter</h3>
-        <p>Für den großen Umzug oder den Wocheneinkauf.</p>
-        <span class="category-cta" aria-hidden="true">Hier klicken →
-          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
-        </span>
-      </a>
-      <a href="search_results.html?category=boote" class="category-card" tabindex="0" aria-label="Boote mieten">
-        <div class="category-image-wrapper">
-          <img src="https://images.pexels.com/photos/1295036/pexels-photo-1295036.jpeg" alt="Boot auf dem Wasser von oben" class="category-image" loading="lazy" />
-          <div class="image-overlay"></div>
-        </div>
-        <h3>Boote</h3>
-        <p>Für entspannte Tage auf dem Wasser.</p>
-        <span class="category-cta" aria-hidden="true">Hier klicken →
-          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
-        </span>
-      </a>
-      <a href="search_results.html?category=fahrrad" class="category-card" tabindex="0" aria-label="Fahrräder & E-Bikes mieten">
-        <div class="category-image-wrapper">
-          <img src="https://images.pexels.com/photos/2270328/pexels-photo-2270328.jpeg" alt="Mann sitzt neben seinem Fahrrad" class="category-image" loading="lazy" />
-          <div class="image-overlay"></div>
-        </div>
-        <h3>Fahrräder & E-Bikes</h3>
-        <p>Aktiv und nachhaltig unterwegs.</p>
-        <span class="category-cta" aria-hidden="true">Hier klicken →
-          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
-        </span>
-      </a>
-      <a href="search_results.html?category=werkzeuge" class="category-card" tabindex="0" aria-label="Werkzeuge mieten">
-        <div class="category-image-wrapper">
-          <img src="https://images.pexels.com/photos/909256/pexels-photo-909256.jpeg" alt="Werkzeuge hängen an einer Werkbank" class="category-image" loading="lazy" />
-          <div class="image-overlay"></div>
-        </div>
-        <h3>Werkzeuge</h3>
-        <p>Vom Bohrer bis zur Säge – alles für dein Projekt.</p>
-        <span class="category-cta" aria-hidden="true">Hier klicken →
-          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
-        </span>
-      </a>
-      <a href="search_results.html?category=maschinen" class="category-card" tabindex="0" aria-label="Maschinen & Baugeräte mieten">
-        <div class="category-image-wrapper">
-          <img src="https://images.pexels.com/photos/13039119/pexels-photo-13039119.jpeg" alt="Mann schneidet Metall mit Baugerät" class="category-image" loading="lazy" />
-          <div class="image-overlay"></div>
-        </div>
-        <h3>Maschinen & Baugeräte</h3>
-        <p>Professionelle Geräte für den Bau.</p>
-        <span class="category-cta" aria-hidden="true">Hier klicken →
-          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
-        </span>
-      </a>
-      <a href="search_results.html?category=party" class="category-card" tabindex="0" aria-label="Party & Event mieten">
-        <div class="category-image-wrapper">
-          <img src="https://images.pexels.com/photos/919734/pexels-photo-919734.jpeg" alt="Laptop und Audiomixer auf Party" class="category-image" loading="lazy" />
-          <div class="image-overlay"></div>
-        </div>
-        <h3>Party & Event</h3>
-        <p>Alles für die perfekte Feier.</p>
-        <span class="category-cta" aria-hidden="true">Hier klicken →
-          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
-        </span>
-      </a>
-      <a href="search_results.html?category=technik" class="category-card" tabindex="0" aria-label="Technik mieten">
-        <div class="category-image-wrapper">
-          <img src="https://images.pexels.com/photos/123335/pexels-photo-123335.jpeg" alt="Frau mit VR-Brille" class="category-image" loading="lazy" />
-          <div class="image-overlay"></div>
-        </div>
-        <h3>Technik</h3>
-        <p>Beamer, Kameras, Soundsysteme und mehr.</p>
-        <span class="category-cta" aria-hidden="true">Hier klicken →
-          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
-        </span>
-      </a>
-      <a href="search_results.html?category=haushalt" class="category-card" tabindex="0" aria-label="Haushalt & Möbel mieten">
-        <div class="category-image-wrapper">
-          <img src="https://images.pexels.com/photos/4107286/pexels-photo-4107286.jpeg" alt="Frau in heller Wohnung mit Reinigungsutensilien" class="category-image" loading="lazy" />
-          <div class="image-overlay"></div>
-        </div>
-        <h3>Haushalt & Möbel</h3>
-        <p>Alles, was dein Zuhause braucht.</p>
-        <span class="category-cta" aria-hidden="true">Hier klicken →
-          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
-        </span>
-      </a>
-      <a href="search_results.html?category=garten" class="category-card" tabindex="0" aria-label="Garten mieten">
-        <div class="category-image-wrapper">
-          <img src="https://images.pexels.com/photos/1301856/pexels-photo-1301856.jpeg" alt="Person arbeitet im Garten mit Schaufel" class="category-image" loading="lazy" />
-          <div class="image-overlay"></div>
-        </div>
-        <h3>Garten</h3>
-        <p>Geräte und Möbel für draußen.</p>
-        <span class="category-cta" aria-hidden="true">Hier klicken →
-          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
-        </span>
-      </a>
-      <a href="search_results.html?category=freizeit" class="category-card" tabindex="0" aria-label="Freizeit & Sport mieten">
-        <div class="category-image-wrapper">
-          <img src="https://images.pexels.com/photos/209977/pexels-photo-209977.jpeg" alt="Tennisball liegt auf Tennisschläger" class="category-image" loading="lazy" />
-          <div class="image-overlay"></div>
-        </div>
-        <h3>Freizeit & Sport</h3>
-        <p>Für Spaß und Bewegung in der Freizeit.</p>
-        <span class="category-cta" aria-hidden="true">Hier klicken →
-          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
-        </span>
-      </a>
-      <a href="search_results.html?category=baby" class="category-card" tabindex="0" aria-label="Baby & Kind mieten">
-        <div class="category-image-wrapper">
-          <img src="https://images.pexels.com/photos/32747057/pexels-photo-32747057.jpeg" alt="Kind spielt mit Bausteinen im Kinderzimmer" class="category-image" loading="lazy" />
-          <div class="image-overlay"></div>
-        </div>
-        <h3>Baby & Kind</h3>
-        <p>Alles für die Kleinsten – flexibel und günstig.</p>
-        <span class="category-cta" aria-hidden="true">Hier klicken →
-          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
-        </span>
-      </a>
-    </div>
-  </main>
+  <!-- DEIN GANZER MAIN-BLOCK UND INHALT KOMMT HIER (UNVERÄNDERT) -->
+
   <footer role="contentinfo">
     <div>
       <div>
