@@ -601,9 +601,22 @@ async function handleFiles(files) {
 }
 
 document.getElementById("save-btn").addEventListener("click", async () => {
-  const { data: sd } = await supabase.auth.getSession();
-  const user = sd?.session?.user;
-  if (!user) return alert("Nicht eingeloggt!");
+  const { data: { session }, error } = await supabase.auth.getSession();
+
+  if (error) {
+    console.error("Fehler beim Abrufen der Session:", error.message);
+    alert("Es gab ein Problem mit deiner Anmeldung.");
+    return;
+  }
+
+  if (!session || !session.user) {
+    alert("Nicht eingeloggt! Du wirst weitergeleitet.");
+    window.location.href = "login.html";
+    return;
+  }
+
+  const user = session.user;
+
 
   if (!userProfile.name || userProfile.name.trim().length < 2 || !userProfile.city || userProfile.city.trim().length < 2) {
     const warningEl = document.getElementById('profile-warning');
