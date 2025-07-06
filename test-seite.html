@@ -4,55 +4,62 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Kontakt – Locorent</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
-      --primary-color: #2e7d32;
-      --secondary-color: #a5d6a7;
-      --background-color: #f1f8e9;
-      --dark-color: #1b5e20;
-      --highlight-color: #66bb6a;
+      --primary: #2e7d32;
+      --primary-light: #66bb6a;
+      --primary-dark: #1b5e20;
+      --background: #f1f8e9;
       --white: #fff;
-      --gray-dark: #333;
-      --border-radius: 12px;
-      --shadow-color: rgba(0, 0, 0, 0.1);
-      --max-width: 1000px;
+      --text-dark: #0f2e13;
+      --text-muted: #466843;
+      --accent: #b9f6ca;
+      --highlight: #a5d6a7;
+      --radius: 18px;
+      --shadow-light: rgba(46, 125, 50, 0.08);
+      --shadow-strong: rgba(46, 125, 50, 0.25);
+      --transition: 0.4s ease;
+      --font-primary: 'Poppins', sans-serif;
     }
 
-    * {
+    *, *::before, *::after {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
     }
 
     body {
-      font-family: 'Poppins', sans-serif;
-      background-color: var(--background-color);
-      color: var(--gray-dark);
+      margin: 0;
+      font-family: var(--font-primary);
+      background: linear-gradient(to bottom, #e8f5e9 0%, #ffffff 100%);
+      color: var(--text-dark);
+      scroll-behavior: smooth;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
+      overflow-x: hidden;
     }
 
     header {
-      background-color: var(--primary-color);
+      background-color: var(--primary);
       color: var(--white);
       padding: 1.5rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      font-weight: 700;
       position: sticky;
       top: 0;
       z-index: 1000;
-      box-shadow: 0 4px 10px var(--shadow-color);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
       flex-wrap: wrap;
     }
 
     header h1 {
       font-size: 1.8rem;
-      font-weight: 600;
       cursor: pointer;
+      user-select: none;
+      margin: 0;
     }
 
     #nav-toggle {
@@ -72,107 +79,67 @@
 
     nav#nav-links a {
       color: var(--white);
-      font-weight: 600;
       text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
       position: relative;
-      padding-bottom: 3px;
       transition: color 0.3s ease;
     }
 
-    nav#nav-links a:hover::after {
-      content: "";
+    nav#nav-links a::after {
+      content: '';
       position: absolute;
-      width: 100%;
-      height: 2px;
-      background-color: var(--highlight-color);
-      bottom: -3px;
       left: 0;
+      bottom: -4px;
+      width: 0;
+      height: 2px;
+      background-color: var(--accent);
+      transition: width 0.3s ease;
     }
 
-    main {
-      flex: 1;
-      max-width: var(--max-width);
-      margin: 4rem auto;
-      padding: 0 2rem;
+    nav#nav-links a:hover::after,
+    nav#nav-links a:focus::after {
+      width: 100%;
     }
 
-    .hero {
+    nav#nav-links a:hover,
+    nav#nav-links a:focus {
+      color: var(--accent);
+      outline: none;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 2rem auto 4rem auto;
+      padding: 2rem 2rem 3rem 2rem;
       background: var(--white);
-      padding: 3rem;
-      border-radius: var(--border-radius);
-      box-shadow: 0 10px 25px var(--shadow-color);
+      border-radius: var(--radius);
+      box-shadow: 0 12px 30px var(--shadow-light);
+      color: #444;
+      line-height: 1.6;
+    }
+
+    h2 {
+      color: var(--primary-dark);
+      font-weight: 700;
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+      margin-top: 0;
       text-align: center;
-      margin-bottom: 3rem;
-    }
-
-    .hero h2 {
-      font-size: 2.6rem;
-      color: var(--primary-color);
-      margin-bottom: 1rem;
-    }
-
-    .hero p {
-      font-size: 1.2rem;
-      max-width: 720px;
-      margin: 0 auto;
-      line-height: 1.8;
-    }
-
-    .form-section {
-      background: var(--white);
-      padding: 2rem;
-      border-radius: var(--border-radius);
-      box-shadow: 0 6px 16px var(--shadow-color);
-    }
-
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 1.2rem;
-    }
-
-    label {
-      font-weight: 600;
-      margin-bottom: 0.4rem;
-    }
-
-    input, textarea {
-      padding: 0.9rem 1rem;
-      border: 1px solid #ccc;
-      border-radius: var(--border-radius);
-      font-family: 'Poppins', sans-serif;
-      font-size: 1rem;
-    }
-
-    textarea {
-      resize: vertical;
-      min-height: 120px;
-    }
-
-    button {
-      background: var(--primary-color);
-      color: var(--white);
-      padding: 0.9rem 1.5rem;
-      font-size: 1.1rem;
-      font-weight: 600;
-      border: none;
-      border-radius: var(--border-radius);
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-
-    button:hover {
-      background: var(--dark-color);
     }
 
     footer {
-      background-color: var(--primary-color);
-      color: var(--white);
+      width: 100%;
+      box-sizing: border-box;
       padding: 2rem 2rem 1rem;
-      border-radius: var(--border-radius);
-      margin: 2rem 0 0 0;
+      border-radius: var(--radius);
+      background-color: var(--primary);
+      color: var(--white);
+      box-shadow: 0 8px 32px rgba(46, 125, 50, 0.22);
       font-size: 0.92rem;
-      width: 100vw;
+      user-select: none;
+      text-align: center;
+      margin-top: auto;
       position: relative;
       left: 50%;
       right: 50%;
@@ -185,7 +152,9 @@
       margin: 0 auto;
       display: flex;
       flex-wrap: wrap;
+      justify-content: space-between;
       gap: 2rem;
+      text-align: left;
     }
 
     footer > div > div {
@@ -208,12 +177,18 @@
     footer ul li a {
       color: var(--white);
       text-decoration: underline;
+      transition: color 0.3s ease;
+    }
+
+    footer ul li a:hover {
+      color: var(--primary-light);
     }
 
     footer small {
       display: block;
-      text-align: center;
       margin-top: 2rem;
+      text-align: center;
+      opacity: 0.85;
     }
 
     @media (max-width: 720px) {
@@ -222,9 +197,9 @@
       }
 
       nav#nav-links {
-        display: none;
-        flex-direction: column;
         width: 100%;
+        flex-direction: column;
+        display: none;
         margin-top: 1rem;
       }
 
@@ -233,6 +208,7 @@
       }
 
       nav#nav-links a {
+        margin: 0.4rem 0;
         padding: 0.5rem 1rem;
         background-color: rgba(255, 255, 255, 0.1);
         border-radius: 6px;
@@ -247,46 +223,50 @@
       footer > div > div {
         width: 100%;
       }
+
+      h2 {
+        font-size: 1.5rem;
+        text-align: left;
+      }
     }
   </style>
 </head>
 <body>
 
 <header>
-  <h1 onclick="location.href='index.html'">Locorent</h1>
+  <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
   <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
   <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
 </header>
 
-<main>
-  <section class="hero">
-    <h2>Kontaktiere uns</h2>
-    <p>Du hast Fragen, Feedback oder möchtest einfach nur Hallo sagen? Schreib uns gerne über das Formular oder direkt per E-Mail.</p>
-    <p><strong>E-Mail:</strong> <a href="mailto:info@locorent.de">info@locorent.de</a></p>
-    <p>Wir melden uns in der Regel innerhalb von 24 Stunden bei dir.</p>
-  </section>
+<main class="container" role="main" tabindex="0">
+  <h2>Kontaktiere uns</h2>
+  <p>Du hast Fragen oder Feedback? Nutze einfach das Formular unten – wir melden uns so schnell wie möglich bei dir.</p>
 
-  <section class="form-section">
-    <form name="kontaktformular" method="POST" data-netlify="true">
-      <input type="hidden" name="form-name" value="kontaktformular" />
-      <label for="name">Name *</label>
-      <input type="text" id="name" name="name" required />
+  <form id="kontaktformular" style="margin-top: 2rem;">
+    <label for="name">Name (optional)</label><br>
+    <input type="text" id="name" name="name" style="width:100%; padding:0.6rem; border-radius:8px; margin-bottom:1rem; border:1px solid #ccc;"><br>
 
-      <label for="email">E-Mail *</label>
-      <input type="email" id="email" name="email" required />
+    <label for="email">E-Mail *</label><br>
+    <input type="email" id="email" name="email" required style="width:100%; padding:0.6rem; border-radius:8px; margin-bottom:1rem; border:1px solid #ccc;"><br>
 
-      <label for="message">Nachricht *</label>
-      <textarea id="message" name="message" required></textarea>
+    <label for="betreff">Betreff</label><br>
+    <input type="text" id="betreff" name="betreff" style="width:100%; padding:0.6rem; border-radius:8px; margin-bottom:1rem; border:1px solid #ccc;"><br>
 
-      <button type="submit">Nachricht senden</button>
-    </form>
-  </section>
+    <label for="nachricht">Nachricht *</label><br>
+    <textarea id="nachricht" name="nachricht" rows="6" required style="width:100%; padding:0.6rem; border-radius:8px; margin-bottom:1rem; border:1px solid #ccc;"></textarea><br>
+
+    <button type="submit" style="background-color: var(--primary); color:white; padding:0.7rem 1.5rem; border:none; border-radius:12px; cursor:pointer; font-weight:600;">
+      Absenden
+    </button>
+    <p id="status" style="margin-top:1rem; font-weight:500;"></p>
+  </form>
 </main>
 
-<footer>
+<footer role="contentinfo">
   <div>
     <div>
-      <h4>Mieten & Vermieten</h4>
+      <h4>Mieten &amp; Vermieten</h4>
       <ul>
         <li><a href="so-funktionierts.html">So funktioniert's</a></li>
         <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
@@ -320,27 +300,20 @@
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
   );
 
-  let userSession = null;
-
-  async function init() {
+  async function updateNav() {
     const { data: { session } } = await supabase.auth.getSession();
-    userSession = session;
-    updateNav();
-  }
-
-  function updateNav() {
-    const nav = document.getElementById('nav-links');
-    nav.innerHTML = userSession?.user
-      ? `<a href="index.html">Start</a>
-         <a href="profil.html">Mein Profil</a>
-         <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-         <a href="favoriten.html">Meine Favoriten</a>
-         <a href="inserate.html">Meine Inserate</a>
-         <a href="social-media.html">Folge uns</a>
-         <a href="mission.html">Unsere Mission</a>
-         <a href="#" onclick="logout(event)">Logout</a>`
-      : `<a href="index.html">Start</a>
-         <a href="login.html">Einloggen</a>`;
+    const nav = document.getElementById("nav-links");
+    nav.innerHTML = session?.user ? `
+      <a href="index.html">Start</a>
+      <a href="profil.html">Mein Profil</a>
+      <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+      <a href="favoriten.html">Meine Favoriten</a>
+      <a href="inserate.html">Meine Inserate</a>
+      <a href="#" onclick="logout(event)">Logout</a>
+    ` : `
+      <a href="index.html">Start</a>
+      <a href="login.html">Einloggen</a>
+    `;
   }
 
   async function logout(event) {
@@ -349,21 +322,43 @@
     window.location.href = "login.html";
   }
 
-  document.addEventListener('DOMContentLoaded', () => {
-    init();
+  document.getElementById("nav-toggle").addEventListener("click", () => {
+    const nav = document.getElementById("nav-links");
+    nav.classList.toggle("show");
+    const expanded = nav.classList.contains("show");
+    document.getElementById("nav-toggle").setAttribute("aria-expanded", expanded);
+  });
 
-    const toggle = document.getElementById('nav-toggle');
-    const nav = document.getElementById('nav-links');
+  updateNav();
 
-    if (toggle && nav) {
-      toggle.addEventListener('click', () => {
-        nav.classList.toggle('show');
-        toggle.setAttribute('aria-expanded', nav.classList.contains('show'));
-      });
+  document.getElementById("kontaktformular").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const status = document.getElementById("status");
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const betreff = document.getElementById("betreff").value.trim();
+    const nachricht = document.getElementById("nachricht").value.trim();
+
+    if (!email || !nachricht) {
+      status.textContent = "Bitte fülle alle Pflichtfelder aus.";
+      status.style.color = "red";
+      return;
+    }
+
+    const { error } = await supabase
+      .from('kontaktanfragen')
+      .insert([{ name, email, betreff, nachricht, eingegangen_am: new Date() }]);
+
+    if (error) {
+      status.textContent = "Fehler beim Absenden. Bitte versuche es später erneut.";
+      status.style.color = "red";
+    } else {
+      status.textContent = "Danke für deine Nachricht! Wir melden uns bald.";
+      status.style.color = "green";
+      document.getElementById("kontaktformular").reset();
     }
   });
 </script>
 
 </body>
 </html>
-
