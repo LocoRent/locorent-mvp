@@ -37,7 +37,7 @@
       min-height: 100vh;
       overflow-x: hidden;
     }
-    header {
+     header {
       background-color: var(--primary);
       color: var(--white);
       padding: 1.5rem 2rem;
@@ -68,13 +68,13 @@
       cursor: pointer;
     }
 
-    nav#nav-links {
+    nav#main-nav {
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
     }
 
-    nav#nav-links a {
+    nav#main-nav a {
       color: var(--white);
       text-decoration: none;
       font-weight: 600;
@@ -83,7 +83,7 @@
       transition: color 0.3s ease;
     }
 
-    nav#nav-links a::after {
+    nav#main-nav a::after {
       content: '';
       position: absolute;
       left: 0;
@@ -94,17 +94,16 @@
       transition: width 0.3s ease;
     }
 
-    nav#nav-links a:hover::after,
-    nav#nav-links a:focus::after {
+    nav#main-nav a:hover::after,
+    nav#main-nav a:focus::after {
       width: 100%;
     }
 
-    nav#nav-links a:hover,
-    nav#nav-links a:focus {
+    nav#main-nav a:hover,
+    nav#main-nav a:focus {
       color: var(--accent);
       outline: none;
     }
-
     }
     @media (max-width: 720px) {
       #nav-toggle {
