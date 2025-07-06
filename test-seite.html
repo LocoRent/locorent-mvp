@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Mietobjekt – Locorent</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
@@ -20,13 +20,12 @@
       --radius: 18px;
       --shadow-light: rgba(46, 125, 50, 0.08);
       --shadow-strong: rgba(46, 125, 50, 0.25);
+      --transition: 0.4s ease;
       --font-primary: 'Poppins', sans-serif;
     }
-
     *, *::before, *::after {
       box-sizing: border-box;
     }
-
     body {
       margin: 0;
       font-family: var(--font-primary);
@@ -38,7 +37,6 @@
       min-height: 100vh;
       overflow-x: hidden;
     }
-
     header {
       background-color: var(--primary);
       color: var(--white);
@@ -53,14 +51,12 @@
       box-shadow: 0 10px 20px rgba(0,0,0,0.1);
       flex-wrap: wrap;
     }
-
     header h1 {
       font-size: 1.8rem;
       cursor: pointer;
       user-select: none;
       margin: 0;
     }
-
     #nav-toggle {
       display: none;
       background: none;
@@ -69,13 +65,11 @@
       color: var(--white);
       cursor: pointer;
     }
-
     nav#nav-links {
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
     }
-
     nav#nav-links a {
       color: var(--white);
       text-decoration: none;
@@ -84,7 +78,6 @@
       position: relative;
       transition: color 0.3s ease;
     }
-
     nav#nav-links a::after {
       content: '';
       position: absolute;
@@ -95,34 +88,28 @@
       background-color: var(--accent);
       transition: width 0.3s ease;
     }
-
     nav#nav-links a:hover::after,
     nav#nav-links a:focus::after {
       width: 100%;
     }
-
     nav#nav-links a:hover,
     nav#nav-links a:focus {
       color: var(--accent);
       outline: none;
     }
-
     @media (max-width: 720px) {
       #nav-toggle {
         display: block;
       }
-
       nav#nav-links {
         width: 100%;
         flex-direction: column;
         display: none;
         margin-top: 1rem;
       }
-
       nav#nav-links.show {
         display: flex;
       }
-
       nav#nav-links a {
         margin: 0.4rem 0;
         padding: 0.5rem 1rem;
@@ -130,13 +117,11 @@
         border-radius: 6px;
         display: block;
       }
-
       header {
         flex-direction: column;
         align-items: flex-start;
       }
     }
-
     main {
       max-width: 1200px;
       background: var(--white);
@@ -150,12 +135,10 @@
       flex-wrap: wrap;
       align-items: flex-start;
     }
-
     .gallery {
       flex: 2 1 600px;
       min-width: 320px;
     }
-
     .main-image {
       width: 100%;
       height: 420px;
@@ -165,11 +148,9 @@
       transition: transform 0.3s ease;
       cursor: pointer;
     }
-
     .main-image:hover {
       transform: scale(1.03);
     }
-
     .thumbnails {
       display: flex;
       gap: 0.75rem;
@@ -177,7 +158,6 @@
       overflow-x: auto;
       padding-bottom: 6px;
     }
-
     .thumbnails img {
       width: 110px;
       height: 80px;
@@ -189,12 +169,10 @@
       transition: border-color 0.3s ease;
       flex-shrink: 0;
     }
-
     .thumbnails img.active {
       border-color: var(--primary);
       box-shadow: 0 0 10px var(--primary);
     }
-
     .content {
       flex: 1 1 320px;
       min-width: 280px;
@@ -202,24 +180,20 @@
       flex-direction: column;
       gap: 1rem;
     }
-
     .content h2 {
       font-size: 2.2rem;
       color: var(--primary);
       font-weight: 700;
       margin-bottom: 0.5rem;
     }
-
     .content p {
       line-height: 1.5;
       font-size: 1rem;
       color: #444;
     }
-
     .content p strong {
       color: var(--primary-dark);
     }
-
     .content .description {
       white-space: pre-wrap;
       background: #f5f5f5;
@@ -229,7 +203,6 @@
       max-height: 220px;
       overflow-y: auto;
     }
-
     button {
       padding: 1rem;
       background-color: var(--primary);
@@ -244,12 +217,10 @@
       margin-top: 0.5rem;
       user-select: none;
     }
-
     button:hover {
       background-color: var(--primary-dark);
       box-shadow: 0 6px 14px rgba(27,94,32,0.8);
     }
-
     .vendor-info {
       background: #f5f5f5;
       padding: 1.5rem;
@@ -262,13 +233,11 @@
       flex: 1 1 320px;
       min-width: 280px;
     }
-
     .vendor-info h3 {
       color: var(--primary);
       font-weight: 700;
       margin-bottom: 0.75rem;
     }
-
     .vendor-info a {
       color: var(--primary);
       text-decoration: underline;
@@ -276,11 +245,9 @@
       cursor: pointer;
       transition: color 0.3s ease;
     }
-
     .vendor-info a:hover {
       color: var(--primary-dark);
     }
-
     footer {
       width: 100%;
       background-color: var(--primary);
@@ -288,7 +255,6 @@
       padding: 2rem 1rem;
       box-shadow: 0 -2px 12px var(--shadow-light);
     }
-
     footer > div {
       max-width: 1200px;
       margin: 0 auto;
@@ -297,28 +263,23 @@
       justify-content: space-between;
       gap: 2rem;
     }
-
     footer h4 {
       margin-bottom: 0.75rem;
       font-weight: 600;
     }
-
     footer ul {
       list-style: none;
       padding-left: 0;
       line-height: 1.7;
     }
-
     footer ul li a {
       color: var(--white);
       text-decoration: underline;
       font-weight: 400;
     }
-
     footer ul li a:hover {
       color: var(--accent);
     }
-
     footer .copyright {
       margin-top: 2rem;
       text-align: center;
@@ -333,9 +294,7 @@
   <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
   <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
 </header>
-
-<main id="listing-details" aria-live="polite" aria-busy="true">Lade Inserat...</main>
-
+<main id="listing-details" aria-live="polite" aria-busy="true">Lade Inserat…</main>
 <footer role="contentinfo">
   <div>
     <section aria-labelledby="footer-rent-title">
@@ -383,6 +342,7 @@
     const nav = document.getElementById('nav-links');
 
     if (session?.user) {
+      currentUser = session.user;
       nav.innerHTML = `
         <a href="index.html">Start</a>
         <a href="profil.html">Mein Profil</a>
@@ -391,7 +351,6 @@
         <a href="inserate.html">Meine Inserate</a>
         <a href="#" onclick="logout()">Logout</a>
       `;
-      currentUser = session.user;
     } else {
       nav.innerHTML = `
         <a href="login.html">Einloggen</a>
@@ -408,9 +367,7 @@
   document.getElementById('nav-toggle').addEventListener('click', () => {
     const nav = document.getElementById('nav-links');
     nav.classList.toggle('show');
-    const toggle = document.getElementById('nav-toggle');
-    const expanded = nav.classList.contains('show');
-    toggle.setAttribute('aria-expanded', expanded);
+    document.getElementById('nav-toggle').setAttribute('aria-expanded', nav.classList.contains('show'));
   });
 
   function capitalize(str) {
@@ -424,11 +381,11 @@
   }
 
   async function incrementViews(listingId) {
-    const { data, error } = await supabase.from('listings').select('views').eq('id', listingId).single();
-    if (!data) return;
-    await supabase.from('listings').update({ views: (data.views || 0) + 1 }).eq('id', listingId);
+    const { data } = await supabase.from('listings').select('views').eq('id', listingId).single();
+    if (data) {
+      await supabase.from('listings').update({ views: (data.views || 0) + 1 }).eq('id', listingId);
+    }
   }
-
   async function loadListing() {
     const { data: { session } } = await supabase.auth.getSession();
     currentUser = session?.user || null;
@@ -436,21 +393,35 @@
     const params = new URLSearchParams(location.search);
     const listingId = params.get('id');
 
-    const { data: listing, error } = await supabase.from('listings').select('*').eq('id', listingId).single();
-    if (!listing) return document.getElementById('listing-details').innerHTML = "Fehler beim Laden.";
+    const { data: listing } = await supabase
+      .from('listings')
+      .select('*')
+      .eq('id', listingId)
+      .single();
+
+    if (!listing) {
+      document.getElementById('listing-details').innerHTML = "<p>Fehler beim Laden des Inserats.</p>";
+      return;
+    }
 
     listingOwnerId = listing.user_id;
-    const { data: profile } = await supabase.from('profiles').select('name, city, bio').eq('id', listing.user_id).single();
+
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('name, city, bio')
+      .eq('id', listing.user_id)
+      .single();
+
     await incrementViews(listingId);
 
-    const images = listing.image_urls || [listing.image_url] || [];
+    const images = listing.image_urls || (listing.image_url ? [listing.image_url] : []);
     const thumbs = images.map((url, i) =>
-      `<img src="${url}" class="${i === 0 ? 'active' : ''}" alt="Bild ${i}" onclick="switchImage('${url}', this)">`
+      `<img src="${url}" class="${i === 0 ? 'active' : ''}" alt="Vorschaubild ${i + 1}" tabindex="0" onclick="switchImage('${url}', this)" onkeydown="if(event.key==='Enter'||event.key===' ') {switchImage('${url}', this);}">`
     ).join('');
 
     document.getElementById('listing-details').innerHTML = `
       <div class="gallery">
-        <img src="${images[0] || 'https://via.placeholder.com/600x400?text=Kein+Bild'}" class="main-image" id="mainImage" />
+        <img src="${images[0] || 'https://via.placeholder.com/600x400?text=Kein+Bild'}" class="main-image" id="mainImage" alt="Bild des Mietobjekts" tabindex="0" />
         ${images.length > 1 ? `<div class="thumbnails">${thumbs}</div>` : ''}
       </div>
       <div class="content">
@@ -460,11 +431,16 @@
         <p><strong>Ort:</strong> ${listing.location || '–'}</p>
         <p><strong>Online seit:</strong> ${formatDate(listing.created_at)}</p>
         <p><strong>Beschreibung:</strong></p>
-        <p class="description">${listing.description || 'Keine Beschreibung.'}</p>
-        <button onclick="goToChat()">Nachricht an Vermieter</button>
-        ${currentUser ? `<button id="add-to-favorites" onclick="toggleFavorite('${listing.id}')">Lade Favoritenstatus...</button>` : ''}
+        <p class="description">${listing.description || 'Keine Beschreibung vorhanden.'}</p>
+        <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+          <button onclick="goToChat()" aria-label="Nachricht an den Vermieter senden">📨 Nachricht senden</button>
+          ${currentUser
+            ? `<button id="add-to-favorites" onclick="toggleFavorite('${listing.id}')" aria-label="Angebot zu Favoriten hinzufügen oder entfernen">⏳ Favoritenstatus wird geladen...</button>`
+            : `<button disabled title="Bitte einloggen, um Favoriten zu speichern" aria-disabled="true">🔒 Login erforderlich für Favoriten</button>`
+          }
+        </div>
       </div>
-      <div class="vendor-info">
+      <div class="vendor-info" aria-label="Vermieterinformationen">
         <h3>Vermieter</h3>
         <p><strong>Name:</strong> <a href="vermieter-profil.html?id=${listing.user_id}">${profile?.name || '–'}</a></p>
         <p><strong>Ort:</strong> ${profile?.city || '–'}</p>
@@ -475,36 +451,63 @@
     if (currentUser) updateFavoriteButton(listing.id);
   }
 
-  function switchImage(url, el) {
+  function switchImage(url, element) {
     document.getElementById("mainImage").src = url;
     document.querySelectorAll(".thumbnails img").forEach(img => img.classList.remove("active"));
-    el.classList.add("active");
+    element.classList.add("active");
   }
 
   async function updateFavoriteButton(listingId) {
-    const { data } = await supabase.from('favorites').select('*').eq('user_id', currentUser.id).eq('listing_id', listingId).maybeSingle();
+    const { data } = await supabase
+      .from('favorites')
+      .select('*')
+      .eq('user_id', currentUser.id)
+      .eq('listing_id', listingId)
+      .maybeSingle();
     isFavorite = !!data;
-    document.getElementById("add-to-favorites").textContent = isFavorite ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufügen";
+    const btn = document.getElementById("add-to-favorites");
+    btn.textContent = isFavorite ? "⭐ Aus Favoriten entfernen" : "⭐ Zu Favoriten hinzufügen";
   }
 
   async function toggleFavorite(listingId) {
     if (!currentUser) return alert("Bitte einloggen.");
+
     const btn = document.getElementById("add-to-favorites");
+
     if (isFavorite) {
-      await supabase.from('favorites').delete().eq('user_id', currentUser.id).eq('listing_id', listingId);
-      isFavorite = false;
-      btn.textContent = "Zu Favoriten hinzufügen";
+      const { error } = await supabase
+        .from('favorites')
+        .delete()
+        .eq('user_id', currentUser.id)
+        .eq('listing_id', listingId);
+
+      if (!error) {
+        isFavorite = false;
+        btn.textContent = "⭐ Zu Favoriten hinzufügen";
+      } else {
+        alert("Fehler beim Entfernen aus Favoriten.");
+      }
     } else {
-      await supabase.from('favorites').insert({ user_id: currentUser.id, listing_id: listingId });
-      isFavorite = true;
-      btn.textContent = "Aus Favoriten entfernen";
+      const { error } = await supabase.from('favorites').insert({
+        user_id: currentUser.id,
+        listing_id: listingId,
+      });
+
+      if (!error) {
+        isFavorite = true;
+        btn.textContent = "⭐ Aus Favoriten entfernen";
+      } else {
+        alert("Fehler beim Hinzufügen zu Favoriten.");
+      }
     }
   }
 
   function goToChat() {
-    if (!currentUser) return alert("Bitte einloggen.");
-    const listingId = new URLSearchParams(location.search).get('id');
-    window.location.href = `nachrichten.html?listing_id=${listingId}&with=${listingOwnerId}`;
+    if (!currentUser) return alert("Bitte einloggen, um Nachrichten zu senden.");
+    const params = new URLSearchParams(location.search);
+    const listingId = params.get('id');
+    const chatWith = listingOwnerId;
+    window.location.href = `nachrichten.html?listing_id=${listingId}&with=${chatWith}`;
   }
 
   updateNav();
