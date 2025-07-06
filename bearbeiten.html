@@ -345,7 +345,7 @@
     </select>
 
     <label for="price">Preis pro Tag (€)</label>
-    <input type="number" id="price" required min="0" max="999999" />
+    <input type="number" id="price-input" maxlength="6" oninput="this.value=this.value.slice(0,6)" />
 
     <label for="location">Ort (PLZ oder Stadt)</label>
     <div style="position: relative;">
