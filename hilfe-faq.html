@@ -84,10 +84,6 @@
       font-size: 1rem;
       position: relative;
       transition: color 0.3s ease;
-      min-width: 90px;          /* gleiche Mindestbreite für alle Links */
-      text-align: center;       /* Text zentrieren */
-      display: inline-block;    /* für min-width notwendig */
-      padding-bottom: 3px;
     }
 
     nav#nav-links a::after {
@@ -112,17 +108,18 @@
       outline: none;
     }
 
-    /* Responsive Nav - Burger Menü */
     @media (max-width: 720px) {
       #nav-toggle {
         display: block;
       }
 
       nav#nav-links {
-        display: none;
+        width: 100%;
         flex-direction: column;
+        display: none;
         margin-top: 1rem;
       }
+
       nav#nav-links.show {
         display: flex;
       }
@@ -133,15 +130,22 @@
         background-color: rgba(255, 255, 255, 0.1);
         border-radius: 6px;
         display: block;
-        min-width: auto;    /* Min-width für kleine Bildschirme aufheben */
-        text-align: left;
+      }
+
+      footer > div {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      footer > div > div {
+        width: 100%;
       }
     }
 
     main {
       max-width: 1100px;
       margin: 3rem auto 4rem auto;
-      padding: 0 2rem;
+      padding: 2rem;
       background: var(--white);
       border-radius: var(--radius);
       box-shadow: 0 12px 30px var(--shadow-light);
@@ -170,7 +174,7 @@
 
     .accordion-header {
       width: 100%;
-      background: var(--secondary-color);
+      background: var(--white);
       border: none;
       padding: 1.25rem 1.5rem;
       text-align: left;
@@ -178,7 +182,7 @@
       font-weight: 600;
       color: var(--primary-dark);
       cursor: pointer;
-      transition: background-color var(--transition) ease;
+      transition: background-color var(--transition);
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -194,7 +198,7 @@
     .accordion-header::after {
       content: "▼";
       font-size: 0.75rem;
-      transition: transform var(--transition) ease;
+      transition: transform var(--transition);
       margin-left: 1rem;
     }
 
@@ -206,7 +210,7 @@
       max-height: 0;
       overflow: hidden;
       padding: 0 1.5rem;
-      transition: max-height var(--transition) ease, padding var(--transition) ease;
+      transition: max-height var(--transition), padding var(--transition);
       font-size: 1rem;
       color: var(--text-dark);
       user-select: text;
@@ -258,7 +262,6 @@
     footer h4 {
       margin-bottom: 0.5rem;
       font-weight: 700;
-      user-select: none;
       font-size: 1.1rem;
     }
 
@@ -274,17 +277,15 @@
       transition: color 0.3s ease;
     }
 
-    footer ul li a:hover,
-    footer ul li a:focus-visible {
+    footer ul li a:hover {
       color: var(--accent);
-      outline: none;
     }
 
     footer small {
       display: block;
       margin-top: 2rem;
       text-align: center;
-      user-select: none;
+      opacity: 0.85;
     }
   </style>
 </head>
@@ -293,19 +294,13 @@
 <header>
   <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
   <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
-  <nav id="nav-links" role="navigation" aria-label="Hauptnavigation">
-    <a href="index.html">Start</a>
-    <a href="profil.html">Mein Profil</a>
-    <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-    <a href="favoriten.html">Meine Favoriten</a>
-    <a href="inserate.html">Meine Inserate</a>
-    <a href="#" onclick="logout(event)">Logout</a>
-  </nav>
+  <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
 </header>
 
 <main>
   <h2>Hilfe & FAQ</h2>
-  <div class="accordion" role="list">
+  <div class="accordion">
+    <!-- FAQ 1–10 -->
     <div class="accordion-item">
       <button class="accordion-header" aria-expanded="false" aria-controls="faq1" id="faq1-header">Wie registriere ich mich bei Locorent?</button>
       <div id="faq1" class="accordion-content" role="region" aria-labelledby="faq1-header" aria-hidden="true">
@@ -321,7 +316,7 @@
     <div class="accordion-item">
       <button class="accordion-header" aria-expanded="false" aria-controls="faq3" id="faq3-header">Was muss ich bei der Abholung und Rückgabe beachten?</button>
       <div id="faq3" class="accordion-content" role="region" aria-labelledby="faq3-header" aria-hidden="true">
-        <p>Die Abholung und Rückgabe erfolgt direkt zwischen dir und dem Vermieter, idealerweise über unsere Chatfunktion. Klärt die Uhrzeiten und den Zustand des Artikels vorab, um Missverständnisse zu vermeiden.</p>
+        <p>Die Abholung und Rückgabe erfolgt direkt zwischen dir und dem Vermieter. Klärt die Uhrzeiten und den Zustand des Artikels vorab, um Missverständnisse zu vermeiden.</p>
       </div>
     </div>
     <div class="accordion-item">
@@ -436,7 +431,6 @@
     window.location.href = "login.html";
   }
 
-  // Burger Menü toggle
   document.getElementById('nav-toggle').addEventListener('click', () => {
     const nav = document.getElementById('nav-links');
     nav.classList.toggle('show');
@@ -444,18 +438,13 @@
     document.getElementById('nav-toggle').setAttribute('aria-expanded', expanded);
   });
 
-  // Accordion functionality
-  document.querySelectorAll('.accordion-header').forEach(header => {
-    header.addEventListener('click', () => {
-      const expanded = header.getAttribute('aria-expanded') === 'true';
-      document.querySelectorAll('.accordion-header').forEach(h => {
-        h.setAttribute('aria-expanded', 'false');
-        document.getElementById(h.getAttribute('aria-controls')).setAttribute('aria-hidden', 'true');
-      });
-      if (!expanded) {
-        header.setAttribute('aria-expanded', 'true');
-        document.getElementById(header.getAttribute('aria-controls')).setAttribute('aria-hidden', 'false');
-      }
+  // Accordion Logic
+  document.querySelectorAll('.accordion-header').forEach(button => {
+    button.addEventListener('click', () => {
+      const expanded = button.getAttribute('aria-expanded') === 'true';
+      button.setAttribute('aria-expanded', !expanded);
+      const content = document.getElementById(button.getAttribute('aria-controls'));
+      content.setAttribute('aria-hidden', expanded);
     });
   });
 
