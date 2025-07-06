@@ -84,7 +84,7 @@
       font-size: 1rem;
       position: relative;
       transition: color 0.3s ease;
-      min-width: 120px;  /* Die gleiche Mindestbreite wie auf anderen Seiten */
+      min-width: 120px;  /* gleiche Mindestbreite wie auf anderen Seiten */
       text-align: center;
       display: inline-block;
       padding-bottom: 3px;
@@ -95,7 +95,7 @@
       position: absolute;
       left: 0;
       bottom: -4px;
-      width: 0;
+      width: 100%;  /* Jetzt wird der Balken über die volle Breite des Links angezeigt */
       height: 2px;
       background-color: var(--accent);
       transition: width 0.3s ease;
@@ -103,7 +103,7 @@
 
     nav#nav-links a:hover::after,
     nav#nav-links a:focus::after {
-      width: 100%;
+      width: 100%;  /* Vollständig ausgefahrener Balken */
     }
 
     nav#nav-links a:hover,
