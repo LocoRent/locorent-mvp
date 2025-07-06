@@ -318,7 +318,48 @@
         <p>Die Abholung und Rückgabe erfolgt direkt zwischen dir und dem Vermieter, idealerweise über unsere Chatfunktion. Klärt die Uhrzeiten und den Zustand des Artikels vorab, um Missverständnisse zu vermeiden.</p>
       </div>
     </div>
-    <!-- Füge hier den Rest der FAQ-Items ein... -->
+    <div class="accordion-item">
+      <button class="accordion-header" aria-expanded="false" aria-controls="faq4" id="faq4-header">Wie funktioniert die Kommunikation mit dem Vermieter?</button>
+      <div id="faq4" class="accordion-content" role="region" aria-labelledby="faq4-header" aria-hidden="true">
+        <p>Alle Anfragen und Absprachen erfolgen bequem über unsere integrierte Chatfunktion. So bleibt die Kommunikation übersichtlich und nachvollziehbar.</p>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-header" aria-expanded="false" aria-controls="faq5" id="faq5-header">Wie kontaktiere ich den Support?</button>
+      <div id="faq5" class="accordion-content" role="region" aria-labelledby="faq5-header" aria-hidden="true">
+        <p>Du kannst uns jederzeit über das Kontaktformular auf unserer Website oder per E-Mail erreichen. Wir helfen dir gerne weiter.</p>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-header" aria-expanded="false" aria-controls="faq6" id="faq6-header">Wie sicher sind meine Daten bei Locorent?</button>
+      <div id="faq6" class="accordion-content" role="region" aria-labelledby="faq6-header" aria-hidden="true">
+        <p>Der Schutz deiner Daten hat für uns höchste Priorität. Wir nutzen moderne Verschlüsselungstechnologien und halten uns an strenge Datenschutzrichtlinien.</p>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-header" aria-expanded="false" aria-controls="faq7" id="faq7-header">Welche Vorteile bietet Locorent gegenüber dem Kauf?</button>
+      <div id="faq7" class="accordion-content" role="region" aria-labelledby="faq7-header" aria-hidden="true">
+        <p>Locorent ermöglicht dir, Dinge flexibel zu nutzen ohne langfristige Bindung. So sparst du Geld, schonst Ressourcen und kannst Artikel vor einem eventuellen Kauf ausprobieren.</p>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-header" aria-expanded="false" aria-controls="faq8" id="faq8-header">Was kann ich tun, wenn es ein Problem mit einem Vermieter gibt?</button>
+      <div id="faq8" class="accordion-content" role="region" aria-labelledby="faq8-header" aria-hidden="true">
+        <p>Kontaktiere bitte unseren Support über das Kontaktformular oder per E-Mail. Wir kümmern uns schnellstmöglich um dein Anliegen und vermitteln bei Bedarf zwischen den Parteien.</p>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-header" aria-expanded="false" aria-controls="faq9" id="faq9-header">Gibt es eine Community-Richtlinie?</button>
+      <div id="faq9" class="accordion-content" role="region" aria-labelledby="faq9-header" aria-hidden="true">
+        <p>Ja, unsere Community-Richtlinie sorgt für respektvolles und faires Miteinander. Verstöße können zu Sperrungen führen. Details findest du in unseren Nutzungsbedingungen.</p>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-header" aria-expanded="false" aria-controls="faq10" id="faq10-header">Wie kann ich meinen Account löschen?</button>
+      <div id="faq10" class="accordion-content" role="region" aria-labelledby="faq10-header" aria-hidden="true">
+        <p>Du kannst deinen Account jederzeit über die Profileinstellungen löschen. Falls du Hilfe benötigst, wende dich bitte an unseren Support.</p>
+      </div>
+    </div>
   </div>
 </main>
 
@@ -388,6 +429,14 @@
     await supabase.auth.signOut();
     window.location.href = "login.html";
   }
+
+  // Burger Menu toggle
+  document.getElementById('nav-toggle').addEventListener('click', () => {
+    const nav = document.getElementById('nav-links');
+    nav.classList.toggle('show');
+    const expanded = nav.classList.contains('show');
+    document.getElementById('nav-toggle').setAttribute('aria-expanded', expanded);
+  });
 
   // Accordion functionality
   document.querySelectorAll('.accordion-header').forEach(header => {
