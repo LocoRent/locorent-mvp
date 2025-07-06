@@ -408,7 +408,8 @@
     async function loadListings(filters = {}) {
       let query = supabase.from('listings').select('*').order('created_at', { ascending: false });
 
-      if (filters.title) query = query.ilike('title', `%${filters.title}%`);
+      if (filters.title) {
+  query = query.or(`title.ilike.%${filters.title}%,description.ilike.%${filters.title}%`);
       if (filters.category) query = query.eq('category', filters.category.toLowerCase());
 
       const min = filters.minPrice ? parseFloat(filters.minPrice) : 0;
