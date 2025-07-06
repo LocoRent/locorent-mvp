@@ -115,12 +115,14 @@
       }
 
       nav#main-nav {
+        width: 100%;
         display: none;
         flex-direction: column;
         margin-top: 1rem;
-        width: 100vw;
+        padding: 0;
         background-color: var(--primary-dark);
-        margin-left: -2rem;
+        border-radius: 0 0 var(--radius) var(--radius);
+        overflow: hidden;
       }
 
       nav#main-nav.show {
@@ -128,26 +130,41 @@
       }
 
       nav#main-nav a {
-        display: block;
-        width: 100%;
         padding: 1rem 1.5rem;
         background-color: var(--primary-dark);
-        color: white;
-        font-weight: 600;
+        color: var(--white);
         text-decoration: none;
+        font-weight: 600;
+        font-size: 1rem;
+        display: block;
+        width: 100%;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
         box-sizing: border-box;
-        border-bottom: 1px solid rgba(255,255,255,0.2);
+        transition: background-color 0.3s ease;
+      }
+
+      nav#main-nav a:hover,
+      nav#main-nav a:focus {
+        background-color: var(--primary);
+        color: var(--accent);
+        outline: none;
       }
     }
 
     main {
-      max-width: 1400px;
-      margin: 3rem auto 4rem auto;
-      padding: 0 2rem;
-      background: var(--white);
-      border-radius: var(--radius);
-      box-shadow: 0 12px 30px var(--shadow-light);
+      width: 100vw;
+      margin: 2rem 0 4rem;
+      padding: 0;
       flex-grow: 1;
+    }
+
+    h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 1.5rem;
+      margin-left: 1rem;
+      margin-top: 0;
     }
 
     .category-grid {
@@ -161,11 +178,13 @@
       background: var(--white);
       border-radius: var(--radius);
       box-shadow: 0 2px 8px var(--shadow-light);
+      cursor: pointer;
       display: flex;
       flex-direction: column;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       padding: 1rem;
       height: 100%;
+      user-select: none;
     }
 
     .result-card:hover {
@@ -175,7 +194,7 @@
 
     .result-card img {
       width: 100%;
-      height: 220px;
+      height: 180px;
       object-fit: cover;
       border-radius: 12px;
       margin-bottom: 1rem;
@@ -183,7 +202,7 @@
 
     .result-card h3 {
       margin: 0 0 0.75rem 0;
-      font-size: 1.5rem;
+      font-size: 1.35rem;
       font-weight: 700;
       color: var(--primary-dark);
     }
@@ -232,7 +251,7 @@
       color: var(--white);
       padding: 2rem 2rem 1rem;
       border-radius: var(--radius);
-      margin: 2rem 0 0 0;
+      margin-top: auto;
       box-shadow: 0 8px 32px rgba(46, 125, 50, 0.22);
       font-size: 0.92rem;
       width: 100vw;
@@ -241,6 +260,7 @@
       right: 50%;
       margin-left: -50vw;
       margin-right: -50vw;
+      user-select: none;
       text-align: center;
     }
 
@@ -277,16 +297,15 @@
       transition: color 0.3s ease;
     }
 
-    footer ul li a:hover,
-    footer ul li a:focus-visible {
+    footer ul li a:hover {
       color: var(--highlight);
-      outline: none;
     }
 
     footer small {
       display: block;
       margin-top: 2rem;
       text-align: center;
+      opacity: 0.85;
     }
   </style>
 </head>
@@ -295,19 +314,12 @@
 <header>
   <h1 tabindex="0" onclick="location.href='index.html'">Locorent</h1>
   <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="main-nav">☰</button>
-  <nav id="main-nav" role="navigation" aria-label="Hauptnavigation">
-    <a href="index.html">Start</a>
-    <a href="profil.html">Mein Profil</a>
-    <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-    <a href="favoriten.html">Meine Favoriten</a>
-    <a href="inserate.html">Meine Inserate</a>
-    <a href="#" onclick="logout(event)">Logout</a>
-  </nav>
+  <nav id="main-nav" role="navigation" aria-label="Hauptnavigation"></nav>
 </header>
 
 <main>
   <h2>Meine Favoriten</h2>
-  <div id="favorites-list" class="category-grid">Lade Favoriten...</div>
+  <div id="favorites-list" class="category-grid">Lade Favoriten…</div>
 </main>
 
 <footer>
@@ -349,15 +361,31 @@
 
   document.getElementById('nav-toggle').addEventListener('click', () => {
     const nav = document.getElementById('main-nav');
-    const toggle = document.getElementById('nav-toggle');
     nav.classList.toggle('show');
-    toggle.setAttribute('aria-expanded', nav.classList.contains('show'));
+    const expanded = nav.classList.contains('show');
+    document.getElementById('nav-toggle').setAttribute('aria-expanded', expanded);
   });
 
   async function logout(event) {
     event.preventDefault();
     await supabase.auth.signOut();
     window.location.href = "login.html";
+  }
+
+  async function updateNav() {
+    const { data: { session } } = await supabase.auth.getSession();
+    const nav = document.getElementById('main-nav');
+    nav.innerHTML = session?.user ? `
+      <a href="index.html">Start</a>
+      <a href="profil.html">Mein Profil</a>
+      <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+      <a href="favoriten.html">Meine Favoriten</a>
+      <a href="inserate.html">Meine Inserate</a>
+      <a href="#" onclick="logout(event)">Logout</a>
+    ` : `
+      <a href="index.html">Start</a>
+      <a href="login.html">Einloggen</a>
+    `;
   }
 
   async function loadFavorites() {
@@ -377,11 +405,11 @@
       return;
     }
 
-    const favoriteListings = await Promise.all(favorites.map(async (fav) => {
+    const favoriteListings = await Promise.all(favorites.map(async (favorite) => {
       const { data } = await supabase
         .from('listings')
         .select('*')
-        .eq('id', fav.listing_id)
+        .eq('id', favorite.listing_id)
         .single();
       return data;
     }));
@@ -412,6 +440,8 @@
 
   async function removeFromFavorites(listingId, event) {
     event.preventDefault();
+    event.stopPropagation();
+
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
@@ -421,7 +451,7 @@
       .eq('user_id', user.id)
       .eq('listing_id', listingId);
 
-    loadFavorites();
+    setTimeout(loadFavorites, 300);
   }
 
   function capitalize(str) {
@@ -429,7 +459,9 @@
   }
 
   loadFavorites();
+  updateNav();
 </script>
 
 </body>
 </html>
+
