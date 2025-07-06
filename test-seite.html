@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Meine Inserate – Locorent</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
+  <title>Login – Locorent</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
@@ -31,13 +31,11 @@
     body {
       margin: 0;
       font-family: var(--font-primary);
-      background: var(--background);
+      background: linear-gradient(to bottom, #e8f5e9 0%, #ffffff 100%);
       color: var(--text-dark);
-      scroll-behavior: smooth;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
-      line-height: 1.5;
     }
 
     header {
@@ -71,13 +69,13 @@
       cursor: pointer;
     }
 
-    nav#main-nav {
+    nav#nav-links {
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
     }
 
-    nav#main-nav a {
+    nav#nav-links a {
       color: var(--white);
       text-decoration: none;
       font-weight: 600;
@@ -86,7 +84,7 @@
       transition: color 0.3s ease;
     }
 
-    nav#main-nav a::after {
+    nav#nav-links a::after {
       content: '';
       position: absolute;
       left: 0;
@@ -97,343 +95,117 @@
       transition: width 0.3s ease;
     }
 
-    nav#main-nav a:hover::after,
-    nav#main-nav a:focus::after {
+    nav#nav-links a:hover::after,
+    nav#nav-links a:focus::after {
       width: 100%;
     }
 
-    nav#main-nav a:hover,
-    nav#main-nav a:focus {
+    nav#nav-links a:hover,
+    nav#nav-links a:focus {
       color: var(--accent);
       outline: none;
     }
 
     main {
-      max-width: 900px;
-      margin: 2rem auto 4rem;
-      background: var(--white);
-      border-radius: var(--radius);
-      box-shadow: 0 4px 12px var(--shadow-light);
-      padding: 1rem 2rem 2rem 2rem;
-      flex-grow: 1;
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 3rem 1rem;
     }
 
-    .form-container {
-      margin-bottom: 2rem;
+    .container {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: 0 12px 30px var(--shadow-light);
+      max-width: 420px;
+      width: 100%;
+      padding: 2rem;
+      text-align: center;
     }
-    .form-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
+
+    h2 {
+      color: var(--primary-dark);
+      font-weight: 700;
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
     }
-    .field {
-      flex: 1 1 200px;
-      display: flex;
-      flex-direction: column;
-      position: relative;
+
+    form {
+      text-align: left;
     }
+
     label {
       font-weight: 600;
-      margin-bottom: 0.4rem;
-    }
-    input, textarea, select {
-      padding: 0.6rem;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-family: inherit;
-      font-size: 1rem;
-    }
-    #suggestions {
-      border: 1px solid #ccc;
-      border-top: none;
-      max-height: 150px;
-      overflow-y: auto;
-      background: white;
-      position: absolute;
-      z-index: 10;
-      top: 100%;
-      left: 0;
-      right: 0;
-    }
-    #suggestions div {
-      padding: 0.5rem;
-      cursor: pointer;
-    }
-    #suggestions div:hover {
-      background: #e0f2f1;
-    }
-    .dropzone {
-      margin-top: 1rem;
-      padding: 1rem;
-      border: 2px dashed var(--primary);
-      text-align: center;
-      border-radius: var(--radius);
-      background: #fafafa;
-      cursor: pointer;
-    }
-    .preview-gallery {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      margin-top: 1rem;
-    }
-    .preview-box {
-      position: relative;
-    }
-    .img-wrapper {
-      width: 120px;
-      height: 100px;
-      background: #e8f5e9;
-      border-radius: 6px;
-      overflow: hidden;
-    }
-    .preview-box img {
-      width: 120px;
-      height: 100px;
-      object-fit: cover;
-    }
-    .remove-btn {
-      position: absolute;
-      top: 4px;
-      right: 4px;
-      background: #c62828;
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 22px;
-      height: 22px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    .form-actions {
-      text-align: right;
-      margin-top: 1rem;
-    }
-    .form-actions button {
-      background: var(--primary);
-      color: var(--white);
-      padding: 0.7rem 1.5rem;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 1rem;
-    }
-    .gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 1rem;
-      margin-top: 2rem;
-    }
-    .card {
-      background: var(--white);
-      border-radius: var(--radius);
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-    .card img {
-      width: 100%;
-      height: 150px;
-      object-fit: cover;
-      flex-shrink: 0;
-    }
-    .card-content {
-      padding: 0.8rem;
-      flex-grow: 1;
-    }
-    .card-content h3 {
-      margin: 0.2rem 0;
-      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+      display: block;
       color: var(--text-dark);
     }
-    .card-content .price {
-      font-weight: 600;
-      color: var(--primary);
-      margin-bottom: 0.3rem;
+
+    input {
+      width: 100%;
+      padding: 0.7rem;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      background: #f7f7f7;
     }
-    .card-content .category {
-      font-size: 0.9rem;
-      margin-bottom: 0.5rem;
-      color: var(--secondary-color);
+
+    .password-wrapper {
+      position: relative;
     }
-    .card .actions {
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-      padding: 0.8rem;
-    }
-    .card .actions button {
-      background: var(--primary);
-      color: var(--white);
-      padding: 0.4rem 0.8rem;
-      border: none;
-      border-radius: 6px;
+
+    .toggle-password {
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
       cursor: pointer;
-      font-weight: 600;
-      font-size: 0.9rem;
-      transition: background-color 0.3s ease;
+      color: #666;
     }
-    .card .actions button:hover {
-      background: var(--highlight);
+
+    button {
+      width: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--highlight));
+      color: var(--white);
+      font-size: 1.1rem;
+      font-weight: 700;
+      padding: 0.9rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 0.5rem;
+    }
+
+    button:hover {
+      background: linear-gradient(90deg, var(--highlight), var(--primary));
+    }
+
+    .forgot {
+      text-align: right;
+      font-size: 0.9rem;
+    }
+
+    .forgot a {
+      color: var(--primary);
+      text-decoration: underline;
+    }
+
+    .message {
+      margin-top: 1rem;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .message.error {
+      color: #d32f2f;
+    }
+
+    .message.success {
       color: var(--primary-dark);
     }
-    .card .actions button.delete {
-      background: #c62828;
-    }
-    .card .actions button.delete:hover {
-      background: #e53935;
-    }
-    .loader {
-      width: 24px;
-      height: 24px;
-      border: 3px solid #c8e6c9;
-      border-top-color: var(--primary);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      margin: auto;
-    }
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
 
-    #profile-warning {
-      background-color: #fff3cd;
-      border: 1px solid #ffeeba;
-      color: #856404;
-      padding: 1rem 1.5rem;
-      border-radius: 8px;
-      margin-bottom: 1rem;
-      font-weight: 600;
-      display: none;
-    }
-
-    @media (max-width: 720px) {
-      #nav-toggle {
-        display: block;
-      }
-
-      nav#main-nav {
-        width: 100%;
-        flex-direction: column;
-        display: none;
-        margin-top: 1rem;
-      }
-
-      nav#main-nav.show {
-        display: flex;
-      }
-
-      nav#main-nav a {
-        margin: 0.4rem 0;
-        padding: 0.5rem 1rem;
-        background-color: rgba(255, 255, 255, 0.1);
-        border-radius: 6px;
-      }
-
-      main {
-        margin: 1rem;
-        padding: 1rem;
-      }
-    }
-  </style>
-</head>
-<body>
-
-<header>
-  <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
-  <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="main-nav">☰</button>
-  <nav id="main-nav" role="navigation" aria-label="Hauptnavigation">
-    <a href="index.html">Start</a>
-    <a href="profil.html">Mein Profil</a>
-    <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-    <a href="favoriten.html">Meine Favoriten</a>
-    <a href="inserate.html">Meine Inserate</a>
-    <a href="#" onclick="logout(event)">Logout</a>
-  </nav>
-</header>
-
-<main>
-  <div id="profile-warning" role="alert" aria-live="assertive"></div>
-
-  <section class="form-container">
-    <h2>Neues Inserat erstellen</h2>
-    <div class="form-group">
-      <div class="field"><label for="title-input">Titel</label><input type="text" id="title-input" /></div>
-      <div class="field">
-        <label for="category-input">Kategorie</label>
-        <select id="category-input">
-          <option value="">Bitte wählen</option>
-          <option value="Fahrzeuge">Fahrzeuge</option>
-          <option value="Transporter">Transporter</option>
-          <option value="Boote">Boote</option>
-          <option value="Fahrrad">Fahrräder & E-Bikes</option>
-          <option value="Werkzeuge">Werkzeuge</option>
-          <option value="Maschinen">Maschinen & Baugeräte</option>
-          <option value="Party">Party & Event</option>
-          <option value="Technik">Technik</option>
-          <option value="Haushalt">Haushalt & Möbel</option>
-          <option value="Garten">Garten</option>
-          <option value="Freizeit">Freizeit & Sport</option>
-          <option value="Baby">Baby & Kind</option>
-        </select>
-      </div>
-      <div class="field"><label for="price-input">Preis €/Tag</label><input type="number" id="price-input" /></div>
-      <div class="field">
-        <label for="location-input">Ort</label>
-        <input type="text" id="location-input" placeholder="Nur Städte in Deutschland" autocomplete="off" />
-        <div id="suggestions"></div>
-      </div>
-      <div class="field" style="flex: 1 1 100%;">
-        <label for="desc-input">Beschreibung</label>
-        <textarea id="desc-input" rows="3"></textarea>
-      </div>
-    </div>
-
-    <div class="dropzone" id="dropzone">Bilder hier ablegen oder klicken (max. 2, max. 2 MB pro Bild)</div>
-    <div class="preview-gallery" id="preview-gallery"></div>
-
-    <div class="form-actions">
-      <button id="save-btn">Inserat speichern</button>
-    </div>
-  </section>
-
-  <section class="gallery" id="gallery">
-    <p>Galerie lädt…</p>
-  </section>
-</main>
-
-<footer role="contentinfo">
-  <div>
-    <div>
-      <h4>Mieten &amp; Vermieten</h4>
-      <ul>
-        <li><a href="so-funktionierts.html">So funktioniert's</a></li>
-        <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
-        <li><a href="kategorien.html">Beliebte Kategorien</a></li>
-        <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
-        <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
-      </ul>
-    </div>
-    <div>
-      <h4>Wissenswertes</h4>
-      <ul>
-        <li><a href="agb.html">AGB & Impressum</a></li>
-        <li><a href="datenschutz.html">Datenschutz</a></li>
-      </ul>
-    </div>
-    <div>
-      <h4>Über uns</h4>
-      <ul>
-        <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
-        <li><a href="social-media.html">Folgen Sie uns</a></li>
-        <li><a href="mission.html">Unsere Mission</a></li>
-      </ul>
-    </div>
-  </div>
-  <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
-  <style>
     footer {
       width: 100%;
       box-sizing: border-box;
@@ -443,7 +215,6 @@
       color: var(--white);
       box-shadow: 0 8px 32px rgba(46, 125, 50, 0.22);
       font-size: 0.92rem;
-      user-select: none;
       text-align: center;
       margin-top: auto;
       position: relative;
@@ -498,6 +269,29 @@
     }
 
     @media (max-width: 720px) {
+      #nav-toggle {
+        display: block;
+      }
+
+      nav#nav-links {
+        width: 100%;
+        flex-direction: column;
+        display: none;
+        margin-top: 1rem;
+      }
+
+      nav#nav-links.show {
+        display: flex;
+      }
+
+      nav#nav-links a {
+        margin: 0.4rem 0;
+        padding: 0.5rem 1rem;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+        display: block;
+      }
+
       footer > div {
         flex-direction: column;
         align-items: flex-start;
@@ -506,269 +300,145 @@
       footer > div > div {
         width: 100%;
       }
+
+      h2 {
+        font-size: 1.5rem;
+      }
     }
   </style>
+</head>
+<body>
+
+<header>
+  <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
+  <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
+  <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
+</header>
+
+<main>
+  <div class="container">
+    <h2>Login</h2>
+    <form id="login-form">
+      <label for="email">E-Mail</label>
+      <input type="email" id="email" required autocomplete="email" />
+
+      <label for="password">Passwort</label>
+      <div class="password-wrapper">
+        <input type="password" id="password" required autocomplete="current-password" />
+        <span class="toggle-password" onclick="togglePassword()">👁</span>
+      </div>
+
+      <div class="forgot">
+        <a href="reset-password.html">Passwort vergessen?</a>
+      </div>
+
+      <button type="submit">Einloggen</button>
+      <div id="message" class="message"></div>
+    </form>
+  </div>
+</main>
+
+<footer role="contentinfo">
+  <div>
+    <div>
+      <h4>Mieten &amp; Vermieten</h4>
+      <ul>
+        <li><a href="so-funktionierts.html">So funktioniert's</a></li>
+        <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
+        <li><a href="kategorien.html">Beliebte Kategorien</a></li>
+        <li><a href="vermieter-tipps.html">Tipps &amp; Tricks für Vermieter</a></li>
+        <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Wissenswertes</h4>
+      <ul>
+        <li><a href="agb.html">AGB &amp; Impressum</a></li>
+        <li><a href="datenschutz.html">Datenschutz</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Über uns</h4>
+      <ul>
+        <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
+        <li><a href="social-media.html">Folgen Sie uns</a></li>
+      </ul>
+    </div>
+  </div>
+  <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
 </footer>
 
-
 <script>
-const supabase = window.supabase.createClient(
-  'https://flnjalgqtkqycsaymmbd.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-);
+  const supabase = window.supabase.createClient(
+    'https://flnjalgqtkqycsaymmbd.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+  );
 
-let uploadedImageUrls = [];
-let selectedAddressData = null;
-let userSession = null;
+  const form = document.getElementById('login-form');
+  const messageDiv = document.getElementById('message');
 
-// Profil-Daten zwischenspeichern
-let userProfile = {
-  name: null,
-  city: null
-};
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    messageDiv.textContent = '';
+    messageDiv.className = 'message';
 
-async function updateNav() {
-  const nav = document.getElementById('nav-links');
-  nav.innerHTML = userSession?.user ?
-    `<a href="index.html">Start</a>
-     <a href="profil.html">Mein Profil</a>
-     <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-     <a href="favoriten.html">Meine Favoriten</a>
-     <a href="inserate.html">Meine Inserate</a>
-     <a href="#" onclick="logout(event)">Logout</a>` :
-    `<a href="index.html">Start</a>
-     <a href="login.html">Einloggen</a>`;
-}
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
 
-async function logout(event) {
-  event.preventDefault();
-  await supabase.auth.signOut();
-  window.location.href = "login.html";
-}
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
-document.getElementById("dropzone").addEventListener("click", () => {
-  if (uploadedImageUrls.length >= 2) return alert("Maximal 2 Bilder erlaubt.");
-  const input = document.createElement("input");
-  input.type = "file"; input.accept = "image/*"; input.multiple = true;
-  input.onchange = () => handleFiles(input.files);
-  input.click();
-});
-
-async function handleFiles(files) {
-  const container = document.getElementById("preview-gallery");
-  for (let file of files) {
-    if (uploadedImageUrls.length >= 2) break;
-    if (!file.type.startsWith("image/")) continue;
-    if (file.size > 2 * 1024 * 1024) {
-      alert("Bilder dürfen maximal 2 MB groß sein.");
-      continue;
+      if (error) {
+        messageDiv.textContent = '❌ ' + error.message;
+        messageDiv.classList.add('error');
+      } else {
+        messageDiv.textContent = '✅ Login erfolgreich!';
+        messageDiv.classList.add('success');
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 1000);
+      }
+    } catch (err) {
+      messageDiv.textContent = '❌ Unerwarteter Fehler: ' + err.message;
+      messageDiv.classList.add('error');
     }
-
-    const tempBox = document.createElement("div");
-    tempBox.className = "preview-box";
-    tempBox.innerHTML = '<div class="img-wrapper"><div class="loader"></div></div>';
-    container.appendChild(tempBox);
-
-    const path = `listing-images/${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
-    const { error } = await supabase.storage.from('listing-images').upload(path, file);
-    if (!error) {
-      const { data } = supabase.storage.from('listing-images').getPublicUrl(path);
-      uploadedImageUrls.push(data.publicUrl);
-    } else {
-      alert("Upload-Fehler: " + error.message);
-    }
-    renderPreviews();
-  }
-}
-
-function renderPreviews() {
-  const container = document.getElementById("preview-gallery");
-  container.innerHTML = '';
-  uploadedImageUrls.forEach((url, i) => {
-    const div = document.createElement("div");
-    div.className = "preview-box";
-    div.innerHTML = `<div class="img-wrapper"><img src="${url}" alt="Bild ${i}"></div><button class="remove-btn" onclick="removeImage(${i})">×</button>`;
-    container.appendChild(div);
-  });
-}
-
-function removeImage(i) {
-  uploadedImageUrls.splice(i, 1);
-  renderPreviews();
-}
-
-document.getElementById("save-btn").addEventListener("click", async () => {
-  const { data: sd } = await supabase.auth.getSession();
-  const user = sd?.session?.user;
-  if (!user) return alert("Nicht eingeloggt!");
-
-  if (!userProfile.name || userProfile.name.trim().length < 2 || !userProfile.city || userProfile.city.trim().length < 2) {
-    const warningEl = document.getElementById('profile-warning');
-    warningEl.textContent = "Bitte fülle zuerst deine Profildaten (Name & Wohnort) aus, bevor du ein Inserat erstellen kannst.";
-    warningEl.style.display = "block";
-    setTimeout(() => {
-      window.location.href = "profil.html";
-    }, 4000);
-    return;
-  }
-
-  const title = document.getElementById('title-input').value.trim();
-  const category = document.getElementById('category-input').value;
-  const price = parseFloat(document.getElementById('price-input').value);
-  const description = document.getElementById('desc-input').value.trim();
-  const location = document.getElementById('location-input').value.trim();
-
-  if (!title || !price || !category || !location) return alert("Pflichtfelder fehlen!");
-  if (!selectedAddressData) return alert("Bitte wähle einen Ort aus der Vorschlagsliste.");
-
-  const { postal_code, city, lat, lon } = selectedAddressData;
-
-  const { error: ie } = await supabase.from('listings').insert({
-    title,
-    category,
-    price_per_day: price,
-    description,
-    user_id: user.id,
-    image_urls: uploadedImageUrls,
-    latitude: lat,
-    longitude: lon,
-    location,
-    postal_code,
-    city
   });
 
-  if (ie) return alert("Speicherfehler: " + ie.message);
-
-  alert("Inserat gespeichert!");
-  document.querySelectorAll('input, textarea, select').forEach(el => el.value = '');
-  uploadedImageUrls = [];
-  selectedAddressData = null;
-  renderPreviews();
-  loadGallery();
-});
-
-const locationInput = document.getElementById('location-input');
-const suggestionBox = document.getElementById('suggestions');
-
-locationInput.addEventListener('input', async (e) => {
-  const value = e.target.value.trim();
-  if (value.length < 2) return suggestionBox.innerHTML = '';
-
-  try {
-    const res = await fetch(`https://corsproxy.io/?https://nominatim.openstreetmap.org/search?format=json&accept-language=de&addressdetails=1&countrycodes=de&limit=8&q=${encodeURIComponent(value)}`);
-    const results = await res.json();
-    const filtered = results.filter(r => r.lat && r.lon && r.address);
-    suggestionBox.innerHTML = '';
-
-    filtered.forEach(r => {
-      const ort = r.address.city || r.address.town || r.address.village || r.address.hamlet || r.address.municipality || r.display_name.split(',')[0];
-      const bundesland = r.address.state || '';
-      const land = r.address.country || 'Deutschland';
-      const plz = r.address.postcode || '';
-      const display = [ort, bundesland, land].filter(Boolean).join(', ');
-
-      const div = document.createElement('div');
-      div.textContent = display;
-      div.onclick = () => {
-        locationInput.value = display;
-        selectedAddressData = {
-          postal_code: plz,
-          city: ort,
-          location: display,
-          lat: parseFloat(r.lat),
-          lon: parseFloat(r.lon)
-        };
-        suggestionBox.innerHTML = '';
-      };
-      suggestionBox.appendChild(div);
-    });
-
-    if (filtered.length === 0) {
-      suggestionBox.innerHTML = '<div style="padding:0.5rem;">Kein Ort gefunden</div>';
-    }
-  } catch (err) {
-    console.error("Fehler bei Ortssuche:", err);
+  function togglePassword() {
+    const pwField = document.getElementById('password');
+    pwField.type = pwField.type === 'password' ? 'text' : 'password';
   }
-});
 
-async function loadGallery() {
-  const { data: sd } = await supabase.auth.getSession();
-  userSession = sd?.session;
+  async function updateNav() {
+    const { data: { session } } = await supabase.auth.getSession();
+    const nav = document.getElementById("nav-links");
+    nav.innerHTML = session?.user ? `
+      <a href="index.html">Start</a>
+      <a href="profil.html">Mein Profil</a>
+      <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+      <a href="favoriten.html">Meine Favoriten</a>
+      <a href="inserate.html">Meine Inserate</a>
+      <a href="#" onclick="logout(event)">Logout</a>
+    ` : `
+      <a href="index.html">Start</a>
+      <a href="login.html">Einloggen</a>
+    `;
+  }
+
+  async function logout(event) {
+    event.preventDefault();
+    await supabase.auth.signOut();
+    window.location.href = "login.html";
+  }
+
+  document.getElementById("nav-toggle").addEventListener("click", () => {
+    const nav = document.getElementById("nav-links");
+    nav.classList.toggle("show");
+    const expanded = nav.classList.contains("show");
+    document.getElementById("nav-toggle").setAttribute("aria-expanded", expanded);
+  });
+
   updateNav();
-
-  const user = userSession?.user;
-  if (!user) {
-    document.getElementById('gallery').innerHTML = 'Nicht eingeloggt.';
-    return;
-  }
-
-  const { data: profile, error: profileError } = await supabase
-    .from('profiles')
-    .select('name, city')
-    .eq('id', user.id)
-    .single();
-
-  if (profileError) {
-    console.error("Fehler beim Laden des Profils:", profileError);
-    userProfile.name = null;
-    userProfile.city = null;
-  } else {
-    userProfile.name = profile?.name || null;
-    userProfile.city = profile?.city || null;
-  }
-
-  const gallery = document.getElementById('gallery');
-
-  const { data: listings, error } = await supabase
-    .from('listings')
-    .select('*')
-    .eq('user_id', user.id)
-    .order('created_at', { ascending: false });
-
-  if (error) {
-    gallery.innerHTML = '<p>Fehler beim Laden der Inserate.</p>';
-    return;
-  }
-
-  gallery.innerHTML = '';
-  listings.forEach(i => {
-    const img = i.image_urls?.[0] || 'https://via.placeholder.com/300x150?text=Kein+Bild';
-    const categoryFormatted = i.category ? (i.category.charAt(0).toUpperCase() + i.category.slice(1).toLowerCase()) : 'Unbekannt';
-
-    const div = document.createElement('div');
-    div.className = 'card';
-    div.innerHTML = `
-      <img src="${img}" alt="${i.title}">
-      <div class="card-content">
-        <h3>${i.title}</h3>
-        <p class="category"><strong>Kategorie:</strong> ${categoryFormatted}</p>
-        <p class="price">${i.price_per_day} € / Tag</p>
-      </div>
-      <div class="actions">
-        <button onclick="window.location.href='bearbeiten.html?id=${i.id}'">Bearbeiten</button>
-        <button class="delete" onclick="deleteListing('${i.id}')">Löschen</button>
-      </div>`;
-    gallery.appendChild(div);
-  });
-}
-
-async function deleteListing(id) {
-  if (!confirm("Wirklich löschen?")) return;
-  const { error } = await supabase.from('listings').delete().eq('id', id);
-  if (!error) loadGallery();
-  else alert("Fehler beim Löschen.");
-}
-
-document.getElementById('nav-toggle').addEventListener('click', () => {
-  const nav = document.getElementById('main-nav');
-  const toggle = document.getElementById('nav-toggle');
-  nav.classList.toggle('show');
-  const expanded = nav.classList.contains('show');
-  toggle.setAttribute('aria-expanded', expanded);
-});
-
-loadGallery();
-updateNav();
 </script>
 
 </body>
