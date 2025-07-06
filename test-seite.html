@@ -16,7 +16,7 @@
       --text-dark: #0f2e13;
       --text-muted: #466843;
       --accent: #b9f6ca;
-      --highlight: #66bb6a; /* angepasst auf das Header-Grün */
+      --highlight: #66bb6a;
       --radius: 18px;
       --shadow-light: rgba(46, 125, 50, 0.08);
       --shadow-strong: rgba(46, 125, 50, 0.25);
@@ -26,12 +26,18 @@
 
     *, *::before, *::after {
       box-sizing: border-box;
+      max-width: 100%;
+      word-wrap: break-word;
     }
 
-    body {
+    html, body {
       margin: 0;
+      padding: 0;
+      width: 100%;
+      max-width: 100vw;
+      overflow-x: hidden;
       font-family: var(--font-primary);
-      background: linear-gradient(to bottom, #e8f5e9 0%, #ffffff 100%);
+      background: var(--background);
       color: var(--text-dark);
       scroll-behavior: smooth;
       display: flex;
@@ -51,6 +57,7 @@
       top: 0;
       z-index: 1000;
       box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      flex-wrap: wrap;
     }
 
     header h1 {
@@ -60,13 +67,22 @@
       margin: 0;
     }
 
-    nav {
+    #nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.8rem;
+      color: var(--white);
+      cursor: pointer;
+    }
+
+    nav#nav-links {
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
     }
 
-    nav a {
+    nav#nav-links a {
       color: var(--white);
       text-decoration: none;
       font-weight: 600;
@@ -75,7 +91,7 @@
       transition: color 0.3s ease;
     }
 
-    nav a::after {
+    nav#nav-links a::after {
       content: '';
       position: absolute;
       left: 0;
@@ -86,21 +102,25 @@
       transition: width 0.3s ease;
     }
 
-    nav a:hover::after,
-    nav a:focus::after {
+    nav#nav-links a:hover::after,
+    nav#nav-links a:focus::after {
       width: 100%;
     }
 
-    nav a:hover,
-    nav a:focus {
+    nav#nav-links a:hover,
+    nav#nav-links a:focus {
       color: var(--accent);
       outline: none;
     }
 
     main {
       max-width: 1200px;
-      margin: 3rem auto;
-      padding: 0 1.5rem;
+      width: 100%;
+      margin: 3rem auto 4rem auto;
+      padding: 1rem 1.5rem;
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: 0 12px 30px var(--shadow-light);
       flex-grow: 1;
     }
 
@@ -178,14 +198,15 @@
     }
 
     footer {
-      background-color: var(--primary);
-      color: var(--white);
+      width: 100%;
       padding: 2rem 2rem 1rem;
       border-radius: var(--radius);
-      margin: 2rem 0 0 0;
+      background-color: var(--primary);
+      color: var(--white);
       box-shadow: 0 8px 32px rgba(46, 125, 50, 0.22);
       font-size: 0.92rem;
-      width: 100vw;
+      text-align: center;
+      margin-top: auto;
       position: relative;
       left: 50%;
       right: 50%;
@@ -200,6 +221,7 @@
       flex-wrap: wrap;
       justify-content: space-between;
       gap: 2rem;
+      text-align: left;
     }
 
     footer > div > div {
@@ -239,10 +261,45 @@
       user-select: none;
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 720px) {
+      #nav-toggle {
+        display: block;
+      }
+
+      nav#nav-links {
+        width: 100%;
+        flex-direction: column;
+        display: none;
+        margin-top: 1rem;
+      }
+
+      nav#nav-links.show {
+        display: flex;
+      }
+
+      nav#nav-links a {
+        margin: 0.4rem 0;
+        padding: 0.5rem 1rem;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+        display: block;
+      }
+
+      footer > div {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      footer > div > div {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
       header {
         flex-direction: column;
         gap: 1rem;
+        padding: 1rem;
       }
 
       .hero h2 {
@@ -255,16 +312,13 @@
 
       .tips-grid {
         grid-template-columns: 1fr;
+        gap: 2rem;
       }
 
-      footer > div {
-        flex-direction: column;
-        align-items: center;
-      }
-
-      footer > div > div {
-        width: 100%;
-        max-width: 320px;
+      footer {
+        margin: 1rem;
+        padding: 1.5rem;
+        font-size: 0.85rem;
       }
     }
 
@@ -282,6 +336,7 @@
 <body>
   <header>
     <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
+    <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
     <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
   </header>
 
@@ -380,6 +435,14 @@
       await supabase.auth.signOut();
       window.location.href = "login.html";
     }
+
+    document.getElementById('nav-toggle').addEventListener('click', () => {
+      const nav = document.getElementById('nav-links');
+      nav.classList.toggle('show');
+      const toggle = document.getElementById('nav-toggle');
+      const expanded = nav.classList.contains('show');
+      toggle.setAttribute('aria-expanded', expanded);
+    });
 
     init();
   </script>
