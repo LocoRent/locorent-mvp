@@ -52,7 +52,6 @@
       top: 0;
       z-index: 1000;
       box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-      flex-wrap: wrap;
       width: 100%;
     }
 
@@ -76,6 +75,8 @@
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
+      justify-content: center;
+      width: 100%;
     }
 
     nav#nav-links a {
@@ -122,10 +123,10 @@
         display: none;
         flex-direction: column;
         margin-top: 1rem;
-        width: 100vw;
-        left: 0;
         position: absolute;
         top: 0;
+        left: 0;
+        width: 100%;
         background-color: var(--primary);
         padding: 1rem;
         z-index: 1000;
@@ -294,7 +295,6 @@
       text-align: center;
       user-select: none;
     }
-
   </style>
 </head>
 <body>
@@ -450,4 +450,5 @@
 
 </body>
 </html>
+
 
