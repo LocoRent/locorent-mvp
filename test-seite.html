@@ -2,9 +2,9 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <title>Kontakt – Locorent</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
@@ -13,24 +13,29 @@
       --white: #ffffff;
       --dark: #1b5e20;
       --accent: #81c784;
-      --radius: 12px;
-      --shadow: 0 10px 24px rgba(0, 0, 0, 0.1);
+      --radius: 16px;
+      --shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
 
-    body {
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      overflow-x: hidden;
       font-family: 'Poppins', sans-serif;
       background: linear-gradient(180deg, var(--light), var(--white));
       color: #333;
-      min-height: 100vh;
       display: flex;
       flex-direction: column;
-      overflow-x: hidden;
+      min-height: 100vh;
     }
 
     header {
-      background-color: var(--primary);
+      background: var(--primary);
       color: var(--white);
       padding: 1.5rem 2rem;
       display: flex;
@@ -43,33 +48,53 @@
 
     header h1 {
       font-size: 1.8rem;
+      margin: 0;
       cursor: pointer;
+    }
+
+    #nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.8rem;
+      color: var(--white);
+      cursor: pointer;
+    }
+
+    nav#nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
     }
 
     nav#nav-links a {
       color: var(--white);
-      margin-left: 1.5rem;
-      font-weight: 600;
       text-decoration: none;
+      font-weight: 500;
       position: relative;
-      padding-bottom: 3px;
+    }
+
+    nav#nav-links a::after {
+      content: "";
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -4px;
+      left: 0;
+      background: var(--accent);
+      transition: width 0.3s;
     }
 
     nav#nav-links a:hover::after {
-      content: "";
-      position: absolute;
       width: 100%;
-      height: 2px;
-      background-color: var(--accent);
-      bottom: -3px;
-      left: 0;
     }
 
     main {
+      max-width: 1100px;
+      width: 100%;
+      margin: 4rem auto;
+      padding: 0 2rem;
       flex: 1;
-      max-width: 1000px;
-      margin: 3rem auto;
-      padding: 0 1.5rem;
     }
 
     .contact-section {
@@ -81,13 +106,10 @@
       overflow: hidden;
     }
 
-    .contact-info, .contact-form {
-      flex: 1 1 300px;
-      padding: 2rem;
-    }
-
     .contact-info {
-      background: var(--light);
+      flex: 1;
+      padding: 2.5rem;
+      background-color: var(--light);
       color: var(--dark);
     }
 
@@ -103,6 +125,12 @@
     .contact-info a {
       color: var(--dark);
       font-weight: 500;
+    }
+
+    .contact-form {
+      flex: 1;
+      padding: 2.5rem;
+      background: var(--white);
     }
 
     form {
@@ -150,12 +178,12 @@
       background-color: var(--primary);
       color: var(--white);
       padding: 2rem 2rem 1rem;
-      margin-top: 3rem;
       font-size: 0.92rem;
+      margin-top: auto;
     }
 
     footer > div {
-      max-width: 1100px;
+      max-width: 1200px;
       margin: auto;
       display: flex;
       flex-wrap: wrap;
@@ -169,7 +197,7 @@
 
     footer h4 {
       margin-bottom: 0.5rem;
-      font-weight: 600;
+      font-weight: 700;
     }
 
     footer ul {
@@ -190,18 +218,29 @@
     }
 
     @media (max-width: 768px) {
-      .contact-section {
-        flex-direction: column;
+      #nav-toggle {
+        display: block;
       }
 
       nav#nav-links {
+        width: 100%;
         flex-direction: column;
-        gap: 0.5rem;
+        display: none;
         margin-top: 1rem;
       }
 
+      nav#nav-links.show {
+        display: flex;
+      }
+
       nav#nav-links a {
-        margin-left: 0;
+        padding: 0.5rem 1rem;
+        background: rgba(255,255,255,0.1);
+        border-radius: 8px;
+      }
+
+      .contact-section {
+        flex-direction: column;
       }
 
       footer > div {
@@ -212,9 +251,9 @@
   </style>
 </head>
 <body>
-
   <header>
     <h1 onclick="location.href='index.html'">Locorent</h1>
+    <button id="nav-toggle" aria-label="Menü öffnen">☰</button>
     <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
   </header>
 
@@ -226,26 +265,22 @@
         <p><strong>E-Mail:</strong> <a href="mailto:info@locorent.de">info@locorent.de</a></p>
         <p>Wir melden uns in der Regel innerhalb von 24 Stunden bei dir.</p>
       </div>
-
       <div class="contact-form">
         <form name="kontaktformular" method="POST" data-netlify="true">
           <input type="hidden" name="form-name" value="kontaktformular" />
           <label for="name">Name *</label>
           <input type="text" id="name" name="name" required />
-
           <label for="email">E-Mail *</label>
           <input type="email" id="email" name="email" required />
-
           <label for="message">Nachricht *</label>
           <textarea id="message" name="message" required></textarea>
-
           <button type="submit">Nachricht senden</button>
         </form>
       </div>
     </div>
   </main>
 
-  <footer>
+  <footer role="contentinfo">
     <div>
       <div>
         <h4>Mieten & Vermieten</h4>
@@ -282,25 +317,25 @@
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
     );
 
+    let userSession = null;
+
     async function init() {
       const { data: { session } } = await supabase.auth.getSession();
-      const nav = document.getElementById('nav-links');
-      const emailInput = document.getElementById('email');
+      userSession = session;
+      updateNav();
+    }
 
-      if (session?.user) {
-        nav.innerHTML = `
-          <a href="index.html">Start</a>
-          <a href="profil.html">Mein Profil</a>
-          <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-          <a href="favoriten.html">Meine Favoriten</a>
-          <a href="inserate.html">Meine Inserate</a>
-          <a href="#" onclick="logout(event)">Logout</a>`;
-        emailInput.value = session.user.email;
-      } else {
-        nav.innerHTML = `
-          <a href="index.html">Start</a>
-          <a href="login.html">Einloggen</a>`;
-      }
+    function updateNav() {
+      const nav = document.getElementById('nav-links');
+      nav.innerHTML = userSession?.user
+        ? `<a href="index.html">Start</a>
+           <a href="profil.html">Mein Profil</a>
+           <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+           <a href="favoriten.html">Meine Favoriten</a>
+           <a href="inserate.html">Meine Inserate</a>
+           <a href="#" onclick="logout(event)">Logout</a>`
+        : `<a href="index.html">Start</a>
+           <a href="login.html">Einloggen</a>`;
     }
 
     async function logout(event) {
@@ -309,8 +344,12 @@
       window.location.href = "login.html";
     }
 
+    document.getElementById('nav-toggle').addEventListener('click', () => {
+      const nav = document.getElementById('nav-links');
+      nav.classList.toggle('show');
+    });
+
     init();
   </script>
-
 </body>
 </html>
