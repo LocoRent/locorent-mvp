@@ -2,24 +2,20 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>Kontakt – Locorent</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --primary: #2e7d32;
-      --primary-light: #66bb6a;
-      --primary-dark: #1b5e20;
-      --background: #f1f8e9;
-      --white: #fff;
-      --text-dark: #0f2e13;
-      --text-muted: #466843;
-      --accent: #b9f6ca;
-      --highlight: #a5d6a7;
+      --light: #e8f5e9;
+      --white: #ffffff;
+      --dark: #1b5e20;
+      --accent: #81c784;
       --radius: 16px;
       --shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
-      --font-primary: 'Poppins', sans-serif;
+      --font: 'Poppins', sans-serif;
     }
 
     *, *::before, *::after {
@@ -28,33 +24,33 @@
 
     body {
       margin: 0;
-      font-family: var(--font-primary);
-      background: linear-gradient(to bottom, var(--background), #ffffff);
-      color: var(--text-dark);
+      font-family: var(--font);
+      background: linear-gradient(180deg, var(--light), var(--white));
+      color: #333;
+      line-height: 1.7;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
+      overflow-x: hidden;
     }
 
     header {
-      background-color: var(--primary);
-      color: var(--white);
+      background: var(--primary);
       padding: 1.5rem 2rem;
+      color: var(--white);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-weight: 700;
       position: sticky;
       top: 0;
-      z-index: 1000;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      z-index: 100;
       flex-wrap: wrap;
+      font-weight: 700;
     }
 
     header h1 {
       font-size: 1.8rem;
       cursor: pointer;
-      user-select: none;
       margin: 0;
     }
 
@@ -79,6 +75,7 @@
       font-weight: 600;
       font-size: 1rem;
       position: relative;
+      transition: color 0.3s ease;
     }
 
     nav#nav-links a::after {
@@ -92,12 +89,9 @@
       transition: width 0.3s ease;
     }
 
-    nav#nav-links a:hover::after {
+    nav#nav-links a:hover::after,
+    nav#nav-links a:focus::after {
       width: 100%;
-    }
-
-    nav#nav-links a:hover {
-      color: var(--accent);
     }
 
     main {
@@ -119,13 +113,22 @@
     .contact-info {
       flex: 1;
       padding: 2.5rem;
-      background-color: var(--background);
-      color: var(--primary-dark);
+      background-color: var(--light);
+      color: var(--dark);
     }
 
     .contact-info h2 {
       font-size: 2rem;
       margin-bottom: 1rem;
+    }
+
+    .contact-info p {
+      margin-bottom: 1rem;
+    }
+
+    .contact-info a {
+      color: var(--dark);
+      font-weight: 500;
     }
 
     .contact-form {
@@ -149,7 +152,7 @@
       border: 1px solid #ccc;
       border-radius: var(--radius);
       margin-top: 0.5rem;
-      font-family: var(--font-primary);
+      font-family: var(--font);
       font-size: 1rem;
     }
 
@@ -172,24 +175,36 @@
     }
 
     button:hover {
-      background: var(--primary-light);
+      background: var(--dark);
+    }
+
+    #form-success {
+      display: none;
+      color: var(--primary);
+      font-weight: 600;
+      margin-top: 1.5rem;
     }
 
     footer {
       background-color: var(--primary);
       color: var(--white);
       padding: 2rem 2rem 1rem;
+      margin-top: 3rem;
       font-size: 0.92rem;
-      margin-top: auto;
+      width: 100vw;
+      position: relative;
+      left: 50%;
+      right: 50%;
+      margin-left: -50vw;
+      margin-right: -50vw;
     }
 
     footer > div {
-      max-width: 1200px;
-      margin: 0 auto;
+      max-width: 1100px;
+      margin: auto;
       display: flex;
       flex-wrap: wrap;
       gap: 2rem;
-      text-align: left;
     }
 
     footer > div > div {
@@ -199,8 +214,7 @@
 
     footer h4 {
       margin-bottom: 0.5rem;
-      font-weight: 700;
-      font-size: 1.1rem;
+      font-weight: 600;
     }
 
     footer ul {
@@ -214,17 +228,13 @@
       text-decoration: underline;
     }
 
-    footer ul li a:hover {
-      color: var(--accent);
-    }
-
     footer small {
       display: block;
       text-align: center;
       margin-top: 2rem;
     }
 
-    @media (max-width: 720px) {
+    @media (max-width: 768px) {
       #nav-toggle {
         display: block;
       }
@@ -248,13 +258,13 @@
         display: block;
       }
 
-      footer > div {
+      .contact-section {
         flex-direction: column;
-        align-items: flex-start;
       }
 
-      footer > div > div {
-        width: 100%;
+      footer > div {
+        flex-direction: column;
+        text-align: center;
       }
     }
   </style>
@@ -262,7 +272,7 @@
 <body>
 
 <header>
-  <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
+  <h1 onclick="location.href='index.html'">Locorent</h1>
   <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
   <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
 </header>
@@ -279,6 +289,8 @@
     <div class="contact-form">
       <form name="kontaktformular" method="POST" data-netlify="true">
         <input type="hidden" name="form-name" value="kontaktformular" />
+        <input type="hidden" name="subject" value="Neue Kontaktanfrage über Locorent" />
+
         <label for="name">Name *</label>
         <input type="text" id="name" name="name" required />
 
@@ -289,12 +301,13 @@
         <textarea id="message" name="message" required></textarea>
 
         <button type="submit">Nachricht senden</button>
+        <p id="form-success">✅ Nachricht erfolgreich gesendet! Wir melden uns bald.</p>
       </form>
     </div>
   </div>
 </main>
 
-<footer role="contentinfo">
+<footer>
   <div>
     <div>
       <h4>Mieten & Vermieten</h4>
@@ -341,18 +354,15 @@
 
   function updateNav() {
     const nav = document.getElementById('nav-links');
-    nav.innerHTML = userSession?.user ? `
-      <a href="index.html">Start</a>
-      <a href="profil.html">Mein Profil</a>
-      <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-      <a href="favoriten.html">Meine Favoriten</a>
-      <a href="inserate.html">Meine Inserate</a>
-      <a href="social-media.html">Folge uns</a>
-      <a href="#" onclick="logout(event)">Logout</a>
-    ` : `
-      <a href="index.html">Start</a>
-      <a href="login.html">Einloggen</a>
-    `;
+    nav.innerHTML = userSession?.user
+      ? `<a href="index.html">Start</a>
+         <a href="profil.html">Mein Profil</a>
+         <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+         <a href="favoriten.html">Meine Favoriten</a>
+         <a href="inserate.html">Meine Inserate</a>
+         <a href="#" onclick="logout(event)">Logout</a>`
+      : `<a href="index.html">Start</a>
+         <a href="login.html">Einloggen</a>`;
   }
 
   async function logout(event) {
@@ -364,11 +374,18 @@
   document.getElementById('nav-toggle').addEventListener('click', () => {
     const nav = document.getElementById('nav-links');
     nav.classList.toggle('show');
-    const expanded = nav.classList.contains('show');
-    document.getElementById('nav-toggle').setAttribute('aria-expanded', expanded);
+    document.getElementById('nav-toggle').setAttribute('aria-expanded', nav.classList.contains('show'));
   });
 
   init();
+
+  const form = document.querySelector("form");
+  const success = document.getElementById("form-success");
+  if (form) {
+    form.addEventListener("submit", function () {
+      success.style.display = "block";
+    });
+  }
 </script>
 
 </body>
