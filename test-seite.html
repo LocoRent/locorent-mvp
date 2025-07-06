@@ -123,53 +123,7 @@
       box-shadow: 0 12px 30px var(--shadow-light);
     }
 
-    h2 {
-      color: var(--primary-dark);
-      font-weight: 700;
-      font-size: 2rem;
-      margin-bottom: 1rem;
-      margin-top: 0;
-    }
-
-    h3 {
-      margin-top: 2rem;
-      color: var(--primary);
-      font-weight: 600;
-      font-size: 1.3rem;
-    }
-
-    p, ul {
-      color: var(--text-muted);
-      font-size: 1rem;
-      line-height: 1.6;
-    }
-
-    ul {
-      padding-left: 1.2rem;
-    }
-
-    a {
-      color: var(--primary);
-      text-decoration: underline;
-    }
-
-    a:hover, a:focus {
-      color: var(--accent);
-      outline: none;
-    }
-
-    .badge {
-      display: inline-block;
-      background-color: var(--accent);
-      color: var(--primary-dark);
-      font-weight: 600;
-      padding: 0.3rem 0.7rem;
-      border-radius: 999px;
-      font-size: 0.85rem;
-      margin-bottom: 1rem;
-      user-select: none;
-    }
- .hero {
+    .hero {
       background: linear-gradient(rgba(46, 125, 50, 0.85), rgba(46, 125, 50, 0.85)), url('https://images.pexels.com/photos/3730760/pexels-photo-3730760.jpeg') center/cover no-repeat;
       color: white;
       border-radius: var(--radius);
@@ -233,6 +187,7 @@
       color: var(--text-muted);
       line-height: 1.6;
     }
+
     footer {
       width: 100%;
       box-sizing: border-box;
@@ -339,22 +294,33 @@
   </header>
   <main class="container" role="main">
     <div class="badge">Stand: 2025</div>
-    <h2>Tipps für Vermieter:innen</h2>
+    <section class="hero">
+      <h2>Deine Vermietung. Auf einem neuen Level.</h2>
+      <p>Unsere Profi-Tipps bringen dir mehr Buchungen, bessere Bewertungen und entspanntes Vermieten mit Stil.</p>
+    </section>
 
-    <h3>1. Setze auf starke Bilder</h3>
-    <p>Verkaufe mit dem ersten Eindruck! Helle, scharfe und detailreiche Fotos machen den Unterschied.</p>
-
-    <h3>2. Qualität = Vertrauen</h3>
-    <p>Reinige, prüfe und pflege deine Artikel – so sicherst du dir wiederkehrende Mieter:innen.</p>
-
-    <h3>3. Bewertungen boosten</h3>
-    <p>Bitte nach jeder Miete aktiv um eine Bewertung – viele Sterne bringen mehr Sichtbarkeit.</p>
-
-    <h3>4. Flexible Übergaben</h3>
-    <p>Abends oder am Wochenende – je flexibler du bist, desto mehr Anfragen bekommst du.</p>
-
-    <h3>5. Antworte wie ein Profi</h3>
-    <p>Je schneller deine Antwort, desto höher deine Chancen auf die nächste Buchung!</p>
+    <section class="tips-grid">
+      <div class="tip-card">
+        <h3>1. Setze auf starke Bilder</h3>
+        <p>Verkaufe mit dem ersten Eindruck! Helle, scharfe und detailreiche Fotos machen den Unterschied.</p>
+      </div>
+      <div class="tip-card">
+        <h3>2. Qualität = Vertrauen</h3>
+        <p>Reinige, prüfe und pflege deine Artikel – so sicherst du dir wiederkehrende Mieter:innen.</p>
+      </div>
+      <div class="tip-card">
+        <h3>3. Bewertungen boosten</h3>
+        <p>Bitte nach jeder Miete aktiv um eine Bewertung – viele Sterne bringen mehr Sichtbarkeit.</p>
+      </div>
+      <div class="tip-card">
+        <h3>4. Flexible Übergaben</h3>
+        <p>Abends oder am Wochenende – je flexibler du bist, desto mehr Anfragen bekommst du.</p>
+      </div>
+      <div class="tip-card">
+        <h3>5. Antworte wie ein Profi</h3>
+        <p>Je schneller deine Antwort, desto höher deine Chancen auf die nächste Buchung!</p>
+      </div>
+    </section>
   </main>
 
   <footer role="contentinfo">
