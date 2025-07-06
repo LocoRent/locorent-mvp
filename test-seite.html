@@ -52,7 +52,6 @@
       top: 0;
       z-index: 1000;
       box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-      flex-wrap: wrap;
       width: 100%;
     }
 
@@ -296,7 +295,6 @@
       text-align: center;
       user-select: none;
     }
-
   </style>
 </head>
 <body>
@@ -443,9 +441,8 @@
   document.getElementById('nav-toggle').addEventListener('click', () => {
     const nav = document.getElementById('nav-links');
     nav.classList.toggle('show');
-    const toggle = document.getElementById('nav-toggle');
     const expanded = nav.classList.contains('show');
-    toggle.setAttribute('aria-expanded', expanded);
+    document.getElementById('nav-toggle').setAttribute('aria-expanded', expanded);
   });
 
   init();
@@ -453,3 +450,4 @@
 
 </body>
 </html>
+
