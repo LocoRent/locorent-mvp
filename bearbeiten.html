@@ -314,7 +314,6 @@
       }
     }
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.1/dist/browser-image-compression.min.js"></script>
 </head>
 <body>
   <header>
@@ -325,7 +324,7 @@
 
   <main role="main">
     <label for="title">Titel</label>
-    <input type="text" id="title" required maxlength="50" />
+    <input type="text" id="title" required />
 
     <label for="category">Kategorie</label>
     <select id="category" required>
@@ -345,7 +344,7 @@
     </select>
 
     <label for="price">Preis pro Tag (€)</label>
-    <input type="number" id="price" required maxlength="6" oninput="this.value=this.value.slice(0,6)" />
+    <input type="number" id="price" required />
 
     <label for="location">Ort (PLZ oder Stadt)</label>
     <div style="position: relative;">
@@ -354,7 +353,7 @@
     </div>
 
     <label for="desc">Beschreibung</label>
-    <textarea id="desc" rows="4" maxlength="150"></textarea>
+    <textarea id="desc" rows="4"></textarea>
 
     <label>Bilder</label>
     <div id="dropzone" class="dropzone" tabindex="0">Bilder hier ablegen oder klicken</div>
@@ -474,10 +473,7 @@
       gallery.appendChild(loader);
 
       const filePath = `${listingId}_${Date.now()}_${file.name.replace(/\s+/g, '-')}`;
-      const compressedFile = await imageCompression(file, {maxSizeMB: 0.05, // entspricht ca. 50 KB maxWidthOrHeight: 800,useWebWorker: true});
-
-const { error } = await supabase.storage.from('listing-images').upload(filePath, compressedFile);
-
+      const { error } = await supabase.storage.from('listing-images').upload(filePath, file);
 
       if (!error) {
         const { data } = supabase.storage.from('listing-images').getPublicUrl(filePath);
