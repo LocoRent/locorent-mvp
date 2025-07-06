@@ -11,10 +11,17 @@
       --primary: #2e7d32;
       --primary-light: #66bb6a;
       --primary-dark: #1b5e20;
+      --background: #f1f8e9;
       --white: #fff;
+      --text-dark: #0f2e13;
+      --text-muted: #466843;
       --accent: #b9f6ca;
-      --font-primary: 'Poppins', sans-serif;
+      --highlight: #a5d6a7;
       --radius: 18px;
+      --shadow-light: rgba(46, 125, 50, 0.08);
+      --shadow-strong: rgba(46, 125, 50, 0.25);
+      --transition: 0.4s ease;
+      --font-primary: 'Poppins', sans-serif;
     }
 
     *, *::before, *::after {
@@ -25,7 +32,8 @@
       margin: 0;
       font-family: var(--font-primary);
       background: linear-gradient(to bottom, #e8f5e9 0%, #ffffff 100%);
-      color: #0f2e13;
+      color: var(--text-dark);
+      scroll-behavior: smooth;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
@@ -38,6 +46,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      font-weight: 700;
       position: sticky;
       top: 0;
       z-index: 1000;
@@ -70,6 +79,22 @@
       text-decoration: none;
       font-weight: 600;
       font-size: 1rem;
+      position: relative;
+    }
+
+    nav#nav-links a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -4px;
+      width: 0;
+      height: 2px;
+      background-color: var(--accent);
+      transition: width 0.3s ease;
+    }
+
+    nav#nav-links a:hover::after {
+      width: 100%;
     }
 
     nav#nav-links a:hover {
@@ -82,8 +107,8 @@
       }
 
       nav#nav-links {
-        width: 100%;
         flex-direction: column;
+        width: 100%;
         display: none;
         margin-top: 1rem;
       }
@@ -93,11 +118,9 @@
       }
 
       nav#nav-links a {
-        margin: 0.4rem 0;
         padding: 0.5rem 1rem;
-        background-color: rgba(255, 255, 255, 0.1);
+        background-color: rgba(255,255,255,0.1);
         border-radius: 6px;
-        display: block;
       }
 
       footer > div {
@@ -182,7 +205,6 @@
       border-radius: 30px;
       font-weight: 600;
       display: inline-block;
-      transition: 0.3s;
     }
 
     .social-card a:hover {
@@ -190,12 +212,22 @@
     }
 
     footer {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 2rem 2rem 1rem;
+      border-radius: var(--radius);
       background-color: var(--primary);
       color: var(--white);
-      padding: 2rem 2rem 1rem;
+      box-shadow: 0 8px 32px rgba(46, 125, 50, 0.22);
       font-size: 0.92rem;
-      margin-top: auto;
+      user-select: none;
       text-align: center;
+      margin-top: auto;
+      position: relative;
+      left: 50%;
+      right: 50%;
+      margin-left: -50vw;
+      margin-right: -50vw;
     }
 
     footer > div {
@@ -228,6 +260,11 @@
     footer ul li a {
       color: var(--white);
       text-decoration: underline;
+      transition: color 0.3s ease;
+    }
+
+    footer ul li a:hover {
+      color: var(--accent);
     }
 
     footer small {
@@ -249,9 +286,7 @@
 <main>
   <h1>Folge uns!</h1>
   <p class="subtext">Bleib auf dem Laufenden & werde Teil der Community 🚀</p>
-
   <div class="social-grid">
-    <!-- Instagram -->
     <div class="social-card">
       <div class="social-icon" style="background:#E1306C;">
         <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/instagram.svg" alt="Instagram" />
@@ -260,7 +295,6 @@
       <p>Fotos, Storys & Highlights rund ums Mieten.</p>
       <a href="https://www.instagram.com/locorent" target="_blank">Jetzt folgen</a>
     </div>
-    <!-- Facebook -->
     <div class="social-card">
       <div class="social-icon" style="background:#1877F2;">
         <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/facebook.svg" alt="Facebook" />
@@ -269,7 +303,6 @@
       <p>News, Events & Gruppen rund um Locorent.</p>
       <a href="https://www.facebook.com/locorent" target="_blank">Fan werden</a>
     </div>
-    <!-- TikTok -->
     <div class="social-card">
       <div class="social-icon" style="background:#000;">
         <svg viewBox="0 0 256 256" fill="white" xmlns="http://www.w3.org/2000/svg">
@@ -280,7 +313,6 @@
       <p>Kreative Videos, Trends & lustige Momente.</p>
       <a href="https://www.tiktok.com/@locorent" target="_blank">Ansehen</a>
     </div>
-    <!-- Kontakt -->
     <div class="social-card">
       <div class="social-icon" style="background:#43a047;">
         <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
@@ -294,10 +326,10 @@
   </div>
 </main>
 
-<footer>
+<footer role="contentinfo">
   <div>
     <div>
-      <h4>Mieten & Vermieten</h4>
+      <h4>Mieten &amp; Vermieten</h4>
       <ul>
         <li><a href="so-funktionierts.html">So funktioniert's</a></li>
         <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
@@ -348,6 +380,7 @@
       <a href="nachrichten-inbox.html">📨 Nachrichten</a>
       <a href="favoriten.html">Meine Favoriten</a>
       <a href="inserate.html">Meine Inserate</a>
+      <a href="social-media.html">Folge uns</a>
       <a href="#" onclick="logout(event)">Logout</a>
     ` : `
       <a href="index.html">Start</a>
@@ -365,11 +398,13 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('nav-toggle').addEventListener('click', () => {
-      const nav = document.getElementById('nav-links');
-      nav.classList.toggle('show');
-      const expanded = nav.classList.contains('show');
-      document.getElementById('nav-toggle').setAttribute('aria-expanded', expanded);
+    const navToggle = document.getElementById('nav-toggle');
+    const navLinks = document.getElementById('nav-links');
+
+    navToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('show');
+      const expanded = navLinks.classList.contains('show');
+      navToggle.setAttribute('aria-expanded', expanded);
     });
 
     init();
