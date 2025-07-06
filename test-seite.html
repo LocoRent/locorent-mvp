@@ -9,138 +9,128 @@
   <style>
     :root {
       --primary: #2e7d32;
-      --primary-light: #66bb6a;
-      --background: #f1f8e9;
-      --white: #fff;
-      --text-dark: #0f2e13;
-      --text-muted: #466843;
-      --accent: #b9f6ca;
-      --radius: 18px;
-      --shadow-light: rgba(46, 125, 50, 0.08);
-      --shadow-strong: rgba(46, 125, 50, 0.25);
-      --font: 'Poppins', sans-serif;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+      --light: #e8f5e9;
+      --white: #ffffff;
+      --dark: #1b5e20;
+      --accent: #81c784;
+      --radius: 16px;
+      --shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
     }
 
     html, body {
-      font-family: var(--font);
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
       background: linear-gradient(to bottom, #e8f5e9, #ffffff);
-      color: var(--text-dark);
+      color: #333;
       scroll-behavior: smooth;
       overflow-x: hidden;
+      width: 100%;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
     }
 
     header {
-      background: var(--primary);
+      background-color: var(--primary);
       color: var(--white);
       padding: 1.5rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
       position: sticky;
       top: 0;
       z-index: 1000;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
     }
 
     header h1 {
       font-size: 1.8rem;
+      font-weight: 700;
+      margin: 0;
       cursor: pointer;
     }
 
     #nav-toggle {
       display: none;
+      font-size: 1.6rem;
       background: none;
       border: none;
-      font-size: 1.8rem;
       color: var(--white);
       cursor: pointer;
     }
 
     nav#nav-links {
       display: flex;
-      gap: 1rem;
+      gap: 1.2rem;
     }
 
     nav#nav-links a {
       color: var(--white);
       text-decoration: none;
       font-weight: 600;
-      font-size: 1rem;
       position: relative;
-    }
-
-    nav#nav-links a::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      bottom: -4px;
-      width: 0;
-      height: 2px;
-      background-color: var(--accent);
-      transition: width 0.3s ease;
+      padding-bottom: 3px;
     }
 
     nav#nav-links a:hover::after {
+      content: "";
+      position: absolute;
       width: 100%;
+      height: 2px;
+      background-color: var(--accent);
+      bottom: -3px;
+      left: 0;
     }
 
     main {
-      max-width: 1080px;
-      margin: 3rem auto;
-      padding: 1rem;
+      max-width: 1100px;
+      margin: 4rem auto;
+      padding: 0 2rem;
+    }
+
+    .contact-section {
       background: var(--white);
       border-radius: var(--radius);
-      box-shadow: 0 12px 30px var(--shadow-light);
+      box-shadow: var(--shadow);
+      padding: 2.5rem;
     }
 
-    .contact-wrapper {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 2rem;
-    }
-
-    .contact-info, .contact-form {
-      flex: 1;
-      min-width: 280px;
-    }
-
-    .contact-info h2 {
+    .contact-section h2 {
       font-size: 2rem;
+      margin-bottom: 1rem;
+      color: var(--primary);
+    }
+
+    .contact-section p {
       margin-bottom: 1rem;
     }
 
-    .contact-info p {
-      margin-bottom: 0.8rem;
-    }
-
-    .contact-info a {
+    .contact-section a {
       color: var(--primary);
       font-weight: 600;
-      text-decoration: underline;
     }
 
     form {
+      margin-top: 2rem;
       display: flex;
       flex-direction: column;
     }
 
     label {
+      margin-top: 1.2rem;
       font-weight: 500;
-      margin-top: 1rem;
     }
 
     input, textarea {
-      margin-top: 0.3rem;
-      padding: 0.9rem;
+      padding: 0.9rem 1rem;
       border: 1px solid #ccc;
       border-radius: var(--radius);
+      margin-top: 0.5rem;
+      font-family: inherit;
       font-size: 1rem;
-      font-family: var(--font);
     }
 
     textarea {
@@ -153,15 +143,23 @@
       background: var(--primary);
       color: var(--white);
       border: none;
-      padding: 1rem;
+      padding: 0.9rem 1.6rem;
       font-size: 1.1rem;
       font-weight: 600;
       border-radius: var(--radius);
       cursor: pointer;
+      transition: background 0.3s ease;
     }
 
     button:hover {
-      background: var(--primary-light);
+      background: var(--dark);
+    }
+
+    #form-success {
+      display: none;
+      color: var(--primary);
+      font-weight: 600;
+      margin-top: 1.5rem;
     }
 
     footer {
@@ -170,17 +168,13 @@
       padding: 2rem 2rem 1rem;
       margin-top: 3rem;
       font-size: 0.92rem;
-      width: 100vw;
-      position: relative;
-      left: 50%;
-      right: 50%;
-      margin-left: -50vw;
-      margin-right: -50vw;
+      width: 100%;
+      box-sizing: border-box;
     }
 
     footer > div {
-      max-width: 1200px;
-      margin: 0 auto;
+      max-width: 1100px;
+      margin: auto;
       display: flex;
       flex-wrap: wrap;
       gap: 2rem;
@@ -193,8 +187,7 @@
 
     footer h4 {
       margin-bottom: 0.5rem;
-      font-weight: 700;
-      font-size: 1.1rem;
+      font-weight: 600;
     }
 
     footer ul {
@@ -220,8 +213,9 @@
       }
 
       nav#nav-links {
-        flex-direction: column;
         display: none;
+        flex-direction: column;
+        width: 100%;
         margin-top: 1rem;
       }
 
@@ -230,14 +224,12 @@
       }
 
       nav#nav-links a {
-        margin: 0.5rem 0;
         padding: 0.5rem 1rem;
-        background: rgba(255,255,255,0.1);
-        border-radius: 6px;
       }
 
-      .contact-wrapper {
+      header {
         flex-direction: column;
+        align-items: flex-start;
       }
 
       footer > div {
@@ -251,34 +243,33 @@
 
   <header>
     <h1 onclick="location.href='index.html'">Locorent</h1>
-    <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
+    <button id="nav-toggle" aria-label="Menü öffnen">☰</button>
     <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
   </header>
 
   <main>
-    <div class="contact-wrapper">
-      <div class="contact-info">
-        <h2>Kontaktiere uns</h2>
-        <p>Du hast Fragen, Feedback oder möchtest einfach nur Hallo sagen? Schreib uns gerne über das Formular oder direkt per E-Mail.</p>
-        <p><strong>E-Mail:</strong> <a href="mailto:info@locorent.de">info@locorent.de</a></p>
-        <p>Wir melden uns in der Regel innerhalb von 24 Stunden bei dir.</p>
-      </div>
+    <div class="contact-section">
+      <h2>Kontaktiere uns</h2>
+      <p>Du hast Fragen, Feedback oder möchtest einfach nur Hallo sagen? Schreib uns gerne über das Formular oder direkt per E-Mail.</p>
+      <p><strong>E-Mail:</strong> <a href="mailto:info@locorent.de">info@locorent.de</a></p>
+      <p>Wir melden uns in der Regel innerhalb von 24 Stunden bei dir.</p>
 
-      <div class="contact-form">
-        <form name="kontaktformular" method="POST" data-netlify="true">
-          <input type="hidden" name="form-name" value="kontaktformular" />
-          <label for="name">Name *</label>
-          <input type="text" id="name" name="name" required />
+      <form name="kontaktformular" method="POST" data-netlify="true">
+        <input type="hidden" name="form-name" value="kontaktformular" />
+        <input type="hidden" name="subject" value="Neue Kontaktanfrage über Locorent" />
+        
+        <label for="name">Name *</label>
+        <input type="text" id="name" name="name" required>
 
-          <label for="email">E-Mail *</label>
-          <input type="email" id="email" name="email" required />
+        <label for="email">E-Mail *</label>
+        <input type="email" id="email" name="email" required>
 
-          <label for="message">Nachricht *</label>
-          <textarea id="message" name="message" required></textarea>
+        <label for="message">Nachricht *</label>
+        <textarea id="message" name="message" required></textarea>
 
-          <button type="submit">Nachricht senden</button>
-        </form>
-      </div>
+        <button type="submit">Nachricht senden</button>
+        <p id="form-success">✅ Nachricht erfolgreich gesendet!</p>
+      </form>
     </div>
   </main>
 
@@ -319,20 +310,16 @@
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
     );
 
-    let userSession = null;
+    const navToggle = document.getElementById('nav-toggle');
+    const navLinks = document.getElementById('nav-links');
+
+    navToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('show');
+    });
 
     async function init() {
       const { data: { session } } = await supabase.auth.getSession();
-      userSession = session;
-      updateNav();
-      if (userSession?.user?.email) {
-        document.getElementById("email").value = userSession.user.email;
-      }
-    }
-
-    function updateNav() {
-      const nav = document.getElementById('nav-links');
-      nav.innerHTML = userSession?.user
+      navLinks.innerHTML = session?.user
         ? `<a href="index.html">Start</a>
            <a href="profil.html">Mein Profil</a>
            <a href="nachrichten-inbox.html">📨 Nachrichten</a>
@@ -349,12 +336,14 @@
       window.location.href = "login.html";
     }
 
-    document.getElementById('nav-toggle').addEventListener('click', () => {
-      const nav = document.getElementById('nav-links');
-      nav.classList.toggle('show');
-      const expanded = nav.classList.contains('show');
-      document.getElementById('nav-toggle').setAttribute('aria-expanded', expanded);
-    });
+    // Zeige Erfolgsmeldung nach Absenden des Formulars
+    const form = document.querySelector("form");
+    const success = document.getElementById("form-success");
+    if (form && success) {
+      form.addEventListener("submit", () => {
+        success.style.display = "block";
+      });
+    }
 
     init();
   </script>
