@@ -87,13 +87,23 @@ header h1 {
     display: flex;
   }
 
-  nav#nav-links a {
-    padding: 0.6rem 1rem;
-    border-radius: 6px;
-    background-color: rgba(255,255,255,0.1);
-    margin: 0.2rem 0;
-  }
+nav#nav-links a {
+  color: var(--white);
+  text-decoration: none;
+  padding: 0.6rem 1rem;
+  margin: 0.2rem 0;
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  font-weight: 600;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  display: block;
 }
+
+nav#nav-links a:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: var(--accent);
+}
+
 
     }
     @media (max-width: 720px) {
