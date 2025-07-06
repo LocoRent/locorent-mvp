@@ -338,7 +338,6 @@
       }
     }
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.1/dist/browser-image-compression.min.js"></script>
 </head>
 <body>
 
@@ -557,25 +556,13 @@ document.getElementById("dropzone").addEventListener("click", () => {
 
 async function handleFiles(files) {
   const container = document.getElementById("preview-gallery");
-
   for (let file of files) {
     if (uploadedImageUrls.length >= 2) break;
     if (!file.type.startsWith("image/")) continue;
-
-    try {
-      // Komprimiere auf max. 0.02 MB (= 20 KB), mit Begrenzung auf 800px
-      const compressedFile = await imageCompression(file, {
-        maxSizeMB: 0.02,
-        maxWidthOrHeight: 800,
-        useWebWorker: true
-      });
-
-      if (compressedFile.size > 2 * 1024 * 1024) {
-        alert("Komprimiertes Bild ist noch zu groß (max. 2 MB).");
-        continue;
-      }
-}
-
+    if (file.size > 2 * 1024 * 1024) {
+      alert("Bilder dürfen maximal 2 MB groß sein.");
+      continue;
+    }
 
     const tempBox = document.createElement("div");
     tempBox.className = "preview-box";
