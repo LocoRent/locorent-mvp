@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Hilfe & FAQ – Locorent</title>
+  <title>Folge uns – Locorent</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
@@ -33,11 +33,10 @@
       font-family: var(--font-primary);
       background: linear-gradient(to bottom, #e8f5e9 0%, #ffffff 100%);
       color: var(--text-dark);
-      scroll-behavior: smooth;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
-      overflow-x: hidden;
+      scroll-behavior: smooth;
     }
 
     header {
@@ -47,11 +46,9 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-weight: 700;
       position: sticky;
       top: 0;
       z-index: 1000;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
       flex-wrap: wrap;
     }
 
@@ -59,7 +56,6 @@
       font-size: 1.8rem;
       cursor: pointer;
       user-select: none;
-      margin: 0;
     }
 
     #nav-toggle {
@@ -97,15 +93,12 @@
       transition: width 0.3s ease;
     }
 
-    nav#nav-links a:hover::after,
-    nav#nav-links a:focus::after {
+    nav#nav-links a:hover::after {
       width: 100%;
     }
 
-    nav#nav-links a:hover,
-    nav#nav-links a:focus {
+    nav#nav-links a:hover {
       color: var(--accent);
-      outline: none;
     }
 
     @media (max-width: 720px) {
@@ -131,98 +124,90 @@
         border-radius: 6px;
         display: block;
       }
-
-      footer > div {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      footer > div > div {
-        width: 100%;
-      }
     }
 
     main {
       max-width: 1100px;
-      margin: 3rem auto 4rem auto;
+      margin: 3rem auto;
       padding: 2rem;
-      background: var(--white);
-      border-radius: var(--radius);
-      box-shadow: 0 12px 30px var(--shadow-light);
       flex-grow: 1;
     }
 
     h2 {
-      color: var(--primary-dark);
-      font-weight: 700;
-      font-size: 2.4rem;
-      margin-bottom: 2rem;
       text-align: center;
-      user-select: none;
-    }
-
-    .accordion {
-      border-radius: var(--radius);
-      box-shadow: 0 6px 16px var(--shadow-light);
-      background: var(--white);
-      overflow: hidden;
-    }
-
-    .accordion-item + .accordion-item {
-      border-top: 1px solid #ddd;
-    }
-
-    .accordion-header {
-      width: 100%;
-      background: var(--white);
-      border: none;
-      padding: 1.25rem 1.5rem;
-      text-align: left;
-      font-size: 1.1rem;
-      font-weight: 600;
+      font-size: 2.4rem;
       color: var(--primary-dark);
-      cursor: pointer;
-      transition: background-color var(--transition);
+      margin-bottom: 0.5rem;
+    }
+
+    .subtext {
+      text-align: center;
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      margin-bottom: 2.5rem;
+    }
+
+    .social-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 2rem;
+    }
+
+    .social-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 2rem;
+      box-shadow: 0 8px 24px var(--shadow-light);
+      text-align: center;
+      transition: var(--transition);
+    }
+
+    .social-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 30px var(--shadow-strong);
+    }
+
+    .social-icon {
+      width: 60px;
+      height: 60px;
+      margin: 0 auto 1rem;
+      border-radius: 50%;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      user-select: none;
+      justify-content: center;
+      background-color: #c8e6c9;
     }
 
-    .accordion-header:hover,
-    .accordion-header[aria-expanded="true"] {
-      background: var(--highlight);
-      color: var(--white);
+    .social-icon img,
+    .social-icon svg {
+      width: 30px;
+      height: 30px;
     }
 
-    .accordion-header::after {
-      content: "▼";
-      font-size: 0.75rem;
-      transition: transform var(--transition);
-      margin-left: 1rem;
+    .social-card h3 {
+      font-size: 1.4rem;
+      margin-bottom: 0.5rem;
     }
 
-    .accordion-header[aria-expanded="true"]::after {
-      transform: rotate(-180deg);
-    }
-
-    .accordion-content {
-      max-height: 0;
-      overflow: hidden;
-      padding: 0 1.5rem;
-      transition: max-height var(--transition), padding var(--transition);
+    .social-card p {
       font-size: 1rem;
-      color: var(--text-dark);
-      user-select: text;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
     }
 
-    .accordion-content p {
-      padding: 1rem 0;
+    .social-card a {
+      text-decoration: none;
+      padding: 0.6rem 1.2rem;
+      background: var(--primary);
+      color: white;
+      border-radius: 30px;
+      font-weight: 600;
+      display: inline-block;
+      transition: var(--transition);
     }
 
-    .accordion-content[aria-hidden="false"] {
-      max-height: 500px;
-      padding-bottom: 1rem;
+    .social-card a:hover {
+      background: var(--primary-light);
     }
 
     footer {
@@ -232,7 +217,7 @@
       border-radius: var(--radius);
       background-color: var(--primary);
       color: var(--white);
-      box-shadow: 0 8px 32px rgba(46, 125, 50, 0.22);
+      box-shadow: 0 8px 32px var(--shadow-strong);
       font-size: 0.92rem;
       user-select: none;
       text-align: center;
@@ -285,81 +270,60 @@
       display: block;
       margin-top: 2rem;
       text-align: center;
-      opacity: 0.85;
     }
   </style>
 </head>
 <body>
 
 <header>
-  <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
+  <h1 onclick="location.href='index.html'" style="cursor:pointer;">Locorent</h1>
   <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
   <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
 </header>
 
 <main>
-  <h2>Hilfe & FAQ</h2>
-  <div class="accordion">
-    <!-- FAQ 1–10 -->
-    <div class="accordion-item">
-      <button class="accordion-header" aria-expanded="false" aria-controls="faq1" id="faq1-header">Wie registriere ich mich bei Locorent?</button>
-      <div id="faq1" class="accordion-content" role="region" aria-labelledby="faq1-header" aria-hidden="true">
-        <p>Die Registrierung ist einfach: Klicke auf „Registrieren“ oben rechts, gib deine Daten ein und bestätige deine E-Mail-Adresse. Danach kannst du sofort loslegen.</p>
+  <h2>Folge uns!</h2>
+  <p class="subtext">Bleib auf dem Laufenden & werde Teil der Community 🚀</p>
+
+  <div class="social-grid">
+    <div class="social-card">
+      <div class="social-icon" style="background:#E1306C;">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/instagram.svg" alt="Instagram" />
       </div>
+      <h3>Instagram</h3>
+      <p>Fotos, Storys & Highlights rund ums Mieten.</p>
+      <a href="https://www.instagram.com/locorent" target="_blank">Jetzt folgen</a>
     </div>
-    <div class="accordion-item">
-      <button class="accordion-header" aria-expanded="false" aria-controls="faq2" id="faq2-header">Wie kann ich einen Artikel mieten?</button>
-      <div id="faq2" class="accordion-content" role="region" aria-labelledby="faq2-header" aria-hidden="true">
-        <p>Suche deinen Wunschartikel oder stöbere durch die Kategorien. Um einen Artikel zu mieten, sende eine Mietanfrage direkt über unsere Chatfunktion und kläre alle Details unkompliziert mit dem Vermieter.</p>
+
+    <div class="social-card">
+      <div class="social-icon" style="background:#1877F2;">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/facebook.svg" alt="Facebook" />
       </div>
+      <h3>Facebook</h3>
+      <p>News, Events & Gruppen rund um Locorent.</p>
+      <a href="https://www.facebook.com/locorent" target="_blank">Fan werden</a>
     </div>
-    <div class="accordion-item">
-      <button class="accordion-header" aria-expanded="false" aria-controls="faq3" id="faq3-header">Was muss ich bei der Abholung und Rückgabe beachten?</button>
-      <div id="faq3" class="accordion-content" role="region" aria-labelledby="faq3-header" aria-hidden="true">
-        <p>Die Abholung und Rückgabe erfolgt direkt zwischen dir und dem Vermieter. Klärt die Uhrzeiten und den Zustand des Artikels vorab, um Missverständnisse zu vermeiden.</p>
+
+    <div class="social-card">
+      <div class="social-icon" style="background:#000;">
+        <svg viewBox="0 0 256 256" fill="white" xmlns="http://www.w3.org/2000/svg">
+          <path d="M204.8 76.8a76.8 76.8 0 01-38.4-10.24v76.8c0 35.84-28.16 66.56-64 68.48A68.03 68.03 0 0167.36 140.8a68.15 68.15 0 0158.24-67.84V102.4a38.4 38.4 0 00-25.6 72.96A38.4 38.4 0 00160 140.8V0h44.8a76.8 76.8 0 010 76.8z"/>
+        </svg>
       </div>
+      <h3>TikTok</h3>
+      <p>Kreative Videos, Trends & lustige Momente.</p>
+      <a href="https://www.tiktok.com/@locorent" target="_blank">Ansehen</a>
     </div>
-    <div class="accordion-item">
-      <button class="accordion-header" aria-expanded="false" aria-controls="faq4" id="faq4-header">Wie funktioniert die Kommunikation mit dem Vermieter?</button>
-      <div id="faq4" class="accordion-content" role="region" aria-labelledby="faq4-header" aria-hidden="true">
-        <p>Alle Anfragen und Absprachen erfolgen bequem über unsere integrierte Chatfunktion. So bleibt die Kommunikation übersichtlich und nachvollziehbar.</p>
+
+    <div class="social-card">
+      <div class="social-icon" style="background:#43a047;">
+        <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2zm-1.4 3.25l-6.6 4.13L5.4 7.25a.5.5 0 01.6-.8L12 10.87l6-3.62a.5.5 0 01.6.8z"/>
+        </svg>
       </div>
-    </div>
-    <div class="accordion-item">
-      <button class="accordion-header" aria-expanded="false" aria-controls="faq5" id="faq5-header">Wie kontaktiere ich den Support?</button>
-      <div id="faq5" class="accordion-content" role="region" aria-labelledby="faq5-header" aria-hidden="true">
-        <p>Du kannst uns jederzeit über das Kontaktformular auf unserer Website oder per E-Mail erreichen. Wir helfen dir gerne weiter.</p>
-      </div>
-    </div>
-    <div class="accordion-item">
-      <button class="accordion-header" aria-expanded="false" aria-controls="faq6" id="faq6-header">Wie sicher sind meine Daten bei Locorent?</button>
-      <div id="faq6" class="accordion-content" role="region" aria-labelledby="faq6-header" aria-hidden="true">
-        <p>Der Schutz deiner Daten hat für uns höchste Priorität. Wir nutzen moderne Verschlüsselungstechnologien und halten uns an strenge Datenschutzrichtlinien.</p>
-      </div>
-    </div>
-    <div class="accordion-item">
-      <button class="accordion-header" aria-expanded="false" aria-controls="faq7" id="faq7-header">Welche Vorteile bietet Locorent gegenüber dem Kauf?</button>
-      <div id="faq7" class="accordion-content" role="region" aria-labelledby="faq7-header" aria-hidden="true">
-        <p>Locorent ermöglicht dir, Dinge flexibel zu nutzen ohne langfristige Bindung. So sparst du Geld, schonst Ressourcen und kannst Artikel vor einem eventuellen Kauf ausprobieren.</p>
-      </div>
-    </div>
-    <div class="accordion-item">
-      <button class="accordion-header" aria-expanded="false" aria-controls="faq8" id="faq8-header">Was kann ich tun, wenn es ein Problem mit einem Vermieter gibt?</button>
-      <div id="faq8" class="accordion-content" role="region" aria-labelledby="faq8-header" aria-hidden="true">
-        <p>Kontaktiere bitte unseren Support über das Kontaktformular oder per E-Mail. Wir kümmern uns schnellstmöglich um dein Anliegen und vermitteln bei Bedarf zwischen den Parteien.</p>
-      </div>
-    </div>
-    <div class="accordion-item">
-      <button class="accordion-header" aria-expanded="false" aria-controls="faq9" id="faq9-header">Gibt es eine Community-Richtlinie?</button>
-      <div id="faq9" class="accordion-content" role="region" aria-labelledby="faq9-header" aria-hidden="true">
-        <p>Ja, unsere Community-Richtlinie sorgt für respektvolles und faires Miteinander. Verstöße können zu Sperrungen führen. Details findest du in unseren Nutzungsbedingungen.</p>
-      </div>
-    </div>
-    <div class="accordion-item">
-      <button class="accordion-header" aria-expanded="false" aria-controls="faq10" id="faq10-header">Wie kann ich meinen Account löschen?</button>
-      <div id="faq10" class="accordion-content" role="region" aria-labelledby="faq10-header" aria-hidden="true">
-        <p>Du kannst deinen Account jederzeit über die Profileinstellungen löschen. Falls du Hilfe benötigst, wende dich bitte an unseren Support.</p>
-      </div>
+      <h3>Kontakt</h3>
+      <p>Du hast Fragen oder Feedback?</p>
+      <a href="mailto:info@locorent.de">Schreib uns</a>
     </div>
   </div>
 </main>
@@ -367,7 +331,7 @@
 <footer role="contentinfo">
   <div>
     <div>
-      <h4>Mieten &amp; Vermieten</h4>
+      <h4>Mieten & Vermieten</h4>
       <ul>
         <li><a href="so-funktionierts.html">So funktioniert's</a></li>
         <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
@@ -434,18 +398,7 @@
   document.getElementById('nav-toggle').addEventListener('click', () => {
     const nav = document.getElementById('nav-links');
     nav.classList.toggle('show');
-    const expanded = nav.classList.contains('show');
-    document.getElementById('nav-toggle').setAttribute('aria-expanded', expanded);
-  });
-
-  // Accordion Logic
-  document.querySelectorAll('.accordion-header').forEach(button => {
-    button.addEventListener('click', () => {
-      const expanded = button.getAttribute('aria-expanded') === 'true';
-      button.setAttribute('aria-expanded', !expanded);
-      const content = document.getElementById(button.getAttribute('aria-controls'));
-      content.setAttribute('aria-hidden', expanded);
-    });
+    document.getElementById('nav-toggle').setAttribute('aria-expanded', nav.classList.contains('show'));
   });
 
   init();
