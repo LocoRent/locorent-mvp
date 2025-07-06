@@ -37,73 +37,64 @@
       min-height: 100vh;
       overflow-x: hidden;
     }
-     header {
-      background-color: var(--primary);
-      color: var(--white);
-      padding: 1.5rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-weight: 700;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-      flex-wrap: wrap;
-    }
+header {
+  background-color: var(--primary);
+  color: var(--white);
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
 
-    header h1 {
-      font-size: 1.8rem;
-      cursor: pointer;
-      user-select: none;
-      margin: 0;
-    }
+header h1 {
+  font-size: 1.4rem;
+  margin: 0;
+  cursor: pointer;
+}
 
-    #nav-toggle {
-      display: none;
-      background: none;
-      border: none;
-      font-size: 1.8rem;
-      color: var(--white);
-      cursor: pointer;
-    }
+#nav-toggle {
+  background: none;
+  border: none;
+  font-size: 1.6rem;
+  color: var(--white);
+  display: none;
+  cursor: pointer;
+}
 
-    nav#main-nav {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
+@media (max-width: 720px) {
+  header {
+    flex-direction: row;
+    justify-content: space-between;
+  }
 
-    nav#main-nav a {
-      color: var(--white);
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 1rem;
-      position: relative;
-      transition: color 0.3s ease;
-    }
+  #nav-toggle {
+    display: block;
+  }
 
-    nav#main-nav a::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      bottom: -4px;
-      width: 0;
-      height: 2px;
-      background-color: var(--accent);
-      transition: width 0.3s ease;
-    }
+  nav#nav-links {
+    flex-direction: column;
+    display: none;
+    width: 100%;
+    margin-top: 1rem;
+  }
 
-    nav#main-nav a:hover::after,
-    nav#main-nav a:focus::after {
-      width: 100%;
-    }
+  nav#nav-links.show {
+    display: flex;
+  }
 
-    nav#main-nav a:hover,
-    nav#main-nav a:focus {
-      color: var(--accent);
-      outline: none;
-    }
+  nav#nav-links a {
+    padding: 0.6rem 1rem;
+    border-radius: 6px;
+    background-color: rgba(255,255,255,0.1);
+    margin: 0.2rem 0;
+  }
+}
+
     }
     @media (max-width: 720px) {
       #nav-toggle {
