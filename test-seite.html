@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Login – Locorent</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
@@ -33,9 +33,11 @@
       font-family: var(--font-primary);
       background: linear-gradient(to bottom, #e8f5e9 0%, #ffffff 100%);
       color: var(--text-dark);
+      scroll-behavior: smooth;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
+      overflow-x: hidden;
     }
 
     header {
@@ -106,50 +108,40 @@
       outline: none;
     }
 
-    main {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 3rem 1rem;
-    }
-
-    .container {
+    main.container {
+      max-width: 450px;
+      margin: 3rem auto;
+      padding: 2rem 2rem 3rem 2rem;
       background: var(--white);
       border-radius: var(--radius);
       box-shadow: 0 12px 30px var(--shadow-light);
-      max-width: 420px;
-      width: 100%;
-      padding: 2rem;
-      text-align: center;
     }
 
     h2 {
+      text-align: center;
+      font-size: 2rem;
       color: var(--primary-dark);
       font-weight: 700;
-      font-size: 2rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
     }
 
     form {
-      text-align: left;
+      display: flex;
+      flex-direction: column;
     }
 
     label {
       font-weight: 600;
-      margin-bottom: 0.5rem;
-      display: block;
-      color: var(--text-dark);
+      margin-top: 1rem;
     }
 
     input {
-      width: 100%;
-      padding: 0.7rem;
+      padding: 0.8rem 1rem;
+      margin-top: 0.3rem;
       border: 1px solid #ccc;
-      border-radius: 10px;
-      margin-bottom: 1rem;
+      border-radius: var(--radius);
       font-size: 1rem;
-      background: #f7f7f7;
+      background: var(--background);
     }
 
     .password-wrapper {
@@ -162,40 +154,42 @@
       top: 50%;
       transform: translateY(-50%);
       cursor: pointer;
-      color: #666;
+      font-size: 1rem;
+      color: #555;
     }
 
     button {
-      width: 100%;
-      background: linear-gradient(90deg, var(--primary), var(--highlight));
-      color: var(--white);
+      margin-top: 2rem;
+      padding: 1rem;
       font-size: 1.1rem;
       font-weight: 700;
-      padding: 0.9rem;
       border: none;
-      border-radius: 10px;
+      border-radius: var(--radius);
+      background: linear-gradient(to right, var(--primary), var(--highlight));
+      color: var(--white);
       cursor: pointer;
-      margin-top: 0.5rem;
+      box-shadow: 0 6px 20px var(--shadow-strong);
     }
 
     button:hover {
-      background: linear-gradient(90deg, var(--highlight), var(--primary));
+      background: linear-gradient(to right, var(--highlight), var(--primary));
     }
 
     .forgot {
+      margin-top: 1rem;
       text-align: right;
-      font-size: 0.9rem;
     }
 
     .forgot a {
+      font-size: 0.9rem;
       color: var(--primary);
       text-decoration: underline;
     }
 
     .message {
       margin-top: 1rem;
-      text-align: center;
       font-weight: 600;
+      text-align: center;
     }
 
     .message.error {
@@ -215,6 +209,7 @@
       color: var(--white);
       box-shadow: 0 8px 32px rgba(46, 125, 50, 0.22);
       font-size: 0.92rem;
+      user-select: none;
       text-align: center;
       margin-top: auto;
       position: relative;
@@ -303,6 +298,7 @@
 
       h2 {
         font-size: 1.5rem;
+        text-align: left;
       }
     }
   </style>
@@ -315,27 +311,25 @@
   <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
 </header>
 
-<main>
-  <div class="container">
-    <h2>Login</h2>
-    <form id="login-form">
-      <label for="email">E-Mail</label>
-      <input type="email" id="email" required autocomplete="email" />
+<main class="container" role="main" tabindex="0">
+  <h2>Login</h2>
+  <form id="login-form">
+    <label for="email">E-Mail</label>
+    <input type="email" id="email" required autocomplete="email" />
 
-      <label for="password">Passwort</label>
-      <div class="password-wrapper">
-        <input type="password" id="password" required autocomplete="current-password" />
-        <span class="toggle-password" onclick="togglePassword()">👁</span>
-      </div>
+    <label for="password">Passwort</label>
+    <div class="password-wrapper">
+      <input type="password" id="password" required autocomplete="current-password" />
+      <span class="toggle-password" onclick="togglePassword()">👁</span>
+    </div>
 
-      <div class="forgot">
-        <a href="reset-password.html">Passwort vergessen?</a>
-      </div>
+    <div class="forgot">
+      <a href="reset-password.html">Passwort vergessen?</a>
+    </div>
 
-      <button type="submit">Einloggen</button>
-      <div id="message" class="message"></div>
-    </form>
-  </div>
+    <button type="submit">Einloggen</button>
+    <div id="message" class="message"></div>
+  </form>
 </main>
 
 <footer role="contentinfo">
@@ -409,6 +403,13 @@
     pwField.type = pwField.type === 'password' ? 'text' : 'password';
   }
 
+  document.getElementById("nav-toggle").addEventListener("click", () => {
+    const nav = document.getElementById("nav-links");
+    nav.classList.toggle("show");
+    const expanded = nav.classList.contains("show");
+    document.getElementById("nav-toggle").setAttribute("aria-expanded", expanded);
+  });
+
   async function updateNav() {
     const { data: { session } } = await supabase.auth.getSession();
     const nav = document.getElementById("nav-links");
@@ -430,13 +431,6 @@
     await supabase.auth.signOut();
     window.location.href = "login.html";
   }
-
-  document.getElementById("nav-toggle").addEventListener("click", () => {
-    const nav = document.getElementById("nav-links");
-    nav.classList.toggle("show");
-    const expanded = nav.classList.contains("show");
-    document.getElementById("nav-toggle").setAttribute("aria-expanded", expanded);
-  });
 
   updateNav();
 </script>
