@@ -618,6 +618,20 @@ document.getElementById("save-btn").addEventListener("click", async () => {
   const { data: sd } = await supabase.auth.getSession();
   const user = sd?.session?.user;
   if (!user) return alert("Nicht eingeloggt!");
+  const { data: existingListings, error: countError } = await supabase
+  .from('listings')
+  .select('id')  // wir brauchen nur die IDs
+  .eq('user_id', user.id);
+
+if (countError) {
+  alert("Fehler beim Überprüfen der Anzahl deiner Inserate.");
+  return;
+}
+
+if (existingListings.length >= 10) {
+  alert("Du kannst maximal 10 Inserate gleichzeitig online stellen.");
+  return;
+}
 
   if (!userProfile.name || userProfile.name.trim().length < 2 || !userProfile.city || userProfile.city.trim().length < 2) {
     const warningEl = document.getElementById('profile-warning');
