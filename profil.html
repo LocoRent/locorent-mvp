@@ -409,7 +409,7 @@
     </div>
     <div class="input-group" style="position:relative;">
       <label for="city">Wohnort</label>
-      <input id="city" type="text" autocomplete="address-level2" placeholder="Wohnort eingeben" aria-autocomplete="list" aria-controls="city-suggestions" aria-expanded="false" />
+      <input id="city" type="text" maxlength="50" autocomplete="address-level2" placeholder="Wohnort eingeben" aria-autocomplete="list" aria-controls="city-suggestions" aria-expanded="false" />
       <div id="city-suggestions" role="listbox" aria-label="Wohnort Vorschläge" style="position:absolute; top:100%; left:0; right:0; background:white; border:1px solid #ccc; max-height: 180px; overflow-y:auto; z-index: 999;"></div>
     </div>
     <div class="input-group">
@@ -721,6 +721,14 @@ if (updates.name.length > 20) {
 }
 if (updates.bio.length > 150) {
   alert("Der Text im Feld 'Über mich' darf maximal 150 Zeichen lang sein.");
+  return;
+}
+if (updates.city.length < 2) {
+  alert("Bitte gib einen gültigen Wohnort ein.");
+  return;
+}
+if (updates.city.length > 50) {
+  alert("Der Wohnort darf maximal 50 Zeichen lang sein.");
   return;
 }
 
