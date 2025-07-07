@@ -401,7 +401,7 @@
   <section id="profile-section" aria-label="Profilinformationen">
     <div class="input-group">
       <label for="name">Name</label>
-      <input id="name" type="text" autocomplete="name" placeholder="Dein Name" />
+      <input id="name" type="text" maxlength="20" autocomplete="name" placeholder="Dein Name" />
     </div>
     <div class="input-group">
       <label for="email">E-Mail (nicht änderbar)</label>
@@ -414,7 +414,7 @@
     </div>
     <div class="input-group">
       <label for="bio">Über mich</label>
-      <textarea id="bio" placeholder="Erzähle etwas über dich..." rows="5"></textarea>
+      <textarea id="bio" maxlength="150" placeholder="Erzähle etwas über dich..." rows="5"></textarea>
     </div>
 
     <div id="password-section" class="input-group">
@@ -712,9 +712,18 @@ async function saveProfile() {
     bio: document.getElementById('bio').value.trim()
   };
   if (updates.name.length < 2) {
-    alert("Bitte gib mindestens 2 Zeichen für den Namen ein.");
-    return;
-  }
+  alert("Bitte gib mindestens 2 Zeichen für den Namen ein.");
+  return;
+}
+if (updates.name.length > 20) {
+  alert("Der Name darf maximal 20 Zeichen lang sein.");
+  return;
+}
+if (updates.bio.length > 150) {
+  alert("Der Text im Feld 'Über mich' darf maximal 150 Zeichen lang sein.");
+  return;
+}
+
   const btn = document.getElementById('save-btn');
   btn.disabled = true;
   try {
