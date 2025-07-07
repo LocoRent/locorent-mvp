@@ -285,10 +285,11 @@
       return;
     }
 
-    if (!userProfile?.name || !userProfile?.city) {
-      alert("Bitte fülle dein Profil aus (Name und Wohnort), bevor du Nachrichten senden kannst.");
-      return;
-    }
+ if (!userProfile?.name?.trim() || !userProfile?.city?.trim()) {
+  alert("Bitte fülle dein Profil aus (Name und Wohnort), bevor du Nachrichten senden kannst.");
+  return;
+}
+
 
     if (isSending) {
       alert("Bitte warte einen Moment, bevor du erneut sendest.");
