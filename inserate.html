@@ -601,6 +601,20 @@ async function handleFiles(files) {
 }
 
 document.getElementById("save-btn").addEventListener("click", async () => {
+  const { data: existingListings, error: countError } = await supabase
+    .from('listings')
+    .select('id')
+    .eq('user_id', user.id);
+
+  if (countError) {
+    alert("Fehler beim Überprüfen der Inserate-Anzahl.");
+    return;
+  }
+
+  if (existingListings.length >= 10) {
+    alert("Du kannst maximal 10 Inserate gleichzeitig online stellen.");
+    return;
+  }
   const { data: sd } = await supabase.auth.getSession();
   const user = sd?.session?.user;
   if (!user) return alert("Nicht eingeloggt!");
