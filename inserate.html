@@ -565,7 +565,7 @@ async function handleFiles(files) {
     try {
       // Komprimiere das Bild auf max. 0.02 MB = 20 KB
       const compressedFile = await imageCompression(file, {
-        maxSizeMB: 0.05,
+        maxSizeMB: 0.1,
         maxWidthOrHeight: 800,
         useWebWorker: true
       });
