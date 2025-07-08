@@ -6,7 +6,6 @@
   <title>Meine Inserate – Locorent</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.1/dist/browser-image-compression.min.js"></script>
   <style>
     :root {
       --primary: #2e7d32;
@@ -339,7 +338,7 @@
       }
     }
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.1/dist/browser-image-compression.min.js"></script>  </style>
+  <script src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.1/dist/browser-image-compression.min.js"></script>
 </head>
 <body>
 
@@ -399,10 +398,6 @@
     <div class="form-actions">
       <button id="save-btn">Inserat speichern</button>
     </div>
-
-    <div id="save-feedback" style="display:none; background:#c8e6c9; border:1px solid #66bb6a; color:#1b5e20; padding:1rem; border-radius:8px; margin-top:1rem; font-weight:600;">
-      ✅ Inserat erfolgreich gespeichert!
-    </div>
   </section>
 
   <section class="gallery" id="gallery">
@@ -411,58 +406,198 @@
 </main>
 
 <footer role="contentinfo">
-  <!-- Footer bleibt wie gehabt -->
+  <div>
+    <div>
+      <h4>Mieten &amp; Vermieten</h4>
+      <ul>
+        <li><a href="so-funktionierts.html">So funktioniert's</a></li>
+        <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
+        <li><a href="kategorien.html">Beliebte Kategorien</a></li>
+        <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
+        <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Wissenswertes</h4>
+      <ul>
+        <li><a href="agb.html">AGB & Impressum</a></li>
+        <li><a href="datenschutz.html">Datenschutz</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Über uns</h4>
+      <ul>
+        <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
+        <li><a href="social-media.html">Folgen Sie uns</a></li>
+        <li><a href="mission.html">Unsere Mission</a></li>
+      </ul>
+    </div>
+  </div>
+  <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
+  <style>
+    footer {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 2rem 2rem 1rem;
+      border-radius: var(--radius);
+      background-color: var(--primary);
+      color: var(--white);
+      box-shadow: 0 8px 32px rgba(46, 125, 50, 0.22);
+      font-size: 0.92rem;
+      user-select: none;
+      text-align: center;
+      margin-top: auto;
+      position: relative;
+      left: 50%;
+      right: 50%;
+      margin-left: -50vw;
+      margin-right: -50vw;
+    }
+
+    footer > div {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 2rem;
+      text-align: left;
+    }
+
+    footer > div > div {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    footer h4 {
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    footer ul {
+      list-style: none;
+      padding: 0;
+      line-height: 1.8;
+    }
+
+    footer ul li a {
+      color: var(--white);
+      text-decoration: underline;
+      transition: color 0.3s ease;
+    }
+
+    footer ul li a:hover {
+      color: var(--primary-light);
+    }
+
+    footer small {
+      display: block;
+      margin-top: 2rem;
+      text-align: center;
+      opacity: 0.85;
+    }
+
+    @media (max-width: 720px) {
+      footer > div {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      footer > div > div {
+        width: 100%;
+      }
+    }
+  </style>
 </footer>
+
 
 <script>
 const supabase = window.supabase.createClient(
   'https://flnjalgqtkqycsaymmbd.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
 );
 
-let selectedImageFiles = [];
+let uploadedImageUrls = [];
 let selectedAddressData = null;
 let userSession = null;
-let userProfile = { name: null, city: null };
+
+// Profil-Daten zwischenspeichern
+let userProfile = {
+  name: null,
+  city: null
+};
+
+async function updateNav() {
+  const nav = document.getElementById('nav-links');
+  nav.innerHTML = userSession?.user ?
+    `<a href="index.html">Start</a>
+     <a href="profil.html">Mein Profil</a>
+     <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+     <a href="favoriten.html">Meine Favoriten</a>
+     <a href="inserate.html">Meine Inserate</a>
+     <a href="#" onclick="logout(event)">Logout</a>` :
+    `<a href="index.html">Start</a>
+     <a href="login.html">Einloggen</a>`;
+}
+
+async function logout(event) {
+  event.preventDefault();
+  await supabase.auth.signOut();
+  window.location.href = "login.html";
+}
 
 document.getElementById("dropzone").addEventListener("click", () => {
-  if (selectedImageFiles.length >= 2) return alert("Maximal 2 Bilder erlaubt.");
+  if (uploadedImageUrls.length >= 2) return alert("Maximal 2 Bilder erlaubt.");
   const input = document.createElement("input");
   input.type = "file"; input.accept = "image/*"; input.multiple = true;
-  input.onchange = () => {
-    for (let file of input.files) {
-      if (selectedImageFiles.length >= 2) break;
-      if (!file.type.startsWith("image/")) continue;
-      if (file.size > 2 * 1024 * 1024) {
-        alert("Bild zu groß (max. 2 MB).");
-        continue;
-      }
-      selectedImageFiles.push(file);
-    }
-    renderPreviewsFromFiles(selectedImageFiles);
-  };
+  input.onchange = () => handleFiles(input.files);
   input.click();
 });
 
-function renderPreviewsFromFiles(files) {
+async function handleFiles(files) {
   const container = document.getElementById("preview-gallery");
-  container.innerHTML = "";
-  files.forEach((file, index) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const box = document.createElement("div");
-      box.className = "preview-box";
-      box.innerHTML = `<div class="img-wrapper"><img src="${e.target.result}" alt="Vorschau"></div>
-        <button class="remove-btn" onclick="removeImage(${index})">×</button>`;
-      container.appendChild(box);
-    };
-    reader.readAsDataURL(file);
-  });
-}
 
-function removeImage(index) {
-  selectedImageFiles.splice(index, 1);
-  renderPreviewsFromFiles(selectedImageFiles);
+  for (let file of files) {
+    if (uploadedImageUrls.length >= 2) break;
+    if (!file.type.startsWith("image/")) continue;
+
+    try {
+      // Komprimiere das Bild auf max. 0.02 MB = 20 KB
+      const compressedFile = await imageCompression(file, {
+        maxSizeMB: 0.5,
+        maxWidthOrHeight: 800,
+        useWebWorker: true
+      });
+
+      const compressedSizeKB = (compressedFile.size / 1024).toFixed(1);
+
+      if (compressedFile.size > 2 * 1024 * 1024) {
+        alert("Komprimiertes Bild ist noch zu groß (max. 2 MB).");
+        continue;
+      }
+
+      const tempBox = document.createElement("div");
+      tempBox.className = "preview-box";
+      tempBox.innerHTML = `<div class="img-wrapper"><div class="loader"></div><small>${compressedSizeKB} KB</small></div>`;
+      container.appendChild(tempBox);
+
+      const path = `listing-images/${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
+      const { error } = await supabase.storage.from('listing-images').upload(path, compressedFile);
+
+      if (!error) {
+        const { data } = supabase.storage.from('listing-images').getPublicUrl(path);
+        uploadedImageUrls.push(data.publicUrl);
+      } else {
+        alert("Upload-Fehler: " + error.message);
+      }
+    } catch (err) {
+      console.error("Fehler bei Bildverarbeitung:", err);
+      alert("Fehler beim Verarbeiten des Bildes.");
+    }
+  }
+
+  renderPreviews();
 }
 
 document.getElementById("save-btn").addEventListener("click", async () => {
@@ -470,21 +605,29 @@ document.getElementById("save-btn").addEventListener("click", async () => {
   const user = sd?.session?.user;
   if (!user) return alert("Nicht eingeloggt!");
 
-  const { data: existingListings } = await supabase
+  // ✅ Jetzt ist "user" definiert – also hier prüfen
+  const { data: existingListings, error: countError } = await supabase
     .from('listings')
     .select('id')
     .eq('user_id', user.id);
 
-  if (existingListings.length >= 10) {
-    alert("Maximal 10 Inserate erlaubt.");
+  if (countError) {
+    alert("Fehler beim Überprüfen der Anzahl deiner Inserate.");
     return;
   }
 
-  if (!userProfile.name || !userProfile.city) {
+  if (existingListings.length >= 10) {
+    alert("Du kannst maximal 10 Inserate gleichzeitig online stellen.");
+    return;
+  }
+
+  if (!userProfile.name || userProfile.name.trim().length < 2 || !userProfile.city || userProfile.city.trim().length < 2) {
     const warningEl = document.getElementById('profile-warning');
-    warningEl.textContent = "Bitte zuerst Profil mit Name und Ort ausfüllen.";
+    warningEl.textContent = "Bitte fülle zuerst deine Profildaten (Name & Wohnort) aus, bevor du ein Inserat erstellen kannst.";
     warningEl.style.display = "block";
-    setTimeout(() => window.location.href = "profil.html", 4000);
+    setTimeout(() => {
+      window.location.href = "profil.html";
+    }, 4000);
     return;
   }
 
@@ -494,75 +637,33 @@ document.getElementById("save-btn").addEventListener("click", async () => {
   const description = document.getElementById('desc-input').value.trim();
   const location = document.getElementById('location-input').value.trim();
 
-  if (!title || !price || !category || !location || !selectedAddressData || selectedImageFiles.length === 0) {
-    alert("Alle Felder ausfüllen und mind. 1 Bild hochladen.");
-    return;
-  }
-
-  const uploadedUrls = [], storedPaths = [];
-  for (let file of selectedImageFiles) {
-    const compressed = await imageCompression(file, { maxSizeMB: 0.5, maxWidthOrHeight: 800 });
-    const path = `listing-images/${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
-    const { error: uploadError } = await supabase.storage.from('listing-images').upload(path, compressed);
-    if (uploadError) return alert("Fehler beim Bild-Upload.");
-    const { data } = supabase.storage.from('listing-images').getPublicUrl(path);
-    uploadedUrls.push(data.publicUrl); storedPaths.push(path);
-  }
+  if (!title || !price || !category || !location) return alert("Pflichtfelder fehlen!");
+  if (!selectedAddressData) return alert("Bitte wähle einen Ort aus der Vorschlagsliste.");
 
   const { postal_code, city, lat, lon } = selectedAddressData;
 
-  const { error: insertError } = await supabase.from('listings').insert({
-    title, category, price_per_day: price, description,
+  const { error: ie } = await supabase.from('listings').insert({
+    title,
+    category,
+    price_per_day: price,
+    description,
     user_id: user.id,
-    image_urls: uploadedUrls,
-    image_paths: storedPaths,
+    image_urls: uploadedImageUrls,
     latitude: lat,
     longitude: lon,
-    location, postal_code, city
+    location,
+    postal_code,
+    city
   });
 
-  if (insertError) return alert("Fehler beim Speichern.");
-  showSaveFeedback();
+  if (ie) return alert("Speicherfehler: " + ie.message);
+
+  alert("Inserat gespeichert!");
   document.querySelectorAll('input, textarea, select').forEach(el => el.value = '');
-  selectedImageFiles = [];
+  uploadedImageUrls = [];
   selectedAddressData = null;
-  renderPreviewsFromFiles([]);
+  renderPreviews();
   loadGallery();
-});
-
-function showSaveFeedback() {
-  const el = document.getElementById("save-feedback");
-  el.style.display = "block";
-  el.scrollIntoView({ behavior: 'smooth' });
-  setTimeout(() => { el.style.display = "none"; }, 4000);
-}
-
-async function deleteListing(id) {
-  if (!confirm("Wirklich löschen?")) return;
-
-  const { data: listing } = await supabase
-    .from('listings')
-    .select('image_paths')
-    .eq('id', id)
-    .single();
-
-  const paths = listing?.image_paths || [];
-
-  const { error: deleteError } = await supabase.from('listings').delete().eq('id', id);
-  if (deleteError) return alert("Fehler beim Löschen.");
-
-  for (let path of paths) {
-    await supabase.storage.from('listing-images').remove([path]);
-  }
-
-  loadGallery();
-}
-
-document.getElementById('nav-toggle').addEventListener('click', () => {
-  const nav = document.getElementById('main-nav');
-  const toggle = document.getElementById('nav-toggle');
-  nav.classList.toggle('show');
-  toggle.setAttribute('aria-expanded', nav.classList.contains('show'));
 });
 
 const locationInput = document.getElementById('location-input');
@@ -572,93 +673,80 @@ locationInput.addEventListener('input', async (e) => {
   const value = e.target.value.trim();
   if (value.length < 2) return suggestionBox.innerHTML = '';
 
-  const res = await fetch(`https://corsproxy.io/?https://nominatim.openstreetmap.org/search?format=json&accept-language=de&addressdetails=1&countrycodes=de&limit=8&q=${encodeURIComponent(value)}`);
-  const results = await res.json();
-  const filtered = results.filter(r => r.lat && r.lon && r.address);
-  suggestionBox.innerHTML = '';
+  try {
+    const res = await fetch(`https://corsproxy.io/?https://nominatim.openstreetmap.org/search?format=json&accept-language=de&addressdetails=1&countrycodes=de&limit=8&q=${encodeURIComponent(value)}`);
+    const results = await res.json();
+    const filtered = results.filter(r => r.lat && r.lon && r.address);
+    suggestionBox.innerHTML = '';
 
-  filtered.forEach(r => {
-    const ort = r.address.city || r.address.town || r.address.village || r.address.hamlet || r.display_name.split(',')[0];
-    const bundesland = r.address.state || '';
-    const land = r.address.country || 'Deutschland';
-    const plz = r.address.postcode || '';
-    const display = [ort, bundesland, land].filter(Boolean).join(', ');
+    filtered.forEach(r => {
+      const ort = r.address.city || r.address.town || r.address.village || r.address.hamlet || r.address.municipality || r.display_name.split(',')[0];
+      const bundesland = r.address.state || '';
+      const land = r.address.country || 'Deutschland';
+      const plz = r.address.postcode || '';
+      const display = [ort, bundesland, land].filter(Boolean).join(', ');
 
-    const div = document.createElement('div');
-    div.textContent = display;
-    div.onclick = () => {
-      locationInput.value = display;
-      selectedAddressData = {
-        postal_code: plz,
-        city: ort,
-        location: display,
-        lat: parseFloat(r.lat),
-        lon: parseFloat(r.lon)
+      const div = document.createElement('div');
+      div.textContent = display;
+      div.onclick = () => {
+        locationInput.value = display;
+        selectedAddressData = {
+          postal_code: plz,
+          city: ort,
+          location: display,
+          lat: parseFloat(r.lat),
+          lon: parseFloat(r.lon)
+        };
+        suggestionBox.innerHTML = '';
       };
-      suggestionBox.innerHTML = '';
-    };
-    suggestionBox.appendChild(div);
-  });
+      suggestionBox.appendChild(div);
+    });
 
-  if (filtered.length === 0) {
-    suggestionBox.innerHTML = '<div style="padding:0.5rem;">Kein Ort gefunden</div>';
+    if (filtered.length === 0) {
+      suggestionBox.innerHTML = '<div style="padding:0.5rem;">Kein Ort gefunden</div>';
+    }
+  } catch (err) {
+    console.error("Fehler bei Ortssuche:", err);
   }
 });
 
 async function loadGallery() {
   const { data: sd } = await supabase.auth.getSession();
   userSession = sd?.session;
-  const user = userSession?.user;
-  if (!user) return document.getElementById('gallery').innerHTML = 'Nicht eingeloggt.';
+  updateNav();
 
-  const { data: profile } = await supabase
+  const user = userSession?.user;
+  if (!user) {
+    document.getElementById('gallery').innerHTML = 'Nicht eingeloggt.';
+    return;
+  }
+
+  const { data: profile, error: profileError } = await supabase
     .from('profiles')
     .select('name, city')
     .eq('id', user.id)
     .single();
 
-  userProfile.name = profile?.name || null;
-  userProfile.city = profile?.city || null;
+  if (profileError) {
+    console.error("Fehler beim Laden des Profils:", profileError);
+    userProfile.name = null;
+    userProfile.city = null;
+  } else {
+    userProfile.name = profile?.name || null;
+    userProfile.city = profile?.city || null;
+  }
 
-  const { data: listings } = await supabase
+  const gallery = document.getElementById('gallery');
+
+  const { data: listings, error } = await supabase
     .from('listings')
     .select('*')
     .eq('user_id', user.id)
     .order('created_at', { ascending: false });
 
-  const gallery = document.getElementById('gallery');
-  gallery.innerHTML = '';
-  listings.forEach(i => {
-    const img = i.image_urls?.[0] || 'https://via.placeholder.com/300x150?text=Kein+Bild';
-    const categoryFormatted = i.category ? (i.category.charAt(0).toUpperCase() + i.category.slice(1).toLowerCase()) : 'Unbekannt';
-    const div = document.createElement('div');
-    div.className = 'card';
-    div.innerHTML = `
-      <img src="${img}" alt="${i.title}">
-      <div class="card-content">
-        <h3>${i.title}</h3>
-        <p class="category"><strong>Kategorie:</strong> ${categoryFormatted}</p>
-        <p class="price">${i.price_per_day} € / Tag</p>
-      </div>
-      <div class="actions">
-        <button onclick="window.location.href='bearbeiten.html?id=${i.id}'">Bearbeiten</button>
-        <button class="delete" onclick="deleteListing('${i.id}')">Löschen</button>
-      </div>`;
-    gallery.appendChild(div);
-  });
-}
-
-async function logout(event) {
-  event.preventDefault();
-  await supabase.auth.signOut();
-  window.location.href = "login.html";
-}
-
-function updateNav() {
-  const nav = document.getElementById('main-nav');
-  const user = userSession?.user;
-  if (nav && user) {
-
+  if (error) {
+    gallery.innerHTML = '<p>Fehler beim Laden der Inserate.</p>';
+    return;
   }
 
   gallery.innerHTML = '';
