@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Inserat bearbeiten – Locorent</title>
+  <title>Meine Inserate – Locorent</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.1/dist/browser-image-compression.min.js"></script>
   <style>
     :root {
       --primary: #2e7d32;
@@ -23,19 +24,23 @@
       --transition: 0.4s ease;
       --font-primary: 'Poppins', sans-serif;
     }
+
     *, *::before, *::after {
       box-sizing: border-box;
     }
+
     body {
       margin: 0;
       font-family: var(--font-primary);
       background: var(--background);
       color: var(--text-dark);
-      min-height: 100vh;
+      scroll-behavior: smooth;
       display: flex;
       flex-direction: column;
-      overflow-x: hidden;
+      min-height: 100vh;
+      line-height: 1.5;
     }
+
     header {
       background-color: var(--primary);
       color: var(--white);
@@ -50,12 +55,14 @@
       box-shadow: 0 10px 20px rgba(0,0,0,0.1);
       flex-wrap: wrap;
     }
+
     header h1 {
       font-size: 1.8rem;
       cursor: pointer;
       user-select: none;
       margin: 0;
     }
+
     #nav-toggle {
       display: none;
       background: none;
@@ -64,12 +71,14 @@
       color: var(--white);
       cursor: pointer;
     }
-    nav#nav-links {
+
+    nav#main-nav {
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
     }
-    nav#nav-links a {
+
+    nav#main-nav a {
       color: var(--white);
       text-decoration: none;
       font-weight: 600;
@@ -77,7 +86,8 @@
       position: relative;
       transition: color 0.3s ease;
     }
-    nav#nav-links a::after {
+
+    nav#main-nav a::after {
       content: '';
       position: absolute;
       left: 0;
@@ -87,541 +97,409 @@
       background-color: var(--accent);
       transition: width 0.3s ease;
     }
-    nav#nav-links a:hover::after,
-    nav#nav-links a:focus::after {
+
+    nav#main-nav a:hover::after,
+    nav#main-nav a:focus::after {
       width: 100%;
     }
-    nav#nav-links a:hover,
-    nav#nav-links a:focus {
+
+    nav#main-nav a:hover,
+    nav#main-nav a:focus {
       color: var(--accent);
       outline: none;
     }
-    main {
-      max-width: 960px;
-      width: 95%;
-      margin: 2.5rem auto 4rem;
-      padding: 2rem 2.5rem;
-      background: var(--white);
-      border-radius: var(--radius);
-      box-shadow: 0 12px 30px var(--shadow-light);
-      flex-grow: 1;
-    }
-    label {
-      display: block;
-      margin-top: 1rem;
-      font-weight: 700;
-      color: var(--primary-dark);
-    }
-    input, textarea, select {
-      width: 100%;
-      padding: 0.7rem 1rem;
-      border: 1.5px solid #ccc;
-      border-radius: 10px;
-      margin-top: 0.5rem;
-      font-size: 1rem;
-      font-family: var(--font-primary);
-      transition: border-color 0.3s ease;
-    }
-    input:focus, textarea:focus, select:focus {
-      border-color: var(--primary);
-      outline: none;
-      box-shadow: 0 0 6px var(--accent);
-    }
-    textarea {
-      resize: vertical;
-      min-height: 130px;
-    }
-    .dropzone {
-      margin-top: 1rem;
-      padding: 1.3rem;
-      border: 2.5px dashed var(--primary);
-      text-align: center;
-      border-radius: 14px;
-      cursor: pointer;
-      background: #fafafa;
-      color: var(--primary-dark);
-      font-weight: 600;
-      transition: background-color 0.3s ease;
-      user-select: none;
-    }
-    .dropzone:hover, .dropzone:focus {
-      background-color: var(--accent);
-      outline: none;
-      color: var(--primary-dark);
-    }
-    .preview-gallery {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1.3rem;
-      margin-top: 1.3rem;
-    }
-    .preview-box {
-      position: relative;
-      flex: 0 0 130px;
-      height: 110px;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 0 8px rgba(0,0,0,0.1);
-    }
-    .preview-box img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 12px;
-    }
-    .remove-btn {
-      position: absolute;
-      top: 6px;
-      right: 6px;
-      background: #c62828;
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 26px;
-      height: 26px;
-      font-weight: bold;
-      cursor: pointer;
-      font-size: 1.1rem;
-      line-height: 26px;
-      text-align: center;
-      transition: background-color 0.3s ease;
-      user-select: none;
-    }
-    .remove-btn:hover,
-    .remove-btn:focus {
-      background-color: #b71c1c;
-      outline: none;
-    }
-    .loader {
-      width: 26px;
-      height: 26px;
-      border: 3.5px solid #c8e6c9;
-      border-top-color: var(--primary);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      margin: auto;
-    }
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-    button.save-btn {
-      margin-top: 2rem;
-      padding: 0.9rem 1.8rem;
-      background-color: var(--primary);
-      color: var(--white);
-      border: none;
-      border-radius: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      font-size: 1.1rem;
-      transition: background-color 0.3s ease;
-      width: 100%;
-      user-select: none;
-    }
-    button.save-btn:hover,
-    button.save-btn:focus {
-      background-color: var(--primary-dark);
-      outline: none;
-    }
-    footer {
-      width: 100vw;
-      box-sizing: border-box;
-      padding: 2rem 2rem 1rem;
-      border-radius: var(--radius);
-      background-color: var(--primary);
-      color: var(--white);
-      box-shadow: 0 8px 32px rgba(46, 125, 50, 0.22);
-      font-size: 0.92rem;
-      user-select: none;
-      text-align: center;
-      position: relative;
-      left: 50%;
-      right: 50%;
-      margin-left: -50vw;
-      margin-right: -50vw;
-      margin-top: auto;
-    }
-    footer > div {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 2rem;
-      text-align: left;
-    }
-    footer > div > div {
-      flex: 1;
-      min-width: 200px;
-    }
-    footer h4 {
-      margin-bottom: 0.5rem;
-      font-weight: 700;
-      font-size: 1.1rem;
-    }
-    footer ul {
-      list-style: none;
-      padding: 0;
-      line-height: 1.8;
-    }
-    footer ul li a {
-      color: var(--white);
-      text-decoration: underline;
-      transition: color 0.3s ease;
-    }
-    footer ul li a:hover,
-    footer ul li a:focus {
-      color: var(--accent);
-      outline: none;
-    }
-    footer small {
-      display: block;
-      margin-top: 2rem;
-      text-align: center;
-      opacity: 0.85;
-    }
+
     @media (max-width: 720px) {
       #nav-toggle {
         display: block;
       }
-      nav#nav-links {
+
+      nav#main-nav {
         width: 100%;
         flex-direction: column;
         display: none;
         margin-top: 1rem;
       }
-      nav#nav-links.show {
+
+      nav#main-nav.show {
         display: flex;
       }
-      nav#nav-links a {
+
+      nav#main-nav a {
         margin: 0.4rem 0;
         padding: 0.5rem 1rem;
         background-color: rgba(255, 255, 255, 0.1);
         border-radius: 6px;
-        display: block;
-      }
-      footer > div {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      footer > div > div {
-        width: 100%;
-      }
-      main {
-        padding: 1.5rem 1rem;
-        margin: 1.5rem auto 3rem;
-        width: 95%;
       }
     }
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.1/dist/browser-image-compression.min.js"></script>
 </head>
+
 <body>
-  <header>
-    <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
-    <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
-    <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
-  </header>
+<header>
+  <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
+  <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="main-nav">☰</button>
+  <nav id="main-nav" role="navigation" aria-label="Hauptnavigation">
+    <a href="index.html">Start</a>
+    <a href="profil.html">Mein Profil</a>
+    <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+    <a href="favoriten.html">Meine Favoriten</a>
+    <a href="inserate.html">Meine Inserate</a>
+    <a href="#" onclick="logout(event)">Logout</a>
+  </nav>
+</header>
+<main>
+  <div id="profile-warning" role="alert" aria-live="assertive" style="display:none; background:#fff3cd; border:1px solid #ffeeba; color:#856404; padding:1rem 1.5rem; border-radius:8px; margin-bottom:1rem; font-weight:600;"></div>
 
-  <main role="main">
-    <label for="title">Titel</label>
-    <input type="text" id="title" required maxlength="50" />
-
-    <label for="category">Kategorie</label>
-    <select id="category" required>
-      <option value="">Bitte wählen</option>
-      <option value="fahrzeuge">Fahrzeuge</option>
-      <option value="transporter">Transporter</option>
-      <option value="boote">Boote</option>
-      <option value="fahrrad">Fahrräder & E-Bikes</option>
-      <option value="werkzeuge">Werkzeuge</option>
-      <option value="maschinen">Maschinen & Baugeräte</option>
-      <option value="party">Party & Event</option>
-      <option value="technik">Technik</option>
-      <option value="haushalt">Haushalt & Möbel</option>
-      <option value="garten">Garten</option>
-      <option value="freizeit">Freizeit & Sport</option>
-      <option value="baby">Baby & Kind</option>
-    </select>
-
-    <label for="price">Preis pro Tag (€)</label>
-    <input type="number" id="price" required maxlength="6" oninput="this.value=this.value.slice(0,6)" />
-
-    <label for="location">Ort (PLZ oder Stadt)</label>
-    <div style="position: relative;">
-      <input type="text" id="location" required autocomplete="off" />
-      <div id="suggestions" role="listbox" aria-label="Ort Vorschläge"></div>
-    </div>
-
-    <label for="desc">Beschreibung</label>
-    <textarea id="desc" rows="4" maxlength="150"></textarea>
-
-    <label>Bilder</label>
-    <div id="dropzone" class="dropzone" tabindex="0">Bilder hier ablegen oder klicken</div>
-    <div id="preview-gallery" class="preview-gallery" aria-live="polite" aria-atomic="true"></div>
-
-    <button class="save-btn" onclick="saveChanges()">Speichern</button>
-  </main>
-
-  <footer role="contentinfo">
-    <div>
-      <div>
-        <h4>Mieten &amp; Vermieten</h4>
-        <ul>
-          <li><a href="so-funktionierts.html">So funktioniert's</a></li>
-          <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
-          <li><a href="kategorien.html">Beliebte Kategorien</a></li>
-          <li><a href="vermieter-tipps.html">Tipps &amp; Tricks für Vermieter</a></li>
-          <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
-        </ul>
+  <section class="form-container">
+    <h2>Neues Inserat erstellen</h2>
+    <div class="form-group">
+      <div class="field">
+        <label for="title-input">Titel</label>
+        <input type="text" id="title-input" maxlength="50" />
       </div>
-      <div>
-        <h4>Wissenswertes</h4>
-        <ul>
-          <li><a href="agb.html">AGB &amp; Impressum</a></li>
-          <li><a href="datenschutz.html">Datenschutz</a></li>
-        </ul>
+      <div class="field">
+        <label for="category-input">Kategorie</label>
+        <select id="category-input">
+          <option value="">Bitte wählen</option>
+          <option value="fahrzeuge">Fahrzeuge</option>
+          <option value="transporter">Transporter</option>
+          <option value="boote">Boote</option>
+          <option value="fahrrad">Fahrräder & E-Bikes</option>
+          <option value="werkzeuge">Werkzeuge</option>
+          <option value="maschinen">Maschinen & Baugeräte</option>
+          <option value="party">Party & Event</option>
+          <option value="technik">Technik</option>
+          <option value="haushalt">Haushalt & Möbel</option>
+          <option value="garten">Garten</option>
+          <option value="freizeit">Freizeit & Sport</option>
+          <option value="naby">Baby & Kind</option>
+        </select>
       </div>
-      <div>
-        <h4>Über uns</h4>
-        <ul>
-          <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
-          <li><a href="social-media.html">Folgen Sie uns</a></li>
-          <li><a href="mission.html">Unsere Mission</a></li>
-        </ul>
+      <div class="field">
+        <label for="price-input">Preis €/Tag</label>
+        <input type="number" id="price-input" maxlength="6" oninput="this.value=this.value.slice(0,6)" />
+      </div>
+      <div class="field">
+        <label for="location-input">Ort</label>
+        <input type="text" id="location-input" placeholder="Nur Städte in Deutschland" autocomplete="off" />
+        <div id="suggestions"></div>
+      </div>
+      <div class="field" style="flex:1 1 100%;">
+        <label for="desc-input">Beschreibung</label>
+        <textarea id="desc-input" rows="3" maxlength="150"></textarea>
       </div>
     </div>
-    <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
-  </footer>
 
+    <div class="dropzone" id="dropzone">Bilder hier ablegen oder klicken (max. 2, max. 2 MB pro Bild)</div>
+    <div class="preview-gallery" id="preview-gallery"></div>
+
+    <div class="form-actions" style="text-align:right; margin-top:1rem;">
+      <button id="save-btn" style="background:var(--primary); color:var(--white); padding:0.7rem 1.5rem; border:none; border-radius:8px; cursor:pointer; font-weight:600; font-size:1rem;">Inserat speichern</button>
+    </div>
+  </section>
+
+  <section class="gallery" id="gallery">
+    <!-- Galerie-Inhalte werden per JavaScript geladen -->
+  </section>
+</main>
 <script>
-  const supabase = window.supabase.createClient(
-    'https://flnjalgqtkqycsaymmbd.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-  );
+const supabase = window.supabase.createClient(
+  'https://flnjalgqtkqycsaymmbd.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...<dein_API_Key>'
+);
 
-  const listingId = new URLSearchParams(location.search).get("id");
-  let imageUrls = [];
-  let selectedAddressData = null;
+// SESSION & PROFILDATEN
+let uploadedImageFiles = [];
+let selectedAddressData = null;
+let userSession = null;
+let userProfile = { name: null, city: null };
 
-  async function loadData() {
-    const { data, error } = await supabase.from('listings').select('*').eq('id', listingId).single();
-    if (error) return alert("Fehler beim Laden.");
-    document.getElementById('title').value = data.title || '';
-    document.getElementById('category').value = data.category || '';
-    document.getElementById('price').value = data.price_per_day || '';
-    document.getElementById('desc').value = data.description || '';
-    document.getElementById('location').value = data.location || '';
-    imageUrls = data.image_urls || [];
-    selectedAddressData = {
-      postal_code: data.postal_code || '',
-      city: data.city || '',
-      location: data.location || '',
-      lat: data.latitude || null,
-      lon: data.longitude || null
+async function logout(event) {
+  event.preventDefault();
+  await supabase.auth.signOut();
+  window.location.href = "login.html";
+}
+
+async function updateNav() {
+  const nav = document.getElementById('main-nav');
+  if (!nav) return;
+  const { data } = await supabase.auth.getSession();
+  userSession = data.session;
+}
+
+// BILDER VORSCHAU
+document.getElementById("dropzone").addEventListener("click", () => {
+  if (uploadedImageFiles.length >= 2) return alert("Maximal 2 Bilder erlaubt.");
+  const input = document.createElement("input");
+  input.type = "file";
+  input.accept = "image/*";
+  input.multiple = true;
+  input.onchange = () => handleFiles(input.files);
+  input.click();
+});
+
+async function handleFiles(files) {
+  const container = document.getElementById("preview-gallery");
+
+  for (let file of files) {
+    if (uploadedImageFiles.length >= 2) break;
+    if (!file.type.startsWith("image/")) continue;
+
+    uploadedImageFiles.push(file);
+
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const tempBox = document.createElement("div");
+      tempBox.className = "preview-box";
+      tempBox.innerHTML = `
+        <div class="img-wrapper">
+          <img src="${e.target.result}" />
+        </div>
+        <button class="remove-btn" onclick="removePreview(${uploadedImageFiles.length - 1})">×</button>
+      `;
+      container.appendChild(tempBox);
     };
-    renderGallery();
+    reader.readAsDataURL(file);
   }
+}
 
-  function renderGallery() {
-    const gallery = document.getElementById('preview-gallery');
-    gallery.innerHTML = '';
-    imageUrls.forEach((url, index) => {
-      const box = document.createElement('div');
-      box.className = 'preview-box';
-      box.innerHTML = `<img src="${url}" alt="Bild ${index + 1}" /><button class="remove-btn" aria-label="Bild entfernen" onclick="removeImage(${index})">×</button>`;
-      gallery.appendChild(box);
+function removePreview(index) {
+  uploadedImageFiles.splice(index, 1);
+  renderPreviews();
+}
+
+function renderPreviews() {
+  const container = document.getElementById("preview-gallery");
+  container.innerHTML = "";
+  uploadedImageFiles.forEach((file, i) => {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const box = document.createElement("div");
+      box.className = "preview-box";
+      box.innerHTML = `
+        <div class="img-wrapper"><img src="${e.target.result}" /></div>
+        <button class="remove-btn" onclick="removePreview(${i})">×</button>
+      `;
+      container.appendChild(box);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+  // ORTSSUCHE
+const locationInput = document.getElementById('location-input');
+const suggestionBox = document.getElementById('suggestions');
+
+locationInput.addEventListener('input', async (e) => {
+  const value = e.target.value.trim();
+  if (value.length < 2) return suggestionBox.innerHTML = '';
+
+  try {
+    const res = await fetch(`https://corsproxy.io/?https://nominatim.openstreetmap.org/search?format=json&accept-language=de&addressdetails=1&countrycodes=de&limit=8&q=${encodeURIComponent(value)}`);
+    const results = await res.json();
+    const filtered = results.filter(r => r.lat && r.lon && r.address);
+    suggestionBox.innerHTML = '';
+
+    filtered.forEach(r => {
+      const ort = r.address.city || r.address.town || r.address.village || r.address.hamlet || r.display_name.split(',')[0];
+      const bundesland = r.address.state || '';
+      const land = r.address.country || 'Deutschland';
+      const plz = r.address.postcode || '';
+      const display = [ort, bundesland, land].filter(Boolean).join(', ');
+
+      const div = document.createElement('div');
+      div.textContent = display;
+      div.onclick = () => {
+        locationInput.value = display;
+        selectedAddressData = {
+          postal_code: plz,
+          city: ort,
+          location: display,
+          lat: parseFloat(r.lat),
+          lon: parseFloat(r.lon)
+        };
+        suggestionBox.innerHTML = '';
+      };
+      suggestionBox.appendChild(div);
     });
-  }
 
-  function removeImage(index) {
-    imageUrls.splice(index, 1);
-    renderGallery();
-  }
-
-  document.getElementById('dropzone').addEventListener('click', () => {
-    if (imageUrls.length >= 2) {
-      alert("Maximal 2 Bilder erlaubt.");
-      return;
+    if (filtered.length === 0) {
+      suggestionBox.innerHTML = '<div style="padding:0.5rem;">Kein Ort gefunden</div>';
     }
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'image/*';
-    input.multiple = true;
-    input.onchange = () => handleFiles(input.files);
-    input.click();
+  } catch (err) {
+    console.error("Fehler bei Ortssuche:", err);
+  }
+});
+
+// INSERAT SPEICHERN
+document.getElementById("save-btn").addEventListener("click", async () => {
+  const { data: sd } = await supabase.auth.getSession();
+  const user = sd?.session?.user;
+  if (!user) return alert("Nicht eingeloggt!");
+
+  const { data: existingListings } = await supabase
+    .from('listings')
+    .select('id')
+    .eq('user_id', user.id);
+
+  if (existingListings.length >= 10) {
+    alert("Maximal 10 Inserate erlaubt.");
+    return;
+  }
+
+  if (!userProfile.name || !userProfile.city) {
+    const warningEl = document.getElementById('profile-warning');
+    warningEl.textContent = "Bitte fülle dein Profil aus.";
+    warningEl.style.display = "block";
+    setTimeout(() => window.location.href = "profil.html", 4000);
+    return;
+  }
+
+  const title = document.getElementById('title-input').value.trim();
+  const category = document.getElementById('category-input').value;
+  const price = parseFloat(document.getElementById('price-input').value);
+  const description = document.getElementById('desc-input').value.trim();
+  const location = document.getElementById('location-input').value.trim();
+
+  if (!title || !price || !category || !location || !selectedAddressData) {
+    return alert("Bitte alle Pflichtfelder ausfüllen.");
+  }
+
+  // 🔼 Bilder jetzt hochladen
+  let uploadedImageUrls = [];
+  for (let file of uploadedImageFiles) {
+    const compressed = await imageCompression(file, {
+      maxSizeMB: 0.5,
+      maxWidthOrHeight: 800,
+      useWebWorker: true
+    });
+
+    const path = `listing-images/${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
+    const { error } = await supabase.storage.from('listing-images').upload(path, compressed);
+
+    if (error) {
+      alert("Fehler beim Bild-Upload: " + error.message);
+    } else {
+      const { data } = supabase.storage.from('listing-images').getPublicUrl(path);
+      uploadedImageUrls.push(data.publicUrl);
+    }
+  }
+
+  const { postal_code, city, lat, lon } = selectedAddressData;
+
+  const { error: insertError } = await supabase.from('listings').insert({
+    title,
+    category,
+    price_per_day: price,
+    description,
+    user_id: user.id,
+    image_urls: uploadedImageUrls,
+    latitude: lat,
+    longitude: lon,
+    location,
+    postal_code,
+    city
   });
 
-  async function handleFiles(files) {
-    const gallery = document.getElementById("preview-gallery");
+  if (insertError) return alert("Fehler beim Speichern: " + insertError.message);
 
-    for (let file of files) {
-      if (imageUrls.length >= 2) {
-        alert("Du kannst nur 2 Bilder hochladen.");
-        break;
-      }
+  alert("Inserat gespeichert!");
+  document.querySelectorAll('input, textarea, select').forEach(el => el.value = '');
+  uploadedImageFiles = [];
+  selectedAddressData = null;
+  renderPreviews();
+  loadGallery();
+});
 
-      if (file.size > 2 * 1024 * 1024) {
-        alert(`"${file.name}" ist zu groß. Maximalgröße: 2 MB`);
-        continue;
-      }
-
-      if (!file.type.startsWith("image/")) continue;
-
-      const loader = document.createElement("div");
-      loader.className = "preview-box";
-      loader.innerHTML = `<div class="loader" aria-label="Lädt"></div>`;
-      gallery.appendChild(loader);
-
-      const filePath = `${listingId}_${Date.now()}_${file.name.replace(/\s+/g, '-')}`;
-      const compressedFile = await imageCompression(file, {maxSizeMB: 0.05, // entspricht ca. 50 KB maxWidthOrHeight: 800,useWebWorker: true});
-
-const { error } = await supabase.storage.from('listing-images').upload(filePath, compressedFile);
-
-
-      if (!error) {
-        const { data } = supabase.storage.from('listing-images').getPublicUrl(filePath);
-        imageUrls.push(data.publicUrl);
-      } else {
-        alert("Upload fehlgeschlagen: " + error.message);
-      }
-
-      renderGallery();
-    }
+// GALERIE LADEN
+async function loadGallery() {
+  const { data: sd } = await supabase.auth.getSession();
+  const user = sd?.session?.user;
+  if (!user) {
+    document.getElementById('gallery').innerHTML = '<p>Nicht eingeloggt.</p>';
+    return;
   }
 
-  document.getElementById('location').addEventListener('input', async (e) => {
-    const value = e.target.value.trim();
-    const suggestionsBox = document.getElementById('suggestions');
-    if (value.length < 2) {
-      suggestionsBox.innerHTML = '';
-      return;
-    }
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('name, city')
+    .eq('id', user.id)
+    .single();
 
-    try {
-      const res = await fetch(`https://corsproxy.io/?https://nominatim.openstreetmap.org/search?format=json&accept-language=de&addressdetails=1&countrycodes=de&limit=8&q=${encodeURIComponent(value)}`);
-      const results = await res.json();
-      const filtered = results.filter(r => r.lat && r.lon && r.address);
-      suggestionsBox.innerHTML = '';
+  userProfile.name = profile?.name || null;
+  userProfile.city = profile?.city || null;
 
-      filtered.forEach(r => {
-        const ort = r.address.city || r.address.town || r.address.village || r.address.hamlet || r.address.municipality || r.display_name.split(',')[0];
-        const bundesland = r.address.state || '';
-        const land = r.address.country || 'Deutschland';
-        const plz = r.address.postcode || '';
-        const display = [ort, bundesland, land].filter(Boolean).join(', ');
+  const { data: listings, error } = await supabase
+    .from('listings')
+    .select('*')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: false });
 
-        const div = document.createElement('div');
-        div.textContent = display;
-        div.tabIndex = 0;
-        div.role = "option";
-        div.setAttribute('role', 'option');
-        div.onclick = () => {
-          document.getElementById('location').value = display;
-          selectedAddressData = {
-            postal_code: plz,
-            city: ort,
-            location: display,
-            lat: parseFloat(r.lat),
-            lon: parseFloat(r.lon)
-          };
-          suggestionsBox.innerHTML = '';
-        };
-        div.onkeydown = (evt) => {
-          if(evt.key === 'Enter' || evt.key === ' ') {
-            evt.preventDefault();
-            div.click();
-          }
-        };
-        suggestionsBox.appendChild(div);
-      });
-    } catch (err) {
-      console.error("Fehler bei Ortssuche:", err);
-    }
+  const gallery = document.getElementById('gallery');
+  if (error) {
+    gallery.innerHTML = '<p>Fehler beim Laden.</p>';
+    return;
+  }
+
+  if (listings.length === 0) {
+    gallery.innerHTML = '<p>Du hast noch keine Inserate.</p>';
+    return;
+  }
+
+  gallery.innerHTML = '';
+  listings.forEach(i => {
+    const img = i.image_urls?.[0] || 'https://via.placeholder.com/300x150?text=Kein+Bild';
+    const categoryFormatted = i.category ? i.category.charAt(0).toUpperCase() + i.category.slice(1).toLowerCase() : 'Unbekannt';
+
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.innerHTML = `
+      <img src="${img}" alt="${i.title}">
+      <div class="card-content">
+        <h3>${i.title}</h3>
+        <p class="category"><strong>Kategorie:</strong> ${categoryFormatted}</p>
+        <p class="price">${i.price_per_day} € / Tag</p>
+      </div>
+      <div class="actions">
+        <button onclick="window.location.href='bearbeiten.html?id=${i.id}'">Bearbeiten</button>
+        <button class="delete" onclick="deleteListing('${i.id}')">Löschen</button>
+      </div>`;
+    gallery.appendChild(div);
   });
+}
 
-  async function saveChanges() {
-    const title = document.getElementById('title').value.trim();
-    const category = document.getElementById('category').value;
-    const price = parseFloat(document.getElementById('price').value);
-    const description = document.getElementById('desc').value.trim();
-    const location = document.getElementById('location').value.trim();
+// INSERAT + BILDER LÖSCHEN
+async function deleteListing(id) {
+  if (!confirm("Wirklich löschen?")) return;
 
-    if (!title || !category || !price || !location) {
-      alert("Alle Pflichtfelder ausfüllen.");
-      return;
-    }
+  const { data: listing } = await supabase
+    .from('listings')
+    .select('image_urls')
+    .eq('id', id)
+    .single();
 
-    if (!selectedAddressData) {
-      alert("Bitte Ort aus Vorschlagsliste wählen.");
-      return;
-    }
+  const filesToDelete = (listing?.image_urls || []).map(url => {
+    const match = url.match(/listing-images\/(.+)$/);
+    return match ? `listing-images/${match[1]}` : null;
+  }).filter(Boolean);
 
-    const { postal_code, city, lat, lon } = selectedAddressData;
-
-    const updates = {
-      title,
-      category,
-      price_per_day: price,
-      description,
-      location,
-      postal_code,
-      city,
-      latitude: lat,
-      longitude: lon,
-      image_urls: imageUrls
-    };
-
-    const { error } = await supabase.from('listings').update(updates).eq('id', listingId);
-    if (error) alert("Fehler beim Speichern: " + error.message);
-    else {
-      alert("Änderungen gespeichert!");
-      window.location.href = "inserate.html";
-    }
+  if (filesToDelete.length > 0) {
+    await supabase.storage.from('listing-images').remove(filesToDelete);
   }
 
-  (async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session || !session.user) {
-      alert("Nicht eingeloggt – du wirst weitergeleitet.");
-      window.location.href = "login.html";
-      return;
-    }
-    loadData();
-  })();
+  const { error } = await supabase.from('listings').delete().eq('id', id);
+  if (error) alert("Fehler beim Löschen.");
+  else loadGallery();
+}
 
-  document.getElementById('nav-toggle').addEventListener('click', () => {
-    const nav = document.getElementById('nav-links');
-    nav.classList.toggle('show');
-    const toggle = document.getElementById('nav-toggle');
-    const expanded = nav.classList.contains('show');
-    toggle.setAttribute('aria-expanded', expanded);
-  });
+// INIT
+document.getElementById('nav-toggle').addEventListener('click', () => {
+  const nav = document.getElementById('main-nav');
+  const toggle = document.getElementById('nav-toggle');
+  nav.classList.toggle('show');
+  toggle.setAttribute('aria-expanded', nav.classList.contains('show'));
+});
 
-  async function updateNav() {
-    const { data: { session } } = await supabase.auth.getSession();
-    const nav = document.getElementById('nav-links');
-    const userSession = session;
-    nav.innerHTML = userSession?.user ? `
-      <a href="index.html">Start</a>
-      <a href="profil.html">Mein Profil</a>
-      <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-      <a href="favoriten.html">Meine Favoriten</a>
-      <a href="inserate.html">Meine Inserate</a>
-      <a href="#" onclick="logout(event)">Logout</a>
-    ` : `
-      <a href="index.html">Start</a>
-      <a href="login.html">Einloggen</a>
-    `;
-  }
-
-  async function logout(event) {
-    event.preventDefault();
-    await supabase.auth.signOut();
-    window.location.href = "login.html";
-  }
-
-  updateNav();
+loadGallery();
+updateNav();
 </script>
-</body>
-</html>
