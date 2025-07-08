@@ -461,7 +461,7 @@
 
     try {
       const compressedFile = await imageCompression(file, {
-        maxSizeMB: 0.01,
+        maxSizeMB: 0.5,
         maxWidthOrHeight: 800,
         useWebWorker: true
       });
