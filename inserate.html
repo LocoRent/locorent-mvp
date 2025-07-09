@@ -555,64 +555,65 @@ document.getElementById("dropzone").addEventListener("click", () => {
   input.click();
 });
 
+let uploadedImageFiles = [];
+
 async function handleFiles(files) {
   const container = document.getElementById("preview-gallery");
 
   for (let file of files) {
-    if (uploadedImageUrls.length >= 2) break;
+    if (uploadedImageFiles.length >= 2) break;
     if (!file.type.startsWith("image/")) continue;
 
-    try {
-      // Komprimiere das Bild auf max. 0.02 MB = 20 KB
-      const compressedFile = await imageCompression(file, {
-        maxSizeMB: 0.5,
-        maxWidthOrHeight: 800,
-        useWebWorker: true
-      });
+    uploadedImageFiles.push(file);
 
-      const compressedSizeKB = (compressedFile.size / 1024).toFixed(1);
-
-      if (compressedFile.size > 2 * 1024 * 1024) {
-        alert("Komprimiertes Bild ist noch zu groß (max. 2 MB).");
-        continue;
-      }
-
+    const reader = new FileReader();
+    reader.onload = function (e) {
       const tempBox = document.createElement("div");
       tempBox.className = "preview-box";
-      tempBox.innerHTML = `<div class="img-wrapper"><div class="loader"></div><small>${compressedSizeKB} KB</small></div>`;
+      tempBox.innerHTML = `
+        <div class="img-wrapper"><img src="${e.target.result}" /></div>
+        <button class="remove-btn" onclick="removePreview(${uploadedImageFiles.length - 1})">×</button>
+      `;
       container.appendChild(tempBox);
-
-      const path = `listing-images/${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
-      const { error } = await supabase.storage.from('listing-images').upload(path, compressedFile);
-
-      if (!error) {
-        const { data } = supabase.storage.from('listing-images').getPublicUrl(path);
-        uploadedImageUrls.push(data.publicUrl);
-      } else {
-        alert("Upload-Fehler: " + error.message);
-      }
-    } catch (err) {
-      console.error("Fehler bei Bildverarbeitung:", err);
-      alert("Fehler beim Verarbeiten des Bildes.");
-    }
+    };
+    reader.readAsDataURL(file);
   }
+}
 
+function removePreview(index) {
+  uploadedImageFiles.splice(index, 1);
   renderPreviews();
 }
 
+function renderPreviews() {
+  const container = document.getElementById("preview-gallery");
+  container.innerHTML = '';
+  uploadedImageFiles.forEach((file, i) => {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const box = document.createElement("div");
+      box.className = "preview-box";
+      box.innerHTML = `
+        <div class="img-wrapper"><img src="${e.target.result}" /></div>
+        <button class="remove-btn" onclick="removePreview(${i})">×</button>
+      `;
+      container.appendChild(box);
+    };
+    reader.readAsDataURL(file);
+  });
+}
 document.getElementById("save-btn").addEventListener("click", async () => {
   const { data: sd } = await supabase.auth.getSession();
   const user = sd?.session?.user;
   if (!user) return alert("Nicht eingeloggt!");
 
-  // ✅ Jetzt ist "user" definiert – also hier prüfen
   const { data: existingListings, error: countError } = await supabase
     .from('listings')
     .select('id')
     .eq('user_id', user.id);
 
   if (countError) {
-    alert("Fehler beim Überprüfen der Anzahl deiner Inserate.");
+    alert("Fehler beim Überprüfen deiner Inserate.");
     return;
   }
 
@@ -621,9 +622,9 @@ document.getElementById("save-btn").addEventListener("click", async () => {
     return;
   }
 
-  if (!userProfile.name || userProfile.name.trim().length < 2 || !userProfile.city || userProfile.city.trim().length < 2) {
+  if (!userProfile.name || !userProfile.city) {
     const warningEl = document.getElementById('profile-warning');
-    warningEl.textContent = "Bitte fülle zuerst deine Profildaten (Name & Wohnort) aus, bevor du ein Inserat erstellen kannst.";
+    warningEl.textContent = "Bitte fülle dein Profil aus (Name & Ort).";
     warningEl.style.display = "block";
     setTimeout(() => {
       window.location.href = "profil.html";
@@ -637,12 +638,37 @@ document.getElementById("save-btn").addEventListener("click", async () => {
   const description = document.getElementById('desc-input').value.trim();
   const location = document.getElementById('location-input').value.trim();
 
-  if (!title || !price || !category || !location) return alert("Pflichtfelder fehlen!");
-  if (!selectedAddressData) return alert("Bitte wähle einen Ort aus der Vorschlagsliste.");
+  if (!title || !price || !category || !location) return alert("Bitte alle Pflichtfelder ausfüllen.");
+  if (!selectedAddressData) return alert("Bitte einen Ort aus der Vorschlagsliste wählen.");
+
+  // 👉 Jetzt Bilder hochladen
+  let uploadedImageUrls = [];
+  for (let file of uploadedImageFiles) {
+    const compressed = await imageCompression(file, {
+      maxSizeMB: 0.5,
+      maxWidthOrHeight: 800,
+      useWebWorker: true
+    });
+
+    if (compressed.size > 2 * 1024 * 1024) {
+      alert("Bild zu groß (max. 2 MB)");
+      continue;
+    }
+
+    const path = `listing-images/${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
+    const { error } = await supabase.storage.from('listing-images').upload(path, compressed);
+
+    if (error) {
+      alert("Fehler beim Bild-Upload: " + error.message);
+    } else {
+      const { data } = supabase.storage.from('listing-images').getPublicUrl(path);
+      uploadedImageUrls.push(data.publicUrl);
+    }
+  }
 
   const { postal_code, city, lat, lon } = selectedAddressData;
 
-  const { error: ie } = await supabase.from('listings').insert({
+  const { error: insertError } = await supabase.from('listings').insert({
     title,
     category,
     price_per_day: price,
@@ -656,16 +682,18 @@ document.getElementById("save-btn").addEventListener("click", async () => {
     city
   });
 
-  if (ie) return alert("Speicherfehler: " + ie.message);
+  if (insertError) {
+    alert("Fehler beim Speichern: " + insertError.message);
+    return;
+  }
 
   alert("Inserat gespeichert!");
   document.querySelectorAll('input, textarea, select').forEach(el => el.value = '');
-  uploadedImageUrls = [];
+  uploadedImageFiles = [];
   selectedAddressData = null;
   renderPreviews();
   loadGallery();
 });
-
 const locationInput = document.getElementById('location-input');
 const suggestionBox = document.getElementById('suggestions');
 
@@ -748,6 +776,10 @@ async function loadGallery() {
     gallery.innerHTML = '<p>Fehler beim Laden der Inserate.</p>';
     return;
   }
+if (listings.length === 0) {
+  gallery.innerHTML = '<p>Du hast noch keine Inserate.</p>';
+  return;
+}
 
   gallery.innerHTML = '';
   listings.forEach(i => {
@@ -773,22 +805,43 @@ async function loadGallery() {
 
 async function deleteListing(id) {
   if (!confirm("Wirklich löschen?")) return;
+
+  // 1. Bildpfade holen
+  const { data: listing, error: fetchErr } = await supabase
+    .from('listings')
+    .select('image_urls')
+    .eq('id', id)
+    .single();
+
+  if (fetchErr) {
+    alert("Fehler beim Abrufen: " + fetchErr.message);
+    return;
+  }
+
+  // 2. Bildpfade extrahieren
+  const filesToDelete = (listing.image_urls || []).map(url => {
+    const match = url.match(/listing-images\/(.+)$/);
+    return match ? `listing-images/${match[1]}` : null;
+  }).filter(Boolean);
+
+  // 3. Bilder aus Supabase Storage löschen
+  if (filesToDelete.length > 0) {
+    const { error: storageError } = await supabase.storage
+      .from('listing-images')
+      .remove(filesToDelete);
+
+    if (storageError) {
+      console.warn("Fehler beim Löschen der Bilder:", storageError.message);
+    }
+  }
+
+  // 4. Inserat aus Datenbank löschen
   const { error } = await supabase.from('listings').delete().eq('id', id);
-  if (!error) loadGallery();
-  else alert("Fehler beim Löschen.");
+  if (error) alert("Fehler beim Löschen des Inserats.");
+  else loadGallery();
 }
-
-document.getElementById('nav-toggle').addEventListener('click', () => {
-  const nav = document.getElementById('main-nav');
-  const toggle = document.getElementById('nav-toggle');
-  nav.classList.toggle('show');
-  const expanded = nav.classList.contains('show');
-  toggle.setAttribute('aria-expanded', expanded);
-});
-
-loadGallery();
-updateNav();
 </script>
 
 </body>
 </html>
+
