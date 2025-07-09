@@ -622,16 +622,21 @@ document.getElementById("save-btn").addEventListener("click", async () => {
     return;
   }
 
-  if (!userProfile.name || !userProfile.city) {
-    const warningEl = document.getElementById('profile-warning');
-    warningEl.textContent = "Bitte fülle dein Profil aus (Name & Ort).";
-    warningEl.style.display = "block";
-    setTimeout(() => {
-      window.location.href = "profil.html";
-    }, 4000);
-    return;
-  }
+const { data: profile, error: profileError } = await supabase
+  .from('profiles')
+  .select('name, city')
+  .eq('id', user.id)
+  .single();
 
+if (profileError || !profile?.name || !profile?.city) {
+  const warningEl = document.getElementById('profile-warning');
+  warningEl.textContent = "Bitte fülle dein Profil aus (Name & Ort).";
+  warningEl.style.display = "block";
+  setTimeout(() => {
+    window.location.href = "profil.html";
+  }, 4000);
+  return;
+}
   const title = document.getElementById('title-input').value.trim();
   const category = document.getElementById('category-input').value;
   const price = parseFloat(document.getElementById('price-input').value);
@@ -840,8 +845,8 @@ async function deleteListing(id) {
   if (error) alert("Fehler beim Löschen des Inserats.");
   else loadGallery();
 }
+window.addEventListener("DOMContentLoaded", loadGallery);
 </script>
 
 </body>
 </html>
-
