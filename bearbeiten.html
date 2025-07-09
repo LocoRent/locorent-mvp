@@ -401,8 +401,11 @@
   );
 
   const listingId = new URLSearchParams(location.search).get("id");
-  let imageUrls = [];
-  let selectedAddressData = null;
+let existingImageUrls = [];     // bereits gespeicherte Bilder
+let newImageFiles = [];         // neue, noch nicht hochgeladene Dateien
+let deletedImageUrls = [];      // alte Bilder, die gelöscht werden sollen
+let imageUrls = [];             // alle sichtbaren Bilder (zum Anzeigen)
+let selectedAddressData = null;
 
   async function loadData() {
     const { data, error } = await supabase.from('listings').select('*').eq('id', listingId).single();
@@ -412,7 +415,8 @@
     document.getElementById('price').value = data.price_per_day || '';
     document.getElementById('desc').value = data.description || '';
     document.getElementById('location').value = data.location || '';
-    imageUrls = data.image_urls || [];
+    existingImageUrls = data.image_urls || [];
+imageUrls = [...existingImageUrls];  // Vorschau zeigt bestehende Bilder
     selectedAddressData = {
       postal_code: data.postal_code || '',
       city: data.city || '',
@@ -434,45 +438,39 @@
     });
   }
 
-  function removeImage(index) {
-    imageUrls.splice(index, 1);
-    renderGallery();
+function removeImage(index) {
+  const removedUrl = imageUrls[index];
+
+  // Fall 1: war schon in Supabase
+  if (existingImageUrls.includes(removedUrl)) {
+    deletedImageUrls.push(removedUrl);
+    existingImageUrls = existingImageUrls.filter(u => u !== removedUrl);
   }
 
-  document.getElementById('dropzone').addEventListener('click', () => {
-    if (imageUrls.length >= 2) {
-      alert("Maximal 2 Bilder erlaubt.");
-      return;
-    }
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'image/*';
-    input.multiple = true;
-    input.onchange = () => handleFiles(input.files);
-    input.click();
-  });
+  // Fall 2: ist ein neues Bild (base64)
+  if (removedUrl.startsWith('data:')) {
+    const fileIndex = imageUrls.indexOf(removedUrl);
+    if (fileIndex > -1) newImageFiles.splice(fileIndex, 1);
+  }
 
-  async function handleFiles(files) {
-  const container = document.getElementById("preview-gallery");
+  imageUrls.splice(index, 1);
+  renderGallery();
+}
 
+async function handleFiles(files) {
   for (let file of files) {
     if (imageUrls.length >= 2) break;
     if (!file.type.startsWith("image/")) continue;
 
-    try {
-      const compressedFile = await imageCompression(file, {
-        maxSizeMB: 0.5,
-        maxWidthOrHeight: 800,
-        useWebWorker: true
-      });
-
-      const compressedSizeKB = (compressedFile.size / 1024).toFixed(1);
-
-      if (compressedFile.size > 2 * 1024 * 1024) {
-        alert("Komprimiertes Bild ist noch zu groß (max. 2 MB).");
-        continue;
-      }
-
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      imageUrls.push(e.target.result);      // base64 zur Anzeige
+      newImageFiles.push(file);             // merken für späteren Upload
+      renderGallery();
+    };
+    reader.readAsDataURL(file);
+  }
+}
       const tempBox = document.createElement("div");
       tempBox.className = "preview-box";
       tempBox.innerHTML = `<div class="img-wrapper"><div class="loader"></div><small>${compressedSizeKB} KB</small></div>`;
@@ -566,8 +564,52 @@
     }
 
     const { postal_code, city, lat, lon } = selectedAddressData;
+let finalImageUrls = [...existingImageUrls];  // alte Bilder (nicht gelöscht)
 
-    const updates = {
+for (let file of newImageFiles) {
+  const compressed = await imageCompression(file, {
+    maxSizeMB: 0.5,
+    maxWidthOrHeight: 800,
+    useWebWorker: true
+  });
+
+  if (compressed.size > 2 * 1024 * 1024) {
+    alert("Bild zu groß (max. 2 MB)");
+    continue;
+  }
+
+  const path = `listing-images/${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
+  const { error } = await supabase.storage.from('listing-images').upload(path, compressed);
+  if (error) {
+    alert("Fehler beim Upload: " + error.message);
+    continue;
+  }
+
+  const { data } = supabase.storage.from('listing-images').getPublicUrl(path);
+  finalImageUrls.push(data.publicUrl);
+}
+   // Schritt 6: Alte Bilder, die vom Nutzer gelöscht wurden, auch aus Supabase entfernen
+if (deletedImageUrls.length > 0) {
+  const deletePaths = deletedImageUrls.map(url => {
+    try {
+      return new URL(url).pathname.replace(/^\/storage\/v1\/object\/public\/listing-images\//, '');
+    } catch (e) {
+      return null;
+    }
+  }).filter(Boolean); // Nur gültige Pfade behalten
+
+  if (deletePaths.length > 0) {
+    const { error: delError } = await supabase
+      .storage
+      .from('listing-images')
+      .remove(deletePaths);
+
+    if (delError) {
+      console.warn("Fehler beim Löschen:", delError.message);
+    }
+  }
+}
+ const updates = {
       title,
       category,
       price_per_day: price,
