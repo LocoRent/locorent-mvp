@@ -827,7 +827,7 @@ async function deleteListing(id) {
 const filesToDelete = (listing.image_urls || []).map(url => {
   try {
     const urlObj = new URL(url);
-    const path = urlObj.pathname.replace(/^\/storage\/v1\/object\/public\//, '');
+    const path = urlObj.pathname.replace(/^\/storage\/v1\/object\/public\/listing-images\//, '');
     return path;
   } catch (err) {
     console.warn("Ungültige Bild-URL:", url);
@@ -856,3 +856,4 @@ window.addEventListener("DOMContentLoaded", loadGallery);
 
 </body>
 </html>
+
