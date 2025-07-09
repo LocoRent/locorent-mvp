@@ -660,7 +660,7 @@ if (profileError || !profile?.name || !profile?.city) {
       continue;
     }
 
-    const path = `listing-images/${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
+    const path = `${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
     const { error } = await supabase.storage.from('listing-images').upload(path, compressed);
 
     if (error) {
