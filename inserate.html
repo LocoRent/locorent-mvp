@@ -824,10 +824,16 @@ async function deleteListing(id) {
   }
 
   // 2. Bildpfade extrahieren
-  const filesToDelete = (listing.image_urls || []).map(url => {
-    const match = url.match(/listing-images\/(.+)$/);
-    return match ? `listing-images/${match[1]}` : null;
-  }).filter(Boolean);
+const filesToDelete = (listing.image_urls || []).map(url => {
+  try {
+    const urlObj = new URL(url);
+    const path = urlObj.pathname.replace(/^\/storage\/v1\/object\/public\//, '');
+    return path;
+  } catch (err) {
+    console.warn("Ungültige Bild-URL:", url);
+    return null;
+  }
+}).filter(Boolean);
 
   // 3. Bilder aus Supabase Storage löschen
   if (filesToDelete.length > 0) {
