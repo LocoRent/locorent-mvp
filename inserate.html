@@ -852,6 +852,15 @@ const filesToDelete = (listing.image_urls || []).map(url => {
   else loadGallery();
 }
 window.addEventListener("DOMContentLoaded", loadGallery);
+  // Burger-Menü Umschalten
+document.getElementById("nav-toggle").addEventListener("click", function () {
+  const nav = document.getElementById("main-nav");
+  nav.classList.toggle("show");
+
+  // Für Screenreader aktualisieren
+  const expanded = this.getAttribute("aria-expanded") === "true";
+  this.setAttribute("aria-expanded", !expanded);
+});
 </script>
 
 </body>
