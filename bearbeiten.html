@@ -357,7 +357,7 @@
     <textarea id="desc" rows="4" maxlength="150"></textarea>
 
     <label>Bilder</label>
-    <div id="dropzone" class="dropzone" tabindex="0">Bilder hier ablegen oder klicken</div>
+    <div id="dropzone" class="dropzone" tabindex="0">Bilder hier ablegen oder klicken (max. 1 Bild, max 2MB.)</div>
     <div id="preview-gallery" class="preview-gallery" aria-live="polite" aria-atomic="true"></div>
 
     <button class="save-btn" onclick="saveChanges()">Speichern</button>
@@ -451,7 +451,7 @@ function removeImage(index) {
 }
 
 document.getElementById('dropzone').addEventListener('click', () => {
-  if (imageUrls.length >= 2) {
+  if (imageUrls.length >= 1) {
     alert("Maximal 2 Bilder erlaubt.");
     return;
   }
@@ -465,7 +465,7 @@ document.getElementById('dropzone').addEventListener('click', () => {
 
 async function handleFiles(files) {
   for (let file of files) {
-    if (imageUrls.length + newImageFiles.length >= 2) break;
+    if (imageUrls.length + newImageFiles.length >= 1) break;
     if (!file.type.startsWith("image/")) continue;
 
     newImageFiles.push(file);
