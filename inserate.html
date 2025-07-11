@@ -548,7 +548,7 @@ async function logout(event) {
 }
 
 document.getElementById("dropzone").addEventListener("click", () => {
-  if (uploadedImageUrls.length >= 2) return alert("Maximal 2 Bilder erlaubt.");
+  if (uploadedImageUrls.length >= 1) return alert("Nur 1 Bild erlaubt.");
   const input = document.createElement("input");
   input.type = "file"; input.accept = "image/*"; input.multiple = true;
   input.onchange = () => handleFiles(input.files);
@@ -561,7 +561,7 @@ async function handleFiles(files) {
   const container = document.getElementById("preview-gallery");
 
   for (let file of files) {
-    if (uploadedImageFiles.length >= 2) break;
+    if (uploadedImageFiles.length >= 1) break;
     if (!file.type.startsWith("image/")) continue;
 
     uploadedImageFiles.push(file);
