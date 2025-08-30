@@ -517,7 +517,16 @@ const supabase = window.supabase.createClient(
   'https://flnjalgqtkqycsaymmbd.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
 );
+  
+// ===== Views hochzählen Funktion =====
+async function incrementViews(listingId) {
+  const { error } = await supabase
+    .from('listings')
+    .update({ views: supabase.raw('views + 1') })
+    .eq('id', listingId);
 
+  if (error) console.error("Fehler beim Erhöhen der Views:", error.message);
+}
 let uploadedImageUrls = [];
 let selectedAddressData = null;
 let userSession = null;
@@ -788,6 +797,8 @@ if (listings.length === 0) {
 
   gallery.innerHTML = '';
   listings.forEach(i => {
+    // Views hochzählen
+incrementViews(i.id);
     const img = i.image_urls?.[0] || 'https://via.placeholder.com/300x150?text=Kein+Bild';
     const categoryFormatted = i.category ? (i.category.charAt(0).toUpperCase() + i.category.slice(1).toLowerCase()) : 'Unbekannt';
 
