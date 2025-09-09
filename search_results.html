@@ -272,7 +272,7 @@
         radius: params.get('radius') || ''
       };
 
-      document.getElementById("title-input").value = filters.title;
+      document.getElementById("search-input").value = filters.title;
       document.getElementById("category-select").value = filters.category.toLowerCase();
       document.getElementById("min-price").value = filters.minPrice;
       document.getElementById("max-price").value = filters.maxPrice;
@@ -339,7 +339,7 @@
     });
 
     document.getElementById('search-btn').addEventListener('click', () => {
-      const title = document.getElementById("search-input").value.trim();
+      const title = document.getElementById("title-input").value.trim();
       const category = document.getElementById("category-select").value.trim();
       const minPrice = document.getElementById("min-price").value.trim();
       const maxPrice = document.getElementById("max-price").value.trim();
