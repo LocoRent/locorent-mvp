@@ -368,6 +368,12 @@
         width: 100%;
       }
     }
+    .result-card .actions {
+  margin-top: auto;   /* schiebt Buttons nach unten */
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
   </style>
 </head>
 <body>
@@ -558,14 +564,16 @@
         card.className = 'result-card';
         const isFav = userSession?.user ? await checkIfFavorite(item.id) : false;
 
-        card.innerHTML = `
-          <img src="${item.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" alt="${item.title}" />
-          <h3>${item.title}</h3>
-          <p><strong>Kategorie:</strong> ${capitalize(item.category) || 'Unbekannt'}</p>
-          <p><strong>Preis pro Tag:</strong> ${item.price_per_day || 'k. A.'} €</p>
-          <button onclick="window.location.href='mietobjekt.html?id=${item.id}'">Details ansehen</button>
-          <button class="fav-btn">${isFav ? 'Favorit entfernen' : 'Zu Favoriten'}</button>
-        `;
+card.innerHTML = `
+  <img src="${item.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" alt="${item.title}" />
+  <h3>${item.title}</h3>
+  <p><strong>Kategorie:</strong> ${capitalize(item.category) || 'Unbekannt'}</p>
+  <p><strong>Preis pro Tag:</strong> ${item.price_per_day || 'k. A.'} €</p>
+  <div class="actions">
+    <button onclick="window.location.href='mietobjekt.html?id=${item.id}'">Details ansehen</button>
+    <button class="fav-btn">${isFav ? 'Favorit entfernen' : 'Zu Favoriten'}</button>
+  </div>
+`;
 
         const favBtn = card.querySelector('.fav-btn');
         if (userSession?.user) {
