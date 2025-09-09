@@ -176,7 +176,7 @@
     <h2>Suchergebnisse</h2>
     <div id="current-category" style="margin-top: 1rem; font-weight: 600; color: var(--primary-color);"></div>
     <div class="search-row">
-      <input type="text" placeholder="Was suchst du?" id="search-input" />
+      <input type="text" placeholder="Was suchst du?" id="title-input" />
       <select id="category-select">
         <option value="">Alle Kategorien</option>
         <option value="fahrzeuge">Fahrzeuge</option>
@@ -272,7 +272,7 @@
         radius: params.get('radius') || ''
       };
 
-      document.getElementById("search-input").value = filters.title;
+      document.getElementById("title-input").value = filters.title;
       document.getElementById("category-select").value = filters.category.toLowerCase();
       document.getElementById("min-price").value = filters.minPrice;
       document.getElementById("max-price").value = filters.maxPrice;
