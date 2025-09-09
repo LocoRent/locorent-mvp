@@ -191,15 +191,18 @@
       gap: 2rem;
       margin-top: 2rem;
     }
-
-    .result-card {
-      background-color: var(--white);
-      border-radius: var(--radius);
-      padding: 1rem;
-      box-shadow: 0 12px 30px rgba(46,125,50,0.1);
-      margin-bottom: 1.5rem;
-      transition: transform 0.3s ease;
-    }
+.result-card {
+  background-color: var(--white);
+  border-radius: var(--radius);
+  padding: 1rem;
+  box-shadow: 0 12px 30px rgba(46,125,50,0.1);
+  margin-bottom: 1.5rem;
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* verteilt Inhalt gleichmäßig */
+  height: 100%; /* gleiche Höhe */
+}
 
     .result-card:hover,
     .result-card:focus-within {
@@ -210,9 +213,9 @@
 
 .result-card img {
   width: 100%;
-  height: auto;
-  max-height: 200px; /* damit sie nicht zu groß werden */
-  object-fit: contain; /* Bild vollständig anzeigen */
+  height: 180px;         /* feste Höhe */
+  object-fit: contain;   /* Bild bleibt vollständig sichtbar */
+  background: #f5f5f5;   /* neutraler Hintergrund bei Rändern */
   border-radius: 12px;
   margin-bottom: 1rem;
 }
