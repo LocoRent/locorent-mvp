@@ -255,11 +255,11 @@
   -webkit-box-orient: vertical;
   color: var(--text-dark);
 }
-    .card-content .price {
-      font-weight: 600;
-      color: var(--primary);
-      margin-bottom: 0.3rem;
-    }
+.card-content .price {
+  font-weight: normal;
+  color: var(--text-dark);   /* gleiche Farbe wie normaler Text */
+  margin-bottom: 0.3rem;
+}
     .card-content .category {
       font-size: 0.9rem;
       margin-bottom: 0.5rem;
@@ -805,7 +805,7 @@ if (listings.length === 0) {
       <div class="card-content">
         <h3>${i.title}</h3>
         <p class="category"><strong>Kategorie:</strong> ${categoryFormatted}</p>
-        <p class="price">${i.price_per_day} € / Tag</p>
+        <p class="price"><strong>Preis pro Tag:</strong> ${i.price_per_day} €</p>
       </div>
       <div class="actions">
         <button onclick="window.location.href='bearbeiten.html?id=${i.id}'">Bearbeiten</button>
