@@ -366,9 +366,17 @@
         width: 100%;
       }
     }
-    .result-card h3 {
-  min-height: 2.5em;
+    
+.result-card h3 {
+  font-size: clamp(0.9rem, 2vw, 1.1rem); /* passt sich dynamisch an */
   margin: 0.5rem 0;
+  line-height: 1.3em;
+  max-height: 3.9em;    /* Platz für max. 3 Zeilen */
+  overflow: hidden;     /* mehr als 3 Zeilen wird abgeschnitten */
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* max. 3 Zeilen */
+  -webkit-box-orient: vertical;
 }
 
 /* Bereich für Kategorie + Preis */
