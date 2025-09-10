@@ -243,11 +243,18 @@
       padding: 0.8rem;
       flex-grow: 1;
     }
-    .card-content h3 {
-      margin: 0.2rem 0;
-      font-size: 1.1rem;
-      color: var(--text-dark);
-    }
+.card-content h3 {
+  margin: 0.2rem 0;
+  font-size: 1.05rem;
+  line-height: 1.4em;
+  height: 4.2em;           /* Platz für max. 3 Zeilen */
+  overflow: hidden;        /* alles drüber wird abgeschnitten */
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;   /* Maximal 3 Zeilen */
+  -webkit-box-orient: vertical;
+  color: var(--text-dark);
+}
     .card-content .price {
       font-weight: 600;
       color: var(--primary);
