@@ -368,14 +368,14 @@
     }
     
 .result-card h3 {
-  font-size: clamp(0.9rem, 2vw, 1.1rem); /* passt sich dynamisch an */
+  font-size: 1.05rem;
+  line-height: 1.4em;
   margin: 0.5rem 0;
-  line-height: 1.3em;
-  max-height: 3.9em;    /* Platz für max. 3 Zeilen */
-  overflow: hidden;     /* mehr als 3 Zeilen wird abgeschnitten */
+  height: 4.2em;          /* Platz für genau 3 Zeilen */
+  overflow: hidden;       /* alles drüber wird abgeschnitten */
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 3; /* max. 3 Zeilen */
+  -webkit-line-clamp: 3;  /* Maximal 3 Zeilen */
   -webkit-box-orient: vertical;
 }
 
