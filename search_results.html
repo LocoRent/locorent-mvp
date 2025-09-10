@@ -118,14 +118,18 @@
       margin-left: auto;
       margin-right: auto;
     }
-    .result-card {
-      background-color: var(--white);
-      border-radius: 10px;
-      padding: 1.5rem;
-      box-shadow: 0 2px 8px var(--shadow-color);
-      margin-bottom: 1.5rem;
-      transition: transform 0.3s ease;
-    }
+.result-card {
+  display: flex;                /* Inhalte in Spalten */
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: var(--white);
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px var(--shadow-color);
+  margin-bottom: 1.5rem;
+  transition: transform 0.3s ease;
+  height: 100%;                 /* gleiche Höhe */
+}
     .result-card:hover {
       transform: translateY(-3px);
       box-shadow: 0 4px 16px var(--shadow-color);
@@ -137,6 +141,32 @@
       border-radius: 8px;
       margin-bottom: 1rem;
     }
+    /* --- Titel Bereich --- */
+.result-card h3 {
+  font-size: 1.05rem;
+  line-height: 1.4em;
+  margin: 0.5rem 0;
+  height: 4.2em;          /* Platz für max. 3 Zeilen */
+  overflow: hidden;       /* alles drüber wird abgeschnitten */
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;  /* maximal 3 Zeilen */
+  -webkit-box-orient: vertical;
+}
+
+/* --- Info Bereich (Kategorie + Preis) --- */
+.result-card .info {
+  flex-grow: 1;
+}
+
+/* --- Buttons immer unten --- */
+.result-card .buttons {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
     .result-card button {
       margin-top: 1rem;
       padding: 0.6rem;
@@ -460,14 +490,18 @@
 
         const isFavorite = await checkIfFavorite(item.id);
 
-        card.innerHTML = `
-          <img src="${item.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" alt="${item.title}" />
-          <h3>${item.title}</h3>
-          <p><strong>Kategorie:</strong> ${capitalize(item.category) || 'Unbekannt'}</p>
-          <p><strong>Preis pro Tag:</strong> ${item.price_per_day || 'k. A.'} €</p>
-          <button onclick="window.location.href='mietobjekt.html?id=${item.id}'">Details ansehen</button>
-          <button class="fav-btn">${isFavorite ? "Favorit entfernen" : "Zu Favoriten"}</button>
-        `;
+card.innerHTML = `
+  <img src="${item.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" alt="${item.title}" />
+  <h3>${item.title}</h3>
+  <div class="info">
+    <p><strong>Kategorie:</strong> ${capitalize(item.category) || 'Unbekannt'}</p>
+    <p><strong>Preis pro Tag:</strong> ${item.price_per_day || 'k. A.'} €</p>
+  </div>
+  <div class="buttons">
+    <button onclick="window.location.href='mietobjekt.html?id=${item.id}'">Details ansehen</button>
+    <button class="fav-btn">${isFavorite ? "Favorit entfernen" : "Zu Favoriten"}</button>
+  </div>
+`;
 
         const favBtn = card.querySelector(".fav-btn");
         if (userSession?.user) {
