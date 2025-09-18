@@ -213,18 +213,18 @@
     display: none;
     flex-direction: column;
     background-color: var(--primary-color);
-    position: absolute;
+    position: fixed;       /* <- wichtig, damit es über allem liegt */
     top: 70px;
-    right: 20px;
+    right: 0;             /* direkt am Bildschirmrand */
+    width: 200px;          /* Breite des Menüs */
     padding: 1rem;
-    border-radius: 8px;
+    border-radius: 0 0 0 8px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    z-index: 9999;         /* <- wichtig, damit es über anderen Elementen liegt */
   }
-nav.show {
-  display: flex;
-  z-index: 999; /* sorgt dafür, dass das Menü oben angezeigt wird */
-}
-
+  nav.show {
+    display: flex;
+  }
   .burger {
     display: flex;
   }
