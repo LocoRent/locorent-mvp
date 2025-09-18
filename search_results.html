@@ -227,9 +227,6 @@
     display: flex;
   }
 }
-    document.getElementById("burger").addEventListener("click", () => {
-  document.getElementById("nav-links").classList.toggle("show");
-});
   </style>
 </head>
 <body>
@@ -242,42 +239,6 @@
     <div></div>
   </div>
 </header>
-  .burger {
-  display: none;
-  flex-direction: column;
-  cursor: pointer;
-  gap: 5px;
-}
-.burger div {
-  width: 25px;
-  height: 3px;
-  background-color: white;
-  border-radius: 2px;
-}
-
-/* Mobile Menü */
-@media (max-width: 768px) {
-  nav {
-    display: none;
-    flex-direction: column;
-    background-color: var(--primary-color);
-    position: absolute;
-    top: 70px;
-    right: 20px;
-    padding: 1rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-  }
-  nav.show {
-    display: flex;
-  }
-  .burger {
-    display: flex;
-  }
-}
-document.getElementById("burger").addEventListener("click", () => {
-  document.getElementById("nav-links").classList.toggle("show");
-});
 
 
   <section class="hero">
@@ -599,6 +560,10 @@ card.innerHTML = `
     }
 
     init();
+    document.getElementById("burger").addEventListener("click", () => {
+  document.getElementById("nav-links").classList.toggle("show");
+});
+
   </script>
 </body>
 </html>
