@@ -186,14 +186,6 @@
       border-radius: var(--border-radius);
       margin-top: 2rem;
     }
-    @media (max-width: 768px) {
-      .search-row {
-        flex-direction: column;
-      }
-      .category-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
     .pagination {
   grid-column: 1/-1;
   display: flex;
@@ -222,13 +214,14 @@
 .pagination .active {
   background-color: var(--highlight-color);
 }
-
-.pagination span {
-  font-weight: 600;
-  color: var(--dark-color);
-  margin: 0 5px;
-}
-
+    @media (max-width: 768px) {
+      .search-row {
+        flex-direction: column;
+      }
+      .category-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
   </style>
 </head>
 <body>
