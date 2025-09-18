@@ -194,85 +194,13 @@
         grid-template-columns: 1fr 1fr;
       }
     }
-    .burger {
-  display: none;
-  flex-direction: column;
-  cursor: pointer;
-  gap: 5px;
-}
-.burger div {
-  width: 25px;
-  height: 3px;
-  background-color: white;
-  border-radius: 2px;
-}
-
-/* Mobile Menü */
-@media (max-width: 768px) {
-  nav {
-    display: none;
-    flex-direction: column;
-    background-color: var(--primary-color);
-    position: fixed;       /* <- wichtig, damit es über allem liegt */
-    top: 70px;
-    right: 0;             /* direkt am Bildschirmrand */
-    width: 200px;          /* Breite des Menüs */
-    padding: 1rem;
-    border-radius: 0 0 0 8px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    z-index: 9999;         /* <- wichtig, damit es über anderen Elementen liegt */
-  }
-  nav.show {
-    display: flex;
-  }
-  .burger {
-    display: flex;
-  }
-}
-    #nav-toggle {
-  display: none;
-  background: none;
-  border: none;
-  font-size: 1.8rem;
-  color: white;
-  cursor: pointer;
-}
-
-@media (max-width: 720px) {
-  #nav-toggle {
-    display: block;
-  }
-
-  nav#main-nav {
-    display: none;
-    flex-direction: column;
-    width: 100%;
-    margin-top: 1rem;
-  }
-
-  nav#main-nav.show {
-    display: flex;
-  }
-
-  nav#main-nav a {
-    margin: 0.4rem 0;
-    padding: 0.5rem 1rem;
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 6px;
-    color: white;
-    text-decoration: none;
-  }
-}
-
   </style>
 </head>
 <body>
-<button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="main-nav">☰</button>
-<nav id="main-nav" role="navigation" aria-label="Hauptnavigation">
-  <!-- Links werden per JS eingefügt -->
-</nav>
-
-
+  <header>
+    <h1>Locorent</h1>
+    <nav id="nav-links"></nav>
+  </header>
 
   <section class="hero">
     <h2>Suchergebnisse</h2>
@@ -393,7 +321,7 @@
     }
 
     function updateNav() {
-      const nav = document.getElementById('main-nav');
+      const nav = document.getElementById('nav-links');
       nav.innerHTML = userSession?.user ? 
         `<a href="index.html">Start</a>
          <a href="profil.html">Mein Profil</a>
@@ -593,16 +521,6 @@ card.innerHTML = `
     }
 
     init();
-const navToggle = document.getElementById('nav-toggle');
-const mainNav = document.getElementById('main-nav');
-
-navToggle.addEventListener('click', () => {
-  mainNav.classList.toggle('show');
-  const expanded = mainNav.classList.contains('show');
-  navToggle.setAttribute('aria-expanded', expanded);
-});
-
-
   </script>
 </body>
 </html>
