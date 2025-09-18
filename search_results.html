@@ -194,6 +194,41 @@
         grid-template-columns: 1fr 1fr;
       }
     }
+    .pagination {
+  grid-column: 1/-1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2rem;
+}
+
+.pagination button {
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 50px;
+  background-color: var(--primary-color);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.pagination button:hover {
+  background-color: var(--highlight-color);
+  transform: translateY(-2px);
+}
+
+.pagination .active {
+  background-color: var(--highlight-color);
+}
+
+.pagination span {
+  font-weight: 600;
+  color: var(--dark-color);
+  margin: 0 5px;
+}
+
   </style>
 </head>
 <body>
@@ -512,36 +547,47 @@ async function renderResults(items, totalCount, page) {
     container.appendChild(card);
   }
 
-  // --- Pagination-Buttons unten ---
-  const pagination = document.createElement("div");
-  pagination.style.cssText = "grid-column:1/-1; display:flex; justify-content:center; gap:10px; margin-top:20px;";
+ // --- Pagination-Buttons unten ---
+const pagination = document.createElement("div");
+pagination.className = "pagination";
 
-  const totalPages = Math.ceil(totalCount / pageSize);
+const totalPages = Math.ceil(totalCount / pageSize);
 
-  if (page > 1) {
-    const prevBtn = document.createElement("button");
-    prevBtn.textContent = "← Zurück";
-    prevBtn.onclick = () => {
-      currentPage--;
-      loadListings(getFilters(), currentPage);
-    };
-    pagination.appendChild(prevBtn);
-  }
-
-  pagination.appendChild(document.createTextNode(`Seite ${page} von ${totalPages}`));
-
-  if (page < totalPages) {
-    const nextBtn = document.createElement("button");
-    nextBtn.textContent = "Weiter →";
-    nextBtn.onclick = () => {
-      currentPage++;
-      loadListings(getFilters(), currentPage);
-    };
-    pagination.appendChild(nextBtn);
-  }
-
-  container.appendChild(pagination);
+// Zurück-Button
+if (page > 1) {
+  const prevBtn = document.createElement("button");
+  prevBtn.textContent = "←";
+  prevBtn.onclick = () => {
+    currentPage--;
+    loadListings(getFilters(), currentPage);
+  };
+  pagination.appendChild(prevBtn);
 }
+
+// Seitenzahlen anzeigen
+for (let i = 1; i <= totalPages; i++) {
+  const pageBtn = document.createElement("button");
+  pageBtn.textContent = i;
+  if (i === page) pageBtn.classList.add("active");
+  pageBtn.onclick = () => {
+    currentPage = i;
+    loadListings(getFilters(), currentPage);
+  };
+  pagination.appendChild(pageBtn);
+}
+
+// Weiter-Button
+if (page < totalPages) {
+  const nextBtn = document.createElement("button");
+  nextBtn.textContent = "→";
+  nextBtn.onclick = () => {
+    currentPage++;
+    loadListings(getFilters(), currentPage);
+  };
+  pagination.appendChild(nextBtn);
+}
+
+container.appendChild(pagination);
 
 function getFilters() {
   const params = new URLSearchParams(window.location.search);
