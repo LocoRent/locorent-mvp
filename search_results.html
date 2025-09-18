@@ -436,91 +436,125 @@
       return R * c;
     }
 
-    async function loadListings(filters = {}) {
-      let query = supabase.from('listings').select('*').order('created_at', { ascending: false });
+    let currentPage = 1;
+const pageSize = 20;
 
-      if (filters.title) query = query.ilike('title', `%${filters.title}%`);
-      if (filters.category) query = query.eq('category', filters.category.toLowerCase());
+async function loadListings(filters = {}, page = 1) {
+  let query = supabase.from('listings')
+    .select('*', { count: 'exact' }) // Gesamtanzahl der Ergebnisse mit abrufen
+    .order('created_at', { ascending: false });
 
-      const min = filters.minPrice ? parseFloat(filters.minPrice) : 0;
-      const max = filters.maxPrice ? parseFloat(filters.maxPrice) : null;
-      if (max !== null && !isNaN(max)) {
-        query = query.gte('price_per_day', min).lte('price_per_day', max);
-      } else {
-        query = query.gte('price_per_day', min);
-      }
+  if (filters.title) query = query.ilike('title', `%${filters.title}%`);
+  if (filters.category) query = query.eq('category', filters.category.toLowerCase());
 
-      const { data, error } = await query;
-      if (error) {
-        console.error(error);
-        return;
-      }
+  const min = filters.minPrice ? parseFloat(filters.minPrice) : 0;
+  const max = filters.maxPrice ? parseFloat(filters.maxPrice) : null;
+  if (max !== null && !isNaN(max)) {
+    query = query.gte('price_per_day', min).lte('price_per_day', max);
+  } else {
+    query = query.gte('price_per_day', min);
+  }
 
-      if (filters.location && filters.radius) {
-        const geo = await geocodeLocation(filters.location);
-        if (!geo) {
-          renderResults([]);
-          return;
-        }
-        const radius = parseFloat(filters.radius);
-        const filtered = data.filter(item => {
-          if (item.latitude && item.longitude) {
-            return getDistance(geo.lat, geo.lon, item.latitude, item.longitude) <= radius;
-          }
-          return false;
-        });
-        renderResults(filtered);
-      } else {
-        renderResults(data);
-      }
+  // LIMIT & OFFSET für Pagination
+  const from = (page - 1) * pageSize;
+  const to = from + pageSize - 1;
+  query = query.range(from, to);
+
+  const { data, count, error } = await query;
+  if (error) {
+    console.error(error);
+    return;
+  }
+
+  renderResults(data, count, page);
+}
+
+async function renderResults(items, totalCount, page) {
+  const container = document.getElementById("results");
+  container.innerHTML = "";
+
+  if (items.length === 0) {
+    container.innerHTML = "<p style='grid-column: 1/-1; text-align:center; color:#666;'>Keine Ergebnisse gefunden.</p>";
+    return;
+  }
+
+  for (const item of items) {
+    const card = document.createElement("div");
+    card.className = "result-card";
+    const isFavorite = await checkIfFavorite(item.id);
+
+    card.innerHTML = `
+      <img src="${item.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" alt="${item.title}" />
+      <h3>${item.title}</h3>
+      <div class="info">
+        <p><strong>Kategorie:</strong> ${capitalize(item.category) || 'Unbekannt'}</p>
+        <p><strong>Preis pro Tag:</strong> ${item.price_per_day || 'k. A.'} €</p>
+      </div>
+      <div class="buttons">
+        <button onclick="window.location.href='mietobjekt.html?id=${item.id}'">Details ansehen</button>
+        <button class="fav-btn">${isFavorite ? "Favorit entfernen" : "Zu Favoriten"}</button>
+      </div>
+    `;
+
+    const favBtn = card.querySelector(".fav-btn");
+    if (userSession?.user) {
+      favBtn.addEventListener("click", async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const toggled = await toggleFavorite(item.id);
+        favBtn.innerText = toggled ? "Favorit entfernen" : "Zu Favoriten";
+      });
+    } else {
+      favBtn.disabled = true;
+      favBtn.innerText = "Login erforderlich";
     }
 
-    async function renderResults(items) {
-      const container = document.getElementById("results");
-      container.innerHTML = "";
+    container.appendChild(card);
+  }
 
-      if (items.length === 0) {
-        container.innerHTML = "<p style='grid-column: 1/-1; text-align:center; color:#666;'>Keine Ergebnisse gefunden.</p>";
-        return;
-      }
+  // --- Pagination-Buttons unten ---
+  const pagination = document.createElement("div");
+  pagination.style.cssText = "grid-column:1/-1; display:flex; justify-content:center; gap:10px; margin-top:20px;";
 
-      for (const item of items) {
-        const card = document.createElement("div");
-        card.className = "result-card";
+  const totalPages = Math.ceil(totalCount / pageSize);
 
-        const isFavorite = await checkIfFavorite(item.id);
+  if (page > 1) {
+    const prevBtn = document.createElement("button");
+    prevBtn.textContent = "← Zurück";
+    prevBtn.onclick = () => {
+      currentPage--;
+      loadListings(getFilters(), currentPage);
+    };
+    pagination.appendChild(prevBtn);
+  }
 
-card.innerHTML = `
-  <img src="${item.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" alt="${item.title}" />
-  <h3>${item.title}</h3>
-  <div class="info">
-    <p><strong>Kategorie:</strong> ${capitalize(item.category) || 'Unbekannt'}</p>
-    <p><strong>Preis pro Tag:</strong> ${item.price_per_day || 'k. A.'} €</p>
-  </div>
-  <div class="buttons">
-    <button onclick="window.location.href='mietobjekt.html?id=${item.id}'">Details ansehen</button>
-    <button class="fav-btn">${isFavorite ? "Favorit entfernen" : "Zu Favoriten"}</button>
-  </div>
-`;
+  pagination.appendChild(document.createTextNode(`Seite ${page} von ${totalPages}`));
 
-        const favBtn = card.querySelector(".fav-btn");
-        if (userSession?.user) {
-          favBtn.addEventListener("click", async (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            const toggled = await toggleFavorite(item.id);
-            favBtn.innerText = toggled ? "Favorit entfernen" : "Zu Favoriten";
-          });
-        } else {
-          favBtn.disabled = true;
-          favBtn.innerText = "Login erforderlich";
-        }
+  if (page < totalPages) {
+    const nextBtn = document.createElement("button");
+    nextBtn.textContent = "Weiter →";
+    nextBtn.onclick = () => {
+      currentPage++;
+      loadListings(getFilters(), currentPage);
+    };
+    pagination.appendChild(nextBtn);
+  }
 
-        container.appendChild(card);
-      }
-    }
+  container.appendChild(pagination);
+}
 
-    init();
+function getFilters() {
+  const params = new URLSearchParams(window.location.search);
+  return {
+    title: params.get('title') || '',
+    category: params.get('category') || '',
+    minPrice: params.get('minPrice') || '',
+    maxPrice: params.get('maxPrice') || '',
+    location: params.get('location') || '',
+    radius: params.get('radius') || ''
+  };
+}
+
   </script>
 </body>
 </html>
