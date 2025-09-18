@@ -220,9 +220,11 @@
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
   }
-  nav.show {
-    display: flex;
-  }
+nav.show {
+  display: flex;
+  z-index: 999; /* sorgt dafür, dass das Menü oben angezeigt wird */
+}
+
   .burger {
     display: flex;
   }
