@@ -229,18 +229,49 @@
     display: flex;
   }
 }
+    #nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  color: white;
+  cursor: pointer;
+}
+
+@media (max-width: 720px) {
+  #nav-toggle {
+    display: block;
+  }
+
+  nav#main-nav {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  nav#main-nav.show {
+    display: flex;
+  }
+
+  nav#main-nav a {
+    margin: 0.4rem 0;
+    padding: 0.5rem 1rem;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    color: white;
+    text-decoration: none;
+  }
+}
+
   </style>
 </head>
 <body>
-<header>
-  <h1>Locorent</h1>
-  <nav id="nav-links"></nav>
-  <div class="burger" id="burger">
-    <div></div>
-    <div></div>
-    <div></div>
-  </div>
-</header>
+<button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="main-nav">☰</button>
+<nav id="main-nav" role="navigation" aria-label="Hauptnavigation">
+  <!-- Links werden per JS eingefügt -->
+</nav>
+
 
 
   <section class="hero">
@@ -362,7 +393,7 @@
     }
 
     function updateNav() {
-      const nav = document.getElementById('nav-links');
+      const nav = document.getElementById('main-nav');
       nav.innerHTML = userSession?.user ? 
         `<a href="index.html">Start</a>
          <a href="profil.html">Mein Profil</a>
@@ -562,9 +593,15 @@ card.innerHTML = `
     }
 
     init();
-    document.getElementById("burger").addEventListener("click", () => {
-  document.getElementById("nav-links").classList.toggle("show");
+const navToggle = document.getElementById('nav-toggle');
+const mainNav = document.getElementById('main-nav');
+
+navToggle.addEventListener('click', () => {
+  mainNav.classList.toggle('show');
+  const expanded = mainNav.classList.contains('show');
+  navToggle.setAttribute('aria-expanded', expanded);
 });
+
 
   </script>
 </body>
