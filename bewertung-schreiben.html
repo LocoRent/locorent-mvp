@@ -199,6 +199,82 @@
       opacity: 0.85;
     }
 
+    .stars {
+  display: flex;
+  gap: 0.5rem;
+  margin: 0.8rem 0 1rem;
+}
+
+.star {
+  font-size: 2.2rem;
+  cursor: pointer;
+  color: #ccc; /* Standard grau */
+  transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.star:hover,
+.star:focus {
+  color: gold;
+  transform: scale(1.2);
+}
+
+.star.selected {
+  color: gold; /* ausgewählte Sterne goldfarben */
+}
+
+    textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 0.8rem;
+  margin-top: 0.5rem;
+  border-radius: var(--radius);
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  resize: none;
+  transition: border-color 0.3s ease;
+}
+
+textarea:focus {
+  border-color: var(--primary);
+  outline: none;
+}
+
+    button[type="submit"] {
+  margin-top: 1rem;
+  padding: 0.7rem 1.5rem;
+  background: var(--primary);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background var(--transition), transform 0.2s ease;
+}
+
+button[type="submit"]:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+button[type="submit"]:active {
+  transform: translateY(0);
+}
+#message {
+  margin-top: 1rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+#message.success {
+  color: var(--primary-dark);
+}
+
+#message.error {
+  color: red;
+}
+
+
        @media (max-width: 720px) {
       #nav-toggle {
         display: block;
