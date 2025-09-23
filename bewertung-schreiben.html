@@ -63,14 +63,19 @@
     }
 
     #nav-toggle {
-      display: none;
-      font-size: 2rem;
-      background: none;
-      border: none;
-      color: var(--white);
-      cursor: pointer;
-    }
-
+  display: none; /* bleibt standardmäßig hidden */
+  font-size: 2rem;
+  background: none;
+  border: none;
+  color: var(--white);
+  cursor: pointer;
+  
+  /* NEU: oben rechts auf mobilen Geräten */
+  position: absolute;
+  top: 0.8rem;    /* Abstand von oben */
+  right: 1rem;    /* Abstand von rechts */
+}
+    
     nav#nav-links {
       display: flex;
       flex-wrap: wrap;
@@ -319,6 +324,32 @@
         width: 100%;
       }
     }
+
+     @media (max-width: 720px) {
+    #nav-toggle {
+      display: block;
+      position: absolute;
+      top: 0.8rem;
+      right: 1rem;
+    }
+
+    nav#nav-links {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      background-color: var(--primary);
+      display: none;
+      flex-direction: column;
+      padding: 0.5rem 1rem;
+      z-index: 1000;
+    }
+
+    nav#nav-links.show {
+      display: flex;
+    }
+  }
+    
   </style>
 </head>
 <body>
