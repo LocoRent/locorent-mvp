@@ -198,8 +198,9 @@
 </head>
 <body>
   <header>
-    <h1>Locorent</h1>
-    <nav id="nav-links"></nav>
+    <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
+    <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
+    <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
   </header>
 
   <section class="hero">
