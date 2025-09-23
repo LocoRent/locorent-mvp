@@ -176,24 +176,24 @@
       opacity: 0.85;
     }
 
-    /* --- Nur Main Container modernisieren --- */
+/* --- Nur Main Container modernisieren --- */
 main.container {
-  width: 90%;
-  max-width: 700px;      /* bleibt für große Bildschirme */
-  margin: 2rem auto 4rem auto;
+  max-width: 700px;       /* begrenzt nur main */
+  margin: 2rem auto 4rem auto;  /* zentriert nur main */
   padding: 2rem;
   background: var(--white);
   border-radius: var(--radius);
   box-shadow: 0 20px 40px rgba(0,0,0,0.08);
   transition: box-shadow 0.3s ease;
 }
-    @media (max-width: 720px) {
+
+/* Mobile bleibt 100% Breite */
+@media (max-width: 720px) {
   main.container {
-    width: 95%;   /* auf Handy fast volle Breite */
+    max-width: 95%;  /* statt width */
     padding: 1.5rem;
   }
 }
-
     main.container:hover {
       box-shadow: 0 25px 50px rgba(0,0,0,0.12);
     }
