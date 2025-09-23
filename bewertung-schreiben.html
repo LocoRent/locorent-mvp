@@ -289,18 +289,18 @@ footer small {
 /* ---------- Responsive ---------- */
 @media (max-width: 720px) {
   #nav-toggle {
-    display: block;
+    display: block;          /* Burger sichtbar */
   }
 
   nav#nav-links {
+    display: none;           /* Standardmäßig unsichtbar */
+    flex-direction: column;  /* Untereinander */
     width: 100%;
-    flex-direction: column;
-    display: none;
     margin-top: 1rem;
   }
 
   nav#nav-links.show {
-    display: flex;
+    display: flex;           /* Wird durch JS sichtbar */
   }
 
   nav#nav-links a {
@@ -309,8 +309,10 @@ footer small {
     background-color: rgba(255, 255, 255, 0.1);
     border-radius: 6px;
     display: block;
+    text-align: left;
   }
-
+}
+    
   main.container {
     width: 95%;   /* fast volle Breite auf Handy */
     padding: 1.5rem;
