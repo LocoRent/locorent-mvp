@@ -325,30 +325,32 @@
       }
     }
 
-     @media (max-width: 720px) {
-    #nav-toggle {
-      display: block;
-      position: absolute;
-      top: 0.8rem;
-      right: 1rem;
-    }
-
-    nav#nav-links {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      width: 100%;
-      background-color: var(--primary);
-      display: none;
-      flex-direction: column;
-      padding: 0.5rem 1rem;
-      z-index: 1000;
-    }
-
-    nav#nav-links.show {
-      display: flex;
-    }
+@media (max-width: 720px) {
+  #nav-toggle {
+    display: block;
+    position: relative; /* relativ zum Header */
+    margin-left: auto;  /* schiebt ihn ganz nach rechts */
+    z-index: 1010;      /* über den anderen Header-Elementen */
   }
+
+  nav#nav-links {
+    position: absolute;
+    top: 100%;          /* direkt unter dem Header */
+    right: 0;
+    width: 200px;       /* gewünschte Breite für das Menü */
+    background-color: var(--primary);
+    display: none;
+    flex-direction: column;
+    padding: 0.5rem 1rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border-radius: 0 0 var(--radius) var(--radius);
+  }
+
+  nav#nav-links.show {
+    display: flex;
+  }
+}
+
     
   </style>
 </head>
