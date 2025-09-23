@@ -62,15 +62,14 @@
       margin: 0;
     }
 
-    #nav-toggle {
-      display: none;
-      background: none;
-      border: none;
-      font-size: 1.8rem;
-      color: var(--white);
-      cursor: pointer;
-    }
-
+#nav-toggle {
+  display: none;              /* Standardmäßig unsichtbar */
+  background: none;
+  border: none;
+  font-size: 1.8rem;          /* Größe vom Burger-Icon */
+  color: var(--white);        /* weiße Farbe passend zum Header */
+  cursor: pointer;
+}
 
     nav#nav-links {
       display: flex;
@@ -268,10 +267,24 @@
       opacity: 0.85;
     }
 
-    @media (max-width: 720px) {
-      #nav-toggle {
-        display: block;
-      }
+@media (max-width: 720px) {
+  #nav-toggle {
+    display: block;           /* Auf Mobile sichtbar */
+  }
+  
+    nav.active ul {
+    display: flex;            /* Bei Klick sichtbar */
+    flex-direction: column;
+    background: var(--primary);
+    position: absolute;
+    top: 60px;                /* unterhalb des Headers */
+    right: 0;
+    left: 0;
+  }
+}
+    nav ul {
+    display: none;            /* Menü auf Mobile erstmal verstecken */
+  }
 
       header h1 {
         font-size: 1.6rem;
