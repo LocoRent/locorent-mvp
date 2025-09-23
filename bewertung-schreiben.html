@@ -48,7 +48,7 @@
       justify-content: space-between;
       align-items: center;
       font-weight: 700;
-      position: sticky;
+      position: relative;
       top: 0;
       z-index: 1000;
       box-shadow: 0 10px 20px rgba(0,0,0,0.1);
@@ -63,14 +63,15 @@
     }
 
     #nav-toggle {
-      display: none;
-      font-size: 2rem;
-      background: none;
-      border: none;
-      color: var(--white);
-      cursor: pointer;
-       margin-left: auto; /* sorgt dafür, dass der Button ganz rechts im Header sitzt */
-    }
+  position: absolute;
+  top: 0.8rem;   /* Abstand nach oben */
+  right: 1rem;   /* Abstand nach rechts */
+  font-size: 2rem;
+  background: none;
+  border: none;
+  color: var(--white);
+  cursor: pointer;
+}
 
     nav#nav-links {
       display: flex;
