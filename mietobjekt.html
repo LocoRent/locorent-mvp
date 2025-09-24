@@ -257,52 +257,87 @@
   <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
 </header>
 
-<main id="listing-details" aria-live="polite" aria-busy="true" style="max-width: 1080px; margin: 2rem auto; padding: 1rem;">
-  <div class="listing-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;">
-
+<main id="listing-details" aria-live="polite" aria-busy="true" style="max-width:1080px; margin:2rem auto; padding:1rem;">
+  <div class="listing-container" style="display:grid; grid-template-columns:1fr 1fr; gap:2rem; align-items:start;">
+    
     <!-- Galerie -->
-    <div class="gallery" style="display: flex; flex-direction: column; gap: 0.8rem;">
-      <div class="main-image-wrapper" style="position: relative; overflow: hidden; border-radius: 18px; box-shadow: 0 10px 30px rgba(46,125,50,0.1);">
-        <img id="mainImage" src="https://via.placeholder.com/600x400?text=Kein+Bild" alt="Bild des Mietobjekts" style="width:100%; display:block; transition: transform 0.3s ease;">
+    <div class="gallery" style="display:flex; flex-direction:column; gap:0.5rem;">
+      <div class="main-image-wrapper" style="overflow:hidden; border-radius:18px; box-shadow:0 8px 24px rgba(46,125,50,0.08);">
+        <img id="mainImage" src="https://via.placeholder.com/600x400?text=Kein+Bild" 
+             alt="Bild des Mietobjekts" style="width:100%; transition:transform 0.3s ease;">
       </div>
-      <div class="thumbnails" style="display:flex; gap:0.5rem; overflow-x:auto; padding-top:0.5rem;">
-        <!-- Thumbnails werden dynamisch geladen -->
-      </div>
+      <div class="thumbnails" style="display:flex; gap:0.5rem; overflow-x:auto; margin-top:0.5rem;"></div>
     </div>
 
     <!-- Details -->
-    <div class="content" style="display: flex; flex-direction: column; gap: 1rem;">
+    <div class="content" style="display:flex; flex-direction:column; gap:1rem;">
       <h2 style="font-weight:700; font-size:2rem; margin-bottom:0.5rem;">Titel des Mietobjekts</h2>
-
-      <div style="display: flex; flex-wrap: wrap; gap: 0.8rem; font-weight:600; color:#466843;">
-        <p><span style="font-weight:700;">Kategorie:</span> 🚲 Fahrräder</p>
-        <p><span style="font-weight:700;">Preis/Tag:</span> 💰 15 €</p>
-        <p><span style="font-weight:700;">Ort:</span> 📍 Berlin</p>
-        <p><span style="font-weight:700;">Online seit:</span> 🗓 24.09.2025</p>
+      <div style="display:flex; flex-wrap:wrap; gap:1rem; margin-bottom:1rem;">
+        <span style="background:var(--highlight); padding:0.5rem 1rem; border-radius:12px;">🚲 Kategorie: Fahrräder</span>
+        <span style="background:var(--highlight); padding:0.5rem 1rem; border-radius:12px;">💰 Preis/Tag: 15 €</span>
+        <span style="background:var(--highlight); padding:0.5rem 1rem; border-radius:12px;">📍 Ort: Berlin</span>
+        <span style="background:var(--highlight); padding:0.5rem 1rem; border-radius:12px;">🕒 Online seit: 24.09.2025</span>
       </div>
 
-      <p style="font-weight:700; margin-top:0.5rem;">Beschreibung:</p>
-      <div class="description" style="background:#f1f8e9; padding:1rem; border-radius:12px; box-shadow: 0 4px 12px rgba(46,125,50,0.08);">
-        Hier steht die Beschreibung des Mietobjekts. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+      <div style="background:var(--background); padding:1rem; border-radius:18px; box-shadow:0 6px 20px rgba(46,125,50,0.08);">
+        <h3 style="margin-bottom:0.5rem; font-weight:700;">Beschreibung</h3>
+        <p class="description" style="margin:0;">Hier steht die Beschreibung des Mietobjekts. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
       </div>
 
-      <!-- Buttons -->
       <div style="display:flex; gap:1rem; flex-wrap:wrap; margin-top:1rem;">
-        <button style="flex:1; padding:1rem; font-weight:700; font-size:1.1rem; border-radius:12px; border:none; background: linear-gradient(135deg,#2e7d32,#66bb6a); color:#fff; cursor:pointer; box-shadow:0 6px 20px rgba(46,125,50,0.25); transition: transform 0.2s ease;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'" onclick="goToChat()">Nachricht an Vermieter</button>
-        <button id="add-to-favorites" style="flex:1; padding:1rem; font-weight:700; font-size:1.1rem; border-radius:12px; border:none; background: linear-gradient(135deg,#66bb6a,#2e7d32); color:#fff; cursor:pointer; box-shadow:0 6px 20px rgba(46,125,50,0.25); transition: transform 0.2s ease;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'" onclick="toggleFavorite('listingId')">Zu Favoriten hinzufügen</button>
+        <button style="flex:1; font-weight:700; font-size:1.1rem; padding:1rem; border-radius:12px; border:none; background:linear-gradient(90deg,#2e7d32,#66bb6a); color:#fff; cursor:pointer; box-shadow:0 6px 16px rgba(46,125,50,0.25); transition:transform 0.2s ease, box-shadow 0.2s ease;" onclick="goToChat()">💬 Nachricht an Vermieter</button>
+        <button id="add-to-favorites" style="flex:1; font-weight:700; font-size:1.1rem; padding:1rem; border-radius:12px; border:none; background:linear-gradient(90deg,#66bb6a,#2e7d32); color:#fff; cursor:pointer; box-shadow:0 6px 16px rgba(46,125,50,0.25); transition:transform 0.2s ease, box-shadow 0.2s ease;" onclick="toggleFavorite('listingId')">⭐ Zu Favoriten hinzufügen</button>
       </div>
 
       <!-- Vermieter-Info -->
-      <div class="vendor-info" style="margin-top:2rem; padding:1rem; border-radius:18px; background:#e8f5e9; box-shadow:0 6px 20px rgba(46,125,50,0.12);">
+      <div class="vendor-info" style="margin-top:2rem; padding:1rem; border-radius:18px; background:var(--background); box-shadow:0 6px 20px rgba(46,125,50,0.08);">
         <h3 style="font-weight:700; margin-bottom:0.5rem;">Vermieter</h3>
-        <p><strong>Name:</strong> <a href="vermieter-profil.html?id=1" style="color:#2e7d32; text-decoration:underline;">Max Mustermann</a></p>
+        <p><strong>Name:</strong> Max Mustermann</p>
         <p><strong>Ort:</strong> Berlin</p>
         <p><strong>Über mich:</strong> Ich vermiete gerne mein Equipment für Kurzzeitnutzung.</p>
       </div>
-
     </div>
   </div>
+
+  <style>
+    /* Hover Zoom für Hauptbild */
+    .main-image-wrapper img:hover {
+      transform: scale(1.05);
+    }
+
+    /* Thumbnails */
+    .thumbnails img {
+      width:80px;
+      height:60px;
+      object-fit:cover;
+      border-radius:8px;
+      border:2px solid transparent;
+      cursor:pointer;
+      transition: all 0.3s ease;
+    }
+
+    .thumbnails img.active {
+      border-color: var(--primary);
+      transform: scale(1.1);
+    }
+
+    /* Buttons Hover */
+    button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(46,125,50,0.3);
+    }
+    button:active {
+      transform: translateY(0);
+    }
+
+    @media(max-width:900px){
+      .listing-container {
+        grid-template-columns:1fr;
+      }
+    }
+  </style>
 </main>
+
 
 <style>
 /* Hover-Animation für Hauptbild */
