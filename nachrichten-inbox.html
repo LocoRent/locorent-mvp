@@ -455,7 +455,8 @@ const messagesPerPage = 10;
 let allMessages = [];
 
 async function loadInbox(page = 1) {
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { session } } = await supabase.auth.getSession();
+  const user = session?.user;
   if (!user) return window.location.href = "login.html";
 
   if (allMessages.length === 0) {
