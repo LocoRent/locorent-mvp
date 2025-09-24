@@ -210,11 +210,16 @@
   </style>
 </head>
 <body>
-  <header>
-    <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
-    <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
-    <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
-  </header>
+<header>
+  <h1 onclick="location.href='index.html'" tabindex="0">Locorent</h1>
+  <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
+  <nav id="nav-links">
+    <a href="index.html">Startseite</a>
+    <a href="login.html">Einloggen</a>
+    <a href="register.html">Registrieren</a>
+  </nav>
+</header>
+
 
 <main id="listing-details" aria-live="polite" aria-busy="true">Lade Inserat...</main>
 
