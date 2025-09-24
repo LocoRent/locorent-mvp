@@ -308,31 +308,8 @@
       text-align: center;
       opacity: 0.85;
     }
-/* Desktop: Navigation sichtbar */
-nav#nav-links {
-  display: flex;           /* Navigation sichtbar */
-  flex-direction: row;     /* Links nebeneinander */
-  gap: 1rem;               /* Abstand zwischen Links */
-  margin-top: 0;
-}
-
-/* Standard: Desktop, Burger ausblenden */
-#nav-toggle {
-  display: none;
-}
 
 @media (max-width: 720px) {
-   nav#nav-links {
-    display: none;         /* versteckt, bis Burger geklickt */
-    flex-direction: column;
-    width: 100%;
-    margin-top: 1rem;
-  }
-
-  nav#nav-links.show {
-    display: flex;         /* nach Klick sichtbar */
-  }
-}
   #nav-toggle {
     display: block; /* Burger-Menü nur auf Mobile */
   }
