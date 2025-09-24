@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Mietobjekt – Locorent</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
@@ -37,6 +37,7 @@
       max-width: 100vw;
       overflow-x: hidden;
       font-family: var(--font-primary);
+      font-weight: 400;
       background: linear-gradient(to bottom, #e8f5e9 0%, #ffffff 100%);
       color: var(--text-dark);
       scroll-behavior: smooth;
@@ -113,7 +114,69 @@
       outline: none;
     }
 
-    /* ---------------- Footer ---------------- */
+    main {
+      max-width: 1080px;
+      width: 100%;
+      margin: 2rem auto 4rem auto;
+      padding: 1rem 1rem;
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: 0 12px 30px var(--shadow-light);
+    }
+
+    main h2, main h3, main h4 {
+      font-weight: 700;
+    }
+
+    p, label, span, li, a, button {
+      font-weight: 600;
+    }
+
+    .gallery {
+      margin-bottom: 1.5rem;
+    }
+
+    .gallery .main-image {
+      width: 100%;
+      border-radius: var(--radius);
+      box-shadow: 0 8px 24px var(--shadow-light);
+    }
+
+    .thumbnails {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .thumbnails img {
+      width: 80px;
+      height: 60px;
+      object-fit: cover;
+      cursor: pointer;
+      border-radius: 8px;
+      border: 2px solid transparent;
+      transition: border 0.3s ease;
+    }
+
+    .thumbnails img.active {
+      border-color: var(--primary);
+    }
+
+    .content p {
+      margin: 0.5rem 0;
+    }
+
+    .vendor-info {
+      margin-top: 2rem;
+      padding: 1rem;
+      border-radius: var(--radius);
+      background: var(--background);
+    }
+
+    button {
+      font-weight: 700;
+    }
+
     footer {
       width: 100%;
       box-sizing: border-box;
@@ -177,49 +240,22 @@
       opacity: 0.85;
     }
 
-    /* ---------------- Mobile ---------------- */
     @media (max-width: 720px) {
-      #nav-toggle {
-        display: block;
-      }
-      nav#nav-links {
-        width: 100%;
-        flex-direction: column;
-        display: none;
-        margin-top: 1rem;
-      }
-      nav#nav-links.show {
-        display: flex;
-      }
-      nav#nav-links a {
-        margin: 0.4rem 0;
-        padding: 0.5rem 1rem;
-        background-color: rgba(255, 255, 255, 0.1);
-        border-radius: 6px;
-        display: block;
-      }
-      footer > div {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      footer > div > div {
-        width: 100%;
-      }
+      #nav-toggle { display: block; }
+      nav#nav-links { width: 100%; flex-direction: column; display: none; margin-top: 1rem; }
+      nav#nav-links.show { display: flex; }
+      nav#nav-links a { margin: 0.4rem 0; padding: 0.5rem 1rem; background-color: rgba(255,255,255,0.1); border-radius: 6px; display: block; }
+      footer > div { flex-direction: column; align-items: flex-start; }
+      footer > div > div { width: 100%; }
     }
-
   </style>
 </head>
 <body>
 <header>
-  <h1 onclick="location.href='index.html'" tabindex="0">Locorent</h1>
+  <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
   <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
-  <nav id="nav-links">
-    <a href="index.html">Startseite</a>
-    <a href="login.html">Einloggen</a>
-    <a href="register.html">Registrieren</a>
-  </nav>
+  <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
 </header>
-
 
 <main id="listing-details" aria-live="polite" aria-busy="true">Lade Inserat...</main>
 
