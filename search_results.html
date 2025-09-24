@@ -229,24 +229,22 @@
 }
 
 /* --- Buttons immer unten --- */
-.result-card .buttons {
-  margin-top: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+.result-card .buttons button {
+  padding: 0.6rem;
+  width: 100%;
+  background-color: var(--primary); /* grün */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
 }
 
-    .result-card button {
-      margin-top: 1rem;
-      padding: 0.6rem;
-      width: 100%;
-      background-color: var(--primary-color);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-    }
+.result-card .buttons button:hover {
+  background-color: var(--primary-dark);
+}
+
     footer {
       width: 100%;
       box-sizing: border-box;
@@ -306,6 +304,10 @@
     }
 
     @media (max-width: 720px) {
+        .category-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 Spalten auf Smartphones */
+  }
+}
       #nav-toggle {
         display: block;
       }
