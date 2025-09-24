@@ -309,16 +309,21 @@
       opacity: 0.85;
     }
 
-@media (max-width: 720px) {
-    .category-grid {
-        grid-template-columns: 1fr; /* nur 1 Inserat pro Reihe auf Handy */
-    }
+/* Standard: Desktop, Burger ausblenden */
+#nav-toggle {
+  display: none;
 }
 
-      #nav-toggle {
-        display: block;
-      }
+/* Auf Smartphones anzeigen */
+@media (max-width: 720px) {
+  #nav-toggle {
+    display: block;
+  }
 
+  .category-grid {
+    grid-template-columns: 1fr; /* nur 1 Inserat pro Reihe auf Handy */
+  }
+  
       nav#nav-links {
         width: 100%;
         flex-direction: column;
