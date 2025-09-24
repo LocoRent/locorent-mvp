@@ -6,7 +6,7 @@
   <title>Login – Locorent</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
   <style>
-        :root {
+    :root {
       --primary: #2e7d32;
       --primary-light: #66bb6a;
       --primary-dark: #1b5e20;
@@ -23,13 +23,11 @@
       --font-primary: 'Poppins', sans-serif;
     }
 
-
     *, *::before, *::after {
       box-sizing: border-box;
       max-width: 100%;
       word-wrap: break-word;
     }
-
 
     html, body {
       margin: 0;
@@ -46,7 +44,6 @@
       min-height: 100vh;
     }
 
-
     header {
       background-color: var(--primary);
       color: var(--white);
@@ -62,14 +59,12 @@
       flex-wrap: wrap;
     }
 
-
     header h1 {
       font-size: 1.8rem;
       cursor: pointer;
       user-select: none;
       margin: 0;
     }
-
 
     #nav-toggle {
       display: none;
@@ -80,13 +75,11 @@
       cursor: pointer;
     }
 
-
     nav#nav-links {
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
     }
-
 
     nav#nav-links a {
       color: var(--white);
@@ -96,7 +89,6 @@
       position: relative;
       transition: color 0.3s ease;
     }
-
 
     nav#nav-links a::after {
       content: '';
@@ -109,12 +101,10 @@
       transition: width 0.3s ease;
     }
 
-
     nav#nav-links a:hover::after,
     nav#nav-links a:focus::after {
       width: 100%;
     }
-
 
     nav#nav-links a:hover,
     nav#nav-links a:focus {
@@ -122,17 +112,120 @@
       outline: none;
     }
 
-
-    .container {
-      max-width: 1080px;
-      width: 100%;
-      margin: 2rem auto 4rem auto;
-      padding: 1rem 1rem;
-      background: var(--white);
+    /* ---------------- Login Styles ---------------- */
+    main .container {
+      max-width: 420px;
+      background: linear-gradient(to bottom right, #ffffff, #f9fff9);
       border-radius: var(--radius);
-      box-shadow: 0 12px 30px var(--shadow-light);
+      box-shadow: 0 12px 28px rgba(46, 125, 50, 0.18);
+      padding: 3rem 2.5rem;
+      text-align: center;
+      animation: fadeIn 0.6s ease;
+      margin: 2rem auto 4rem auto;
     }
 
+    main .container h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 1.5rem;
+    }
+
+    main form label {
+      font-weight: 600;
+      display: block;
+      margin: 1.2rem 0 0.4rem;
+      color: var(--text-muted);
+      text-align: left;
+    }
+
+    main form input {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      border-radius: 10px;
+      border: 1px solid #d9e2da;
+      background: #f5f8f6;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    main form input:focus {
+      border-color: var(--primary);
+      background: #ffffff;
+      box-shadow: 0 0 0 4px rgba(46, 125, 50, 0.15);
+      outline: none;
+    }
+
+    .password-wrapper {
+      position: relative;
+    }
+
+    .password-wrapper .toggle-password {
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.2rem;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+
+    .forgot {
+      margin-top: 0.8rem;
+      text-align: right;
+    }
+    .forgot a {
+      font-size: 0.9rem;
+      color: var(--primary);
+      text-decoration: none;
+    }
+    .forgot a:hover {
+      text-decoration: underline;
+    }
+
+    main button {
+      width: 100%;
+      margin-top: 2rem;
+      padding: 1rem;
+      border-radius: 12px;
+      border: none;
+      background: linear-gradient(90deg, var(--primary), var(--primary-light));
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 16px rgba(46, 125, 50, 0.25);
+    }
+    main button:hover {
+      background: linear-gradient(90deg, var(--primary-light), var(--primary));
+      transform: translateY(-2px);
+    }
+
+    .message {
+      margin-top: 1rem;
+      padding: 0.8rem 1rem;
+      border-radius: 8px;
+      font-weight: 600;
+      text-align: center;
+    }
+    .message.error {
+      background: #ffebee;
+      color: #c62828;
+      border: 1px solid #ef5350;
+    }
+    .message.success {
+      background: #e8f5e9;
+      color: var(--primary-dark);
+      border: 1px solid var(--primary);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ---------------- Footer ---------------- */
     footer {
       width: 100%;
       box-sizing: border-box;
@@ -152,7 +245,6 @@
       margin-right: -50vw;
     }
 
-
     footer > div {
       max-width: 1200px;
       margin: 0 auto;
@@ -162,7 +254,6 @@
       gap: 2rem;
       text-align: left;
     }
-
 
     footer > div > div {
       flex: 1;
@@ -198,157 +289,35 @@
       opacity: 0.85;
     }
 
-    /* Container auffälliger */
-.container {
-  background: linear-gradient(to bottom right, #ffffff, #f9fff9);
-  border-radius: var(--radius);
-  box-shadow: 0 12px 28px rgba(46, 125, 50, 0.18);
-  padding: 3rem 2.5rem;
-  text-align: center;
-  animation: fadeIn 0.6s ease;
-}
-
-/* Überschrift */
-.container h2 {
-  font-size: 2rem;
-  font-weight: 700;
-  color: var(--primary);
-  margin-bottom: 1.5rem;
-}
-
-/* Labels & Inputs */
-form label {
-  font-weight: 600;
-  display: block;
-  margin: 1.2rem 0 0.4rem;
-  color: var(--text-muted);
-  text-align: left;
-}
-
-form input {
-  width: 100%;
-  padding: 0.85rem 1rem;
-  border-radius: 10px;
-  border: 1px solid #d9e2da;
-  background: #f5f8f6;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-}
-
-form input:focus {
-  border-color: var(--primary);
-  background: #ffffff;
-  box-shadow: 0 0 0 4px rgba(46, 125, 50, 0.15);
-  outline: none;
-}
-
-/* Passwort-Wrapper mit Icon */
-.password-wrapper {
-  position: relative;
-}
-
-.password-wrapper .toggle-password {
-  position: absolute;
-  right: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 1.2rem;
-  cursor: pointer;
-  color: var(--text-muted);
-}
-
-/* Login-Button */
-button {
-  width: 100%;
-  margin-top: 2rem;
-  padding: 1rem;
-  border-radius: 12px;
-  border: none;
-  background: linear-gradient(90deg, var(--primary), var(--primary-light));
-  color: #fff;
-  font-weight: 700;
-  font-size: 1.1rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 6px 16px rgba(46, 125, 50, 0.25);
-}
-
-button:hover {
-  background: linear-gradient(90deg, var(--primary-light), var(--primary));
-  transform: translateY(-2px);
-}
-
-/* Feedback-Meldungen schöner */
-.message {
-  margin-top: 1rem;
-  padding: 0.8rem 1rem;
-  border-radius: 8px;
-  font-weight: 600;
-  text-align: center;
-}
-
-.message.error {
-  background: #ffebee;
-  color: #c62828;
-  border: 1px solid #ef5350;
-}
-
-.message.success {
-  background: #e8f5e9;
-  color: var(--primary-dark);
-  border: 1px solid var(--primary);
-}
-
-/* sanftes Erscheinen */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(15px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-  /* Container auf Mobile verkleinern */
-@media (max-width: 720px) {
-  .container {
-    width: 90%;
-    padding: 2rem 1.5rem;
-    margin: 1.5rem auto;
-  }
-
-  header {
-    flex-wrap: nowrap;       /* verhindert, dass Logo und Button verrutschen */
-  }
-
-  header h1 {
-    font-size: 1.5rem;
-  }
-
-  #nav-toggle {
-    display: block;
-    margin-left: auto;       /* Burger nach rechts */
-  }
-
-  nav#nav-links {
-    width: 100%;
-    flex-direction: column;
-    display: none;
-    margin-top: 1rem;
-    background: var(--primary-dark);  /* damit sich das Menü abhebt */
-    padding: 1rem;
-    border-radius: 12px;
-  }
-
-  nav#nav-links.show {
-    display: flex;
-  }
-
-  nav#nav-links a {
-    margin: 0.4rem 0;
-    padding: 0.7rem 1rem;
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 6px;
-    display: block;
-  }
-}
-
+    /* ---------------- Mobile ---------------- */
+    @media (max-width: 720px) {
+      #nav-toggle {
+        display: block;
+      }
+      nav#nav-links {
+        width: 100%;
+        flex-direction: column;
+        display: none;
+        margin-top: 1rem;
+      }
+      nav#nav-links.show {
+        display: flex;
+      }
+      nav#nav-links a {
+        margin: 0.4rem 0;
+        padding: 0.5rem 1rem;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+        display: block;
+      }
+      footer > div {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      footer > div > div {
+        width: 100%;
+      }
+    }
   </style>
 </head>
 <body>
@@ -459,7 +428,8 @@ button:hover {
     const pwField = document.getElementById('password');
     pwField.type = pwField.type === 'password' ? 'text' : 'password';
   }
-    // Burger-Menü
+
+  // Burger-Menü
   document.getElementById('nav-toggle').addEventListener('click', () => {
     const nav = document.getElementById('nav-links');
     nav.classList.toggle('show');
@@ -470,4 +440,3 @@ button:hover {
 
 </body>
 </html>
-
