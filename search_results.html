@@ -8,57 +8,122 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
-      --primary-color: #2e7d32;
-      --secondary-color: #a5d6a7;
-      --background-color: #f1f8e9;
-      --dark-color: #1b5e20;
-      --highlight-color: #66bb6a;
+      --primary: #2e7d32;
+      --primary-light: #66bb6a;
+      --primary-dark: #1b5e20;
+      --background: #f1f8e9;
       --white: #fff;
-      --gray-light: #f7f7f7;
-      --gray-dark: #333;
-      --border-radius: 12px;
-      --shadow-color: rgba(0, 0, 0, 0.1);
-      --max-width: 1200px;
+      --text-dark: #0f2e13;
+      --text-muted: #466843;
+      --accent: #b9f6ca;
+      --highlight: #a5d6a7;
+      --radius: 18px;
+      --shadow-light: rgba(46, 125, 50, 0.08);
+      --shadow-strong: rgba(46, 125, 50, 0.25);
+      --transition: 0.4s ease;
+      --font-primary: 'Poppins', sans-serif;
     }
-    * {
-      margin: 0;
-      padding: 0;
+
+    *, *::before, *::after {
       box-sizing: border-box;
     }
+
     body {
-      font-family: 'Poppins', sans-serif;
-      background-color: var(--background-color);
-      color: var(--gray-dark);
-      line-height: 1.6;
+      margin: 0;
+      font-family: var(--font-primary);
+      background: linear-gradient(to bottom, #e8f5e9 0%, #ffffff 100%);
+      color: var(--text-dark);
+      scroll-behavior: smooth;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      overflow-x: hidden;
     }
+
     header {
-      background-color: var(--primary-color);
+      background-color: var(--primary);
       color: var(--white);
       padding: 1.5rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      font-weight: 700;
       position: sticky;
       top: 0;
       z-index: 1000;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      flex-wrap: wrap;
     }
-    nav a {
+
+    header h1 {
+      font-size: 1.8rem;
+      cursor: pointer;
+      user-select: none;
+      margin: 0;
+    }
+
+    #nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.8rem;
       color: var(--white);
-      margin-left: 1.5rem;
+      cursor: pointer;
+    }
+
+    nav#nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    nav#nav-links a {
+      color: var(--white);
       text-decoration: none;
       font-weight: 600;
+      font-size: 1rem;
+      position: relative;
+      transition: color 0.3s ease;
     }
-    nav a:hover {
-      border-bottom: 2px solid var(--highlight-color);
+
+    nav#nav-links a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -4px;
+      width: 0;
+      height: 2px;
+      background-color: var(--accent);
+      transition: width 0.3s ease;
     }
+
+    nav#nav-links a:hover::after,
+    nav#nav-links a:focus::after {
+      width: 100%;
+    }
+
+    nav#nav-links a:hover,
+    nav#nav-links a:focus {
+      color: var(--accent);
+      outline: none;
+    }
+
     .hero {
       background-color: var(--white);
       padding: 3rem 2rem;
-      border-radius: var(--border-radius);
-      box-shadow: 0 2px 12px var(--shadow-color);
+      border-radius: var(--radius);
+      box-shadow: 0 12px 30px rgba(46,125,50,0.1);
       margin-top: 2rem;
       text-align: center;
     }
+
+    .hero h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--primary-dark);
+    }
+
     .search-row {
       display: flex;
       flex-wrap: wrap;
