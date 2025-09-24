@@ -322,14 +322,20 @@
   .category-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr); /* 2 Inserate nebeneinander */
-    gap: 0.75rem; /* kleinerer Abstand für Mobile */
-    padding: 0 0.75rem; /* damit Grid nicht am Rand klebt */
+    gap: 0.75rem; /* Abstand zwischen den Karten */
+    padding: 0.75rem; /* Abstand links und rechts zum Bildschirmrand */
+    box-sizing: border-box; /* verhindert Überlauf */
   }
 
   .result-card {
-    width: 100%; /* volle Breite innerhalb der Grid-Zelle */
-    box-sizing: border-box; /* verhindert Überlauf */
+    width: 100%; /* passt in die Grid-Zelle */
+    box-sizing: border-box; /* Padding + Border bleiben innerhalb der Zelle */
   }
+  body {
+    margin: 0;
+    padding: 0;
+  }
+}
 
   nav#nav-links {
     width: 100%;
