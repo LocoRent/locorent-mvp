@@ -314,44 +314,46 @@
   display: none;
 }
 
-/* Auf Smartphones anzeigen */
+/* Auf Smartphones (max-width: 720px) */
 @media (max-width: 720px) {
   #nav-toggle {
-    display: block;
+    display: block; /* Burger-Menü nur auf Mobile */
   }
 
   .category-grid {
-    grid-template-columns: 1fr; /* nur 1 Inserat pro Reihe auf Handy */
+    grid-template-columns: repeat(2, 1fr); /* 2 Inserate pro Reihe */
+    gap: 1rem; /* kleinerer Abstand auf Mobile */
   }
   
-      nav#nav-links {
-        width: 100%;
-        flex-direction: column;
-        display: none;
-        margin-top: 1rem;
-      }
+  nav#nav-links {
+    width: 100%;
+    flex-direction: column;
+    display: none;
+    margin-top: 1rem;
+  }
 
-      nav#nav-links.show {
-        display: flex;
-      }
+  nav#nav-links.show {
+    display: flex;
+  }
 
-      nav#nav-links a {
-        margin: 0.4rem 0;
-        padding: 0.5rem 1rem;
-        background-color: rgba(255, 255, 255, 0.1);
-        border-radius: 6px;
-        display: block;
-      }
+  nav#nav-links a {
+    margin: 0.4rem 0;
+    padding: 0.5rem 1rem;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    display: block;
+  }
 
-      footer > div {
-        flex-direction: column;
-        align-items: flex-start;
-      }
+  footer > div {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 
-      footer > div > div {
-        width: 100%;
-      }
-    }
+  footer > div > div {
+    width: 100%;
+  }
+}
+
 
   </style>
 </head>
