@@ -143,16 +143,20 @@
       flex: 1;
       min-width: 200px;
     }
-    .search-row button {
-      background-color: var(--highlight-color);
-      color: var(--white);
-      font-weight: 600;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-    .search-row button:hover {
-      background-color: var(--secondary-color);
-    }
+.search-row button {
+  background-color: var(--primary); /* grüner Button */
+  color: var(--white);
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.search-row button:hover {
+  background-color: var(--primary-dark);
+}
+
     #suggestions {
       position: absolute;
       top: calc(100% + 5px);
@@ -174,27 +178,27 @@
     #suggestions div:hover {
       background-color: #e0f2f1;
     }
-    .category-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 2rem;
-      margin-top: 2rem;
-      max-width: var(--max-width);
-      margin-left: auto;
-      margin-right: auto;
-    }
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 2rem auto;
+}
+
+
 .result-card {
-  display: flex;                /* Inhalte in Spalten */
+  display: flex;
   flex-direction: column;
   justify-content: space-between;
   background-color: var(--white);
   border-radius: 10px;
   padding: 1.5rem;
-  box-shadow: 0 2px 8px var(--shadow-color);
-  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 8px rgba(46, 125, 50, 0.1);
   transition: transform 0.3s ease;
-  height: 100%;                 /* gleiche Höhe */
+  height: 100%; /* sorgt für gleiche Höhe innerhalb der Grid-Zellen */
 }
+
     .result-card:hover {
       transform: translateY(-3px);
       box-shadow: 0 4px 16px var(--shadow-color);
