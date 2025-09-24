@@ -305,41 +305,49 @@ button:hover {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-    @media (max-width: 720px) {
-      #nav-toggle {
-        display: block;
-      }
+  /* Container auf Mobile verkleinern */
+@media (max-width: 720px) {
+  .container {
+    width: 90%;
+    padding: 2rem 1.5rem;
+    margin: 1.5rem auto;
+  }
 
-      nav#nav-links {
-        width: 100%;
-        flex-direction: column;
-        display: none;
-        margin-top: 1rem;
-      }
+  header {
+    flex-wrap: nowrap;       /* verhindert, dass Logo und Button verrutschen */
+  }
 
-      nav#nav-links.show {
-        display: flex;
-      }
+  header h1 {
+    font-size: 1.5rem;
+  }
 
-      nav#nav-links a {
-        margin: 0.4rem 0;
-        padding: 0.5rem 1rem;
-        background-color: rgba(255, 255, 255, 0.1);
-        border-radius: 6px;
-        display: block;
-      }
+  #nav-toggle {
+    display: block;
+    margin-left: auto;       /* Burger nach rechts */
+  }
 
-      footer > div {
-        flex-direction: column;
-        align-items: flex-start;
-      }
+  nav#nav-links {
+    width: 100%;
+    flex-direction: column;
+    display: none;
+    margin-top: 1rem;
+    background: var(--primary-dark);  /* damit sich das Menü abhebt */
+    padding: 1rem;
+    border-radius: 12px;
+  }
 
-      footer > div > div {
-        width: 100%;
-      }
-    }
+  nav#nav-links.show {
+    display: flex;
+  }
 
-
+  nav#nav-links a {
+    margin: 0.4rem 0;
+    padding: 0.7rem 1rem;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    display: block;
+  }
+}
 
   </style>
 </head>
