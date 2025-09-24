@@ -342,6 +342,8 @@
     'https://flnjalgqtkqycsaymmbd.supabase.co',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
   );
+  let currentPage = 1;
+  const pageSize = 20;
 
   document.getElementById('nav-toggle').addEventListener('click', () => {
     const nav = document.getElementById('nav-links');
@@ -372,16 +374,17 @@
     `;
   }
 
-  async function loadFavorites() {
+  async function loadFavorites(page = 1) {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
       window.location.href = "login.html";
       return;
     }
 
+    // Favoriten IDs laden
     const { data: favorites, error } = await supabase
       .from('favorites')
-      .select('listing_id')
+      .select('listing_id', { count: 'exact' })
       .eq('user_id', user.id);
 
     if (error || !favorites.length) {
@@ -389,21 +392,34 @@
       return;
     }
 
-    const favoriteListings = await Promise.all(favorites.map(async (favorite) => {
-      const { data } = await supabase
-        .from('listings')
-        .select('*')
-        .eq('id', favorite.listing_id)
-        .single();
-      return data;
-    }));
+    const totalCount = favorites.length;
+    const from = (page - 1) * pageSize;
+    const to = from + pageSize;
 
-    renderFavorites(favoriteListings);
+    const pagedFavorites = favorites.slice(from, to);
+
+    const favoriteListings = await Promise.all(
+      pagedFavorites.map(async (favorite) => {
+        const { data } = await supabase
+          .from('listings')
+          .select('*')
+          .eq('id', favorite.listing_id)
+          .single();
+        return data;
+      })
+    );
+
+    renderFavorites(favoriteListings, totalCount, page);
   }
 
-  function renderFavorites(listings) {
+  function renderFavorites(listings, totalCount, page) {
     const container = document.getElementById("favorites-list");
     container.innerHTML = "";
+
+    if (listings.length === 0) {
+      container.innerHTML = "<p>Keine Favoriten auf dieser Seite.</p>";
+      return;
+    }
 
     listings.forEach(listing => {
       const card = document.createElement("div");
@@ -420,6 +436,36 @@
       `;
       container.appendChild(card);
     });
+
+    // --- Pagination hinzufügen ---
+    const pagination = document.createElement("div");
+    pagination.style.cssText = "grid-column:1/-1; display:flex; justify-content:center; gap:10px; margin-top:20px;";
+
+    const totalPages = Math.ceil(totalCount / pageSize);
+
+    if (page > 1) {
+      const prevBtn = document.createElement("button");
+      prevBtn.textContent = "← Zurück";
+      prevBtn.onclick = () => {
+        currentPage--;
+        loadFavorites(currentPage);
+      };
+      pagination.appendChild(prevBtn);
+    }
+
+    pagination.appendChild(document.createTextNode(`Seite ${page} von ${totalPages}`));
+
+    if (page < totalPages) {
+      const nextBtn = document.createElement("button");
+      nextBtn.textContent = "Weiter →";
+      nextBtn.onclick = () => {
+        currentPage++;
+        loadFavorites(currentPage);
+      };
+      pagination.appendChild(nextBtn);
+    }
+
+    container.appendChild(pagination);
   }
 
   async function removeFromFavorites(listingId, event) {
@@ -435,7 +481,7 @@
       .eq('user_id', user.id)
       .eq('listing_id', listingId);
 
-    setTimeout(loadFavorites, 300);
+    setTimeout(() => loadFavorites(currentPage), 300);
   }
 
   function capitalize(str) {
@@ -445,6 +491,3 @@
   loadFavorites();
   updateNav();
 </script>
-
-</body>
-</html>
