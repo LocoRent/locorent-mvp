@@ -198,6 +198,113 @@
       opacity: 0.85;
     }
 
+    /* Container auffälliger */
+.container {
+  background: linear-gradient(to bottom right, #ffffff, #f9fff9);
+  border-radius: var(--radius);
+  box-shadow: 0 12px 28px rgba(46, 125, 50, 0.18);
+  padding: 3rem 2.5rem;
+  text-align: center;
+  animation: fadeIn 0.6s ease;
+}
+
+/* Überschrift */
+.container h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 1.5rem;
+}
+
+/* Labels & Inputs */
+form label {
+  font-weight: 600;
+  display: block;
+  margin: 1.2rem 0 0.4rem;
+  color: var(--text-muted);
+  text-align: left;
+}
+
+form input {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  border: 1px solid #d9e2da;
+  background: #f5f8f6;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+form input:focus {
+  border-color: var(--primary);
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(46, 125, 50, 0.15);
+  outline: none;
+}
+
+/* Passwort-Wrapper mit Icon */
+.password-wrapper {
+  position: relative;
+}
+
+.password-wrapper .toggle-password {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: var(--text-muted);
+}
+
+/* Login-Button */
+button {
+  width: 100%;
+  margin-top: 2rem;
+  padding: 1rem;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(90deg, var(--primary), var(--primary-light));
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 16px rgba(46, 125, 50, 0.25);
+}
+
+button:hover {
+  background: linear-gradient(90deg, var(--primary-light), var(--primary));
+  transform: translateY(-2px);
+}
+
+/* Feedback-Meldungen schöner */
+.message {
+  margin-top: 1rem;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.message.error {
+  background: #ffebee;
+  color: #c62828;
+  border: 1px solid #ef5350;
+}
+
+.message.success {
+  background: #e8f5e9;
+  color: var(--primary-dark);
+  border: 1px solid var(--primary);
+}
+
+/* sanftes Erscheinen */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
     @media (max-width: 720px) {
       #nav-toggle {
         display: block;
