@@ -474,6 +474,9 @@
     window.location.href = `nachrichten.html?listing_id=${listingId}&with=${chatWith}`;
   }
 
+  updateNav();
+  loadListing();
+
 // Burger-Menü Toggle
 document.getElementById('nav-toggle').addEventListener('click', () => {
   const nav = document.getElementById('nav-links');
