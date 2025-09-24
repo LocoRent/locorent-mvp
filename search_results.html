@@ -314,17 +314,23 @@
   display: none;
 }
 
-/* Auf Smartphones (max-width: 720px) */
 @media (max-width: 720px) {
   #nav-toggle {
     display: block; /* Burger-Menü nur auf Mobile */
   }
 
   .category-grid {
-    grid-template-columns: repeat(2, 1fr); /* 2 Inserate pro Reihe */
-    gap: 1rem; /* kleinerer Abstand auf Mobile */
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 Inserate nebeneinander */
+    gap: 0.75rem; /* kleinerer Abstand für Mobile */
+    padding: 0 0.75rem; /* damit Grid nicht am Rand klebt */
   }
-  
+
+  .result-card {
+    width: 100%; /* volle Breite innerhalb der Grid-Zelle */
+    box-sizing: border-box; /* verhindert Überlauf */
+  }
+
   nav#nav-links {
     width: 100%;
     flex-direction: column;
