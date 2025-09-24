@@ -240,6 +240,12 @@
   font-weight: 600;
   transition: background-color 0.3s ease;
 }
+.result-card .buttons {
+  display: flex;
+  flex-direction: column; /* Buttons untereinander */
+  gap: 0.6rem; /* Abstand zwischen den Buttons */
+  margin-top: 1rem; /* Optional: Abstand nach oben */
+}
 
 .result-card .buttons button:hover {
   background-color: var(--primary-dark);
@@ -303,11 +309,12 @@
       opacity: 0.85;
     }
 
-    @media (max-width: 720px) {
-        .category-grid {
-    grid-template-columns: repeat(2, 1fr); /* 2 Spalten auf Smartphones */
-  }
+@media (max-width: 720px) {
+    .category-grid {
+        grid-template-columns: 1fr; /* nur 1 Inserat pro Reihe auf Handy */
+    }
 }
+
       #nav-toggle {
         display: block;
       }
