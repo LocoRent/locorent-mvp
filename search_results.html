@@ -308,28 +308,43 @@
       text-align: center;
       opacity: 0.85;
     }
-/* Standard für Desktop: Navigation sichtbar */
+    
+/* Desktop: Navigation sichtbar, kein Burger */
+#nav-toggle {
+  display: none; /* Burger auf Desktop ausblenden */
+}
+
 nav#nav-links {
-  display: flex;
+  display: flex;       /* Links horizontal */
   flex-wrap: wrap;
   gap: 1rem;
-  width: auto;
 }
-/* Mobile Anpassungen */
+
+/* Mobile */
 @media (max-width: 720px) {
   #nav-toggle {
     display: block; /* Burger-Menü nur auf Mobile */
   }
 
   nav#nav-links {
+    display: none;       /* standardmäßig versteckt */
     flex-direction: column;
-    display: none; /* nur mobile Navigation initial verstecken */
+    width: 100%;
     margin-top: 1rem;
   }
 
   nav#nav-links.show {
-    display: flex; /* sichtbar, wenn Burger-Menü geöffnet */
+    display: flex;       /* sichtbar nach Klick */
   }
+
+  nav#nav-links a {
+    margin: 0.4rem 0;
+    padding: 0.5rem 1rem;
+    background-color: rgba(255,255,255,0.1);
+    border-radius: 6px;
+    display: block;
+  }
+}
 
   .category-grid {
     display: grid;
