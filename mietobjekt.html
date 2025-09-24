@@ -474,20 +474,16 @@
     window.location.href = `nachrichten.html?listing_id=${listingId}&with=${chatWith}`;
   }
 
-updateNav().then(() => {
-  // Burger-Menü Toggle
-  const toggle = document.getElementById('nav-toggle');
+  updateNav();
+  loadListing();
+
+// Burger-Menü Toggle
+document.getElementById('nav-toggle').addEventListener('click', () => {
   const nav = document.getElementById('nav-links');
-
-  toggle.addEventListener('click', () => {
-    const isOpen = nav.classList.toggle('show');
-    toggle.setAttribute('aria-expanded', isOpen);
-    toggle.textContent = isOpen ? "✖" : "☰"; // Icon wechseln
-  });
+  const toggle = document.getElementById('nav-toggle');
+  const isOpen = nav.classList.toggle('show');
+  toggle.setAttribute('aria-expanded', isOpen);
 });
-
-loadListing();
-
 
 </script>
 </body>
