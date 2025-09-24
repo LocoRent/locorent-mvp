@@ -385,13 +385,40 @@
 
   const form = document.getElementById('register-form');
   const messageDiv = document.getElementById('message');
+  const emailInput = document.getElementById('email');
 
+  // Passwort Toggle
+  function togglePassword() {
+    const pwField = document.getElementById('password');
+    pwField.type = pwField.type === 'password' ? 'text' : 'password';
+  }
+  function togglePasswordConfirm() {
+    const pwField = document.getElementById('passwordConfirm');
+    pwField.type = pwField.type === 'password' ? 'text' : 'password';
+  }
+
+  // E-Mail direkt prüfen, ob schon registriert
+  emailInput.addEventListener('blur', async () => {
+    const email = emailInput.value.trim();
+    if (!email) return;
+
+    const { data, error } = await supabase.auth.getUserByEmail?.(email) || {};
+    if (data?.user) {
+      messageDiv.textContent = '❌ Diese E-Mail-Adresse ist bereits registriert.';
+      messageDiv.classList.add('error');
+    } else {
+      messageDiv.textContent = '';
+      messageDiv.classList.remove('error');
+    }
+  });
+
+  // Registrieren
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     messageDiv.textContent = '';
     messageDiv.className = 'message';
 
-    const email = document.getElementById('email').value.trim();
+    const email = emailInput.value.trim();
     const password = document.getElementById('password').value;
     const passwordConfirm = document.getElementById('passwordConfirm').value;
 
@@ -405,7 +432,11 @@
       const { data, error } = await supabase.auth.signUp({ email, password });
 
       if (error) {
-        messageDiv.textContent = '❌ ' + error.message;
+        if (error.message.includes("already registered")) {
+          messageDiv.textContent = '❌ Diese E-Mail-Adresse ist bereits registriert. Bitte einloggen.';
+        } else {
+          messageDiv.textContent = '❌ ' + error.message;
+        }
         messageDiv.classList.add('error');
       } else {
         messageDiv.textContent = '✅ Registrierung erfolgreich! Bitte E-Mail bestätigen.';
@@ -420,16 +451,6 @@
     }
   });
 
-  function togglePassword() {
-    const pwField = document.getElementById('password');
-    pwField.type = pwField.type === 'password' ? 'text' : 'password';
-  }
-
-  function togglePasswordConfirm() {
-    const pwField = document.getElementById('passwordConfirm');
-    pwField.type = pwField.type === 'password' ? 'text' : 'password';
-  }
-
   // Burger-Menü
   document.getElementById('nav-toggle').addEventListener('click', () => {
     const nav = document.getElementById('nav-links');
@@ -441,4 +462,3 @@
 
 </body>
 </html>
-
