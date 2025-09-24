@@ -37,7 +37,7 @@
       max-width: 100vw;
       overflow-x: hidden;
       font-family: var(--font-primary);
-      font-weight: 400;
+      font-weight: 400; /* Standardtext normal */
       background: linear-gradient(to bottom, #e8f5e9 0%, #ffffff 100%);
       color: var(--text-dark);
       scroll-behavior: smooth;
@@ -66,6 +66,7 @@
       cursor: pointer;
       user-select: none;
       margin: 0;
+      font-weight: 700; /* wie Login */
     }
 
     #nav-toggle {
@@ -86,7 +87,7 @@
     nav#nav-links a {
       color: var(--white);
       text-decoration: none;
-      font-weight: 600;
+      font-weight: 700; /* wie Login */
       font-size: 1rem;
       position: relative;
       transition: color 0.3s ease;
@@ -114,7 +115,7 @@
       outline: none;
     }
 
-    main {
+    .container {
       max-width: 1080px;
       width: 100%;
       margin: 2rem auto 4rem auto;
@@ -124,57 +125,72 @@
       box-shadow: 0 12px 30px var(--shadow-light);
     }
 
-    main h2, main h3, main h4 {
-      font-weight: 700;
-    }
-
-    p, label, span, li, a, button {
-      font-weight: 600;
-    }
-
+    /* Galerie */
     .gallery {
-      margin-bottom: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
     }
-
-    .gallery .main-image {
+    .main-image {
       width: 100%;
       border-radius: var(--radius);
-      box-shadow: 0 8px 24px var(--shadow-light);
+      box-shadow: 0 6px 16px var(--shadow-light);
     }
-
     .thumbnails {
       display: flex;
       gap: 0.5rem;
-      margin-top: 0.5rem;
+      overflow-x: auto;
     }
-
     .thumbnails img {
       width: 80px;
       height: 60px;
       object-fit: cover;
+      border-radius: var(--radius);
       cursor: pointer;
-      border-radius: 8px;
       border: 2px solid transparent;
       transition: border 0.3s ease;
     }
-
     .thumbnails img.active {
       border-color: var(--primary);
     }
 
+    /* Inhalte */
+    .content h2 {
+      font-weight: 700; /* wie Login */
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
     .content p {
-      margin: 0.5rem 0;
+      font-weight: 400; /* Standardtext normal */
+      margin: 0.3rem 0;
     }
 
-    .vendor-info {
-      margin-top: 2rem;
-      padding: 1rem;
-      border-radius: var(--radius);
-      background: var(--background);
+    button, #add-to-favorites {
+      font-family: var(--font-primary);
+      font-weight: 700; /* wie Login */
+      font-size: 1.1rem;
+      padding: 0.8rem 1rem;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      background: linear-gradient(90deg, var(--primary), var(--primary-light));
+      color: #fff;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 16px rgba(46, 125, 50, 0.25);
+    }
+    button:hover, #add-to-favorites:hover {
+      background: linear-gradient(90deg, var(--primary-light), var(--primary));
+      transform: translateY(-2px);
     }
 
-    button {
+    .vendor-info h3 {
       font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+    .vendor-info p {
+      font-weight: 400;
+      margin: 0.2rem 0;
     }
 
     footer {
@@ -212,39 +228,20 @@
     }
 
     footer h4 {
-      margin-bottom: 0.5rem;
       font-weight: 700;
       font-size: 1.1rem;
     }
 
-    footer ul {
-      list-style: none;
-      padding: 0;
-      line-height: 1.8;
-    }
-
     footer ul li a {
-      color: var(--white);
+      font-weight: 400;
       text-decoration: underline;
-      transition: color 0.3s ease;
-    }
-
-    footer ul li a:hover {
-      color: var(--accent);
-    }
-
-    footer small {
-      display: block;
-      margin-top: 2rem;
-      text-align: center;
-      opacity: 0.85;
     }
 
     @media (max-width: 720px) {
       #nav-toggle { display: block; }
       nav#nav-links { width: 100%; flex-direction: column; display: none; margin-top: 1rem; }
       nav#nav-links.show { display: flex; }
-      nav#nav-links a { margin: 0.4rem 0; padding: 0.5rem 1rem; background-color: rgba(255,255,255,0.1); border-radius: 6px; display: block; }
+      nav#nav-links a { margin: 0.4rem 0; padding: 0.5rem 1rem; display: block; }
       footer > div { flex-direction: column; align-items: flex-start; }
       footer > div > div { width: 100%; }
     }
@@ -252,14 +249,21 @@
 </head>
 <body>
 <header>
-  <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
+  <h1 onclick="location.href='index.html'" tabindex="0">Locorent</h1>
   <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
-  <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
+  <nav id="nav-links">
+    <a href="index.html">Start</a>
+    <a href="profil.html">Mein Profil</a>
+    <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+    <a href="favoriten.html">Meine Favoriten</a>
+    <a href="inserate.html">Meine Inserate</a>
+    <a href="javascript:void(0);" onclick="logout()">Logout</a>
+  </nav>
 </header>
 
 <main id="listing-details" aria-live="polite" aria-busy="true">Lade Inserat...</main>
 
-<footer role="contentinfo">
+<footer>
   <div>
     <section aria-labelledby="footer-rent-title">
       <h4 id="footer-rent-title">Mieten &amp; Vermieten</h4>
@@ -283,14 +287,14 @@
       <ul>
         <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
         <li><a href="social-media.html">Folgen Sie uns</a></li>
-        <li><a href="mission.html">Unsere Mission</a></li>
       </ul>
     </section>
   </div>
-  <div class="copyright" aria-label="Copyright">
+  <div class="copyright">
     © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
   </div>
 </footer>
+
 <script>
   const supabase = window.supabase.createClient(
     'https://flnjalgqtkqycsaymmbd.supabase.co',
