@@ -322,16 +322,17 @@
   .category-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr); /* 2 Inserate nebeneinander */
-    gap: 0.75rem; /* kleiner Abstand zwischen Karten */
+    gap: 0.75rem; /* Abstand zwischen Karten */
     padding: 0 0.75rem; /* Abstand links/rechts */
     margin: 2rem 0; /* optional: Abstand oben/unten */
-    max-width: 100%; /* wichtig: kein Overflow */
-    box-sizing: border-box;
+    max-width: 100%; /* <--- verhindert, dass Grid breiter als Viewport wird */
+    box-sizing: border-box; /* wichtig */
+    overflow: hidden; /* verhindert Scrollen nach rechts */
   }
 
   .result-card {
-    width: 100%; /* volle Breite innerhalb der Grid-Zelle */
-    box-sizing: border-box; /* verhindert Überlauf */
+    width: 100%;
+    box-sizing: border-box;
   }
 
   nav#nav-links {
@@ -362,6 +363,7 @@
     width: 100%;
   }
 }
+
   </style>
 </head>
 <body>
