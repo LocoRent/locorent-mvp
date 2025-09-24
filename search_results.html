@@ -322,20 +322,17 @@
   .category-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr); /* 2 Inserate nebeneinander */
-    gap: 0.75rem; /* Abstand zwischen den Karten */
-    padding: 0.75rem; /* Abstand links und rechts zum Bildschirmrand */
-    box-sizing: border-box; /* verhindert Überlauf */
+    gap: 0.75rem; /* kleiner Abstand zwischen Karten */
+    padding: 0 0.75rem; /* Abstand links/rechts */
+    margin: 2rem 0; /* optional: Abstand oben/unten */
+    max-width: 100%; /* wichtig: kein Overflow */
+    box-sizing: border-box;
   }
 
   .result-card {
-    width: 100%; /* passt in die Grid-Zelle */
-    box-sizing: border-box; /* Padding + Border bleiben innerhalb der Zelle */
+    width: 100%; /* volle Breite innerhalb der Grid-Zelle */
+    box-sizing: border-box; /* verhindert Überlauf */
   }
-  body {
-    margin: 0;
-    padding: 0;
-  }
-}
 
   nav#nav-links {
     width: 100%;
@@ -365,8 +362,6 @@
     width: 100%;
   }
 }
-
-
   </style>
 </head>
 <body>
