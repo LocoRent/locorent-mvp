@@ -474,12 +474,6 @@
     window.location.href = `nachrichten.html?listing_id=${listingId}&with=${chatWith}`;
   }
 
-  updateNav();
-  loadListing();
-      document.getElementById('comment').addEventListener('input', e => {
-      document.getElementById('charCount').textContent = e.target.value.length;
-      message.textContent = '';
-    });
 // Burger-Menü Toggle
 document.getElementById('nav-toggle').addEventListener('click', () => {
   const nav = document.getElementById('nav-links');
