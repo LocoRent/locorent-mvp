@@ -495,63 +495,43 @@ async function loadListing() {
   const categoryCapitalized = capitalize(listing.category);
   const createdAtFormatted = formatDate(listing.created_at);
   const images = listing.image_urls || (listing.image_url ? [listing.image_url] : []);
-  const thumbs = images.map((url, i) =>
-    `<img src="${url}" class="${i === 0 ? 'active' : ''}" alt="Vorschaubild ${i + 1}" tabindex="0"
+
+  // Titel & Details
+  document.getElementById('listing-title').textContent = listing.title;
+  document.getElementById('listing-category').textContent = "Kategorie: " + categoryCapitalized;
+  document.getElementById('listing-price').textContent = "Preis/Tag: " + listing.price_per_day + " €";
+  document.getElementById('listing-location').textContent = "Ort: " + (listing.location || "–");
+  document.getElementById('listing-date').textContent = "Online seit: " + createdAtFormatted;
+  document.getElementById('listing-description').textContent = listing.description || "Keine Beschreibung vorhanden.";
+
+  // Hauptbild
+  const mainImage = document.getElementById('mainImage');
+  mainImage.src = images[0] || 'https://via.placeholder.com/600x400?text=Kein+Bild';
+
+  // Thumbnails
+  const thumbsContainer = document.querySelector('.thumbnails');
+  thumbsContainer.innerHTML = images.map((url, i) =>
+    `<img src="${url}" class="${i === 0 ? 'active' : ''}" alt="Vorschaubild ${i+1}" tabindex="0"
       onclick="switchImage('${url}', this)"
       onkeydown="if(event.key==='Enter'||event.key===' ') {switchImage('${url}', this);}">`
   ).join('');
 
-  document.getElementById('listing-details').innerHTML = `
-    <div style="display:flex; flex-wrap:wrap; gap:2rem;">
-      
-      <!-- Galerie -->
-      <div style="flex:1 1 500px;">
-        <img id="mainImage" src="${images[0] || 'https://via.placeholder.com/600x400?text=Kein+Bild'}" 
-          alt="Bild des Mietobjekts" 
-          style="width:100%; border-radius:18px; box-shadow:0 8px 24px rgba(46,125,50,0.08); margin-bottom:0.5rem;">
-        ${images.length > 1 ? `<div class="thumbnails" style="display:flex; gap:0.5rem; overflow-x:auto;">${thumbs}</div>` : ''}
-      </div>
+  // Vermieter-Info
+  document.getElementById('vendor-name').innerHTML = `<strong>Name:</strong> <a href="vermieter-profil.html?id=${listing.user_id}">${profile?.name || '–'}</a>`;
+  document.getElementById('vendor-city').textContent = "Ort: " + (profile?.city || "–");
+  document.getElementById('vendor-bio').textContent = "Über mich: " + (profile?.bio || "–");
 
-      <!-- Details -->
-      <div style="flex:1 1 450px; display:flex; flex-direction:column; gap:1rem;">
-        <h2 style="font-size:2rem; font-weight:700; margin-bottom:0.5rem;">${listing.title}</h2>
-        <div style="display:flex; flex-wrap:wrap; gap:1rem;">
-          <p><strong>Kategorie:</strong> ${categoryCapitalized}</p>
-          <p><strong>Preis/Tag:</strong> ${listing.price_per_day} €</p>
-          <p><strong>Ort:</strong> ${listing.location || '–'}</p>
-          <p><strong>Online seit:</strong> ${createdAtFormatted}</p>
-        </div>
-        <p><strong>Beschreibung:</strong></p>
-        <p style="background:#f1f8e9; padding:1rem; border-radius:12px;">${listing.description || 'Keine Beschreibung vorhanden.'}</p>
-
-        <div style="display:flex; gap:1rem; flex-wrap:wrap; margin-top:1rem;">
-          <button style="flex:1; font-weight:700; font-size:1.1rem; padding:1rem; border-radius:12px; border:none; background:linear-gradient(90deg,#2e7d32,#66bb6a); color:#fff; cursor:pointer; box-shadow:0 6px 16px rgba(46,125,50,0.25);" onclick="goToChat()">Nachricht an Vermieter</button>
-          ${currentUser ? `<button id="add-to-favorites" style="flex:1; font-weight:700; font-size:1.1rem; padding:1rem; border-radius:12px; border:none; background:linear-gradient(90deg,#66bb6a,#2e7d32); color:#fff; cursor:pointer; box-shadow:0 6px 16px rgba(46,125,50,0.25);" onclick="toggleFavorite('${listing.id}')">Lade Favoritenstatus...</button>` : ''}
-        </div>
-
-        <!-- Vermieter Card -->
-        <div style="margin-top:2rem; padding:1.5rem; border-radius:18px; background:#e8f5e9; box-shadow:0 4px 16px rgba(46,125,50,0.12);">
-          <h3 style="font-weight:700; margin-bottom:0.5rem;">Vermieter</h3>
-          <p><strong>Name:</strong> <a href="vermieter-profil.html?id=${listing.user_id}">${profile?.name || '–'}</a></p>
-          <p><strong>Ort:</strong> ${profile?.city || '–'}</p>
-          <p><strong>Über mich:</strong> ${profile?.bio || '–'}</p>
-        </div>
-      </div>
-
-    </div>
-  `;
-
+  // Favoritenbutton
   if (currentUser) await updateFavoriteButton(listing.id);
 }
 
+// Bild wechseln Funktion
+function switchImage(url, thumb) {
+  document.getElementById('mainImage').src = url;
+  document.querySelectorAll('.thumbnails img').forEach(img => img.classList.remove('active'));
+  thumb.classList.add('active');
+}
 
-  function goToChat() {
-    if (!currentUser) return alert("Bitte einloggen, um Nachrichten zu senden.");
-    const params = new URLSearchParams(location.search);
-    const listingId = params.get('id');
-    const chatWith = listingOwnerId;
-    window.location.href = `nachrichten.html?listing_id=${listingId}&with=${chatWith}`;
-  }
 
   updateNav();
   loadListing();
