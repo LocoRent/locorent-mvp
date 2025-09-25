@@ -285,24 +285,25 @@
     display: block;
     color: var(--white);
   }
-  .result-card .info {
-    display: flex;
-    flex-direction: column; /* zwingt die Elemente untereinander */
-    width: 100%;
-    gap: 0.25rem;
-  }
 
-  .result-card .info p {
-    width: 100%;          /* volle Breite */
-    white-space: normal;  /* Textumbruch zulassen */
-    margin: 0;
-  }
   .category-grid {
     grid-template-columns: repeat(2, 1fr); /* Mobile: 2 Inserate pro Reihe */
     gap: 1rem;
     transform: translateX(-0.25rem);
   }
+  .result-card .info {
+    display: flex !important;
+    flex-direction: column !important; /* vertikal */
+    width: 100%;
+    gap: 0.25rem; /* Abstand zwischen Kategorie und Preis */
+  }
 
+  .result-card .info p {
+    width: 100% !important;
+    margin: 0 !important;
+    white-space: normal !important; /* Textumbruch erlauben */
+    display: block !important;
+  }
   .result-card img {
     height: 140px;
   }
