@@ -16,14 +16,28 @@
     --text-dark: #0f2e13;
     --text-muted: #466843;
     --accent: #b9f6ca;
+    --highlight: #a5d6a7;
     --radius: 18px;
     --shadow-light: rgba(46, 125, 50, 0.08);
     --shadow-strong: rgba(46, 125, 50, 0.25);
     --transition: 0.4s ease;
     --font-primary: 'Poppins', sans-serif;
   }
-  *, *::before, *::after { box-sizing: border-box; margin:0; padding:0; }
-  body { font-family: var(--font-primary); background: var(--background); color: var(--text-dark); min-height:100vh; display:flex; flex-direction:column; }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    font-family: var(--font-primary);
+    background: var(--background);
+    color: var(--text-dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
   header {
     background-color: var(--primary);
     color: var(--white);
@@ -38,107 +52,176 @@
     box-shadow: 0 10px 20px rgba(0,0,0,0.1);
     flex-wrap: wrap;
   }
-  header h1 { font-size:1.8rem; cursor:pointer; user-select:none; }
-  #nav-toggle { display:none; background:none; border:none; font-size:1.8rem; color:var(--white); cursor:pointer; }
-  nav#nav-links { display:flex; flex-wrap:wrap; gap:1rem; }
+
+  header h1 { font-size: 1.8rem; cursor: pointer; user-select: none; margin: 0; }
+
+  #nav-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    color: var(--white);
+    cursor: pointer;
+  }
+
+  nav#nav-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
   nav#nav-links a {
     color: var(--white);
-    text-decoration:none;
-    font-weight:600;
-    font-size:1rem;
-    position:relative;
-    transition:color 0.3s ease;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    position: relative;
+    transition: color 0.3s ease;
   }
+
   nav#nav-links a::after {
-    content:'';
-    position:absolute;
-    left:0;
-    bottom:-4px;
-    width:0;
-    height:2px;
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -4px;
+    width: 0;
+    height: 2px;
     background-color: var(--accent);
     transition: width 0.3s ease;
   }
-  nav#nav-links a:hover::after,
-  nav#nav-links a:focus::after { width:100%; }
-  nav#nav-links a:hover,
-  nav#nav-links a:focus { color: var(--accent); outline:none; }
 
-  main { display:flex; flex-wrap:wrap; justify-content:center; gap:2rem; padding:2rem; width:100%; flex-grow:1; }
+  nav#nav-links a:hover::after, nav#nav-links a:focus::after { width: 100%; }
+  nav#nav-links a:hover, nav#nav-links a:focus { color: var(--accent); outline: none; }
 
-  .gallery { flex:2 1 500px; min-width:300px; }
-  .main-image { width:100%; max-height:500px; object-fit:contain; border-radius:var(--radius); box-shadow:0 4px 14px rgba(0,0,0,0.12); cursor:pointer; transition:transform 0.3s ease; }
-  .main-image:hover { transform:scale(1.03); }
-  .thumbnails { display:flex; gap:0.5rem; margin-top:1rem; overflow-x:auto; padding-bottom:6px; }
-  .thumbnails img { width:100px; height:70px; object-fit:cover; border-radius:8px; border:3px solid transparent; cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,0.08); transition:border-color 0.3s ease; flex-shrink:0; }
-  .thumbnails img.active { border-color: var(--primary); box-shadow:0 0 10px var(--primary); }
+  @media (max-width: 720px) {
+    #nav-toggle { display: block; }
+    nav#nav-links {
+      width: 100%;
+      flex-direction: column;
+      display: none;
+      margin-top: 1rem;
+    }
+    nav#nav-links.show { display: flex; }
+    nav#nav-links a {
+      margin: 0.4rem 0;
+      padding: 0.5rem 1rem;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      display: block;
+      color: var(--white);
+    }
+  }
 
-  .content { flex:1 1 300px; min-width:280px; display:flex; flex-direction:column; gap:1rem; }
-  .content h2 { font-size:2rem; font-weight:700; color:var(--primary); }
-  .content p { font-size:1rem; color:var(--text-muted); }
-  .content p strong { color: var(--primary-dark); }
-  .description { background:#fff; padding:1rem; border-radius:var(--radius); box-shadow:0 2px 10px rgba(0,0,0,0.05); max-height:200px; overflow-y:auto; color:#555; }
+  main {
+    width: 100%;
+    max-width: 1200px;
+    margin: 2rem auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+    padding: 0 1rem;
+  }
+
+  @media (max-width: 900px) {
+    main { grid-template-columns: 1fr; }
+  }
+
+  .gallery { display: flex; flex-direction: column; gap: 1rem; }
+  .main-image { width: 100%; height: 400px; object-fit: cover; border-radius: var(--radius); box-shadow: 0 2px 12px var(--shadow-light); cursor: pointer; transition: transform 0.3s; }
+  .main-image:hover { transform: scale(1.02); }
+  .thumbnails { display: flex; gap: 0.5rem; overflow-x: auto; }
+  .thumbnails img { width: 100px; height: 70px; object-fit: cover; border-radius: 12px; cursor: pointer; border: 3px solid transparent; }
+  .thumbnails img.active { border-color: var(--primary); box-shadow: 0 0 10px var(--primary); }
+
+  .content, .vendor-info {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: 0 2px 12px var(--shadow-light);
+    padding: 1rem 1.5rem;
+  }
+
+  .content h2 { color: var(--primary); font-size: 1.8rem; margin-bottom: 0.5rem; }
+  .content p { margin: 0.4rem 0; color: var(--text-muted); }
+  .description { background: #f5f5f5; padding: 0.8rem; border-radius: 12px; max-height: 200px; overflow-y: auto; }
 
   button {
-    padding:0.6rem 0;
-    background:var(--primary);
-    color:var(--white);
-    border:none;
-    border-radius:8px;
-    font-weight:600;
-    font-size:1rem;
-    cursor:pointer;
-    transition:background-color 0.3s ease;
-    margin-top:0.5rem;
+    padding: 0.6rem 1rem;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: 0.3s;
+    margin-top: 0.5rem;
   }
-  button:hover { background:var(--primary-light); color:var(--primary-dark); }
-  .btn-favorite { background:#c62828; }
-  .btn-favorite:hover { background:#b71c1c; }
 
-  .vendor-info {
-    flex:1 1 280px;
-    background:#fff;
-    padding:1rem;
-    border-radius:var(--radius);
-    box-shadow:0 2px 10px rgba(0,0,0,0.08);
-  }
-  .vendor-info h3 { color:var(--primary); margin-bottom:0.5rem; }
-  .vendor-info a { color:var(--primary); text-decoration:underline; }
+  .btn-favorite { background: #c62828; color: #fff; }
+  .btn-favorite:hover { background: #b71c1c; }
+
+  .btn-chat { background: var(--primary); color: #fff; }
+  .btn-chat:hover { background: var(--primary-light); color: var(--primary-dark); }
 
   footer {
-    background:var(--primary);
-    color:var(--white);
-    padding:2rem;
-    text-align:center;
-    box-shadow:0 -2px 12px rgba(0,0,0,0.15);
+    background-color: var(--primary);
+    color: var(--white);
+    padding: 2rem;
+    margin-top: auto;
+    box-shadow: 0 -2px 12px rgba(46, 125, 50, 0.2);
+    width: 100%;
   }
 
-  @media(max-width:720px){
-    #nav-toggle { display:block; }
-    nav#nav-links { width:100%; flex-direction:column; display:none; margin-top:1rem; }
-    nav#nav-links.show { display:flex; }
-    nav#nav-links a { margin:0.4rem 0; padding:0.5rem 1rem; background:rgba(255,255,255,0.1); border-radius:6px; display:block; }
-    main { flex-direction:column; padding:1rem; }
-    .thumbnails img { width:70px; height:50px; }
-    .main-image { max-height:280px; }
-    button { font-size:0.9rem; padding:0.5rem 0; }
+  footer > div { max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2rem; }
+  footer h4 { margin-bottom: 0.5rem; font-weight: 700; }
+  footer ul { list-style: none; padding: 0; line-height: 1.8; }
+  footer ul li a { color: var(--white); text-decoration: underline; }
+  footer ul li a:hover { color: var(--highlight); }
+  footer small { display: block; margin-top: 2rem; text-align: center; opacity: 0.85; }
+
+  @media (max-width: 720px) {
+    .thumbnails img { width: 70px; height: 50px; }
+    .main-image { height: 200px; }
+    button { font-size: 0.9rem; padding: 0.4rem 0.6rem; }
   }
 </style>
 </head>
 <body>
-
 <header>
   <h1 tabindex="0" onclick="location.href='index.html'">Locorent</h1>
   <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
   <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
 </header>
 
-<main id="listing-details" aria-live="polite" aria-busy="true">
-  Lade Inserat...
-</main>
+<main id="listing-details">Lade Inserat…</main>
 
-<footer role="contentinfo">
-  © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
+<footer>
+  <div>
+    <div>
+      <h4>Mieten &amp; Vermieten</h4>
+      <ul>
+        <li><a href="so-funktionierts.html">So funktioniert's</a></li>
+        <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
+        <li><a href="kategorien.html">Beliebte Kategorien</a></li>
+        <li><a href="vermieter-tipps.html">Tipps &amp; Tricks für Vermieter</a></li>
+        <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Wissenswertes</h4>
+      <ul>
+        <li><a href="agb.html">AGB &amp; Impressum</a></li>
+        <li><a href="datenschutz.html">Datenschutz</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Über uns</h4>
+      <ul>
+        <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
+        <li><a href="social-media.html">Folgen Sie uns</a></li>
+        <li><a href="mission.html">Unsere Mission</a></li>
+      </ul>
+    </div>
+  </div>
+  <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
 </footer>
 
 <script>
@@ -147,70 +230,58 @@ const supabase = window.supabase.createClient(
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
 );
 
-let currentUser=null, listingOwnerId=null, isFavorite=false;
+let currentUser = null;
+let listingOwnerId = null;
+let isFavorite = false;
 
-document.getElementById('nav-toggle').addEventListener('click', ()=>{
-  const nav=document.getElementById('nav-links');
+document.getElementById('nav-toggle').addEventListener('click', () => {
+  const nav = document.getElementById('nav-links');
   nav.classList.toggle('show');
   document.getElementById('nav-toggle').setAttribute('aria-expanded', nav.classList.contains('show'));
 });
 
-async function updateNav(){
-  const { data:{session} } = await supabase.auth.getSession();
-  const nav=document.getElementById('nav-links');
+async function updateNav() {
+  const { data: { session } } = await supabase.auth.getSession();
+  const nav = document.getElementById('nav-links');
   if(session?.user){
-    currentUser=session.user;
-    nav.innerHTML=`
-      <a href="index.html">Start</a>
-      <a href="profil.html">Mein Profil</a>
-      <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-      <a href="favoriten.html">Meine Favoriten</a>
-      <a href="inserate.html">Meine Inserate</a>
-      <a href="#" onclick="logout()">Logout</a>
-    `;
+    nav.innerHTML = `<a href="index.html">Start</a><a href="profil.html">Mein Profil</a><a href="nachrichten-inbox.html">📨 Nachrichten</a><a href="favoriten.html">Meine Favoriten</a><a href="inserate.html">Meine Inserate</a><a href="#" onclick="logout()">Logout</a>`;
+    currentUser = session.user;
   } else {
-    nav.innerHTML=`<a href="login.html">Einloggen</a><a href="register.html">Registrieren</a>`;
+    nav.innerHTML = `<a href="login.html">Einloggen</a><a href="register.html">Registrieren</a>`;
   }
 }
 
-async function logout(){ await supabase.auth.signOut(); window.location.href="login.html"; }
-function capitalize(str){ return str? str.charAt(0).toUpperCase()+str.slice(1):''; }
-function formatDate(dateStr){ if(!dateStr)return'Unbekannt'; const d=new Date(dateStr); return d.toLocaleDateString('de-DE',{year:'numeric',month:'long',day:'numeric'}); }
+async function logout() { await supabase.auth.signOut(); window.location.href="login.html"; }
 
-async function incrementViews(listingId){
-  const { data, error } = await supabase.from('listings').select('views').eq('id',listingId).single();
-  if(error||!data) return;
-  const newViews=(data.views||0)+1;
-  await supabase.from('listings').update({views:newViews}).eq('id',listingId);
-}
+function capitalize(str){ return str ? str.charAt(0).toUpperCase() + str.slice(1) : ''; }
+function formatDate(dateStr){ if(!dateStr) return 'Unbekannt'; const d=new Date(dateStr); return d.toLocaleDateString('de-DE',{year:'numeric',month:'long',day:'numeric'}); }
 
 async function loadListing(){
-  const params=new URLSearchParams(location.search);
-  const listingId=params.get('id');
+  const params = new URLSearchParams(location.search);
+  const listingId = params.get('id');
   const { data: listing, error } = await supabase.from('listings').select('*').eq('id',listingId).single();
-  if(error||!listing){ document.getElementById('listing-details').innerHTML="<p>Fehler beim Laden des Inserats.</p>"; return; }
-  listingOwnerId=listing.user_id;
-
+  if(error || !listing){ document.getElementById('listing-details').innerHTML="<p>Fehler beim Laden des Inserats.</p>"; return; }
+  listingOwnerId = listing.user_id;
   const { data: profile } = await supabase.from('profiles').select('name, city, bio').eq('id', listing.user_id).single();
-  await incrementViews(listingId);
-
-  const images=listing.image_urls || (listing.image_url?[listing.image_url]:[]);
-  const thumbs=images.map((url,i)=>`<img src="${url}" class="${i===0?'active':''}" alt="Vorschaubild ${i+1}" tabindex="0" onclick="switchImage('${url}', this)" onkeydown="if(event.key==='Enter'||event.key===' '){switchImage('${url}',this);}">`).join('');
-
+  const categoryCapitalized = capitalize(listing.category);
+  const createdAtFormatted = formatDate(listing.created_at);
+  const images = listing.image_urls || (listing.image_url?[listing.image_url]:[]);
+  const thumbs = images.map((url,i)=>`<img src="${url}" class="${i===0?'active':''}" alt="Vorschaubild ${i+1}" tabindex="0" onclick="switchImage('${url}',this)">`).join('');
   document.getElementById('listing-details').innerHTML=`
     <div class="gallery">
-      <img src="${images[0]||'https://via.placeholder.com/600x400?text=Kein+Bild'}" class="main-image" id="mainImage" alt="Bild des Mietobjekts" tabindex="0" />
+      <img src="${images[0]||'https://via.placeholder.com/600x400?text=Kein+Bild'}" class="main-image" id="mainImage" alt="Bild des Mietobjekts"/>
       ${images.length>1?`<div class="thumbnails">${thumbs}</div>`:''}
     </div>
     <div class="content">
       <h2>${listing.title}</h2>
-      <p><strong>Kategorie:</strong> ${capitalize(listing.category)}</p>
+      <p><strong>Kategorie:</strong> ${categoryCapitalized}</p>
       <p><strong>Preis pro Tag:</strong> ${listing.price_per_day} €</p>
       <p><strong>Ort:</strong> ${listing.location||'–'}</p>
-      <p><strong>Online seit:</strong> ${formatDate(listing.created_at)}</p>
+      <p><strong>Online seit:</strong> ${createdAtFormatted}</p>
+      <p><strong>Beschreibung:</strong></p>
       <p class="description">${listing.description||'Keine Beschreibung vorhanden.'}</p>
-      <button onclick="goToChat()">Nachricht an Vermieter</button>
-      ${currentUser?`<button id="add-to-favorites" class="btn-favorite" onclick="toggleFavorite('${listing.id}')">Lade Favoritenstatus...</button>`:''}
+      <button class="btn-chat" onclick="goToChat()">Nachricht an Vermieter</button>
+      ${currentUser?`<button class="btn-favorite" id="add-to-favorites" onclick="toggleFavorite('${listing.id}')">Lade Favoritenstatus...</button>`:''}
     </div>
     <div class="vendor-info">
       <h3>Vermieter</h3>
@@ -219,46 +290,37 @@ async function loadListing(){
       <p><strong>Über mich:</strong> ${profile?.bio||'–'}</p>
     </div>
   `;
-
   if(currentUser) await updateFavoriteButton(listing.id);
 }
 
-function switchImage(url, el){
+function switchImage(url,element){
   document.getElementById("mainImage").src=url;
   document.querySelectorAll(".thumbnails img").forEach(img=>img.classList.remove("active"));
-  el.classList.add("active");
+  element.classList.add("active");
 }
 
 async function updateFavoriteButton(listingId){
   const { data } = await supabase.from('favorites').select('*').eq('user_id',currentUser.id).eq('listing_id',listingId).single();
-  isFavorite=!!data;
-  const btn=document.getElementById("add-to-favorites");
+  isFavorite = !!data;
+  const btn = document.getElementById("add-to-favorites");
   btn.textContent=isFavorite?"Aus Favoriten entfernen":"Zu Favoriten hinzufügen";
 }
 
 async function toggleFavorite(listingId){
-  const btn=document.getElementById("add-to-favorites");
+  if(!currentUser){ alert("Bitte einloggen."); return; }
+  const btn = document.getElementById("add-to-favorites");
   if(isFavorite){
-    await supabase.from('favorites').delete().eq('user_id',currentUser.id).eq('listing_id',listingId);
-    isFavorite=false;
-    btn.textContent="Zu Favoriten hinzufügen";
-  } else {
-    await supabase.from('favorites').insert({user_id:currentUser.id, listing_id:listingId});
-    isFavorite=true;
-    btn.textContent="Aus Favoriten entfernen";
+    const { error } = await supabase.from('favorites').delete().eq('user_id',currentUser.id).eq('listing_id',listingId);
+    if(!error){ isFavorite=false; btn.textContent="Zu Favoriten hinzufügen"; } else { alert("Fehler beim Entfernen aus Favoriten."); }
+  }else{
+    const { error } = await supabase.from('favorites').insert({user_id:currentUser.id, listing_id:listingId});
+    if(!error){ isFavorite=true; btn.textContent="Aus Favoriten entfernen"; } else { alert("Fehler beim Hinzufügen zu Favoriten."); }
   }
 }
 
-function goToChat(){
-  if(!currentUser) return alert("Bitte einloggen, um Nachrichten zu senden.");
-  const params=new URLSearchParams(location.search);
-  const listingId=params.get('id');
-  const chatWith=listingOwnerId;
-  window.location.href=`nachrichten.html?listing_id=${listingId}&with=${chatWith}`;
-}
+function goToChat(){ if(!currentUser){ alert("Bitte einloggen, um Nachrichten zu senden."); return; } const params=new URLSearchParams(location.search); const listingId=params.get('id'); window.location.href=`nachrichten.html?listing_id=${listingId}&with=${listingOwnerId}`; }
 
-updateNav();
-loadListing();
+updateNav(); loadListing();
 </script>
 </body>
 </html>
