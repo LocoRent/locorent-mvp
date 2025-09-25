@@ -441,24 +441,24 @@
       return;
     }
 
-    listings.forEach(listing => {
-      const card = document.createElement("div");
-      card.className = "result-card";
-card.innerHTML = `
-  <img src="${listing.image_urls?.[0] || 'https://via.placeholder.com/400x220'}" alt="${listing.title}" />
-  <h3>${listing.title}</h3>
-  <div class="info">
-    <p><strong>Kategorie:</strong> ${capitalize(listing.category) || 'Unbekannt'}</p>
-    <p><strong>Preis pro Tag:</strong> ${listing.price_per_day || 'k. A.'} €</p>
-  </div>
-  <div class="btn-group">
-    <button onclick="window.location.href='mietobjekt.html?id=${listing.id}'">Details ansehen</button>
-    <button onclick="removeFromFavorites('${listing.id}', event)">Favorit entfernen</button>
-  </div>
-`;
-      container.appendChild(card);
-    });
-
+listings.forEach(listing => {
+  const card = document.createElement("div");
+  card.className = "result-card";
+  card.innerHTML = `
+    <img src="${listing.image_urls?.[0] || 'https://via.placeholder.com/400x220'}" alt="${listing.title}" />
+    <h3>${listing.title}</h3>
+    <div class="info">
+      <p><strong>Kategorie:</strong> ${capitalize(listing.category) || 'Unbekannt'}</p>
+      <p><strong>Preis pro Tag:</strong> ${listing.price_per_day || 'k. A.'} €</p>
+    </div>
+    <div class="btn-group">
+      <button onclick="window.location.href='mietobjekt.html?id=${listing.id}'">Details ansehen</button>
+      <button onclick="removeFromFavorites('${listing.id}', event)">Favorit entfernen</button>
+    </div>
+  `;
+  container.appendChild(card);
+});
+    
     const pagination = document.createElement("div");
     pagination.style.cssText = "grid-column:1/-1; display:flex; justify-content:center; gap:10px; margin-top:20px;";
 
