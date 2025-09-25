@@ -158,18 +158,18 @@
       padding: 0 1rem 2rem;
     }
 
-    .result-card {
-      background: var(--white);
-      border-radius: var(--radius);
-      box-shadow: 0 2px 8px var(--shadow-light);
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      padding: 1rem;
-      height: 100%;
-      user-select: none;
-    }
+.result-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* sorgt dafür, dass Buttons unten bleiben */
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: 0 2px 8px var(--shadow-light);
+  padding: 1rem;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 100%; /* gleiche Höhe innerhalb des Grid */
+}
 
     .result-card:hover {
       transform: translateY(-5px);
@@ -184,25 +184,32 @@
       margin-bottom: 1rem;
     }
 
-    .result-card h3 {
-      margin: 0 0 0.75rem 0;
-      font-size: 1.35rem;
-      font-weight: 700;
-      color: var(--primary-dark);
-    }
-
+.result-card h3 {
+  font-size: 1.05rem;
+  line-height: 1.4em;
+  margin: 0.5rem 0;
+  height: 4.2em;          /* max. 3 Zeilen für Titel */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+.result-card .info {
+  flex-grow: 1; /* sorgt dafür, dass Kategorie & Preis unter Titel fixiert sind */
+}
     .result-card p {
       margin: 0.3rem 0;
       color: var(--text-muted);
       font-size: 1rem;
     }
 
-    .btn-group {
-      margin-top: auto;
-      display: flex;
-      gap: 0.6rem;
-      flex-direction: column; /* Buttons untereinander */
-    }
+.btn-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-top: 1rem; /* immer unten */
+}
 
     .result-card button {
       padding: 0.6rem;
@@ -437,16 +444,18 @@
     listings.forEach(listing => {
       const card = document.createElement("div");
       card.className = "result-card";
-      card.innerHTML = `
-        <img src="${listing.image_urls?.[0] || 'https://via.placeholder.com/400x220'}" alt="${listing.title}" />
-        <h3>${listing.title}</h3>
-        <p><strong>Kategorie:</strong> ${capitalize(listing.category) || 'Unbekannt'}</p>
-        <p><strong>Preis pro Tag:</strong> ${listing.price_per_day || 'k. A.'} €</p>
-        <div class="btn-group">
-          <button onclick="window.location.href='mietobjekt.html?id=${listing.id}'">Details ansehen</button>
-          <button onclick="removeFromFavorites('${listing.id}', event)">Favorit entfernen</button>
-        </div>
-      `;
+card.innerHTML = `
+  <img src="${listing.image_urls?.[0] || 'https://via.placeholder.com/400x220'}" alt="${listing.title}" />
+  <h3>${listing.title}</h3>
+  <div class="info">
+    <p><strong>Kategorie:</strong> ${capitalize(listing.category) || 'Unbekannt'}</p>
+    <p><strong>Preis pro Tag:</strong> ${listing.price_per_day || 'k. A.'} €</p>
+  </div>
+  <div class="btn-group">
+    <button onclick="window.location.href='mietobjekt.html?id=${listing.id}'">Details ansehen</button>
+    <button onclick="removeFromFavorites('${listing.id}', event)">Favorit entfernen</button>
+  </div>
+`;
       container.appendChild(card);
     });
 
