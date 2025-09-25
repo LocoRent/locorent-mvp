@@ -294,18 +294,17 @@
   .result-card button { font-size: 0.85rem; padding: 0.4rem; }
 
   /* Kategorie & Preis immer untereinander */
-  .result-card .info {
-    display: flex;
-    flex-direction: column; /* vertikal */
-    gap: 0.25rem; 
-    width: 100%;
-  }
-  .result-card .info p {
-    width: 100%;
-    margin: 0;
-    white-space: normal; /* Textumbruch erlauben */
-    display: block;
-  }
+.result-card .info {
+  display: block !important;  /* kein flex */
+  width: 100% !important;
+}
+
+.result-card .info p {
+  display: block !important;  /* jede Zeile untereinander */
+  width: 100% !important;
+  margin: 0.25rem 0;
+  white-space: normal !important;
+}
 }
 
   </style>
