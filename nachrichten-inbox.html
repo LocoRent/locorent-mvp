@@ -24,9 +24,7 @@
       --font-primary: 'Poppins', sans-serif;
     }
 
-    *, *::before, *::after {
-      box-sizing: border-box;
-    }
+    *, *::before, *::after { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -99,19 +97,13 @@
     }
 
     nav#main-nav a:hover::after,
-    nav#main-nav a:focus::after {
-      width: 100%;
-    }
-
+    nav#main-nav a:focus::after { width: 100%; }
     nav#main-nav a:hover,
-    nav#main-nav a:focus {
-      color: var(--accent);
-      outline: none;
-    }
+    nav#main-nav a:focus { color: var(--accent); outline: none; }
 
     /* MAIN */
     main {
-      max-width: 900px;
+      max-width: 1200px;
       margin: 2rem auto 4rem;
       padding: 1rem;
       flex-grow: 1;
@@ -123,39 +115,35 @@
       color: var(--primary);
     }
 
+    /* INBOX GRID */
     #inbox {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      grid-template-columns: repeat(6, 1fr); /* Desktop: 6 Chats pro Reihe */
       gap: 2rem;
       margin-bottom: 2.5rem;
-      padding: 0 0.5rem;
+      padding: 0 1rem;
     }
 
+    /* CHAT CARD */
     .chat-card {
       background: var(--white);
-      padding: 1.75rem 2.5rem;
+      padding: 1.75rem 1.5rem;
       border-radius: var(--radius);
       box-shadow: 0 12px 30px rgba(46, 125, 50, 0.1);
-      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: transform 0.3s, box-shadow 0.3s;
       cursor: pointer;
       display: flex;
-      gap: 2.5rem;
+      flex-direction: column;
       position: relative;
-      align-items: center;
-      min-height: 180px;
+      min-height: 220px;
     }
 
-    .chat-card:hover,
-    .chat-card:focus-within {
-      transform: translateY(-6px);
-      box-shadow: 0 20px 48px rgba(46, 125, 50, 0.2);
-      outline: none;
-    }
+    .chat-card:hover { transform: translateY(-6px); box-shadow: 0 20px 48px rgba(46,125,50,0.2); }
 
     .chat-avatar {
       flex-shrink: 0;
-      width: 90px;
-      height: 90px;
+      width: 70px;
+      height: 70px;
       border-radius: 50%;
       background: #dcedc8;
       display: flex;
@@ -164,103 +152,32 @@
       font-size: 2rem;
       font-weight: 700;
       color: var(--primary-dark);
+      margin-bottom: 0.8rem;
       overflow: hidden;
       box-shadow: 0 6px 15px rgba(0,0,0,0.12);
-      transition: background-color 0.3s ease;
     }
 
-    .chat-avatar img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 50%;
-      transition: transform 0.3s ease;
-    }
+    .chat-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
 
-    .chat-avatar:hover img {
-      transform: scale(1.05);
-    }
+    .chat-info { flex: 1; display: flex; flex-direction: column; gap: 0.3rem; }
 
-    .chat-info {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 0.3rem;
-    }
-
-    .chat-name {
-      font-weight: 700;
-      font-size: 1.4rem;
-      color: var(--primary-dark);
-      margin-bottom: 0.15rem;
-    }
-
-    .chat-title {
-      font-size: 1.1rem;
-      color: var(--primary-light);
-      font-weight: 600;
-      margin-bottom: 0.85rem;
-    }
-
-    .listing-thumb {
-      width: 100%;
-      max-height: 140px;
-      object-fit: cover;
-      border-radius: 14px;
-      margin: 0.4rem 0 1rem;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-      transition: box-shadow 0.3s ease;
-    }
-
-    .listing-thumb:hover {
-      box-shadow: 0 12px 36px rgba(0,0,0,0.15);
-    }
-
-    .listing-meta {
-      font-size: 0.95rem;
-      color: var(--primary-dark);
-      display: flex;
-      gap: 1.75rem;
-      flex-wrap: wrap;
-      margin-bottom: 0.8rem;
-      font-weight: 600;
-    }
-
-    .chat-preview {
-      font-size: 1.1rem;
-      color: #555;
-      line-height: 1.6;
-      margin-bottom: 0.6rem;
-      font-style: italic;
-    }
-
-    .chat-time {
-      font-size: 0.85rem;
-      color: #7a7a7a;
-      user-select: none;
-      text-align: right;
-      font-weight: 500;
-      letter-spacing: 0.03em;
-    }
+    .chat-name { font-weight: 700; font-size: 1.2rem; color: var(--primary-dark); }
+    .chat-title { font-size: 1rem; color: var(--primary-light); font-weight: 600; margin-bottom: 0.6rem; }
+    .listing-thumb { width: 100%; max-height: 120px; object-fit: cover; border-radius: 12px; margin: 0.4rem 0 0.8rem; }
+    .listing-meta { font-size: 0.9rem; color: var(--primary-dark); display: flex; gap: 1rem; flex-wrap: wrap; font-weight: 600; margin-bottom: 0.5rem; }
+    .chat-preview { font-size: 1rem; color: #555; font-style: italic; margin-bottom: 0.5rem; }
+    .chat-time { font-size: 0.8rem; color: #7a7a7a; text-align: right; user-select: none; }
 
     .delete-chat {
       position: absolute;
-      top: 16px;
-      right: 20px;
+      top: 12px;
+      right: 12px;
       color: #d32f2f;
-      font-size: 1.8rem;
+      font-size: 1.6rem;
       cursor: pointer;
-      transition: transform 0.25s ease, color 0.25s ease;
-      z-index: 10;
+      transition: transform 0.25s, color 0.25s;
     }
-
-    .delete-chat:hover,
-    .delete-chat:focus {
-      transform: scale(1.35);
-      color: #b71c1c;
-      outline: none;
-    }
+    .delete-chat:hover { transform: scale(1.3); color: #b71c1c; }
 
     /* FOOTER */
     footer {
@@ -287,81 +204,31 @@
       text-align: left;
     }
 
-    footer > div > div {
-      flex: 1;
-      min-width: 200px;
-    }
-
-    footer h4 {
-      margin-bottom: 0.5rem;
-      font-weight: 700;
-      font-size: 1.1rem;
-    }
-
-    footer ul {
-      list-style: none;
-      padding: 0;
-      line-height: 1.8;
-    }
-
-    footer ul li a {
-      color: var(--white);
-      text-decoration: underline;
-      transition: color 0.3s ease;
-    }
-
-    footer ul li a:hover {
-      color: var(--primary-light);
-    }
-
-    footer small {
-      display: block;
-      margin-top: 2rem;
-      text-align: center;
-      opacity: 0.85;
-    }
+    footer > div > div { flex: 1; min-width: 200px; }
+    footer h4 { margin-bottom: 0.5rem; font-weight: 700; font-size: 1.1rem; }
+    footer ul { list-style: none; padding: 0; line-height: 1.8; }
+    footer ul li a { color: var(--white); text-decoration: underline; transition: color 0.3s ease; }
+    footer ul li a:hover { color: var(--primary-light); }
+    footer small { display: block; margin-top: 2rem; text-align: center; opacity: 0.85; }
 
     /* Mobile Responsive */
     @media (max-width: 720px) {
-      #nav-toggle {
-        display: block;
-      }
-
-      nav#main-nav {
-        width: 100%;
-        flex-direction: column;
-        display: none;
-        margin-top: 1rem;
-      }
-
-      nav#main-nav.show {
-        display: flex;
-      }
-
-      nav#main-nav a {
-        margin: 0.4rem 0;
-        padding: 0.5rem 1rem;
-        background-color: rgba(255, 255, 255, 0.1);
-        border-radius: 6px;
-      }
-
-      footer > div {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      footer > div > div {
-        width: 100%;
-      }
+      #nav-toggle { display: block; }
+      nav#main-nav { width: 100%; flex-direction: column; display: none; margin-top: 1rem; }
+      nav#main-nav.show { display: flex; }
+      nav#main-nav a { margin: 0.4rem 0; padding: 0.5rem 1rem; background-color: rgba(255,255,255,0.1); border-radius: 6px; }
+      #inbox { grid-template-columns: repeat(2, 1fr); gap: 1rem; padding: 0 0.5rem; }
+      footer > div { flex-direction: column; align-items: flex-start; }
+      footer > div > div { width: 100%; }
     }
   </style>
 </head>
 <body>
 
 <header>
-  <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
+  <h1 tabindex="0" onclick="location.href='index.html'">Locorent</h1>
   <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="main-nav">☰</button>
-  <nav id="main-nav" role="navigation" aria-label="Hauptnavigation">
+  <nav id="main-nav">
     <a href="index.html">Start</a>
     <a href="profil.html">Mein Profil</a>
     <a href="nachrichten-inbox.html">📨 Nachrichten</a>
@@ -376,7 +243,7 @@
   <div id="inbox" aria-live="polite" aria-relevant="additions">Lade Nachrichten...</div>
 </main>
 
-<footer role="contentinfo">
+<footer>
   <div>
     <div>
       <h4>Mieten &amp; Vermieten</h4>
@@ -408,134 +275,136 @@
 </footer>
 
 <script>
-  const supabase = window.supabase.createClient(
-    'https://flnjalgqtkqycsaymmbd.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-  );
+const supabase = window.supabase.createClient(
+  'https://flnjalgqtkqycsaymmbd.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+);
 
-  document.getElementById('nav-toggle').addEventListener('click', () => {
-    const nav = document.getElementById('main-nav');
-    const toggle = document.getElementById('nav-toggle');
-    nav.classList.toggle('show');
-    const expanded = nav.classList.contains('show');
-    toggle.setAttribute('aria-expanded', expanded);
+let currentPage = 1;
+const pageSize = 24;
+
+document.getElementById('nav-toggle').addEventListener('click', () => {
+  const nav = document.getElementById('main-nav');
+  nav.classList.toggle('show');
+  document.getElementById('nav-toggle').setAttribute('aria-expanded', nav.classList.contains('show'));
+});
+
+async function logout(event) {
+  event.preventDefault();
+  await supabase.auth.signOut();
+  window.location.href = "login.html";
+}
+
+function timeAgo(dateString) {
+  const date = new Date(dateString);
+  const diff = (Date.now() - date.getTime()) / 1000;
+  if (diff < 60) return "gerade eben";
+  if (diff < 3600) return `${Math.floor(diff / 60)} Min.`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)} Std.`;
+  return `${Math.floor(diff / 86400)} Tg.`;
+}
+
+async function loadInbox(page = 1) {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return window.location.href = "login.html";
+
+  const { data: messages } = await supabase
+    .from('messages')
+    .select('*')
+    .or(`sender_id.eq.${user.id},receiver_id.eq.${user.id}`)
+    .order('created_at', { ascending: false });
+
+  const inbox = document.getElementById('inbox');
+  inbox.innerHTML = '';
+
+  if (!messages || messages.length === 0) {
+    inbox.innerHTML = "<p>Keine Nachrichten gefunden.</p>";
+    return;
+  }
+
+  const uniqueChats = new Map();
+  messages.forEach(msg => {
+    const otherId = msg.sender_id === user.id ? msg.receiver_id : msg.sender_id;
+    const key = `${msg.listing_id}_${otherId}`;
+    if (!uniqueChats.has(key)) uniqueChats.set(key, msg);
   });
 
-  async function logout(event) {
-    event.preventDefault();
-    await supabase.auth.signOut();
-    window.location.href = "login.html";
+  const chatArray = Array.from(uniqueChats.values());
+  const totalCount = chatArray.length;
+  const from = (page-1)*pageSize;
+  const to = from+pageSize;
+  const pagedChats = chatArray.slice(from,to);
+
+  for(const msg of pagedChats){
+    const otherId = msg.sender_id === user.id ? msg.receiver_id : msg.sender_id;
+    const [{data:userData},{data:listingData}] = await Promise.all([
+      supabase.from('profiles').select('name, avatar_url').eq('id',otherId).single(),
+      supabase.from('listings').select('title, image_urls, price_per_day, location').eq('id',msg.listing_id).single()
+    ]);
+
+    const name = userData?.name || 'Unbekannt';
+    const avatar = userData?.avatar_url || null;
+    const title = listingData?.title || 'Inserat gelöscht';
+    const price = listingData?.price_per_day ? `${listingData.price_per_day} €/Tag` : '';
+    const location = listingData?.location || '';
+    const image = listingData?.image_urls?.[0] || '';
+
+    const card = document.createElement('div');
+    card.className='chat-card';
+    card.tabIndex=0;
+    card.onclick = ()=>window.location.href=`nachrichten.html?listing_id=${msg.listing_id}&with=${otherId}`;
+    card.innerHTML=`
+      <div class="delete-chat" title="Chat löschen" tabindex="0" role="button" aria-label="Chat löschen" onclick="event.stopPropagation(); confirmDelete('${msg.listing_id}','${otherId}',this)">🗑️</div>
+      <div class="chat-avatar">${avatar?`<img src="${avatar}" alt="${name}" />`:`<span>${name.charAt(0).toUpperCase()}</span>`}</div>
+      <div class="chat-info">
+        <div class="chat-name">${name}</div>
+        <div class="chat-title">📦 ${title}</div>
+        ${image?`<img class="listing-thumb" src="${image}" alt="${title}" />`:''}
+        <div class="listing-meta">${price?`<span>💶 ${price}</span>`:''}${location?`<span>📍 ${location}</span>`:''}</div>
+        <div class="chat-preview">💬 ${msg.content.slice(0,90)}${msg.content.length>90?'…':''}</div>
+        <div class="chat-time">⏱️ ${timeAgo(msg.created_at)}</div>
+      </div>
+    `;
+    inbox.appendChild(card);
   }
 
-  function timeAgo(dateString) {
-    const date = new Date(dateString);
-    const diff = (Date.now() - date.getTime()) / 1000;
-    if (diff < 60) return "gerade eben";
-    if (diff < 3600) return `${Math.floor(diff / 60)} Min.`;
-    if (diff < 86400) return `${Math.floor(diff / 3600)} Std.`;
-    return `${Math.floor(diff / 86400)} Tg.`;
+  // Pagination
+  const pagination = document.createElement('div');
+  pagination.style.cssText="grid-column:1/-1; display:flex; justify-content:center; gap:10px; margin-top:20px;";
+  const totalPages = Math.ceil(totalCount/pageSize);
+
+  if(page>1){
+    const prevBtn = document.createElement('button');
+    prevBtn.textContent="← Zurück";
+    prevBtn.onclick=()=>{currentPage--; loadInbox(currentPage);};
+    pagination.appendChild(prevBtn);
   }
 
-  async function loadInbox() {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return window.location.href = "login.html";
+  pagination.appendChild(document.createTextNode(`Seite ${page} von ${totalPages}`));
 
-    const { data: messages } = await supabase
-      .from('messages')
-      .select('*')
-      .or(`sender_id.eq.${user.id},receiver_id.eq.${user.id}`)
-      .order('created_at', { ascending: false });
-
-    const inbox = document.getElementById('inbox');
-    inbox.innerHTML = '';
-
-    if (!messages || messages.length === 0) {
-      inbox.innerHTML = "<p>Keine Nachrichten gefunden.</p>";
-      return;
-    }
-
-    const uniqueChats = new Map();
-
-    messages.forEach(msg => {
-      const otherId = msg.sender_id === user.id ? msg.receiver_id : msg.sender_id;
-      const key = `${msg.listing_id}_${otherId}`;
-      if (!uniqueChats.has(key)) {
-        uniqueChats.set(key, msg);
-      }
-    });
-
-    for (const [key, msg] of uniqueChats.entries()) {
-      const otherId = msg.sender_id === user.id ? msg.receiver_id : msg.sender_id;
-
-      const [{ data: userData }, { data: listingData }] = await Promise.all([
-        supabase.from('profiles').select('name, avatar_url').eq('id', otherId).single(),
-        supabase.from('listings').select('title, image_urls, price_per_day, location').eq('id', msg.listing_id).single()
-      ]);
-
-      const name = userData?.name || 'Unbekannt';
-      const avatar = userData?.avatar_url || null;
-      const title = listingData?.title || 'Inserat gelöscht';
-      const price = listingData?.price_per_day ? `${listingData.price_per_day} €/Tag` : '';
-      const location = listingData?.location || '';
-      const image = listingData?.image_urls?.[0] || '';
-
-      const card = document.createElement('div');
-      card.className = 'chat-card';
-      card.tabIndex = 0;
-      card.onclick = () => {
-        window.location.href = `nachrichten.html?listing_id=${msg.listing_id}&with=${otherId}`;
-      };
-      card.onkeydown = e => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          card.click();
-        }
-      };
-
-      card.innerHTML = `
-        <div class="delete-chat" title="Chat löschen" tabindex="0" role="button" aria-label="Chat löschen" onclick="event.stopPropagation(); confirmDelete('${msg.listing_id}', '${otherId}', this)" onkeydown="if(event.key==='Enter' || event.key===' ') {event.preventDefault(); this.click();}">🗑️</div>
-        <div class="chat-avatar" aria-hidden="true">
-          ${avatar ? `<img src="${avatar}" alt="${name}" />` : `<span>${name.charAt(0).toUpperCase()}</span>`}
-        </div>
-        <div class="chat-info">
-          <div class="chat-name">${name}</div>
-          <div class="chat-title">📦 ${title}</div>
-          ${image ? `<img class="listing-thumb" src="${image}" alt="${title}" />` : ''}
-          <div class="listing-meta">
-            ${price ? `<span>💶 ${price}</span>` : ''}
-            ${location ? `<span>📍 ${location}</span>` : ''}
-          </div>
-          <div class="chat-preview">💬 ${msg.content.slice(0, 90)}${msg.content.length > 90 ? '…' : ''}</div>
-          <div class="chat-time">⏱️ ${timeAgo(msg.created_at)}</div>
-        </div>
-      `;
-
-      inbox.appendChild(card);
-    }
+  if(page<totalPages){
+    const nextBtn = document.createElement('button');
+    nextBtn.textContent="Weiter →";
+    nextBtn.onclick=()=>{currentPage++; loadInbox(currentPage);};
+    pagination.appendChild(nextBtn);
   }
 
-  async function confirmDelete(listingId, otherId, el) {
-    if (!confirm("Möchtest du diesen Chatverlauf wirklich löschen?")) return;
+  inbox.appendChild(pagination);
+}
 
-    const { data: { user } } = await supabase.auth.getUser();
+async function confirmDelete(listingId,otherId,el){
+  if(!confirm("Möchtest du diesen Chatverlauf wirklich löschen?")) return;
+  const {data:{user}} = await supabase.auth.getUser();
+  const {error} = await supabase
+    .from('messages')
+    .delete()
+    .or(`and(sender_id.eq.${user.id},receiver_id.eq.${otherId},listing_id.eq.${listingId}),and(receiver_id.eq.${user.id},sender_id.eq.${otherId},listing_id.eq.${listingId})`);
+  if(!error) el.closest('.chat-card').remove();
+  else alert("Fehler beim Löschen des Chats.");
+}
 
-    const { error } = await supabase
-      .from('messages')
-      .delete()
-      .or(`and(sender_id.eq.${user.id},receiver_id.eq.${otherId},listing_id.eq.${listingId}),and(receiver_id.eq.${user.id},sender_id.eq.${otherId},listing_id.eq.${listingId})`);
-
-    if (!error) {
-      el.closest('.chat-card').remove();
-    } else {
-      alert("Fehler beim Löschen des Chats.");
-    }
-  }
-
-  loadInbox();
+loadInbox();
 </script>
-
-</body>
-</html>
 
 </body>
 </html>
