@@ -261,78 +261,50 @@
       text-align: center;
       opacity: 0.85;
     }
-    @media (max-width: 720px) {
-  #nav-toggle {
-    display: block;
-  }
-
+  @media (max-width: 720px) {
+  /* Mobile: Navigation */
+  #nav-toggle { display: block; }
   nav#nav-links {
     width: 100%;
     flex-direction: column;
     display: none;
     margin-top: 1rem;
   }
-
-  nav#nav-links.show {
-    display: flex;
-  }
-
+  nav#nav-links.show { display: flex; }
   nav#nav-links a {
     margin: 0.4rem 0;
     padding: 0.5rem 1rem;
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255,255,255,0.1);
     border-radius: 6px;
     display: block;
     color: var(--white);
   }
 
+  /* Grid auf 2 Spalten */
   .category-grid {
-    grid-template-columns: repeat(2, 1fr); /* Mobile: 2 Inserate pro Reihe */
+    grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
     transform: translateX(-0.25rem);
   }
-  .result-card .info {
-    display: flex !important;
-    flex-direction: column !important; /* vertikal */
-    width: 100%;
-    gap: 0.25rem; /* Abstand zwischen Kategorie und Preis */
-  }
 
-  .result-card .info p {
-    width: 100% !important;
-    margin: 0 !important;
-    white-space: normal !important; /* Textumbruch erlauben */
-    display: block !important;
-  }
-  .result-card img {
-    height: 140px;
-  }
+  /* Result-Card Mobile-Anpassungen */
+  .result-card img { height: 140px; }
+  .result-card h3 { font-size: 1rem; }
+  .result-card p { font-size: 0.85rem; }
+  .result-card button { font-size: 0.85rem; padding: 0.4rem; }
 
-  .result-card h3 {
-    font-size: 1rem;
-  }
-
-  .result-card p {
-    font-size: 0.85rem;
-  }
-
-  .result-card button {
-    font-size: 0.85rem;
-    padding: 0.4rem;
-  }
-
-  /* Kategorie und Preis immer untereinander */
+  /* Kategorie & Preis immer untereinander */
   .result-card .info {
     display: flex;
-    flex-direction: column; /* untereinander */
-    gap: 0.25rem;
+    flex-direction: column; /* vertikal */
+    gap: 0.25rem; 
     width: 100%;
   }
-
   .result-card .info p {
     width: 100%;
     margin: 0;
-    white-space: normal; /* Textumbruch */
+    white-space: normal; /* Textumbruch erlauben */
+    display: block;
   }
 }
 
