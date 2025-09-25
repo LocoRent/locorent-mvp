@@ -290,17 +290,6 @@
     }
 
     @media (max-width: 720px) {
-        .result-card .info {
-    display: flex;
-    flex-direction: column; /* immer untereinander */
-    gap: 0.3rem;            /* etwas Abstand zwischen Kategorie und Preis */
-  }
-
-  .result-card .info p {
-    margin: 0;              /* keine zusätzlichen Ränder */
-    white-space: normal;    /* Text umbrechen, falls nötig */
-  }
-}
       .category-grid {
         grid-template-columns: repeat(2, 1fr); /* Mobile: 2 Inserate */
         gap: 1rem;
@@ -324,6 +313,19 @@
         padding: 0.4rem;
       }
     }
+    @media (max-width: 720px) {
+  .result-card .info {
+    display: flex;
+    flex-direction: column; /* immer untereinander */
+    gap: 0.3rem;            /* etwas Abstand zwischen Kategorie und Preis */
+  }
+
+  .result-card .info p {
+    margin: 0;              /* keine zusätzlichen Ränder */
+    white-space: normal;    /* Text umbrechen, falls nötig */
+  }
+}
+
   </style>
 </head>
 <body>
