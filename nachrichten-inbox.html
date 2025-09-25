@@ -139,26 +139,6 @@
 
     /* MOBILE */
     @media (max-width: 720px) {
-        html, body {
-    overflow-x: hidden; /* verhindert horizontales Scrollen */
-  }
-
-  main {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-
-  .chat-item {
-    flex-wrap: wrap;        /* Inhalt darf umbrechen */
-    min-width: 0;           /* verhindert Überlauf in Flexbox */
-  }
-
-  .chat-content {
-    min-width: 0;           /* Flex-Item darf schrumpfen */
-    word-wrap: break-word;  /* lange Wörter umbrechen */
-    overflow: hidden;
-  }
-}
         header {
     padding-left: 1rem;  /* minimaler Abstand links */
     padding-right: 1rem; /* minimaler Abstand rechts */
@@ -169,6 +149,29 @@
       nav#main-nav.show { display: flex; }
       nav#main-nav a { margin: 0.4rem 0; padding: 0.5rem 1rem; background-color: rgba(255,255,255,0.1); border-radius: 6px; }
     }
+    /* Mobile Fix für horizontales Scrollen */
+@media (max-width: 720px) {
+  html, body {
+    max-width: 100vw;  /* maximale Breite auf Viewport begrenzen */
+    overflow-x: hidden; /* horizontales Scrollen verhindern */
+  }
+
+  .chat-item {
+    flex-wrap: wrap;        /* Inhalt darf umbrechen */
+    min-width: 0;           /* verhindert Flexbox Überlauf */
+  }
+
+  .chat-avatar, .chat-image {
+    max-width: 100%;        /* Bilder dürfen nicht größer als Container sein */
+    height: auto;           /* Höhe automatisch anpassen */
+  }
+
+  .chat-content {
+    min-width: 0;
+    overflow: hidden;
+    word-wrap: break-word;
+  }
+}
   </style>
 </head>
 <body>
