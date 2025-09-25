@@ -78,7 +78,16 @@
     h2 { font-size: 2rem; margin-bottom: 1.5rem; color: var(--primary); }
 
  /* CHAT LIST ITEMS */
-  .chat-item { display: flex; align-items: center; padding: 1rem; border-bottom: 1px solid #ddd; cursor: pointer; width: 100%; max-width: 100%; }
+.chat-item {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden; /* verhindert Überlauf */
+}
   .chat-item:hover { background: #f1f8e9; }
 
   .chat-avatar { width: 60px; height: 60px; border-radius: 50%; background: #dcedc8; display: flex; justify-content: center; align-items: center; font-weight: 700; color: var(--primary-dark); margin-right: 1rem; flex-shrink: 0; overflow: hidden; }
@@ -86,10 +95,24 @@
 
   .chat-image { width: 100px; height: 80px; object-fit: cover; border-radius: 6px; margin-right: 1rem; flex-shrink: 0; }
 
-  .chat-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.chat-content {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  min-width: 0; /* sehr wichtig für flex items */
+  overflow: hidden;
+  word-wrap: break-word; /* Zeilenumbruch für lange Wörter */
+}
   .chat-name { font-weight: 600; color: var(--primary-dark); font-size: 1.1rem; }
   .chat-title { font-weight: 500; color: var(--primary); font-size: 1rem; margin-top: 0.2rem; }
-  .chat-preview { font-size: 0.95rem; color: #555; margin-top: 0.2rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chat-preview {
+  font-size: 0.95rem;
+  color: #555;
+  margin-top: 0.2rem;
+  white-space: normal; /* vorher war nowrap */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
   .chat-time { font-size: 0.85rem; color: #777; margin-left: 1rem; white-space: nowrap; flex-shrink: 0; }
 
   /* Desktop spezifisch */
