@@ -291,6 +291,31 @@
       text-align: center;
       opacity: 0.85;
     }
+    /* Handy: 2 Spalten Grid */
+@media (max-width: 720px) {
+  .category-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .result-card img {
+    height: 140px; /* Bild etwas kleiner, passt besser nebeneinander */
+  }
+
+  .result-card h3 {
+    font-size: 1rem;
+  }
+
+  .result-card p {
+    font-size: 0.85rem;
+  }
+
+  .result-card button {
+    font-size: 0.85rem;
+    padding: 0.4rem;
+  }
+}
+
   </style>
 </head>
 <body>
