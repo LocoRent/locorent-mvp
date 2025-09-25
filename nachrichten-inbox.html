@@ -139,6 +139,26 @@
 
     /* MOBILE */
     @media (max-width: 720px) {
+        html, body {
+    overflow-x: hidden; /* verhindert horizontales Scrollen */
+  }
+
+  main {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .chat-item {
+    flex-wrap: wrap;        /* Inhalt darf umbrechen */
+    min-width: 0;           /* verhindert Überlauf in Flexbox */
+  }
+
+  .chat-content {
+    min-width: 0;           /* Flex-Item darf schrumpfen */
+    word-wrap: break-word;  /* lange Wörter umbrechen */
+    overflow: hidden;
+  }
+}
         header {
     padding-left: 1rem;  /* minimaler Abstand links */
     padding-right: 1rem; /* minimaler Abstand rechts */
