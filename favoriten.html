@@ -294,19 +294,19 @@
   .result-card button { font-size: 0.85rem; padding: 0.4rem; }
 
   /* Kategorie & Preis immer untereinander */
-.result-card .info {
-  display: block !important;  /* kein flex */
-  width: 100% !important;
-}
+  .result-card .info {
+    display: block !important;  /* block erzwingt neue Zeilen */
+    width: 100% !important;
+    flex-grow: 0 !important;     /* Flex-Effekte entfernen */
+  }
 
-.result-card .info p {
-  display: block !important;  /* jede Zeile untereinander */
-  width: 100% !important;
-  margin: 0.25rem 0;
-  white-space: normal !important;
+  .result-card .info p {
+    display: block !important;  /* Jede Zeile untereinander */
+    width: 100% !important;
+    margin: 0.25rem 0;
+    white-space: normal !important;
+  }
 }
-}
-
   </style>
 </head>
 <body>
