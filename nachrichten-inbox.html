@@ -118,13 +118,23 @@
     /* INBOX GRID */
 #inbox {
   display: grid;
-  grid-template-columns: repeat(6, 1fr); /* Desktop: 6 Chats pro Reihe */
-  gap: 2rem; /* Abstand zwischen den Karten */
+  grid-template-columns: repeat(6, 1fr); /* Desktop: 6 nebeneinander */
+  gap: 2rem;
   margin-bottom: 2.5rem;
   padding: 0 1rem;
 }
+    @media (max-width: 720px) {
+  #inbox {
+    grid-template-columns: repeat(2, 1fr); /* Mobile: 2 nebeneinander */
+    gap: 1rem;
+    padding: 0 0.5rem;
+  }
+}
+
     /* CHAT CARD */
     .chat-card {
+        width: 100%; /* füllt die Grid-Spalte komplett aus */
+  box-sizing: border-box;
       background: var(--white);
       padding: 1.75rem 1.5rem;
       border-radius: var(--radius);
@@ -212,13 +222,7 @@
 
     /* Mobile Responsive */
     @media (max-width: 720px) {
-        #inbox {
-    grid-template-columns: repeat(2, 1fr); /* Mobile: 2 Chats pro Reihe */
-    gap: 1rem;
-    padding: 0 0.5rem;
-  }
-}
-      #nav-toggle { display: block; }
+#nav-toggle { display: block; }
       nav#main-nav { width: 100%; flex-direction: column; display: none; margin-top: 1rem; }
       nav#main-nav.show { display: flex; }
       nav#main-nav a { margin: 0.4rem 0; padding: 0.5rem 1rem; background-color: rgba(255,255,255,0.1); border-radius: 6px; }
