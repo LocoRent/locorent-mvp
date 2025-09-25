@@ -33,20 +33,22 @@
     }
 
     /* HEADER */
-    header {
-      background-color: var(--primary);
-      color: var(--white);
-      padding: 1.5rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-weight: 700;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-      flex-wrap: wrap;
-    }
+header {
+  background-color: var(--primary);
+  color: var(--white);
+  padding: 1.5rem 1rem; /* mobile padding verkleinert */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  flex-wrap: wrap;
+  width: 100vw; /* sorgt dafür, dass Header die komplette Breite einnimmt */
+  margin-left: calc(-1 * (100vw - 100%)); /* korrigiert horizontales Scrollen durch padding */
+}
     header h1 { font-size: 1.8rem; cursor: pointer; user-select: none; margin: 0; }
     #nav-toggle { display: none; background: none; border: none; font-size: 1.8rem; color: var(--white); cursor: pointer; }
     nav#main-nav { display: flex; flex-wrap: wrap; gap: 1rem; }
