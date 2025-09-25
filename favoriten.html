@@ -293,14 +293,19 @@
     }
     /* Handy: 2 Spalten Grid */
 @media (max-width: 720px) {
+  main {
+    padding: 0 0.5rem; /* Abstand links und rechts */
+  }
+
   .category-grid {
-    grid-template-columns: repeat(2, 1fr); /* 2 Spalten */
-    gap: 1rem;
-    padding: 0 0.75rem 2rem; /* links + rechts = 0.75rem Abstand */
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem; /* Abstand zwischen den Spalten */
+    width: 100%;
+    padding: 0; /* Padding jetzt in main */
   }
 
   .result-card img {
-    height: 140px; /* Bild etwas kleiner */
+    height: 140px;
   }
 
   .result-card h3 {
@@ -316,6 +321,7 @@
     padding: 0.4rem;
   }
 }
+
   </style>
 </head>
 <body>
