@@ -115,69 +115,56 @@
       color: var(--primary);
     }
 
-    /* INBOX GRID */
+    /* LISTENANSICHT */
     #inbox {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr); /* Desktop: 6 Chats pro Reihe */
-      gap: 2rem;
-      margin-bottom: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
       padding: 0 1rem;
     }
 
-    /* CHAT CARD */
-    .chat-card {
-      background: var(--white);
-      padding: 1.75rem 1.5rem;
-      border-radius: var(--radius);
-      box-shadow: 0 12px 30px rgba(46, 125, 50, 0.1);
-      transition: transform 0.3s, box-shadow 0.3s;
-      cursor: pointer;
+    .chat-item {
       display: flex;
-      flex-direction: column;
-      position: relative;
-      min-height: 220px;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #ddd;
+      cursor: pointer;
+      transition: background 0.2s;
     }
 
-    .chat-card:hover { transform: translateY(-6px); box-shadow: 0 20px 48px rgba(46,125,50,0.2); }
+    .chat-item:hover { background: #f5f5f5; }
 
     .chat-avatar {
-      flex-shrink: 0;
-      width: 70px;
-      height: 70px;
+      width: 50px;
+      height: 50px;
       border-radius: 50%;
       background: #dcedc8;
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 2rem;
       font-weight: 700;
-      color: var(--primary-dark);
-      margin-bottom: 0.8rem;
+      margin-right: 1rem;
       overflow: hidden;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.12);
+      flex-shrink: 0;
     }
 
-    .chat-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
-
-    .chat-info { flex: 1; display: flex; flex-direction: column; gap: 0.3rem; }
-
-    .chat-name { font-weight: 700; font-size: 1.2rem; color: var(--primary-dark); }
-    .chat-title { font-size: 1rem; color: var(--primary-light); font-weight: 600; margin-bottom: 0.6rem; }
-    .listing-thumb { width: 100%; max-height: 120px; object-fit: cover; border-radius: 12px; margin: 0.4rem 0 0.8rem; }
-    .listing-meta { font-size: 0.9rem; color: var(--primary-dark); display: flex; gap: 1rem; flex-wrap: wrap; font-weight: 600; margin-bottom: 0.5rem; }
-    .chat-preview { font-size: 1rem; color: #555; font-style: italic; margin-bottom: 0.5rem; }
-    .chat-time { font-size: 0.8rem; color: #7a7a7a; text-align: right; user-select: none; }
-
-    .delete-chat {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      color: #d32f2f;
-      font-size: 1.6rem;
-      cursor: pointer;
-      transition: transform 0.25s, color 0.25s;
+    .chat-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
     }
-    .delete-chat:hover { transform: scale(1.3); color: #b71c1c; }
+
+    .chat-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .chat-name { font-weight: 600; color: var(--primary-dark); }
+    .chat-preview { font-size: 0.95rem; color: #555; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .chat-time { font-size: 0.8rem; color: #777; margin-left: 1rem; white-space: nowrap; flex-shrink: 0; }
 
     /* FOOTER */
     footer {
@@ -217,9 +204,6 @@
       nav#main-nav { width: 100%; flex-direction: column; display: none; margin-top: 1rem; }
       nav#main-nav.show { display: flex; }
       nav#main-nav a { margin: 0.4rem 0; padding: 0.5rem 1rem; background-color: rgba(255,255,255,0.1); border-radius: 6px; }
-      #inbox { grid-template-columns: repeat(2, 1fr); gap: 1rem; padding: 0 0.5rem; }
-      footer > div { flex-direction: column; align-items: flex-start; }
-      footer > div > div { width: 100%; }
     }
   </style>
 </head>
@@ -280,9 +264,6 @@ const supabase = window.supabase.createClient(
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
 );
 
-let currentPage = 1;
-const pageSize = 24;
-
 document.getElementById('nav-toggle').addEventListener('click', () => {
   const nav = document.getElementById('main-nav');
   nav.classList.toggle('show');
@@ -304,12 +285,11 @@ function timeAgo(dateString) {
   return `${Math.floor(diff / 86400)} Tg.`;
 }
 
-async function loadInbox(page = 1) {
+async function loadInboxList() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return window.location.href = "login.html";
 
-  const { data: messages } = await supabase
-    .from('messages')
+  const { data: messages } = await supabase.from('messages')
     .select('*')
     .or(`sender_id.eq.${user.id},receiver_id.eq.${user.id}`)
     .order('created_at', { ascending: false });
@@ -330,80 +310,31 @@ async function loadInbox(page = 1) {
   });
 
   const chatArray = Array.from(uniqueChats.values());
-  const totalCount = chatArray.length;
-  const from = (page-1)*pageSize;
-  const to = from+pageSize;
-  const pagedChats = chatArray.slice(from,to);
 
-  for(const msg of pagedChats){
+  for(const msg of chatArray) {
     const otherId = msg.sender_id === user.id ? msg.receiver_id : msg.sender_id;
-    const [{data:userData},{data:listingData}] = await Promise.all([
-      supabase.from('profiles').select('name, avatar_url').eq('id',otherId).single(),
-      supabase.from('listings').select('title, image_urls, price_per_day, location').eq('id',msg.listing_id).single()
-    ]);
+    const { data: userData } = await supabase.from('profiles').select('name, avatar_url').eq('id', otherId).single();
 
     const name = userData?.name || 'Unbekannt';
     const avatar = userData?.avatar_url || null;
-    const title = listingData?.title || 'Inserat gelöscht';
-    const price = listingData?.price_per_day ? `${listingData.price_per_day} €/Tag` : '';
-    const location = listingData?.location || '';
-    const image = listingData?.image_urls?.[0] || '';
 
-    const card = document.createElement('div');
-    card.className='chat-card';
-    card.tabIndex=0;
-    card.onclick = ()=>window.location.href=`nachrichten.html?listing_id=${msg.listing_id}&with=${otherId}`;
-    card.innerHTML=`
-      <div class="delete-chat" title="Chat löschen" tabindex="0" role="button" aria-label="Chat löschen" onclick="event.stopPropagation(); confirmDelete('${msg.listing_id}','${otherId}',this)">🗑️</div>
-      <div class="chat-avatar">${avatar?`<img src="${avatar}" alt="${name}" />`:`<span>${name.charAt(0).toUpperCase()}</span>`}</div>
-      <div class="chat-info">
+    const item = document.createElement('div');
+    item.className = 'chat-item';
+    item.tabIndex = 0;
+    item.onclick = () => window.location.href = `nachrichten.html?listing_id=${msg.listing_id}&with=${otherId}`;
+    item.innerHTML = `
+      <div class="chat-avatar">${avatar ? `<img src="${avatar}" alt="${name}" />` : `<span>${name.charAt(0)}</span>`}</div>
+      <div class="chat-content">
         <div class="chat-name">${name}</div>
-        <div class="chat-title">📦 ${title}</div>
-        ${image?`<img class="listing-thumb" src="${image}" alt="${title}" />`:''}
-        <div class="listing-meta">${price?`<span>💶 ${price}</span>`:''}${location?`<span>📍 ${location}</span>`:''}</div>
-        <div class="chat-preview">💬 ${msg.content.slice(0,90)}${msg.content.length>90?'…':''}</div>
-        <div class="chat-time">⏱️ ${timeAgo(msg.created_at)}</div>
+        <div class="chat-preview">💬 ${msg.content.slice(0,80)}${msg.content.length>80?'…':''}</div>
       </div>
+      <div class="chat-time">${timeAgo(msg.created_at)}</div>
     `;
-    inbox.appendChild(card);
+    inbox.appendChild(item);
   }
-
-  // Pagination
-  const pagination = document.createElement('div');
-  pagination.style.cssText="grid-column:1/-1; display:flex; justify-content:center; gap:10px; margin-top:20px;";
-  const totalPages = Math.ceil(totalCount/pageSize);
-
-  if(page>1){
-    const prevBtn = document.createElement('button');
-    prevBtn.textContent="← Zurück";
-    prevBtn.onclick=()=>{currentPage--; loadInbox(currentPage);};
-    pagination.appendChild(prevBtn);
-  }
-
-  pagination.appendChild(document.createTextNode(`Seite ${page} von ${totalPages}`));
-
-  if(page<totalPages){
-    const nextBtn = document.createElement('button');
-    nextBtn.textContent="Weiter →";
-    nextBtn.onclick=()=>{currentPage++; loadInbox(currentPage);};
-    pagination.appendChild(nextBtn);
-  }
-
-  inbox.appendChild(pagination);
 }
 
-async function confirmDelete(listingId,otherId,el){
-  if(!confirm("Möchtest du diesen Chatverlauf wirklich löschen?")) return;
-  const {data:{user}} = await supabase.auth.getUser();
-  const {error} = await supabase
-    .from('messages')
-    .delete()
-    .or(`and(sender_id.eq.${user.id},receiver_id.eq.${otherId},listing_id.eq.${listingId}),and(receiver_id.eq.${user.id},sender_id.eq.${otherId},listing_id.eq.${listingId})`);
-  if(!error) el.closest('.chat-card').remove();
-  else alert("Fehler beim Löschen des Chats.");
-}
-
-loadInbox();
+loadInboxList();
 </script>
 
 </body>
