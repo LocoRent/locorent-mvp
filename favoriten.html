@@ -151,13 +151,12 @@
       margin-top: 0;
     }
 
-.category-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 2rem;
-  padding: 0 0 2rem;  /* links/rechts Padding weg */
-  margin: 0 1rem;     /* gleichmäßiger Rand links & rechts */
-}
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 2rem;
+      padding: 0 1rem 2rem;
+    }
 
     .result-card {
       background: var(--white);
@@ -292,13 +291,13 @@
       text-align: center;
       opacity: 0.85;
     }
+    /* Handy: 2 Spalten Grid */
 @media (max-width: 720px) {
   .category-grid {
-    grid-template-columns: repeat(2, 1fr); /* 2 Spalten auf Handy */
+    grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
-    margin: 0 0.5rem; /* etwas kleinere Außenränder auf Handy */
   }
-}
+
   .result-card img {
     height: 140px; /* Bild etwas kleiner, passt besser nebeneinander */
   }
