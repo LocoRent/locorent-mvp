@@ -116,14 +116,13 @@
     }
 
     /* INBOX GRID */
-    #inbox {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr); /* Desktop: 6 Chats pro Reihe */
-      gap: 2rem;
-      margin-bottom: 2.5rem;
-      padding: 0 1rem;
-    }
-
+#inbox {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* flexible Breite */
+  gap: 2.5rem; /* etwas mehr Abstand */
+  margin-bottom: 2.5rem;
+  padding: 0 1rem;
+}
     /* CHAT CARD */
     .chat-card {
       background: var(--white);
