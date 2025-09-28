@@ -7,39 +7,67 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <style>
+    :root {
+      --primary: #2e7d32;
+      --primary-light: #66bb6a;
+      --primary-dark: #1b5e20;
+      --background: #f1f8e9;
+      --white: #fff;
+      --text-dark: #0f2e13;
+      --text-muted: #466843;
+      --accent: #b9f6ca;
+      --highlight: #a5d6a7;
+      --radius: 12px;
+      --shadow-light: rgba(46, 125, 50, 0.08);
+      --shadow-strong: rgba(46, 125, 50, 0.25);
+      --transition: 0.4s ease;
+      --font-primary: 'Poppins', sans-serif;
+    }
+
     body {
-      font-family: 'Poppins', sans-serif;
-      background: #f1f8e9;
+      font-family: var(--font-primary);
+      background: var(--background);
       margin: 0;
-      color: #1b5e20;
+      color: var(--text-dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
     header {
-      background: #2e7d32;
-      color: white;
-      padding: 0.5rem 1rem; /* schmaler gemacht */
+      background-color: var(--primary);
+      color: var(--white);
+      padding: 1.5rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      font-weight: 700;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      flex-wrap: wrap;
     }
 
     header h1 {
-      font-size: 1.4rem;
+      font-size: 1.8rem;
       margin: 0;
+      cursor: pointer;
     }
 
     nav a {
-      color: white;
+      color: var(--white);
       text-decoration: none;
       font-weight: 600;
+      font-size: 1rem;
     }
 
     main {
       max-width: 900px;
       margin: 2rem auto;
       background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      border-radius: var(--radius);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       display: flex;
       flex-direction: column;
       height: 85vh;
@@ -47,19 +75,21 @@
     }
 
     .chat-header {
-      padding: 0.8rem 1rem; /* leicht schmaler */
+      padding: 1.2rem 1.5rem;
       border-bottom: 1px solid #ccc;
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
       background: #e8f5e9;
+      gap: 1rem;
     }
 
     .listing-info, .user-info {
       display: flex;
       align-items: center;
       gap: 1rem;
+      cursor: pointer;
     }
 
     .listing-info img, .user-info img {
@@ -79,17 +109,9 @@
       font-size: 1rem;
     }
 
-    .listing-info:hover {
+    .listing-info:hover, .user-info:hover {
       background-color: #f0f4c3;
       border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-
-    .user-info:hover {
-      background-color: #f0f4c3;
-      border-radius: 8px;
-      cursor: pointer;
       transition: background 0.3s ease;
     }
 
@@ -126,13 +148,8 @@
       position: relative;
     }
 
-    .sent .message {
-      background: #c8e6c9;
-    }
-
-    .received .message {
-      background: #eeeeee;
-    }
+    .sent .message { background: #c8e6c9; }
+    .received .message { background: #eeeeee; }
 
     .message time {
       display: block;
@@ -143,7 +160,7 @@
     }
 
     .input-bar {
-      padding: 0.8rem;
+      padding: 1rem;
       border-top: 1px solid #ccc;
       display: flex;
       gap: 0.5rem;
@@ -152,15 +169,15 @@
 
     .input-bar input {
       flex: 1;
-      padding: 0.7rem;
+      padding: 0.8rem;
       border: 1px solid #ccc;
       border-radius: 8px;
     }
 
     .input-bar button {
-      background: #2e7d32;
-      color: white;
-      padding: 0.7rem 1rem;
+      background: var(--primary);
+      color: var(--white);
+      padding: 0.8rem 1.2rem;
       border: none;
       border-radius: 8px;
       font-weight: bold;
@@ -178,20 +195,22 @@
 <body>
 
 <header>
-  <h1>Locorent</h1>
-  <nav><a href="nachrichten-inbox.html">← Zurück</a></nav>
+  <h1 onclick="location.href='index.html'">Locorent</h1>
+  <nav>
+    <a href="nachrichten-inbox.html">← Zurück</a>
+  </nav>
 </header>
 
 <main>
   <div class="chat-header">
-    <a class="listing-info" id="listing-link" href="#" style="text-decoration: none; color: inherit;">
+    <a class="listing-info" id="listing-link" href="#">
       <img id="listing-image" src="" alt="Bild" />
       <div>
         <span class="title" id="listing-title">Titel</span>
         <small id="listing-price">–</small>
       </div>
     </a>
-    <div class="user-info" id="partner-link" style="cursor:pointer;">
+    <div class="user-info" id="partner-link">
       <img id="partner-avatar" src="" alt="Avatar" />
       <div>
         <span id="partner-name">Name</span>
@@ -217,9 +236,7 @@
   const urlParams = new URLSearchParams(window.location.search);
   const listingId = urlParams.get('listing_id');
   const chatWith = urlParams.get('with');
-  let currentUser = null;
-  let partnerName = "", partnerAvatar = "", channel, userProfile = null;
-  let isSending = false;
+  let currentUser = null, partnerName="", partnerAvatar="", channel, userProfile=null, isSending=false;
 
   async function init() {
     const { data: { user } } = await supabase.auth.getUser();
@@ -244,7 +261,7 @@
     document.getElementById('listing-image').src = listing?.image_urls?.[0] || 'https://via.placeholder.com/60';
     document.getElementById('listing-link').href = `mietobjekt.html?id=${listingId}`;
 
-    // Partner klickbar
+    // Weiterleitung bei Klick auf Partner
     document.getElementById('partner-link').addEventListener('click', () => {
       window.location.href = `vermieter-profil.html?id=${chatWith}`;
     });
@@ -254,17 +271,8 @@
   }
 
   async function loadMessages() {
-    const { data, error } = await supabase
-      .from('messages')
-      .select('*')
-      .eq('listing_id', listingId)
-      .order('created_at');
-
-    const relevant = data.filter(m =>
-      (m.sender_id === currentUser.id && m.receiver_id === chatWith) ||
-      (m.sender_id === chatWith && m.receiver_id === currentUser.id)
-    );
-
+    const { data } = await supabase.from('messages').select('*').eq('listing_id', listingId).order('created_at');
+    const relevant = data.filter(m => (m.sender_id===currentUser.id && m.receiver_id===chatWith) || (m.sender_id===chatWith && m.receiver_id===currentUser.id));
     const container = document.getElementById('chat');
     container.innerHTML = '';
     relevant.forEach(renderMessage);
@@ -273,20 +281,17 @@
 
   function renderMessage(msg) {
     const wrapper = document.createElement('div');
-    wrapper.className = `message-wrapper ${msg.sender_id === currentUser.id ? 'sent' : 'received'}`;
-
+    wrapper.className = `message-wrapper ${msg.sender_id===currentUser.id?'sent':'received'}`;
     const avatar = document.createElement('img');
-    avatar.src = msg.sender_id === currentUser.id
+    avatar.src = msg.sender_id===currentUser.id
       ? `https://ui-avatars.com/api/?name=Ich&background=66bb6a&color=fff`
       : partnerAvatar;
-
     const bubble = document.createElement('div');
     bubble.className = 'message';
     bubble.textContent = msg.content;
     const time = document.createElement('time');
-    time.textContent = new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    time.textContent = new Date(msg.created_at).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
     bubble.appendChild(time);
-
     wrapper.appendChild(avatar);
     wrapper.appendChild(bubble);
     document.getElementById('chat').appendChild(wrapper);
@@ -296,66 +301,38 @@
     const input = document.getElementById('message-input');
     const content = input.value.trim();
     if (!content) return;
+    if (currentUser.id===chatWith) { alert("Du kannst dir selbst keine Nachrichten schreiben."); return; }
+    if (!userProfile?.name?.trim() || !userProfile?.city?.trim()) { alert("Bitte fülle dein Profil aus (Name und Wohnort)"); return; }
+    if (isSending) { alert("Bitte warte kurz"); return; }
+    isSending=true; setTimeout(()=>isSending=false,3000);
 
-    if (currentUser.id === chatWith) {
-      alert("Du kannst dir selbst keine Nachrichten schreiben.");
-      return;
-    }
+    const { data } = await supabase.from('messages').insert({
+      sender_id: currentUser.id,
+      receiver_id: chatWith,
+      listing_id: listingId,
+      content
+    }).select().single();
 
-    if (!userProfile?.name?.trim() || !userProfile?.city?.trim()) {
-      alert("Bitte fülle dein Profil aus (Name und Wohnort), bevor du Nachrichten senden kannst.");
-      return;
-    }
-
-    if (isSending) {
-      alert("Bitte warte einen Moment, bevor du erneut sendest.");
-      return;
-    }
-
-    isSending = true;
-    setTimeout(() => { isSending = false; }, 3000);
-
-    const { data, error } = await supabase
-      .from('messages')
-      .insert({
-        sender_id: currentUser.id,
-        receiver_id: chatWith,
-        listing_id: listingId,
-        content
-      }).select().single();
-
-    if (data) {
-      input.value = '';
-      renderMessage(data);
-      document.getElementById('chat').scrollTop = document.getElementById('chat').scrollHeight;
-    }
+    if (data) { input.value=''; renderMessage(data); document.getElementById('chat').scrollTop=document.getElementById('chat').scrollHeight; }
   }
 
   function setupRealtime() {
-    channel = supabase
-      .channel('chat-' + listingId)
-      .on('postgres_changes', {
-        event: 'INSERT',
-        schema: 'public',
-        table: 'messages',
-        filter: `listing_id=eq.${listingId}`
-      }, payload => {
-        const msg = payload.new;
-        if (msg.sender_id !== currentUser.id && msg.receiver_id === currentUser.id) {
-          renderMessage(msg);
-          document.getElementById('chat').scrollTop = document.getElementById('chat').scrollHeight;
-        }
-      }).subscribe();
+    channel = supabase.channel('chat-'+listingId).on('postgres_changes', {
+      event: 'INSERT',
+      schema: 'public',
+      table: 'messages',
+      filter:`listing_id=eq.${listingId}`
+    }, payload => {
+      const msg = payload.new;
+      if (msg.sender_id!==currentUser.id && msg.receiver_id===currentUser.id) {
+        renderMessage(msg);
+        document.getElementById('chat').scrollTop=document.getElementById('chat').scrollHeight;
+      }
+    }).subscribe();
   }
 
-  window.addEventListener('beforeunload', () => {
-    if (channel) supabase.removeChannel(channel);
-  });
-
-  document.getElementById('message-input').addEventListener('keydown', e => {
-    if (e.key === 'Enter') sendMessage();
-  });
-
+  window.addEventListener('beforeunload',()=>{ if(channel) supabase.removeChannel(channel); });
+  document.getElementById('message-input').addEventListener('keydown', e => { if(e.key==='Enter') sendMessage(); });
   init();
 </script>
 
