@@ -1,316 +1,213 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Mietobjekt – Locorent</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <style>
-    :root {
-      --primary: #2e7d32;
-      --primary-light: #66bb6a;
-      --primary-dark: #1b5e20;
-      --background: #f1f8e9;
-      --white: #fff;
-      --text-dark: #0f2e13;
-      --text-muted: #466843;
-      --accent: #b9f6ca;
-      --highlight: #a5d6a7;
-      --radius: 18px;
-      --shadow-light: rgba(46, 125, 50, 0.08);
-      --shadow-strong: rgba(46, 125, 50, 0.25);
-      --transition: 0.4s ease;
-      --font-primary: 'Poppins', sans-serif;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mietobjekt – Locorent</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root {
+  --primary: #2e7d32;
+  --primary-light: #66bb6a;
+  --primary-dark: #1b5e20;
+  --background: #f1f8e9;
+  --white: #fff;
+  --text-dark: #0f2e13;
+  --text-muted: #466843;
+  --accent: #b9f6ca;
+  --highlight: #a5d6a7;
+  --radius: 18px;
+  --shadow-light: rgba(46, 125, 50, 0.08);
+  --shadow-strong: rgba(46, 125, 50, 0.25);
+  --transition: 0.4s ease;
+  --font-primary: 'Poppins', sans-serif;
+}
 
-    *, *::before, *::after { box-sizing: border-box; }
+*, *::before, *::after { box-sizing: border-box; }
 
-    html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      overflow-x: hidden;
-      font-family: var(--font-primary);
-      background: var(--background);
-      color: var(--text-dark);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
+html, body {
+  margin:0; padding:0; width:100%; overflow-x:hidden;
+  font-family: var(--font-primary); background: var(--background);
+  color: var(--text-dark); min-height:100vh; display:flex; flex-direction:column;
+}
 
-    header {
-      background-color: var(--primary);
-      color: var(--white);
-      padding: 1rem 1.5rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-weight: 700;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-      flex-wrap: wrap;
-    }
+header {
+  background-color: var(--primary);
+  color: var(--white);
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  flex-wrap: wrap;
+}
 
-    header h1 {
-      font-size: 1.8rem;
-      cursor: pointer;
-      user-select: none;
-      margin: 0;
-    }
+header h1 {
+  font-size: 1.8rem;
+  cursor: pointer;
+  user-select: none;
+  margin: 0;
+}
 
-    #nav-toggle {
-      display: none;
-      background: none;
-      border: none;
-      font-size: 1.8rem;
-      color: var(--white);
-      cursor: pointer;
-    }
+#nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  color: var(--white);
+  cursor: pointer;
+}
 
-    nav#nav-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
+nav#nav-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
 
-    nav#nav-links a {
-      color: var(--white);
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 1rem;
-      position: relative;
-      transition: color 0.3s ease;
-    }
+nav#nav-links a {
+  color: var(--white);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  position: relative;
+  transition: color 0.3s ease;
+}
 
-    nav#nav-links a::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      bottom: -4px;
-      width: 0;
-      height: 2px;
-      background-color: var(--accent);
-      transition: width 0.3s ease;
-    }
+nav#nav-links a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0;
+  height: 2px;
+  background-color: var(--accent);
+  transition: width 0.3s ease;
+}
 
-    nav#nav-links a:hover::after,
-    nav#nav-links a:focus::after {
-      width: 100%;
-    }
+nav#nav-links a:hover::after,
+nav#nav-links a:focus::after { width: 100%; }
 
-    nav#nav-links a:hover,
-    nav#nav-links a:focus {
-      color: var(--accent);
-      outline: none;
-    }
+nav#nav-links a:hover,
+nav#nav-links a:focus { color: var(--accent); outline: none; }
 
-    main {
-      width: 100vw;
-      margin: 2rem 0 4rem;
-      padding: 0 1rem;
-      flex-grow: 1;
-      display: flex;
-      gap: 2rem;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
+main {
+  width: 100vw;
+  margin: 2rem 0 4rem;
+  padding: 0 1rem;
+  flex-grow: 1;
+}
 
-    .gallery {
-      flex: 2 1 400px;
-      max-width: 600px;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
+.listing-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+}
 
-    .gallery img.main-image {
-      width: 100%;
-      border-radius: var(--radius);
-      box-shadow: 0 4px 14px var(--shadow-light);
-      object-fit: cover;
-    }
+.gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
 
-    .thumbnails {
-      display: flex;
-      gap: 0.5rem;
-      overflow-x: auto;
-      padding-bottom: 6px;
-    }
+.gallery img.main-image {
+  width: 100%;
+  border-radius: var(--radius);
+  max-height: 400px;
+  object-fit: cover;
+  box-shadow: 0 2px 8px var(--shadow-light);
+}
 
-    .thumbnails img {
-      width: 90px;
-      height: 70px;
-      object-fit: cover;
-      border-radius: 12px;
-      border: 3px solid transparent;
-      cursor: pointer;
-      box-shadow: 0 2px 6px var(--shadow-light);
-      transition: border-color 0.3s ease;
-      flex-shrink: 0;
-    }
+.thumbnails {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+}
 
-    .thumbnails img.active {
-      border-color: var(--primary);
-      box-shadow: 0 0 10px var(--primary);
-    }
+.thumbnails img {
+  width: 100px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  cursor: pointer;
+}
 
-    .content {
-      flex: 1 1 320px;
-      max-width: 400px;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      background: var(--white);
-      padding: 1.5rem;
-      border-radius: var(--radius);
-      box-shadow: 0 4px 14px var(--shadow-light);
-    }
+.thumbnails img.active { border-color: var(--primary); }
 
-    .content h2 {
-      font-size: 1.8rem;
-      margin: 0;
-      color: var(--primary);
-    }
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
 
-    .content p {
-      margin: 0.4rem 0;
-      font-size: 1rem;
-      color: var(--text-muted);
-    }
+.content h2 { font-size: 2rem; color: var(--primary); margin:0; }
+.content p { font-size: 1rem; color: var(--text-muted); margin:0; }
+.content .description { padding:0.8rem; background: var(--white); box-shadow: 0 2px 8px var(--shadow-light); border-radius: var(--radius); max-height:200px; overflow-y:auto; }
 
-    .content .description {
-      margin-top: 0.5rem;
-      background: var(--background);
-      padding: 0.8rem;
-      border-radius: var(--radius);
-      box-shadow: inset 0 0 6px var(--shadow-light);
-      max-height: 180px;
-      overflow-y: auto;
-    }
+.content button {
+  padding: 0.6rem;
+  background: var(--primary);
+  color: var(--white);
+  border:none;
+  border-radius:8px;
+  font-weight:600;
+  cursor:pointer;
+  transition: background 0.3s;
+}
 
-    button {
-      padding: 0.6rem;
-      background: var(--primary);
-      color: var(--white);
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: background-color 0.3s ease;
-      width: 100%;
-    }
+.content button:hover { background: var(--primary-dark); }
 
-    button:hover {
-      background: var(--primary-dark);
-    }
+.vendor-info {
+  margin-top:2rem;
+  padding:1rem;
+  background: var(--white);
+  box-shadow: 0 2px 8px var(--shadow-light);
+  border-radius: var(--radius);
+}
 
-    .vendor-info {
-      flex: 1 1 300px;
-      max-width: 320px;
-      background: var(--white);
-      padding: 1rem;
-      border-radius: var(--radius);
-      box-shadow: 0 4px 12px var(--shadow-light);
-      font-size: 0.95rem;
-      color: var(--text-dark);
-      line-height: 1.4;
-    }
+.vendor-info h3 { margin-top:0; color: var(--primary); }
+.vendor-info p { margin:0.2rem 0; color: var(--text-muted); }
 
-    .vendor-info h3 {
-      color: var(--primary);
-      margin-bottom: 0.5rem;
-    }
+footer {
+  background-color: var(--primary);
+  color: var(--white);
+  padding: 2rem 2rem 1rem;
+  border-radius: var(--radius);
+  margin-top: auto;
+  box-shadow: 0 8px 32px rgba(46, 125, 50, 0.22);
+  font-size: 0.92rem;
+  width: 100vw;
+}
 
-    .vendor-info a {
-      color: var(--primary);
-      text-decoration: underline;
-      cursor: pointer;
-    }
+footer > div {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2rem;
+}
 
-    footer {
-      background-color: var(--primary);
-      color: var(--white);
-      padding: 2rem 2rem 1rem;
-      border-radius: var(--radius);
-      margin-top: auto;
-      box-shadow: 0 8px 32px rgba(46, 125, 50, 0.22);
-      font-size: 0.92rem;
-      width: 100vw;
-      position: relative;
-      left: 50%;
-      right: 50%;
-      margin-left: -50vw;
-      margin-right: -50vw;
-      text-align: center;
-    }
+footer h4 { margin-bottom:0.5rem; font-weight:700; }
+footer ul { list-style:none; padding:0; line-height:1.8; }
+footer ul li a { color: var(--white); text-decoration: underline; }
+footer ul li a:hover { color: var(--highlight); }
 
-    footer > div {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 2rem;
-      text-align: left;
-    }
-
-    footer h4 {
-      margin-bottom: 0.5rem;
-      font-weight: 700;
-    }
-
-    footer ul {
-      list-style: none;
-      padding: 0;
-      line-height: 1.8;
-    }
-
-    footer ul li a {
-      color: var(--white);
-      text-decoration: underline;
-    }
-
-    footer small {
-      display: block;
-      margin-top: 2rem;
-      text-align: center;
-      opacity: 0.85;
-    }
-
-    @media (max-width: 720px) {
-      #nav-toggle { display: block; }
-      nav#nav-links {
-        width: 100%;
-        flex-direction: column;
-        display: none;
-        margin-top: 1rem;
-      }
-      nav#nav-links.show { display: flex; }
-      nav#nav-links a {
-        margin: 0.4rem 0;
-        padding: 0.5rem 1rem;
-        background-color: rgba(255,255,255,0.1);
-        border-radius: 6px;
-      }
-
-      main {
-        flex-direction: column;
-        padding: 0 0.5rem;
-      }
-
-      .gallery, .content, .vendor-info {
-        max-width: 100%;
-        flex: none;
-      }
-
-      .gallery img.main-image { height: 200px; object-fit: cover; }
-
-      .thumbnails img { width: 70px; height: 50px; }
-    }
-  </style>
+@media(max-width:720px){
+  #nav-toggle { display:block; }
+  nav#nav-links { display:none; flex-direction:column; width:100%; margin-top:1rem; }
+  nav#nav-links.show { display:flex; }
+  nav#nav-links a { margin:0.4rem 0; padding:0.5rem 1rem; background-color: rgba(255,255,255,0.1); border-radius:6px; display:block; }
+  .listing-grid { grid-template-columns:1fr; }
+  .gallery img.main-image { max-height:250px; }
+  .thumbnails img { width:70px; height:50px; }
+}
+</style>
 </head>
 <body>
 <header>
@@ -319,7 +216,9 @@
   <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
 </header>
 
-<main id="listing-details">Lade Inserat…</main>
+<main id="listing-details">
+  Lade Inserat…
+</main>
 
 <footer>
   <div>
@@ -353,60 +252,55 @@
 </footer>
 
 <script>
-  const supabase = window.supabase.createClient(
-    'https://flnjalgqtkqycsaymmbd.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-  );
+const supabase = window.supabase.createClient(
+  'https://flnjalgqtkqycsaymmbd.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+);
 
-  let currentUser = null;
-  let listingOwnerId = null;
-  let isFavorite = false;
+let currentUser = null;
+let listingOwnerId = null;
+let isFavorite = false;
 
-  document.getElementById('nav-toggle').addEventListener('click', () => {
-    const nav = document.getElementById('nav-links');
-    nav.classList.toggle('show');
-    const expanded = nav.classList.contains('show');
-    document.getElementById('nav-toggle').setAttribute('aria-expanded', expanded);
-  });
+document.getElementById('nav-toggle').addEventListener('click',()=>{
+  const nav = document.getElementById('nav-links');
+  nav.classList.toggle('show');
+  document.getElementById('nav-toggle').setAttribute('aria-expanded',nav.classList.contains('show'));
+});
 
-  async function updateNav() {
-    const { data: { session } } = await supabase.auth.getSession();
-    const nav = document.getElementById('nav-links');
-    if(session?.user){
-      nav.innerHTML = `
-        <a href="index.html">Start</a>
-        <a href="profil.html">Mein Profil</a>
-        <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-        <a href="favoriten.html">Meine Favoriten</a>
-        <a href="inserate.html">Meine Inserate</a>
-        <a href="javascript:void(0);" onclick="logout()">Logout</a>
-      `;
-      currentUser = session.user;
-    } else {
-      nav.innerHTML = `<a href="login.html">Einloggen</a><a href="register.html">Registrieren</a>`;
-    }
-  }
+async function updateNav(){
+  const { data:{session} } = await supabase.auth.getSession();
+  const nav = document.getElementById('nav-links');
+  if(session?.user){
+    nav.innerHTML = `
+      <a href="index.html">Start</a>
+      <a href="profil.html">Mein Profil</a>
+      <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+      <a href="favoriten.html">Meine Favoriten</a>
+      <a href="inserate.html">Meine Inserate</a>
+      <a href="#" onclick="logout()">Logout</a>
+    `;
+    currentUser = session.user;
+  } else { nav.innerHTML = `<a href="login.html">Einloggen</a>`; }
+}
 
-  async function logout() {
-    await supabase.auth.signOut();
-    window.location.href = "login.html";
-  }
+async function logout(){ await supabase.auth.signOut(); window.location.href="login.html"; }
 
-  function capitalize(str){return str?str.charAt(0).toUpperCase()+str.slice(1):'';}
-  function formatDate(dateStr){if(!dateStr)return 'Unbekannt';const d=new Date(dateStr);return d.toLocaleDateString('de-DE',{year:'numeric',month:'long',day:'numeric'});}
+function capitalize(str){return str?str.charAt(0).toUpperCase()+str.slice(1):'';}
+function formatDate(dateStr){if(!dateStr)return'–'; const d=new Date(dateStr);return d.toLocaleDateString('de-DE',{year:'numeric',month:'long',day:'numeric'});}
 
-  async function loadListing() {
-    const params = new URLSearchParams(location.search);
-    const listingId = params.get('id');
-    const { data: listing, error } = await supabase.from('listings').select('*').eq('id',listingId).single();
-    if(error||!listing){document.getElementById('listing-details').innerHTML="<p>Fehler beim Laden des Inserats.</p>"; return;}
-    listingOwnerId = listing.user_id;
-    const { data: profile } = await supabase.from('profiles').select('name,city,bio').eq('id',listing.user_id).single();
+async function loadListing(){
+  const params = new URLSearchParams(location.search);
+  const listingId = params.get('id');
+  const { data: listing, error } = await supabase.from('listings').select('*').eq('id',listingId).single();
+  if(error||!listing){document.getElementById('listing-details').innerHTML="<p>Fehler beim Laden des Inserats.</p>"; return;}
+  listingOwnerId = listing.user_id;
+  const { data: profile } = await supabase.from('profiles').select('name,city,bio').eq('id',listing.user_id).single();
 
-    const images = listing.image_urls||(listing.image_url?[listing.image_url] : ['https://via.placeholder.com/600x400?text=Kein+Bild']);
-    const thumbs = images.map((url,i)=>`<img src="${url}" class="${i===0?'active':''}" alt="Vorschaubild ${i+1}" onclick="switchImage('${url}',this)">`).join('');
+  const images = listing.image_urls || (listing.image_url?[listing.image_url]:['https://via.placeholder.com/600x400?text=Kein+Bild']);
+  const thumbs = images.map((url,i)=>`<img src="${url}" class="${i===0?'active':''}" alt="Vorschaubild ${i+1}" onclick="switchImage('${url}',this)">`).join('');
 
-    document.getElementById('listing-details').innerHTML=`
+  document.getElementById('listing-details').innerHTML=`
+    <div class="listing-grid">
       <div class="gallery">
         <img src="${images[0]}" class="main-image" id="mainImage" alt="Bild des Mietobjekts"/>
         ${images.length>1?`<div class="thumbnails">${thumbs}</div>`:''}
@@ -414,59 +308,60 @@
       <div class="content">
         <h2>${listing.title}</h2>
         <p><strong>Kategorie:</strong> ${capitalize(listing.category)}</p>
-        <p><strong>Preis pro Tag:</strong> ${listing.price_per_day} €</p>
+        <p><strong>Preis pro Tag:</strong> ${listing.price_per_day || '–'} €</p>
         <p><strong>Ort:</strong> ${listing.location||'–'}</p>
         <p><strong>Online seit:</strong> ${formatDate(listing.created_at)}</p>
         <p><strong>Beschreibung:</strong></p>
         <p class="description">${listing.description||'Keine Beschreibung vorhanden.'}</p>
         <button onclick="goToChat()">Nachricht an Vermieter</button>
         ${currentUser?`<button id="add-to-favorites" onclick="toggleFavorite('${listing.id}')">Lade Favoritenstatus...</button>`:''}
+        <div class="vendor-info">
+          <h3>Vermieter</h3>
+          <p><strong>Name:</strong> <a href="vermieter-profil.html?id=${listing.user_id}">${profile?.name||'–'}</a></p>
+          <p><strong>Ort:</strong> ${profile?.city||'–'}</p>
+          <p><strong>Über mich:</strong> ${profile?.bio||'–'}</p>
+        </div>
       </div>
-      <div class="vendor-info">
-        <h3>Vermieter</h3>
-        <p><strong>Name:</strong> <a href="vermieter-profil.html?id=${listing.user_id}">${profile?.name||'–'}</a></p>
-        <p><strong>Ort:</strong> ${profile?.city||'–'}</p>
-        <p><strong>Über mich:</strong> ${profile?.bio||'–'}</p>
-      </div>
-    `;
+    </div>
+  `;
 
-    if(currentUser) await updateFavoriteButton(listing.id);
+  if(currentUser) await updateFavoriteButton(listing.id);
+}
+
+function switchImage(url,el){
+  document.getElementById("mainImage").src=url;
+  document.querySelectorAll(".thumbnails img").forEach(img=>img.classList.remove("active"));
+  el.classList.add("active");
+}
+
+async function updateFavoriteButton(listingId){
+  const { data } = await supabase.from('favorites').select('*').eq('user_id',currentUser.id).eq('listing_id',listingId).single();
+  isFavorite=!!data;
+  document.getElementById("add-to-favorites").textContent=isFavorite?"Aus Favoriten entfernen":"Zu Favoriten hinzufügen";
+}
+
+async function toggleFavorite(listingId){
+  if(!currentUser) return alert("Bitte einloggen.");
+  const btn=document.getElementById("add-to-favorites");
+  if(isFavorite){
+    const { error } = await supabase.from('favorites').delete().eq('user_id',currentUser.id).eq('listing_id',listingId);
+    if(!error){isFavorite=false; btn.textContent="Zu Favoriten hinzufügen";} else alert("Fehler beim Entfernen aus Favoriten.");
+  }else{
+    const { error } = await supabase.from('favorites').insert({user_id:currentUser.id,listing_id:listingId});
+    if(!error){isFavorite=true; btn.textContent="Aus Favoriten entfernen";} else alert("Fehler beim Hinzufügen zu Favoriten.");
   }
+}
 
-  function switchImage(url,element){
-    document.getElementById("mainImage").src=url;
-    document.querySelectorAll(".thumbnails img").forEach(img=>img.classList.remove("active"));
-    element.classList.add("active");
-  }
+function goToChat(){
+  if(!currentUser) return alert("Bitte einloggen, um Nachrichten zu senden.");
+  const params=new URLSearchParams(location.search);
+  const listingId=params.get('id');
+  const chatWith=listingOwnerId;
+  window.location.href=`nachrichten.html?listing_id=${listingId}&with=${chatWith}`;
+}
 
-  async function updateFavoriteButton(listingId){
-    const { data } = await supabase.from('favorites').select('*').eq('user_id',currentUser.id).eq('listing_id',listingId).single();
-    isFavorite=!!data;
-    document.getElementById("add-to-favorites").textContent=isFavorite?"Aus Favoriten entfernen":"Zu Favoriten hinzufügen";
-  }
-
-  async function toggleFavorite(listingId){
-    if(!currentUser) return alert("Bitte einloggen.");
-    const btn=document.getElementById("add-to-favorites");
-    if(isFavorite){
-      const { error } = await supabase.from('favorites').delete().eq('user_id',currentUser.id).eq('listing_id',listingId);
-      if(!error){isFavorite=false;btn.textContent="Zu Favoriten hinzufügen";} else alert("Fehler beim Entfernen aus Favoriten.");
-    }else{
-      const { error } = await supabase.from('favorites').insert({user_id:currentUser.id,listing_id:listingId});
-      if(!error){isFavorite=true;btn.textContent="Aus Favoriten entfernen";} else alert("Fehler beim Hinzufügen zu Favoriten.");
-    }
-  }
-
-  function goToChat(){
-    if(!currentUser) return alert("Bitte einloggen, um Nachrichten zu senden.");
-    const params=new URLSearchParams(location.search);
-    const listingId=params.get('id');
-    const chatWith=listingOwnerId;
-    window.location.href=`nachrichten.html?listing_id=${listingId}&with=${chatWith}`;
-  }
-
-  updateNav();
-  loadListing();
+updateNav();
+loadListing();
 </script>
 </body>
 </html>
