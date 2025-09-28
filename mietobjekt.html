@@ -46,106 +46,40 @@ nav#nav-links a::after { content:''; position:absolute; left:0; bottom:-4px; wid
 nav#nav-links a:hover::after, nav#nav-links a:focus::after { width:100%; }
 nav#nav-links a:hover, nav#nav-links a:focus { color:var(--accent); outline:none; }
 
-/* Main modern */
+/* Main */
 main {
   width:100%;
   max-width:1200px;
   margin:2rem auto 4rem;
   padding:0 1rem;
   display:grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 1.5fr 2fr 1fr; /* 3 Spalten Desktop */
   gap:2rem;
 }
 
-.gallery {
-  display:flex;
-  flex-direction:column;
-  gap:0.5rem;
-  background:#fff;
-  padding:0.8rem;
-  border-radius:var(--radius);
-  box-shadow:0 4px 18px rgba(0,0,0,0.08);
-}
-
-.main-image {
-  width:100%;
-  max-height:500px;
-  object-fit:contain;
-  border-radius:16px;
-  transition:transform 0.3s ease;
-  cursor:pointer;
-}
-
-.main-image:hover { transform: scale(1.03); }
-
-.thumbnails {
-  display:flex;
-  gap:0.5rem;
-  overflow-x:auto;
-  margin-top:0.8rem;
-}
-
-.thumbnails img {
-  width:80px; height:60px;
-  object-fit:cover;
-  border-radius:8px;
-  border:2px solid transparent;
-  cursor:pointer;
-  transition:border-color 0.3s;
-  flex-shrink:0;
-}
-
-.thumbnails img.active {
-  border-color: var(--primary);
-  box-shadow:0 0 8px var(--primary);
-}
-
-.content {
-  display:flex;
-  flex-direction:column;
-  gap:0.8rem;
+.gallery, .content, .vendor-info {
   background:#fff;
   padding:1rem;
   border-radius:var(--radius);
   box-shadow:0 4px 18px rgba(0,0,0,0.08);
 }
+
+.gallery { display:flex; flex-direction:column; gap:0.5rem; }
+.main-image { width:100%; max-height:500px; object-fit:contain; border-radius:16px; cursor:pointer; transition: transform 0.3s ease; }
+.main-image:hover { transform: scale(1.03); }
+.thumbnails { display:flex; gap:0.5rem; overflow-x:auto; margin-top:0.8rem; }
+.thumbnails img { width:80px; height:60px; object-fit:cover; border-radius:8px; border:2px solid transparent; cursor:pointer; transition:border-color 0.3s; flex-shrink:0; }
+.thumbnails img.active { border-color: var(--primary); box-shadow:0 0 8px var(--primary); }
 
 .content h2 { font-size:2rem; font-weight:700; color:var(--primary); margin-bottom:0.5rem; }
 .content p { margin:0.3rem 0; line-height:1.5; }
-.content .description {
-  white-space:pre-wrap;
-  background:#f5f5f5;
-  padding:0.8rem;
-  border-radius:16px;
-  box-shadow:inset 0 0 6px rgba(0,0,0,0.05);
-  max-height:220px;
-  overflow-y:auto;
-  font-size:0.95rem;
-  color:#555;
-}
+.content .description { white-space:pre-wrap; background:#f5f5f5; padding:0.8rem; border-radius:16px; box-shadow:inset 0 0 6px rgba(0,0,0,0.05); max-height:220px; overflow-y:auto; font-size:0.95rem; color:#555; }
 
-button {
-  padding:0.7rem;
-  background:var(--primary);
-  color:#fff;
-  border:none;
-  border-radius:12px;
-  font-weight:700;
-  cursor:pointer;
-  transition:0.3s;
-  margin-top:0.5rem;
-}
+.vendor-info h3 { font-size:1.2rem; font-weight:700; margin-bottom:0.5rem; }
+.vendor-info p { margin:0.3rem 0; line-height:1.4; }
 
+button { padding:0.7rem; background:var(--primary); color:#fff; border:none; border-radius:12px; font-weight:700; cursor:pointer; transition:0.3s; margin-top:0.5rem; }
 button:hover { background:var(--primary-dark); }
-
-/* Vendor Info modern */
-.vendor-info {
-  background:#fff;
-  padding:1rem;
-  border-radius:var(--radius);
-  box-shadow:0 4px 18px rgba(0,0,0,0.08);
-  flex:1;
-}
 
 /* Footer */
 footer { background-color: var(--primary); color: var(--white); padding:2rem; margin-top:auto; box-shadow:0 8px 32px rgba(46,125,50,0.22); text-align:left; user-select:none; }
@@ -167,7 +101,6 @@ footer small { display:block; margin-top:2rem; text-align:center; opacity:0.85; 
   nav#nav-links a{margin:0.4rem 0; padding:0.5rem 1rem; background: rgba(255,255,255,0.1); border-radius:6px;}
   .main-image{max-height:280px;}
   .thumbnails img{width:70px;height:50px;}
-  .content, .vendor-info { padding:0.8rem; }
 }
 </style>
 </head>
@@ -274,12 +207,12 @@ async function loadListing(){
       <p class="description">${listing.description||'Keine Beschreibung vorhanden.'}</p>
       <button onclick="goToChat()">Nachricht an Vermieter</button>
       ${currentUser?`<button id="add-to-favorites" onclick="toggleFavorite('${listing.id}')">Lade Favoritenstatus...</button>`:''}
-      <div class="vendor-info">
-        <h3>Vermieter</h3>
-        <p><strong>Name:</strong> <a href="vermieter-profil.html?id=${listing.user_id}">${profile?.name||'–'}</a></p>
-        <p><strong>Ort:</strong> ${profile?.city||'–'}</p>
-        <p><strong>Über mich:</strong> ${profile?.bio||'–'}</p>
-      </div>
+    </div>
+    <div class="vendor-info">
+      <h3>Vermieter</h3>
+      <p><strong>Name:</strong> <a href="vermieter-profil.html?id=${listing.user_id}">${profile?.name||'–'}</a></p>
+      <p><strong>Ort:</strong> ${profile?.city||'–'}</p>
+      <p><strong>Über mich:</strong> ${profile?.bio||'–'}</p>
     </div>
   `;
   if(currentUser) await updateFavoriteButton(listing.id);
