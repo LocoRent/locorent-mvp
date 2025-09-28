@@ -46,38 +46,49 @@ nav#nav-links a::after { content:''; position:absolute; left:0; bottom:-4px; wid
 nav#nav-links a:hover::after, nav#nav-links a:focus::after { width:100%; }
 nav#nav-links a:hover, nav#nav-links a:focus { color:var(--accent); outline:none; }
 
-/* Main */
+/* Main Desktop modernisiert */
 main {
   width:100%;
   max-width:1200px;
   margin:2rem auto 4rem;
   padding:0 1rem;
   display:grid;
-  grid-template-columns: 1.5fr 2fr 1fr; /* 3 Spalten Desktop */
+  grid-template-columns: 1.5fr 2fr 1fr; /* Bild - Infos - Profil */
   gap:2rem;
 }
 
+/* Boxen für Desktop */
 .gallery, .content, .vendor-info {
   background:#fff;
-  padding:1rem;
+  padding:1.2rem;
   border-radius:var(--radius);
-  box-shadow:0 4px 18px rgba(0,0,0,0.08);
+  box-shadow:0 8px 24px rgba(0,0,0,0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+.gallery:hover, .content:hover, .vendor-info:hover {
+  transform: translateY(-3px);
+  box-shadow:0 12px 28px rgba(0,0,0,0.12);
+}
+
+/* Galerie */
 .gallery { display:flex; flex-direction:column; gap:0.5rem; }
 .main-image { width:100%; max-height:500px; object-fit:contain; border-radius:16px; cursor:pointer; transition: transform 0.3s ease; }
 .main-image:hover { transform: scale(1.03); }
 .thumbnails { display:flex; gap:0.5rem; overflow-x:auto; margin-top:0.8rem; }
-.thumbnails img { width:80px; height:60px; object-fit:cover; border-radius:8px; border:2px solid transparent; cursor:pointer; transition:border-color 0.3s; flex-shrink:0; }
-.thumbnails img.active { border-color: var(--primary); box-shadow:0 0 8px var(--primary); }
+.thumbnails img { width:80px; height:60px; object-fit:cover; border-radius:8px; border:2px solid transparent; cursor:pointer; transition:border-color 0.3s, transform 0.2s; flex-shrink:0; }
+.thumbnails img.active { border-color: var(--primary); box-shadow:0 0 8px var(--primary); transform: scale(1.05); }
 
+/* Content */
 .content h2 { font-size:2rem; font-weight:700; color:var(--primary); margin-bottom:0.5rem; }
 .content p { margin:0.3rem 0; line-height:1.5; }
-.content .description { white-space:pre-wrap; background:#f5f5f5; padding:0.8rem; border-radius:16px; box-shadow:inset 0 0 6px rgba(0,0,0,0.05); max-height:220px; overflow-y:auto; font-size:0.95rem; color:#555; }
+.content .description { white-space:pre-wrap; background:#f9f9f9; padding:1rem; border-radius:16px; box-shadow:inset 0 0 6px rgba(0,0,0,0.05); max-height:220px; overflow-y:auto; font-size:0.95rem; color:#555; }
 
+/* Vendor */
 .vendor-info h3 { font-size:1.2rem; font-weight:700; margin-bottom:0.5rem; }
 .vendor-info p { margin:0.3rem 0; line-height:1.4; }
 
+/* Buttons */
 button { padding:0.7rem; background:var(--primary); color:#fff; border:none; border-radius:12px; font-weight:700; cursor:pointer; transition:0.3s; margin-top:0.5rem; }
 button:hover { background:var(--primary-dark); }
 
@@ -92,7 +103,7 @@ footer ul li a { color: var(--white); text-decoration: underline; }
 footer ul li a:hover { color: var(--accent); }
 footer small { display:block; margin-top:2rem; text-align:center; opacity:0.85; }
 
-/* Responsive */
+/* Responsive (unverändert für mobile) */
 @media(max-width:900px){ main { grid-template-columns:1fr; gap:1.5rem; } }
 @media(max-width:720px){
   #nav-toggle{display:block;}
@@ -146,6 +157,7 @@ footer small { display:block; margin-top:2rem; text-align:center; opacity:0.85; 
 </footer>
 
 <script>
+// Dein Supabase-Skript bleibt unverändert
 const supabase = window.supabase.createClient(
   'https://flnjalgqtkqycsaymmbd.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
