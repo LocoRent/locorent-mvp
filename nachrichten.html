@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Nachrichten – Locorent</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
   <style>
     :root {
       --primary: #2e7d32;
@@ -16,11 +16,9 @@
       --text-dark: #0f2e13;
       --text-muted: #466843;
       --accent: #b9f6ca;
-      --highlight: #a5d6a7;
       --radius: 12px;
       --shadow-light: rgba(46, 125, 50, 0.08);
       --shadow-strong: rgba(46, 125, 50, 0.25);
-      --transition: 0.4s ease;
       --font-primary: 'Poppins', sans-serif;
     }
 
@@ -51,6 +49,7 @@
 
     header h1 {
       font-size: 1.8rem;
+      font-weight: 700; /* fett */
       margin: 0;
       cursor: pointer;
     }
@@ -90,6 +89,8 @@
       align-items: center;
       gap: 1rem;
       cursor: pointer;
+      text-decoration: none;
+      color: var(--text-dark); /* keine lila/blau */
     }
 
     .listing-info img, .user-info img {
@@ -107,6 +108,11 @@
     .listing-info .title {
       font-weight: 600;
       font-size: 1rem;
+      color: var(--text-dark); /* normalfarbe */
+    }
+
+    .listing-info small, .user-info small {
+      color: var(--text-muted);
     }
 
     .listing-info:hover, .user-info:hover {
