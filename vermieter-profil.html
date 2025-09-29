@@ -601,9 +601,6 @@
       const list = reviews.map(r => `
         <article class="review-item" tabindex="0" aria-label="Bewertung ${r.rating} von 5 Sternen von ${r.from_user?.name || 'Unbekannt'}">
           <div class="review-header">
-            <div class="review-avatar" style="background-image: url('${r.from_user?.avatar_url || ''}');" aria-hidden="true">
-              ${!r.from_user?.avatar_url ? getInitials(r.from_user?.name) : ''}
-            </div>
             <div class="reviewer-name">${r.from_user?.name || 'Unbekannt'}</div>
             <div class="review-rating" aria-label="Bewertung: ${r.rating} von 5 Sternen">${createStarIcons(r.rating)}</div>
           </div>
