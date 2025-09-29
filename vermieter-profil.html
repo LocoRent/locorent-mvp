@@ -604,7 +604,6 @@
             <div class="reviewer-name">${r.from_user?.name || 'Unbekannt'}</div>
             <div class="review-rating" aria-label="Bewertung: ${r.rating} von 5 Sternen">${createStarIcons(r.rating)}</div>
           </div>
-          <p class="review-text">${r.comment}</p>
           <time class="review-date" datetime="${new Date(r.created_at).toISOString()}">Verfasst am ${new Date(r.created_at).toLocaleDateString()}</time>
         </article>
       `).join('');
