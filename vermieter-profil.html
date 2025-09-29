@@ -45,13 +45,13 @@ header {
   display: flex;
   justify-content: space-between; /* Logo links, Burger rechts */
   align-items: center;            /* gleiche Höhe */
-  padding: 0.6rem 1rem;           /* kompakte Höhe für Mobil & Desktop */
+  padding: 0.8rem 1.5rem;         /* kompakte Höhe */
   position: sticky;
   top: 0;
   z-index: 1000;
   box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-  flex-wrap: nowrap;               /* kein Zeilenumbruch */
 }
+
 header h1 {
   font-weight: 900; /* immer fett */
   font-size: 1.8rem;
@@ -66,43 +66,43 @@ header h1 {
   color: var(--white);
   cursor: pointer;
 }
+/* Desktop Navigation */
+nav#nav-links {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
 
-    nav#nav-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
+nav#nav-links a {
+  color: var(--white);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  position: relative;
+  transition: color 0.3s ease;
+}
 
-    nav#nav-links a {
-      color: var(--white);
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 1rem;
-      position: relative;
-      transition: color 0.3s ease;
-    }
+nav#nav-links a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0;
+  height: 2px;
+  background-color: var(--accent);
+  transition: width 0.3s ease;
+}
 
-    nav#nav-links a::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      bottom: -4px;
-      width: 0;
-      height: 2px;
-      background-color: var(--accent);
-      transition: width 0.3s ease;
-    }
+nav#nav-links a:hover::after,
+nav#nav-links a:focus::after {
+  width: 100%;
+}
 
-    nav#nav-links a:hover::after,
-    nav#nav-links a:focus::after {
-      width: 100%;
-    }
-
-    nav#nav-links a:hover,
-    nav#nav-links a:focus {
-      color: var(--accent);
-      outline: none;
-    }
+nav#nav-links a:hover,
+nav#nav-links a:focus {
+  color: var(--accent);
+  outline: none;
+}
   main {
     max-width: var(--max-width);
     background: var(--white);
@@ -435,9 +435,10 @@ header h1 {
   }
   nav#nav-links a {
     margin: 0.3rem 0;
-    padding: 0.4rem 1rem;
+    padding: 0.5rem 1rem;
     background-color: rgba(255,255,255,0.1);
     border-radius: 6px;
+    display: block;
     color: var(--white);
     font-weight: 600;
   }
