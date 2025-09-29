@@ -7,107 +7,93 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-  :root {
-    --primary-color: #2e7d32;
-    --primary-dark: #1b5e20;
-    --background-color: #f1f8e9;
-    --white: #fff;
-    --light-gray: #f5f5f5;
-    --border-radius: 16px;
-    --shadow-color: rgba(0, 0, 0, 0.12);
-    --max-width: 1200px;
-    --star-color: #fbc02d;
-    --transition-speed: 0.3s;
-  }
-  *, *::before, *::after {
-    margin: 0; padding: 0; box-sizing: border-box;
-  }
-  body {
-    font-family: 'Poppins', sans-serif;
-    background-color: var(--background-color);
-    color: #333;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
+:root {
+  --primary-color: #2e7d32;
+  --primary-dark: #1b5e20;
+  --background-color: #f1f8e9;
+  --white: #fff;
+  --light-gray: #f5f5f5;
+  --border-radius: 16px;
+  --shadow-color: rgba(0, 0, 0, 0.12);
+  --max-width: 1200px;
+  --star-color: #fbc02d;
+  --transition-speed: 0.3s;
+}
+
+*, *::before, *::after {
+  margin: 0; padding: 0; box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--background-color);
+  color: #333;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 header {
-  background-color: var(--primary);
+  background-color: var(--primary-color);
   color: var(--white);
-  padding: 1.5rem 2rem;
+  width: 100%;
+  padding: 1.8rem 2.5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-weight: 700;
   position: sticky;
   top: 0;
-  z-index: 1000;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-  flex-wrap: wrap;
+  z-index: 1100;
+  box-shadow: 0 3px 12px var(--shadow-color);
 }
-
 header h1 {
-  font-size: 1.8rem;
+  font-weight: 700;
+  font-size: 2rem;
   cursor: pointer;
   user-select: none;
-  margin: 0;
+  letter-spacing: 1px;
 }
-#nav-toggle {
-  display: none;
-  background: none;
-  border: none;
-  font-size: 1.8rem;
-  color: var(--white);
-  cursor: pointer;
-}
-
 nav#nav-links {
   display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
+  align-items: center;
 }
-
 nav#nav-links a {
   color: var(--white);
+  margin-left: 2rem;
   text-decoration: none;
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 1.1rem;
+  padding-bottom: 4px;
   position: relative;
-  transition: color 0.3s ease;
+  transition: color var(--transition-speed);
 }
-
 nav#nav-links a::after {
   content: '';
   position: absolute;
-  left: 0;
-  bottom: -4px;
   width: 0;
   height: 2px;
-  background-color: var(--accent);
-  transition: width 0.3s ease;
+  bottom: 0;
+  left: 0;
+  background-color: var(--star-color);
+  transition: width var(--transition-speed);
 }
-
-nav#nav-links a:hover::after,
-nav#nav-links a:focus::after {
+nav#nav-links a:hover {
+  color: var(--star-color);
+}
+nav#nav-links a:hover::after {
   width: 100%;
 }
-
-nav#nav-links a:hover,
-nav#nav-links a:focus {
-  color: var(--accent);
-  outline: none;
+main {
+  max-width: var(--max-width);
+  background: var(--white);
+  border-radius: var(--border-radius);
+  box-shadow: 0 10px 30px var(--shadow-color);
+  padding: 3rem 4rem 4rem;
+  margin: 4rem 1rem 6rem;
+  width: 100%;
 }
-  main {
-    max-width: var(--max-width);
-    background: var(--white);
-    border-radius: var(--border-radius);
-    box-shadow: 0 10px 30px var(--shadow-color);
-    padding: 3rem 4rem 4rem;
-    margin: 4rem 1rem 6rem;
-    width: 100%;
-  }
   /* Profil Header */
   #profile-section {
     display: flex;
@@ -338,72 +324,64 @@ nav#nav-links a:focus {
     background-color: var(--primary-dark);
   }
   /* Footer */
-  footer {
-  background-color: var(--primary);
+footer {
+  width: 100%;
+  background-color: var(--primary-color);
   color: var(--white);
-  padding: 2rem 2rem 1rem;
-  border-radius: var(--radius);
-  margin-top: auto;
-  box-shadow: 0 8px 32px rgba(46, 125, 50, 0.22);
-  font-size: 0.92rem;
-  width: 100vw;
-  position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
-  user-select: none;
-  text-align: center;
+  padding: 2.5rem 0;
+  box-shadow: 0 -3px 16px var(--shadow-color);
 }
-
 footer > div {
-  max-width: 1200px;
+  max-width: var(--max-width);
   margin: 0 auto;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 2rem;
-  text-align: left;
+  padding: 0 1.5rem;
 }
-
-footer > div > div {
-  flex: 1;
-  min-width: 200px;
-}
-
 footer h4 {
-  margin-bottom: 0.5rem;
-  font-weight: 700;
-  font-size: 1.1rem;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
 }
-
 footer ul {
   list-style: none;
-  padding: 0;
-  line-height: 1.8;
+  line-height: 1.7;
+  padding-left: 0;
 }
-
 footer ul li a {
   color: var(--white);
   text-decoration: underline;
-  transition: color 0.3s ease;
+  font-weight: 400;
+  transition: color var(--transition-speed);
 }
-
 footer ul li a:hover {
-  color: var(--highlight);
+  color: var(--star-color);
 }
-
-footer small {
-  display: block;
+footer .copyright {
   margin-top: 2rem;
   text-align: center;
-  opacity: 0.85;
+  font-size: 0.9rem;
+  color: var(--white);
 }
   /* Responsive */
   @media (max-width: 960px) {
-    main {
-      padding: 3rem 2rem 4rem;
-    }
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem 1rem;
+  }
+  nav#nav-links {
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+  }
+  nav#nav-links a {
+    margin: 0.5rem 1rem 0 0;
+    font-size: 1rem;
+  }
+  main {
+    padding: 2rem;
+  }
     #profile-section {
       flex-direction: column;
       align-items: center;
@@ -432,41 +410,22 @@ footer small {
       margin-top: 0.7rem;
       font-size: 1rem;
     }
-    .review-btn {
-      position: fixed;
-      bottom: 1rem;
-      right: 1rem;
-      padding: 1rem 1.5rem;
-      font-size: 1rem;
-      border-radius: 14px;
-      box-shadow: 0 4px 12px rgba(46,125,50,0.5);
-      z-index: 2000;
-    }
-  /* Mobile Navigation */
-@media (max-width: 720px) {
-  #nav-toggle { display: block; }
-  nav#nav-links {
-    width: 100%;
-    flex-direction: column;
-    display: none;
-    margin-top: 1rem;
+  .review-btn {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 14px;
+    box-shadow: 0 4px 12px rgba(46,125,50,0.5);
+    z-index: 2000;
   }
-  nav#nav-links.show { display: flex; }
-  nav#nav-links a {
-    margin: 0.4rem 0;
-    padding: 0.5rem 1rem;
-    background-color: rgba(255,255,255,0.1);
-    border-radius: 6px;
-    display: block;
-    color: var(--white);
   }
-}
 </style>
 </head>
 <body>
 <header>
-  <h1 tabindex="0" onclick="location.href='index.html'">Locorent</h1>
-  <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
+  <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
   <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
 </header>
 <main>
@@ -498,10 +457,10 @@ footer small {
   <button class="review-btn" id="review-btn" title="Bewertung abgeben">Bewertung abgeben</button>
 </main>
 
-<footer>
+<footer role="contentinfo">
   <div>
-    <div>
-      <h4>Mieten &amp; Vermieten</h4>
+    <section aria-labelledby="footer-rent-title">
+      <h4 id="footer-rent-title">Mieten &amp; Vermieten</h4>
       <ul>
         <li><a href="so-funktionierts.html">So funktioniert's</a></li>
         <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
@@ -509,26 +468,26 @@ footer small {
         <li><a href="vermieter-tipps.html">Tipps &amp; Tricks für Vermieter</a></li>
         <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
       </ul>
-    </div>
-    <div>
-      <h4>Wissenswertes</h4>
+    </section>
+    <section aria-labelledby="footer-info-title">
+      <h4 id="footer-info-title">Wissenswertes</h4>
       <ul>
         <li><a href="agb.html">AGB &amp; Impressum</a></li>
         <li><a href="datenschutz.html">Datenschutz</a></li>
       </ul>
-    </div>
-    <div>
-      <h4>Über uns</h4>
+    </section>
+    <section aria-labelledby="footer-about-title">
+      <h4 id="footer-about-title">Über uns</h4>
       <ul>
         <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
         <li><a href="social-media.html">Folgen Sie uns</a></li>
-        <li><a href="mission.html">Unsere Mission</a></li>
       </ul>
-    </div>
+    </section>
   </div>
-  <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
+  <div class="copyright" aria-label="Copyright">
+    © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
+  </div>
 </footer>
-
 
 <script>
   const supabase = window.supabase.createClient(
@@ -710,39 +669,9 @@ footer small {
       `).join('');
     }
   }
+
   updateNav();
   loadVermieterProfil();
-  document.getElementById('nav-toggle').addEventListener('click', () => {
-  const nav = document.getElementById('nav-links');
-  nav.classList.toggle('show');
-  const expanded = nav.classList.contains('show');
-  document.getElementById('nav-toggle').setAttribute('aria-expanded', expanded);
-});
-
-async function logout(event) {
-  event.preventDefault();
-  await supabase.auth.signOut();
-  window.location.href = "login.html";
-}
-
-async function updateNav() {
-  const { data: { session } } = await supabase.auth.getSession();
-  const nav = document.getElementById('nav-links');
-  nav.innerHTML = session?.user ? `
-    <a href="index.html">Start</a>
-    <a href="profil.html">Mein Profil</a>
-    <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-    <a href="favoriten.html">Meine Favoriten</a>
-    <a href="inserate.html">Meine Inserate</a>
-    <a href="#" onclick="logout(event)">Logout</a>
-  ` : `
-    <a href="index.html">Start</a>
-    <a href="login.html">Einloggen</a>
-  `;
-}
-
-updateNav();
-
 </script>
 </body>
 </html>
