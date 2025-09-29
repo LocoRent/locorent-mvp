@@ -81,6 +81,14 @@
     border-bottom: 2px solid var(--accent);
     outline: none;
   }
+  #nav-toggle {
+  display: none; /* Nur auf mobile anzeigen */
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  color: var(--white);
+  cursor: pointer;
+}
 
   main {
     max-width: var(--max-width);
@@ -387,6 +395,32 @@
       flex: unset;
       width: 100%;
     }
+      nav#nav-links {
+    display: none;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+    background-color: var(--primary);
+    padding: 1rem 2rem;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    border-radius: 0 0 var(--radius) var(--radius);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    z-index: 999;
+  }
+
+  nav#nav-links.show {
+    display: flex;
+  }
+
+  #nav-toggle {
+    display: block;
+  }
+
+  header {
+    position: relative;
+  }
   }
 
 </style>
@@ -394,6 +428,7 @@
 <body>
 <header>
   <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
+  <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
   <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
 </header>
 
