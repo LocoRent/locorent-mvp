@@ -245,13 +245,20 @@ main {
 
   #reviews-list {
     flex-grow: 1;
-    overflow-y: auto;
+  width: 100%;           /* Container anpassen */
+  max-width: 100%;       /* Nicht über den Rand hinaus */
+  overflow: hidden;      /* Keine Scrollbars horizontal */
+  box-sizing: border-box; 
     display: grid;
     grid-template-columns: 1fr;
     gap: 1.2rem;
   }
 
   .review-item {
+      width: 100%;           /* Container anpassen */
+  max-width: 100%;       /* Nicht über den Rand hinaus */
+  overflow: hidden;      /* Keine Scrollbars horizontal */
+  box-sizing: border-box; 
     background-color: var(--background);
     border-radius: var(--radius);
     padding: 1rem 1.5rem;
@@ -308,16 +315,17 @@ main {
     margin-left: 1rem;
   }
 
-  .review-text {
-    font-size: 1rem;
-    line-height: 1.5;
-    color: #444;
-    white-space: pre-line;
-    border-left: 3px solid var(--primary);
-    padding-left: 1rem;
-    background: #e9f5e9;
-    border-radius: 6px;
-  }
+.review-text {
+  border-left: 3px solid var(--primary);
+  padding-left: 0.8rem;
+  font-size: 0.95rem;
+  line-height: 1.4;
+
+  /* Wichtig für lange Texte */
+  word-wrap: break-word;   /* Zeilen umbrechen */
+  overflow-wrap: break-word; /* für ältere Browser */
+  white-space: normal;     /* nicht in einer Zeile halten */
+}
 
   #stats-section {
     flex: 1 1 250px;
