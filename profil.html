@@ -395,33 +395,57 @@
       flex: unset;
       width: 100%;
     }
-      nav#nav-links {
-    display: none;
-    flex-direction: column;
-    gap: 1rem;
-    width: 100%;
-    background-color: var(--primary);
-    padding: 1rem 2rem;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    border-radius: 0 0 var(--radius) var(--radius);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-    z-index: 999;
-  }
-
-  nav#nav-links.show {
-    display: flex;
-  }
-
-  #nav-toggle {
+ #nav-toggle {
     display: block;
   }
 
   header {
     position: relative;
+    z-index: 1000;
   }
+
+  nav#nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+    background-color: var(--primary);
+    border-radius: 0 0 var(--radius) var(--radius);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    position: absolute;
+    top: 100%;
+    left: 0;
+    padding: 0.8rem 1.5rem;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
   }
+
+  nav#nav-links.show {
+    max-height: 500px; /* genug für alle Links */
+    opacity: 1;
+  }
+
+  nav#nav-links a {
+    display: block;
+    color: var(--white);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    background-color: rgba(255,255,255,0.1);
+    transition: background 0.25s, transform 0.25s;
+  }
+
+  nav#nav-links a:hover,
+  nav#nav-links a:focus {
+    background-color: var(--primary-dark);
+    transform: translateX(5px);
+    outline: none;
+  }
+}
 
 </style>
 </head>
