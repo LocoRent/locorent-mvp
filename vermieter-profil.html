@@ -192,7 +192,6 @@
     display: flex;
     flex-direction: column;
     margin-bottom: 3rem;
-    gap: 0.5rem;
     position: relative;
   }
 
@@ -217,7 +216,7 @@
   .review-btn {
     position: absolute;
     right: 0;
-    top: 0.1rem;
+    top: 0; /* Button auf Höhe der Überschrift */
     padding: 0.6rem 1.2rem;
     font-size: 1rem;
     font-weight: 700;
@@ -323,9 +322,8 @@
     max-width: var(--max-width);
     margin: 0 auto;
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 2rem;
+    flex-direction: column; /* von row zu column */
+    gap: 1.5rem;
     text-align: left;
   }
 
@@ -389,9 +387,9 @@
       gap: 0.5rem;
     }
     .review-btn {
-      position: static;
-      align-self: flex-start;
+      position: static; /* Button unter Überschrift auf mobile */
       margin-top: 0.5rem;
+      align-self: flex-start;
     }
   }
 </style>
