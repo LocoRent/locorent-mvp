@@ -214,21 +214,20 @@
   }
 
 .review-btn {
-  position: static; /* vorher: absolute */
-  padding: 0.4rem 0.8rem;
+  position: static; /* nicht mehr absolut */
+  padding: 0.5rem 1rem;
   font-size: 0.95rem;
   font-weight: 700;
-  background: var(--white);
-  color: var(--primary);
-  border: 2px solid var(--primary);
+  background-color: var(--primary); /* grün wie Header */
+  color: var(--white); /* Text weiß */
+  border: none;
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .review-btn:hover {
-  background: var(--primary);
-  color: var(--white);
+  background-color: var(--primary-dark); /* dunkler beim Hover */
 }
 
 
@@ -438,8 +437,6 @@
       <p>⏳ Lade Inserate…</p>
     </div>
   </section>
-
-  <button class="review-btn" id="review-btn" title="Bewertung abgeben">Bewertung abgeben</button>
 </main>
 
 <footer role="contentinfo">
