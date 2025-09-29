@@ -89,7 +89,10 @@
   color: var(--white);
   cursor: pointer;
 }
-
+html, body {
+  max-width: 100vw;
+  overflow-x: hidden; /* Verhindert horizontalen Scroll */
+}
   main {
     max-width: var(--max-width);
     margin: 4rem auto;
@@ -99,7 +102,10 @@
     flex-wrap: wrap;
     user-select: none;
   }
-
+#city-suggestions {
+  max-width: 100vw; /* Vorschläge ragen nicht über den Bildschirm hinaus */
+  box-sizing: border-box;
+}
   #profile-section, #reviews-section, #stats-section {
     background: var(--white);
     padding: 2.5rem 2rem;
