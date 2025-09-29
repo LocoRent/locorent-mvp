@@ -416,22 +416,20 @@
     main {
       padding: 3rem 2rem 4rem;
     }
-      #nav-toggle { display: block; }
-  nav#nav-links {
-    width: 100%;
-    flex-direction: column;
-    display: none;
-    margin-top: 1rem;
-  }
-        #nav-toggle {
-    order: 2; /* weiter rechts */
-    margin-left: auto; /* nach rechts schieben */
+  #nav-toggle {
+    display: block;
+    font-size: 1.8rem;
+    background: none;
+    border: none;
+    color: var(--white);
+    cursor: pointer;
+    margin-left: auto;
   }
   nav#nav-links {
     width: 100%;
     flex-direction: column;
     display: none;
-    margin-top: 0.5rem; /* kleinerer Abstand */
+    margin-top: 0.5rem;
   }
   nav#nav-links.show { display: flex; }
   nav#nav-links a {
@@ -441,6 +439,13 @@
     border-radius: 6px;
     display: block;
     color: var(--white);
+    font-weight: 600;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+  nav#nav-links a:hover,
+  nav#nav-links a:focus {
+    background-color: rgba(255,255,255,0.2);
+    color: var(--accent);
   }
     #profile-section {
       flex-direction: column;
@@ -484,7 +489,7 @@
 </head>
 <body>
 <header>
-  <h1 tabindex="0" onclick="location.href='index.html'">Locorent</h1>
+  <h1 tabindex="0" onclick="location.href='index.html'" style="font-weight:900;">Locorent</h1>
   <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
   <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
 </header>
