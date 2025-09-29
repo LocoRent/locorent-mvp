@@ -55,6 +55,7 @@
     }
 
     header h1 {
+    font-weight: 900; /* vorher 700 */
       font-size: 1.8rem;
       cursor: pointer;
       user-select: none;
@@ -407,6 +408,11 @@
     }
   /* Responsive */
   @media (max-width: 720px) {
+       header {
+    flex-direction: row; /* vertikal zu horizontal */
+    align-items: center;
+    padding: 0.8rem 1rem; /* weniger Höhe */
+  } 
     main {
       padding: 3rem 2rem 4rem;
     }
@@ -416,6 +422,16 @@
     flex-direction: column;
     display: none;
     margin-top: 1rem;
+  }
+        #nav-toggle {
+    order: 2; /* weiter rechts */
+    margin-left: auto; /* nach rechts schieben */
+  }
+  nav#nav-links {
+    width: 100%;
+    flex-direction: column;
+    display: none;
+    margin-top: 0.5rem; /* kleinerer Abstand */
   }
   nav#nav-links.show { display: flex; }
   nav#nav-links a {
@@ -457,6 +473,12 @@
       box-shadow: 0 4px 12px rgba(46,125,50,0.5);
       z-index: 2000;
     }
+        footer > div {
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    gap: 1.5rem;
+  }
   }
 </style>
 </head>
