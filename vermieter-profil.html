@@ -213,25 +213,24 @@
     cursor: pointer;
   }
 
-  .review-btn {
-    position: absolute;
-    right: 0;
-    top: 0; /* auf Höhe der Überschrift */
-    padding: 0.6rem 1.2rem;
-    font-size: 1rem;
-    font-weight: 700;
-    background: var(--white);
-    color: var(--primary);
-    border: 2px solid var(--primary);
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
+.review-btn {
+  position: static; /* vorher: absolute */
+  padding: 0.4rem 0.8rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  background: var(--white);
+  color: var(--primary);
+  border: 2px solid var(--primary);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
 
-  .review-btn:hover {
-    background: var(--primary);
-    color: var(--white);
-  }
+.review-btn:hover {
+  background: var(--primary);
+  color: var(--white);
+}
+
 
   /* Listings Section */
   #listings-section h2 {
@@ -420,10 +419,13 @@
   </section>
 
   <section id="reviews-section" aria-label="Bewertungen des Vermieters">
-    <h2>
-      Bewertungen
-      <a href="#" id="all-reviews-link" aria-label="Alle Bewertungen anzeigen">Alle anzeigen →</a>
-    </h2>
+<h2>
+  Bewertungen
+  <span style="display: flex; align-items: center; gap: 0.5rem;">
+    <a href="#" id="all-reviews-link" aria-label="Alle Bewertungen anzeigen">Alle anzeigen →</a>
+    <button class="review-btn" id="review-btn" title="Bewertung abgeben">Bewertung abgeben</button>
+  </span>
+</h2>
     <div id="reviews-list" role="list" aria-live="polite">
       ⏳ Lade Bewertungen…
     </div>
