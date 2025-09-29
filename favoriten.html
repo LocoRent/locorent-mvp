@@ -124,12 +124,14 @@
       margin-top: 0;
     }
 
-    .category-grid {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr); /* Desktop: 6 Inserate pro Reihe */
-      gap: 2rem;
-      padding: 0 1rem 2rem;
-    }
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+  gap: 2rem;
+  margin: 2rem;
+  padding: 0 2rem;
+  box-sizing: border-box;
+}
 
 .result-card {
   display: flex;
