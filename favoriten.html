@@ -284,8 +284,10 @@
 
   /* Grid auf 2 Spalten */
   .category-grid {
-    margin: 1rem auto;   /* zentriert + weniger Abstand */
-    padding: 0 1rem;     /* schmaler Innenabstand */
+    grid-template-columns: repeat(2, 1fr); /* genau 2 Spalten */
+    gap: 1rem;
+    margin: 1rem auto;
+    padding: 0 1rem;
   }
 }
   /* Result-Card Mobile-Anpassungen */
