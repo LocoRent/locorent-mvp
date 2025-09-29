@@ -33,52 +33,73 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-  header {
-    background-color: var(--primary-color);
-    color: var(--white);
-    width: 100%;
-    padding: 1.8rem 2.5rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: sticky;
-    top: 0;
-    z-index: 1100;
-    box-shadow: 0 3px 12px var(--shadow-color);
-  }
-  header h1 {
-    font-weight: 700;
-    font-size: 2rem;
-    cursor: pointer;
-    user-select: none;
-    letter-spacing: 1px;
-  }
-  nav#nav-links a {
-    color: var(--white);
-    margin-left: 2rem;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 1.1rem;
-    padding-bottom: 4px;
-    position: relative;
-    transition: color var(--transition-speed);
-  }
-  nav#nav-links a::after {
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 2px;
-    bottom: 0;
-    left: 0;
-    background-color: var(--star-color);
-    transition: width var(--transition-speed);
-  }
-  nav#nav-links a:hover {
-    color: var(--star-color);
-  }
-  nav#nav-links a:hover::after {
-    width: 100%;
-  }
+header {
+  background-color: var(--primary-color);
+  color: var(--white);
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  flex-wrap: wrap;
+}
+
+header h1 {
+  font-size: 1.8rem;
+  cursor: pointer;
+  user-select: none;
+  margin: 0;
+}
+
+#nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  color: var(--white);
+  cursor: pointer;
+}
+
+nav#nav-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+nav#nav-links a {
+  color: var(--white);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+nav#nav-links a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0;
+  height: 2px;
+  background-color: var(--star-color);
+  transition: width 0.3s ease;
+}
+
+nav#nav-links a:hover::after,
+nav#nav-links a:focus::after {
+  width: 100%;
+}
+
+nav#nav-links a:hover,
+nav#nav-links a:focus {
+  color: var(--star-color);
+  outline: none;
+}
   main {
     max-width: var(--max-width);
     background: var(--white);
@@ -361,6 +382,30 @@
     color: var(--white);
     user-select: none;
   }
+  /* Mobile */
+@media (max-width: 720px) {
+  #nav-toggle {
+    display: block;
+  }
+
+  nav#nav-links {
+    width: 100%;
+    flex-direction: column;
+    display: none;
+    margin-top: 1rem;
+  }
+
+  nav#nav-links.show {
+    display: flex;
+  }
+
+  nav#nav-links a {
+    margin: 0.4rem 0;
+    padding: 0.5rem 1rem;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    display: block;
+  }
   /* Responsive */
   @media (max-width: 960px) {
     main {
@@ -410,6 +455,7 @@
 <body>
 <header>
   <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
+  <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
   <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
 </header>
 <main>
@@ -656,6 +702,14 @@
 
   updateNav();
   loadVermieterProfil();
+  document.getElementById('nav-toggle').addEventListener('click', () => {
+  const nav = document.getElementById('nav-links');
+  nav.classList.toggle('show');
+  const toggle = document.getElementById('nav-toggle');
+  const expanded = nav.classList.contains('show');
+  toggle.setAttribute('aria-expanded', expanded);
+});
+
 </script>
 </body>
 </html>
