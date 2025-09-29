@@ -598,21 +598,20 @@
         </div>
       `;
 
-      const list = reviews.map(r => `
-        <article class="review-item" tabindex="0" aria-label="Bewertung ${r.rating} von 5 Sternen von ${r.from_user?.name || 'Unbekannt'}">
-          <div class="review-header">
-            <div class="review-avatar" style="background-image: url('${r.from_user?.avatar_url || ''}');" aria-hidden="true">
-              ${!r.from_user?.avatar_url ? getInitials(r.from_user?.name) : ''}
-            </div>
-            <div class="reviewer-name">${r.from_user?.name || 'Unbekannt'}</div>
-            <div class="review-rating" aria-label="Bewertung: ${r.rating} von 5 Sternen">${createStarIcons(r.rating)}</div>
-          </div>
-          <p class="review-text">${r.comment}</p>
-          <time class="review-date" datetime="${new Date(r.created_at).toISOString()}">Verfasst am ${new Date(r.created_at).toLocaleDateString()}</time>
-        </article>
-      `).join('');
-      reviewList.innerHTML = summary + list;
-    }
+const list = reviews.map(r => `
+  <article class="review-item" tabindex="0" aria-label="Bewertung ${r.rating} von 5 Sternen von ${r.from_user?.name || 'Unbekannt'}">
+    <div class="review-header" style="display:flex; align-items:center; gap:0.5rem;">
+      <div class="review-avatar" style="background-image: url('${r.from_user?.avatar_url || ''}'); width:40px; height:40px; border-radius:50%; background-size:cover;" aria-hidden="true">
+        ${!r.from_user?.avatar_url ? getInitials(r.from_user?.name) : ''}
+      </div>
+      <div class="reviewer-name" style="font-weight:700;">${r.from_user?.name || 'Unbekannt'}</div>
+      <div class="review-rating" aria-label="Bewertung: ${r.rating} von 5 Sternen">${createStarIcons(r.rating)}</div>
+    </div>
+  </article>
+`).join('');
+
+reviewList.innerHTML = summary + list; // summary für den Durchschnitt beibehalten
+
 
     // Prüfen ob User schon bewertet hat
     let hasReviewed = false;
