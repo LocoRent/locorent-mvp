@@ -7,78 +7,111 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-  :root {
-    --primary-color: #2e7d32;
-    --primary-dark: #1b5e20;
-    --background-color: #f1f8e9;
-    --white: #fff;
-    --light-gray: #f5f5f5;
-    --border-radius: 16px;
-    --shadow-color: rgba(0, 0, 0, 0.12);
-    --max-width: 1200px;
-    --star-color: #fbc02d;
-    --transition-speed: 0.3s;
-  }
-  *, *::before, *::after {
-    margin: 0; padding: 0; box-sizing: border-box;
-  }
-  body {
-    font-family: 'Poppins', sans-serif;
-    background-color: var(--background-color);
-    color: #333;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-  header {
-    background-color: var(--primary-color);
-    color: var(--white);
-    width: 100%;
-    padding: 1.8rem 2.5rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: sticky;
-    top: 0;
-    z-index: 1100;
-    box-shadow: 0 3px 12px var(--shadow-color);
-  }
-  header h1 {
-    font-weight: 700;
-    font-size: 2rem;
-    cursor: pointer;
-    user-select: none;
-    letter-spacing: 1px;
-  }
-  nav#nav-links a {
-    color: var(--white);
-    margin-left: 2rem;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 1.1rem;
-    padding-bottom: 4px;
-    position: relative;
-    transition: color var(--transition-speed);
-  }
-  nav#nav-links a::after {
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 2px;
-    bottom: 0;
-    left: 0;
-    background-color: var(--star-color);
-    transition: width var(--transition-speed);
-  }
-  nav#nav-links a:hover {
-    color: var(--star-color);
-  }
-  nav#nav-links a:hover::after {
-    width: 100%;
-  }
+    :root {
+      --primary: #2e7d32;
+      --primary-light: #66bb6a;
+      --primary-dark: #1b5e20;
+      --background: #f1f8e9;
+      --white: #fff;
+      --text-dark: #0f2e13;
+      --text-muted: #466843;
+      --accent: #b9f6ca;
+      --highlight: #a5d6a7;
+      --radius: 18px;
+      --shadow-light: rgba(46, 125, 50, 0.08);
+      --shadow-strong: rgba(46, 125, 50, 0.25);
+      --transition: 0.4s ease;
+      --font-primary: 'Poppins', sans-serif;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      max-width: 100%;
+      word-wrap: break-word;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      max-width: 100vw;
+      overflow-x: hidden;
+      font-family: var(--font-primary);
+      background: linear-gradient(to bottom, #e8f5e9 0%, #ffffff 100%);
+      color: var(--text-dark);
+      scroll-behavior: smooth;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background-color: var(--primary);
+      color: var(--white);
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 700;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      flex-wrap: wrap;
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+      cursor: pointer;
+      user-select: none;
+      margin: 0;
+    }
+
+    #nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.8rem;
+      color: var(--white);
+      cursor: pointer;
+    }
+
+    nav#nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    nav#nav-links a {
+      color: var(--white);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      position: relative;
+      transition: color 0.3s ease;
+    }
+
+    nav#nav-links a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -4px;
+      width: 0;
+      height: 2px;
+      background-color: var(--accent);
+      transition: width 0.3s ease;
+    }
+
+    nav#nav-links a:hover::after,
+    nav#nav-links a:focus::after {
+      width: 100%;
+    }
+
+    nav#nav-links a:hover,
+    nav#nav-links a:focus {
+      color: var(--accent);
+      outline: none;
+    }
   main {
     max-width: var(--max-width);
     background: var(--white);
@@ -318,100 +351,110 @@
     background-color: var(--primary-dark);
   }
   /* Footer */
-  footer {
-    width: 100%;
-    background-color: var(--primary-color);
-    color: var(--white);
-    padding: 2.5rem 0;
-    box-shadow: 0 -3px 16px var(--shadow-color);
-    user-select: none;
-  }
-  footer > div {
-    max-width: var(--max-width);
-    margin: 0 auto;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 2rem;
-    padding: 0 1.5rem;
-  }
-  footer h4 {
-    margin-bottom: 0.75rem;
-    font-weight: 600;
-  }
-  footer ul {
-    list-style: none;
-    line-height: 1.7;
-    padding-left: 0;
-  }
-  footer ul li a {
-    color: var(--white);
-    text-decoration: underline;
-    font-weight: 400;
-    cursor: pointer;
-    transition: color var(--transition-speed);
-  }
-  footer ul li a:hover {
-    color: var(--primary-dark);
-  }
-  footer .copyright {
-    margin-top: 2rem;
-    text-align: center;
-    font-size: 0.9rem;
-    color: var(--white);
-    user-select: none;
-  }
-  /* Responsive */
-  @media (max-width: 960px) {
-    main {
-      padding: 3rem 2rem 4rem;
-    }
-    #profile-section {
-      flex-direction: column;
-      align-items: center;
+     footer {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 2rem 2rem 1rem;
+      border-radius: var(--radius);
+      background-color: var(--primary);
+      color: var(--white);
+      box-shadow: 0 8px 32px rgba(46, 125, 50, 0.22);
+      font-size: 0.92rem;
+      user-select: none;
       text-align: center;
+      margin-top: auto;
+      position: relative;
+      left: 50%;
+      right: 50%;
+      margin-left: -50vw;
+      margin-right: -50vw;
     }
-    #profile-photo {
-      width: 140px;
-      height: 140px;
-      margin-bottom: 1.5rem;
+
+    footer > div {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 2rem;
+      text-align: left;
     }
-    #profile-info p {
-      font-size: 1.15rem;
+
+    footer > div > div {
+      flex: 1;
+      min-width: 200px;
     }
-    #reviews-list {
-      grid-template-columns: 1fr;
+
+    footer h4 {
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+      font-size: 1.1rem;
     }
-  }
-  @media (max-width: 480px) {
-    header {
-      flex-direction: column;
-      align-items: flex-start;
-      padding: 1rem 1rem;
+
+    footer ul {
+      list-style: none;
+      padding: 0;
+      line-height: 1.8;
     }
-    nav#nav-links a {
-      margin-left: 0;
-      margin-top: 0.7rem;
-      font-size: 1rem;
+
+    footer ul li a {
+      color: var(--white);
+      text-decoration: underline;
+      transition: color 0.3s ease;
     }
-    .review-btn {
-      position: fixed;
-      bottom: 1rem;
-      right: 1rem;
-      padding: 1rem 1.5rem;
-      font-size: 1rem;
-      border-radius: 14px;
-      box-shadow: 0 4px 12px rgba(46,125,50,0.5);
-      z-index: 2000;
+
+    footer ul li a:hover {
+      color: var(--accent);
     }
-  }
+
+    footer small {
+      display: block;
+      margin-top: 2rem;
+      text-align: center;
+      opacity: 0.85;
+    }
+
+     @media (max-width: 720px) {
+      #nav-toggle {
+        display: block;
+      }
+
+      nav#nav-links {
+        width: 100%;
+        flex-direction: column;
+        display: none;
+        margin-top: 1rem;
+      }
+
+      nav#nav-links.show {
+        display: flex;
+      }
+
+      nav#nav-links a {
+        margin: 0.4rem 0;
+        padding: 0.5rem 1rem;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+        display: block;
+      }
+
+      footer > div {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      footer > div > div {
+        width: 100%;
+      }
+    }
 </style>
 </head>
 <body>
-<header>
-  <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
-  <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
-</header>
+  <header>
+    <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
+    <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
+    <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
+  </header>
 <main>
   <section id="profile-section" aria-label="Profilinformationen des Vermieters">
     <div id="profile-photo" aria-hidden="true"></div>
@@ -478,6 +521,13 @@
     'https://flnjalgqtkqycsaymmbd.supabase.co',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
   );
+      document.getElementById('nav-toggle').addEventListener('click', () => {
+      const nav = document.getElementById('nav-links');
+      nav.classList.toggle('show');
+      const toggle = document.getElementById('nav-toggle');
+      const expanded = nav.classList.contains('show');
+      toggle.setAttribute('aria-expanded', expanded);
+    });
 
   function getInitials(name) {
     if (!name) return '';
