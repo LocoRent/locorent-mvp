@@ -404,13 +404,20 @@ main {
       width: 100%;
     }
 }
+/* --- Mobile Ansicht: max-width 720px --- */
 @media (max-width: 720px) {
-  /* Menü-Button anzeigen */
+  /* Body fix */
+  body, html {
+    overflow-x: hidden;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* Header */
   #nav-toggle {
     display: block;
   }
 
-  /* Mobile Navigation */
   nav#nav-links {
     display: none;
     flex-direction: column;
@@ -419,7 +426,7 @@ main {
     top: 100%;
     left: 0;
     background-color: var(--primary);
-    padding: 1rem 1rem; /* Padding reduziert, damit es nicht überläuft */
+    padding: 1rem 1rem;
     border-radius: 0 0 var(--radius) var(--radius);
     box-shadow: 0 8px 20px rgba(0,0,0,0.15);
     z-index: 999;
@@ -455,14 +462,15 @@ main {
     outline: none;
   }
 
-  /* Main-Bereich anpassen */
+  /* Main */
   main {
-    flex-direction: column;
-    margin: 2rem 1rem; /* kleinerer Rand, damit nichts rechts abgeschnitten wird */
-    gap: 2rem;
-    width: 100%; /* Wichtig, damit es nicht breiter als Bildschirm wird */
+    margin: 2rem 1rem;
+    padding: 0;
+    width: 100%;
     max-width: 100%;
-    box-sizing: border-box; /* sichert Padding innerhalb des Bildschirms */
+    flex-direction: column;
+    gap: 2rem;
+    box-sizing: border-box;
   }
 
   #profile-section,
@@ -470,13 +478,55 @@ main {
   #stats-section {
     width: 100%;
     flex: unset;
+    margin: 0 auto;
   }
 
-  /* Fix für horizontale Scroll-Leiste */
-  body, html {
-    overflow-x: hidden;
+  /* Reviews */
+  #reviews-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    overflow: visible;
+    padding: 0;
+    margin: 0;
+  }
+
+  .review-item {
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    background: var(--white);
+    flex: 1 1 auto;
+  }
+
+  .review-text {
+    border-left: 3px solid var(--primary);
+    padding-left: 0.8rem;
+    font-size: 0.95rem;
+    line-height: 1.4;
+  }
+
+  .review-avatar {
+    width: 40px;
+    height: 40px;
+    font-size: 1.1rem;
+  }
+
+  .reviewer-name {
+    font-size: 1rem;
+  }
+
+  .review-date {
+    font-size: 0.75rem;
+  }
+
+  /* Header & Footer Padding */
+  header, footer {
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 }
+
 </style>
 </head>
 <body>
