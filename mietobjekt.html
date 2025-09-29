@@ -120,9 +120,25 @@ footer small { display:block; margin-top:2rem; text-align:center; opacity:0.85; 
     header {
     padding: 0.7rem 1rem; /* flacher = grüner Balken kleiner */
   }
-  #nav-toggle{display:block;}
-  nav#nav-links{display:none; flex-direction:column; width:100%; margin-top:1rem;}
-  nav#nav-links.show{display:flex;}
+    header h1 {
+    font-size: 1.5rem;
+    margin: 0;
+  }
+
+  #nav-toggle {
+    display: block;
+    font-size: 1.5rem;
+    margin-left: auto; /* schiebt Burger nach rechts */
+  }
+  nav#nav-links {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 0.8rem;
+  }
+  nav#nav-links.show {
+    display: flex;
+  }
   nav#nav-links a{margin:0.4rem 0; padding:0.5rem 1rem; background: rgba(255,255,255,0.1); border-radius:6px;}
   .main-image{max-height:280px;}
   .thumbnails img{width:70px;height:50px;}
