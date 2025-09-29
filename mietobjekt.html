@@ -1,46 +1,36 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Meine Favoriten – Locorent</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mietobjekt – Locorent</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root {
   --primary: #2e7d32;
-  --primary-light: #66bb6a;
   --primary-dark: #1b5e20;
   --background: #f1f8e9;
   --white: #fff;
   --text-dark: #0f2e13;
-  --text-muted: #466843;
   --accent: #b9f6ca;
-  --radius: 12px;
-  --shadow-light: rgba(46, 125, 50, 0.08);
-  --shadow-strong: rgba(46, 125, 50, 0.25);
+  --radius: 18px;
+  --shadow-light: rgba(46,125,50,0.08);
+  --shadow-strong: rgba(46,125,50,0.25);
   --font-primary: 'Poppins', sans-serif;
 }
 
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  font-family: var(--font-primary);
-  background: var(--background);
-  color: var(--text-dark);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
+*, *::before, *::after { box-sizing:border-box; }
+html, body { margin:0; padding:0; width:100%; font-family:var(--font-primary); background:var(--background); color:var(--text-dark); min-height:100vh; display:flex; flex-direction:column; }
 
-/* HEADER */
+/* Header */
 header {
   background-color: var(--primary);
   color: var(--white);
+  padding: 2.5rem 1.5rem; /* vorher 1rem 1.5rem, jetzt tiefer */
   display: flex;
   justify-content: space-between;
-  align-items: center; /* vertikale Zentrierung */
-  padding: 1rem 2rem; /* angenehme Höhe */
+  align-items: center;
   font-weight: 700;
   position: sticky;
   top: 0;
@@ -48,169 +38,96 @@ header {
   box-shadow: 0 6px 15px rgba(0,0,0,0.1);
   flex-wrap: wrap;
 }
-
 header h1 {
-  font-size: 1.8rem;
-  font-weight: 700; /* fett */
+  font-size: 1.6rem;
+  font-weight: 700;
+  cursor: pointer;
   margin: 0;
-  cursor: pointer;
 }
+#nav-toggle { display:none; background:none; border:none; font-size:1.6rem; color:var(--white); font-weight:700; cursor:pointer; }
+nav#nav-links { display:flex; flex-wrap:wrap; gap:1rem; }
+nav#nav-links a { color:var(--white); text-decoration:none; font-weight:700; font-size:1rem; position:relative; transition: color 0.3s ease; }
+nav#nav-links a::after { content:''; position:absolute; left:0; bottom:-4px; width:0; height:2px; background-color:var(--accent); transition: width 0.3s ease; }
+nav#nav-links a:hover::after, nav#nav-links a:focus::after { width:100%; }
+nav#nav-links a:hover, nav#nav-links a:focus { color:var(--accent); outline:none; }
 
-nav a {
-  color: var(--white);
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 1rem;
-  margin-left: 1rem;
-}
-
-nav a:hover {
-  color: var(--accent);
-}
-
-/* MAIN */
+/* Main Desktop modernisiert */
 main {
-  max-width: 900px;
-  margin: 2rem auto 4rem;
-  padding: 0;
-  flex-grow: 1;
-}
-
-/* FAVORITEN GRID */
-.category-grid {
+  width: 100%;
+  max-width: 1400px;
+  margin: 3rem auto 4rem;
+  padding: 0 1.5rem;
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 2rem;
-  padding: 0 1rem 2rem;
+  grid-template-columns: 2fr 2.5fr 1.5fr;
+  gap: 3rem;
 }
 
-.result-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  background: var(--white);
-  border-radius: var(--radius);
-  box-shadow: 0 2px 8px var(--shadow-light);
-  padding: 1rem;
-  cursor: pointer;
+.gallery, .content, .vendor-info {
+  background: #fff;
+  padding: 1.8rem;
+  border-radius: 22px;
+  box-shadow: 0 12px 36px rgba(0,0,0,0.08);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  height: 100%;
 }
 
-.result-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 20px var(--shadow-strong);
+.gallery:hover, .content:hover, .vendor-info:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.12);
 }
 
-.result-card img {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-  border-radius: 12px;
-  margin-bottom: 1rem;
-}
+/* Galerie */
+.gallery { display: flex; flex-direction: column; gap: 0.8rem; }
+.main-image { width: 100%; max-height: 550px; object-fit: contain; border-radius: 18px; cursor: pointer; transition: transform 0.3s ease; }
+.main-image:hover { transform: scale(1.04); }
+.thumbnails { display:flex; gap:0.6rem; overflow-x:auto; margin-top:1rem; }
+.thumbnails img { width:90px; height:65px; object-fit:cover; border-radius:10px; border:2px solid transparent; cursor:pointer; transition:border-color 0.3s, transform 0.2s; flex-shrink:0; }
+.thumbnails img.active { border-color: var(--primary); box-shadow:0 0 10px var(--primary); transform: scale(1.06); }
 
-.result-card h3 {
-  font-size: 1.05rem;
-  line-height: 1.4em;
-  margin: 0.5rem 0;
-  height: 4.2em; /* max. 3 Zeilen */
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-}
+/* Content */
+.content h2 { font-size:2.2rem; font-weight:700; color:var(--primary); margin-bottom:0.8rem; }
+.content p { margin:0.4rem 0; line-height:1.6; }
+.content .description { white-space:pre-wrap; background:#fdfdfd; padding:1.2rem; border-radius:20px; box-shadow: inset 0 0 10px rgba(0,0,0,0.04); max-height:260px; overflow-y:auto; font-size:1rem; color:#444; }
 
-.result-card .info {
-  flex-grow: 1;
-}
+/* Vendor */
+.vendor-info h3 { font-size:1.3rem; font-weight:700; margin-bottom:0.6rem; }
+.vendor-info p { margin:0.4rem 0; line-height:1.5; }
 
-.result-card p { margin: 0.3rem 0; color: var(--text-muted); font-size: 1rem; }
+/* Buttons */
+button { padding:0.8rem 1.2rem; background:var(--primary); color:#fff; border:none; border-radius:14px; font-weight:700; cursor:pointer; transition:0.3s; margin-top:0.7rem; font-size:1rem; }
+button:hover { background:var(--primary-dark); }
 
-.btn-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  margin-top: 1rem;
-}
-
-.result-card button {
-  padding: 0.6rem;
-  background: var(--primary);
-  color: var(--white);
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: background-color 0.3s ease;
-  width: 100%;
-}
-
-.result-card button:hover { background: var(--primary-dark); }
-
-/* FOOTER */
-footer {
-  background-color: var(--primary);
-  color: var(--white);
-  padding: 2rem 2rem 1rem;
-  border-radius: var(--radius);
-  margin-top: auto;
-  box-shadow: 0 8px 32px rgba(46, 125, 50, 0.22);
-  font-size: 0.92rem;
-  width: 100vw;
-  position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
-  user-select: none;
-  text-align: center;
-}
-
-footer > div {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 2rem;
-  text-align: left;
-}
-
-footer > div > div { flex: 1; min-width: 200px; }
-footer h4 { margin-bottom: 0.5rem; font-weight: 700; font-size: 1.1rem; }
-footer ul { list-style: none; padding: 0; line-height: 1.8; }
-footer ul li a { color: var(--white); text-decoration: underline; transition: color 0.3s ease; }
+/* Footer */
+footer { background-color: var(--primary); color: var(--white); padding:2rem; margin-top:auto; box-shadow:0 8px 32px rgba(46,125,50,0.22); text-align:left; user-select:none; }
+footer > div { max-width:1200px; margin:0 auto; display:flex; flex-wrap:wrap; gap:2rem; }
+footer > div > div { flex:1; min-width:200px; display:flex; flex-direction:column; }
+footer h4 { margin-bottom:0.5rem; font-weight:700; }
+footer ul { list-style:none; padding:0; line-height:1.8; }
+footer ul li { margin-bottom:0.3rem; }
+footer ul li a { color: var(--white); text-decoration: underline; }
 footer ul li a:hover { color: var(--accent); }
-footer small { display: block; margin-top: 2rem; text-align: center; opacity: 0.85; }
+footer small { display:block; margin-top:2rem; text-align:center; opacity:0.85; }
 
-/* RESPONSIVE */
-@media (max-width: 720px) {
-  .category-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
-  .result-card img { height: 140px; }
-  .result-card h3 { font-size: 1rem; }
-  .result-card p { font-size: 0.85rem; }
-  .result-card button { font-size: 0.85rem; padding: 0.4rem; }
+/* Responsive */
+@media(max-width:900px){ main { grid-template-columns:1fr; gap:1.8rem; } }
+@media(max-width:720px){
+  #nav-toggle{display:block;}
+  nav#nav-links{display:none; flex-direction:column; width:100%; margin-top:1rem;}
+  nav#nav-links.show{display:flex;}
+  nav#nav-links a{margin:0.4rem 0; padding:0.5rem 1rem; background: rgba(255,255,255,0.1); border-radius:6px;}
+  .main-image{max-height:280px;}
+  .thumbnails img{width:70px;height:50px;}
 }
 </style>
 </head>
 <body>
 
 <header>
-  <h1 onclick="location.href='index.html'">Locorent</h1>
-  <nav>
-    <a href="index.html">Start</a>
-    <a href="profil.html">Mein Profil</a>
-    <a href="nachrichten-inbox.html">Nachrichten</a>
-    <a href="favoriten.html">Meine Favoriten</a>
-  </nav>
+  <h1 tabindex="0" onclick="location.href='index.html'">Locorent</h1>
+  <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
+  <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
 </header>
 
-<main>
-  <h2>Meine Favoriten</h2>
-  <div id="favorites-list" class="category-grid">Lade Favoriten…</div>
-</main>
+<main id="listing-details" aria-live="polite" aria-busy="true">Lade Inserat…</main>
 
 <footer>
   <div>
@@ -220,7 +137,7 @@ footer small { display: block; margin-top: 2rem; text-align: center; opacity: 0.
         <li><a href="so-funktionierts.html">So funktioniert's</a></li>
         <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
         <li><a href="kategorien.html">Beliebte Kategorien</a></li>
-        <li><a href="vermieter-tipps.html">Tipps & Tricks</a></li>
+        <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
         <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
       </ul>
     </div>
@@ -243,5 +160,113 @@ footer small { display: block; margin-top: 2rem; text-align: center; opacity: 0.
   <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
 </footer>
 
+<script>
+const supabase = window.supabase.createClient(
+  'https://flnjalgqtkqycsaymmbd.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+);
+
+let currentUser=null;
+let listingOwnerId=null;
+let isFavorite=false;
+
+document.getElementById('nav-toggle').addEventListener('click',()=>{
+  const nav=document.getElementById('nav-links');
+  nav.classList.toggle('show');
+  document.getElementById('nav-toggle').setAttribute('aria-expanded',nav.classList.contains('show'));
+});
+
+async function updateNav(){
+  const {data:{session}}=await supabase.auth.getSession();
+  const nav=document.getElementById('nav-links');
+  if(session?.user){
+    currentUser=session.user;
+    nav.innerHTML=`
+      <a href="index.html">Start</a>
+      <a href="profil.html">Mein Profil</a>
+      <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+      <a href="favoriten.html">Meine Favoriten</a>
+      <a href="inserate.html">Meine Inserate</a>
+      <a href="#" onclick="logout()">Logout</a>
+    `;
+  }else{
+    nav.innerHTML=`<a href="login.html">Einloggen</a><a href="register.html">Registrieren</a>`;
+  }
+}
+
+async function logout(){await supabase.auth.signOut(); window.location.href="login.html";}
+function capitalize(str){return str?str.charAt(0).toUpperCase()+str.slice(1):'';}
+function formatDate(dateStr){if(!dateStr)return'Unbekannt';const d=new Date(dateStr);return d.toLocaleDateString('de-DE',{year:'numeric',month:'long',day:'numeric'});}
+
+async function loadListing(){
+  const params=new URLSearchParams(location.search);
+  const listingId=params.get('id');
+  const {data: listing, error}=await supabase.from('listings').select('*').eq('id',listingId).single();
+  if(error||!listing){document.getElementById('listing-details').innerHTML="<p>Fehler beim Laden des Inserats.</p>";return;}
+  listingOwnerId=listing.user_id;
+  const {data: profile}=await supabase.from('profiles').select('name,city,bio').eq('id',listing.user_id).single();
+  const images=listing.image_urls||(listing.image_url?[listing.image_url]:['https://via.placeholder.com/600x400?text=Kein+Bild']);
+  const thumbs=images.map((url,i)=>`<img src="${url}" class="${i===0?'active':''}" alt="Vorschaubild ${i+1}" onclick="switchImage('${url}',this)">`).join('');
+  document.getElementById('listing-details').innerHTML=`
+    <div class="gallery">
+      <img src="${images[0]}" class="main-image" id="mainImage" alt="Bild des Mietobjekts"/>
+      ${images.length>1?`<div class="thumbnails">${thumbs}</div>`:''}
+    </div>
+    <div class="content">
+      <h2>${listing.title}</h2>
+      <p><strong>Kategorie:</strong> ${capitalize(listing.category)}</p>
+      <p><strong>Preis pro Tag:</strong> ${listing.price_per_day} €</p>
+      <p><strong>Ort:</strong> ${listing.location||'–'}</p>
+      <p><strong>Online seit:</strong> ${formatDate(listing.created_at)}</p>
+      <p><strong>Beschreibung:</strong></p>
+      <p class="description">${listing.description||'Keine Beschreibung vorhanden.'}</p>
+      <button onclick="goToChat()">Nachricht an Vermieter</button>
+      ${currentUser?`<button id="add-to-favorites" onclick="toggleFavorite('${listing.id}')">Lade Favoritenstatus...</button>`:''}
+    </div>
+    <div class="vendor-info">
+      <h3>Vermieter</h3>
+      <p><strong>Name:</strong> <a href="vermieter-profil.html?id=${listing.user_id}">${profile?.name||'–'}</a></p>
+      <p><strong>Ort:</strong> ${profile?.city||'–'}</p>
+      <p><strong>Über mich:</strong> ${profile?.bio||'–'}</p>
+    </div>
+  `;
+  if(currentUser) await updateFavoriteButton(listing.id);
+}
+
+function switchImage(url,element){
+  document.getElementById("mainImage").src=url;
+  document.querySelectorAll(".thumbnails img").forEach(img=>img.classList.remove("active"));
+  element.classList.add("active");
+}
+
+async function updateFavoriteButton(listingId){
+  const { data } = await supabase.from('favorites').select('*').eq('user_id',currentUser.id).eq('listing_id',listingId).single();
+  isFavorite=!!data;
+  document.getElementById("add-to-favorites").textContent=isFavorite?"Aus Favoriten entfernen":"Zu Favoriten hinzufügen";
+}
+
+async function toggleFavorite(listingId){
+  if(!currentUser) return alert("Bitte einloggen.");
+  const btn=document.getElementById("add-to-favorites");
+  if(isFavorite){
+    const { error }=await supabase.from('favorites').delete().eq('user_id',currentUser.id).eq('listing_id',listingId);
+    if(!error){isFavorite=false;btn.textContent="Zu Favoriten hinzufügen";} else alert("Fehler beim Entfernen aus Favoriten.");
+  }else{
+    const { error }=await supabase.from('favorites').insert({user_id:currentUser.id,listing_id:listingId});
+    if(!error){isFavorite=true;btn.textContent="Aus Favoriten entfernen";} else alert("Fehler beim Hinzufügen zu Favoriten.");
+  }
+}
+
+function goToChat(){
+  if(!currentUser) return alert("Bitte einloggen, um Nachrichten zu senden.");
+  const params=new URLSearchParams(location.search);
+  const listingId=params.get('id');
+  const chatWith=listingOwnerId;
+  window.location.href=`nachrichten.html?listing_id=${listingId}&with=${chatWith}`;
+}
+
+updateNav();
+loadListing();
+</script>
 </body>
 </html>
