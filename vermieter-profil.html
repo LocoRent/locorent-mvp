@@ -42,32 +42,30 @@
 header {
   background-color: var(--primary);
   color: var(--white);
-  padding: 1.2rem 2rem; /* etwas kompakter */
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-weight: 700;
+  justify-content: space-between; /* Logo links, Burger rechts */
+  align-items: center;            /* gleiche Höhe */
+  padding: 0.6rem 1rem;           /* kompakte Höhe für Mobil & Desktop */
   position: sticky;
   top: 0;
   z-index: 1000;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+  flex-wrap: nowrap;               /* kein Zeilenumbruch */
 }
-
 header h1 {
-  font-weight: 900;
+  font-weight: 900; /* immer fett */
   font-size: 1.8rem;
-  cursor: pointer;
-  user-select: none;
   margin: 0;
+  cursor: pointer;
 }
-    #nav-toggle {
-      display: none;
-      background: none;
-      border: none;
-      font-size: 1.8rem;
-      color: var(--white);
-      cursor: pointer;
-    }
+#nav-toggle {
+  display: none; /* Desktop ausblenden */
+  font-size: 1.8rem;
+  background: none;
+  border: none;
+  color: var(--white);
+  cursor: pointer;
+}
 
     nav#nav-links {
       display: flex;
@@ -417,7 +415,7 @@ header h1 {
       padding: 3rem 2rem 4rem;
     }
   #nav-toggle {
-    display: block;
+    display: block;/* nur auf Mobil zeigen */
     font-size: 1.8rem;
     margin: 0; /* direkt neben Logo */
     color: var(--white);
@@ -432,16 +430,16 @@ header h1 {
     margin-top: 0.5rem;
   }
 
-  nav#nav-links.show { display: flex; }
+  nav#nav-links.show {
+    display: flex;
+  }
   nav#nav-links a {
-    margin: 0.4rem 0;
-    padding: 0.5rem 1rem;
+    margin: 0.3rem 0;
+    padding: 0.4rem 1rem;
     background-color: rgba(255,255,255,0.1);
     border-radius: 6px;
-    display: block;
     color: var(--white);
     font-weight: 600;
-    transition: background 0.3s ease, color 0.3s ease;
   }
   nav#nav-links a:hover,
   nav#nav-links a:focus {
