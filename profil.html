@@ -782,6 +782,14 @@ if (updates.city.length > 50) {
 
 updateNav();
 loadProfile();
+  const navToggle = document.getElementById('nav-toggle');
+const navLinks = document.getElementById('nav-links');
+
+navToggle.addEventListener('click', () => {
+  navLinks.classList.toggle('show');
+  const expanded = navToggle.getAttribute('aria-expanded') === 'true';
+  navToggle.setAttribute('aria-expanded', !expanded);
+});
 </script>
 </body>
 </html>
