@@ -55,47 +55,56 @@
     }
 
     header h1 {
-    font-weight: 900; /* vorher 700 */
       font-size: 1.8rem;
       cursor: pointer;
       user-select: none;
       margin: 0;
     }
-#nav-toggle {
-  display: block;
-  font-size: 1.8rem;
-  background: none;
-  border: none;
-  color: var(--white);
-  cursor: pointer;
-  margin-left: auto;
-}
+    #nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.8rem;
+      color: var(--white);
+      cursor: pointer;
+    }
 
-nav#nav-links {
-  width: 100%;
-  flex-direction: column;
-  display: none;
-  margin-top: 0.5rem;
-}
+    nav#nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
 
-nav#nav-links.show { display: flex; }
+    nav#nav-links a {
+      color: var(--white);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      position: relative;
+      transition: color 0.3s ease;
+    }
 
-nav#nav-links a {
-  margin: 0.4rem 0;
-  padding: 0.5rem 1rem;
-  background-color: rgba(255,255,255,0.1);
-  border-radius: 6px;
-  display: block;
-  color: var(--white);
-  font-weight: 600;
-  transition: background 0.3s ease, color 0.3s ease;
-}
-nav#nav-links a:hover,
-nav#nav-links a:focus {
-  background-color: rgba(255,255,255,0.2);
-  color: var(--accent);
-}
+    nav#nav-links a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -4px;
+      width: 0;
+      height: 2px;
+      background-color: var(--accent);
+      transition: width 0.3s ease;
+    }
 
+    nav#nav-links a:hover::after,
+    nav#nav-links a:focus::after {
+      width: 100%;
+    }
+
+    nav#nav-links a:hover,
+    nav#nav-links a:focus {
+      color: var(--accent);
+      outline: none;
+    }
   main {
     max-width: var(--max-width);
     background: var(--white);
@@ -398,23 +407,23 @@ nav#nav-links a:focus {
     }
   /* Responsive */
   @media (max-width: 720px) {
-       header {
-    flex-direction: row; /* vertikal zu horizontal */
-    align-items: center;
-    padding: 0.8rem 1rem; /* weniger Höhe */
-  } 
+    header {
+        flex-direction: row; /* Zeilenlayout */
+        align-items: center; /* alles zentriert auf einer Höhe */
+        padding: 0.6rem 1rem; /* weniger Höhe */
+    }
     main {
       padding: 3rem 2rem 4rem;
     }
-  #nav-toggle {
-    display: block;
-    font-size: 1.8rem;
-    background: none;
-    border: none;
-    color: var(--white);
-    cursor: pointer;
-    margin-left: auto;
-  }
+    #nav-toggle {
+        display: block;
+        font-size: 1.8rem;
+        margin-left: auto; /* rechts vom Logo */
+        color: var(--white);
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
   nav#nav-links {
     width: 100%;
     flex-direction: column;
