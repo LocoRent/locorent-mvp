@@ -136,10 +136,11 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  const supabase = window.supabase.createClient(
-    'https://flnjalgqtkqycsaymmbd.supabase.co',
-    'YOUR_PUBLIC_ANON_KEY'
-  );
+const supabase = window.supabase.createClient(
+  'https://flnjalgqtkqycsaymmbd.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+);
+
 
   const form = document.getElementById('register-form');
   const messageDiv = document.getElementById('message');
