@@ -407,23 +407,28 @@
 <form class="search-form" onsubmit="event.preventDefault(); search();" role="search" aria-label="Suchformular">
   <input type="text" placeholder="Was suchst du?" id="search-input" aria-label="Suchbegriff eingeben" />
 
-  <select id="main-category" aria-label="Hauptkategorie auswählen" required>
-    <option value="">Bitte wählen</option>
-    <option value="fahrzeuge">Fahrzeuge</option>
-    <option value="technik">Elektronik & Technik</option>
-    <option value="haus">Haus & Garten</option>
-    <option value="freizeit">Freizeit & Hobby</option>
-    <option value="sport">Sport & Outdoor</option>
-    <option value="musik">Musik, Film & Kultur</option>
-    <option value="familie">Familie, Kind & Baby</option>
-    <option value="tiere">Tiere</option>
-    <option value="mode">Mode & Accessoires</option>
-    <option value="dienst">Dienstleistungen</option>
-    <option value="gewerbe">Gewerbe & Industrie</option>
-    <option value="gesundheit">Gesundheit & Reha</option>
-    <option value="bildung">Bildung & Veranstaltungen</option>
-    <option value="sonstiges">Sonstiges</option>
-  </select>
+<select id="main-category" aria-label="Kategorie auswählen">
+  <option value="">Bitte wählen</option>
+  <option value="fahrzeuge">Fahrzeuge</option>
+  <option value="technik">Elektronik & Technik</option>
+  <option value="haus">Haus & Garten</option>
+  <option value="freizeit">Freizeit & Hobby</option>
+  <option value="sport">Sport & Outdoor</option>
+  <option value="musik">Musik, Film & Kultur</option>
+  <option value="familie">Familie, Kind & Baby</option>
+  <option value="tiere">Tiere</option>
+  <option value="mode">Mode & Accessoires</option>
+  <option value="dienst">Dienstleistungen</option>
+  <option value="gewerbe">Gewerbe & Industrie</option>
+  <option value="gesundheit">Gesundheit & Reha</option>
+  <option value="bildung">Bildung & Veranstaltungen</option>
+  <option value="sonstiges">Sonstiges</option>
+</select>
+
+<select id="sub-category" aria-label="Unterkategorie auswählen" style="display:none;">
+  <option value="">Unterkategorie wählen (optional)</option>
+</select>
+
 
   <select id="sub-category" aria-label="Unterkategorie auswählen" style="display:none;" required>
     <option value="">Bitte Hauptkategorie wählen</option>
@@ -506,6 +511,29 @@
 
     let userSession = null;
     let selectedAddressData = null;
+    
+const mainSelect = document.getElementById('main-category');
+const subSelect = document.getElementById('sub-category');
+
+mainSelect.addEventListener('change', (e) => {
+  const main = e.target.value;
+
+  subSelect.innerHTML = '<option value="">Unterkategorie wählen (optional)</option>';
+
+  if (!main || !categories[main]) {
+    subSelect.style.display = 'none';
+    return;
+  }
+
+  categories[main].forEach(sub => {
+    const option = document.createElement('option');
+    option.value = `${main}:${sub.value}`;
+    option.textContent = sub.text;
+    subSelect.appendChild(option);
+  });
+
+  subSelect.style.display = 'block';
+});
 
     const categories = {
   fahrzeuge: [
