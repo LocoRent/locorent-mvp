@@ -407,121 +407,26 @@
 <form class="search-form" onsubmit="event.preventDefault(); search();" role="search" aria-label="Suchformular">
   <input type="text" placeholder="Was suchst du?" id="search-input" aria-label="Suchbegriff eingeben" />
 
-  <select id="category-select" aria-label="Kategorie auswählen" required>
+  <select id="main-category" aria-label="Hauptkategorie auswählen" required>
     <option value="">Bitte wählen</option>
+    <option value="fahrzeuge">Fahrzeuge</option>
+    <option value="technik">Elektronik & Technik</option>
+    <option value="haus">Haus & Garten</option>
+    <option value="freizeit">Freizeit & Hobby</option>
+    <option value="sport">Sport & Outdoor</option>
+    <option value="musik">Musik, Film & Kultur</option>
+    <option value="familie">Familie, Kind & Baby</option>
+    <option value="tiere">Tiere</option>
+    <option value="mode">Mode & Accessoires</option>
+    <option value="dienst">Dienstleistungen</option>
+    <option value="gewerbe">Gewerbe & Industrie</option>
+    <option value="gesundheit">Gesundheit & Reha</option>
+    <option value="bildung">Bildung & Veranstaltungen</option>
+    <option value="sonstiges">Sonstiges</option>
+  </select>
 
-    <optgroup label="Fahrzeuge">
-      <option value="fahrzeuge:autos-transporter">Autos & Transporter</option>
-      <option value="fahrzeuge:motorräder-roller">Motorräder & Roller</option>
-      <option value="fahrzeuge:fahrräder-ebikes">Fahrräder & E-Bikes</option>
-      <option value="fahrzeuge:wohnmobile-wohnwagen">Wohnmobile & Wohnwagen</option>
-      <option value="fahrzeuge:boote-jetskis">Boote & Jetskis</option>
-      <option value="fahrzeuge:anhaenger">Anhänger</option>
-    </optgroup>
-
-    <optgroup label="Elektronik & Technik">
-      <option value="technik:computer-laptops">Computer & Laptops</option>
-      <option value="technik:smartphones-tablets">Smartphones & Tablets</option>
-      <option value="technik:kameras-foto">Kameras & Fotozubehör</option>
-      <option value="technik:film-video">Film- & Videotechnik</option>
-      <option value="technik:drohnen">Drohnen</option>
-      <option value="technik:beamer-praesentation">Beamer & Präsentationstechnik</option>
-      <option value="technik:dj-audio">DJ- & Audio-Equipment</option>
-    </optgroup>
-
-    <optgroup label="Haus & Garten">
-      <option value="haus:moebel">Möbel & Einrichtung</option>
-      <option value="haus:haushaltsgeraete">Haushaltsgeräte</option>
-      <option value="garten:gartengeraete">Gartengeräte & Zubehör</option>
-      <option value="haus:werkzeuge">Werkzeuge</option>
-      <option value="haus:maschinen-bau">Maschinen & Baugeräte</option>
-      <option value="haus:dekoration">Dekoration</option>
-      <option value="haus:reinigung">Reinigungstechnik</option>
-    </optgroup>
-
-    <optgroup label="Freizeit & Hobby">
-      <option value="freizeit:camping">Camping & Outdoor</option>
-      <option value="freizeit:drohnen-modelle">Drohnen & RC-Modelle</option>
-      <option value="freizeit:spiele-konsolen">Gesellschaftsspiele & Konsolen</option>
-      <option value="freizeit:buecher">Bücher & Lernmaterial</option>
-      <option value="freizeit:sammlerstuecke">Modelleisenbahn & Sammlerstücke</option>
-    </optgroup>
-
-    <optgroup label="Sport & Outdoor">
-      <option value="sport:fitnessgeraete">Fitnessgeräte</option>
-      <option value="sport:ski-wintersport">Ski & Wintersport</option>
-      <option value="sport:wassersport">Wassersport (SUP, Kajaks, Surfen)</option>
-      <option value="sport:teamsport">Teamsport-Ausrüstung</option>
-      <option value="sport:klettern">Klettern & Bergsport</option>
-      <option value="sport:fahrradzubehoer">Fahrradzubehör</option>
-    </optgroup>
-
-    <optgroup label="Musik, Film & Kultur">
-      <option value="musik:instrumente">Musikinstrumente</option>
-      <option value="musik:tontechnik">Tontechnik</option>
-      <option value="musik:lichttechnik">Lichttechnik</option>
-      <option value="musik:kostueme">Kostüme & Theater</option>
-      <option value="musik:event-deko">Event-Deko</option>
-      <option value="musik:buehnen-messebau">Bühnen- & Messebau</option>
-    </optgroup>
-
-    <optgroup label="Familie, Kind & Baby">
-      <option value="familie:kinderwagen">Kinderwagen</option>
-      <option value="familie:spielzeug">Spielzeug & Spiele</option>
-      <option value="familie:kinderzimmer">Kinderzimmermöbel</option>
-      <option value="familie:babyausstattung">Babyausstattung</option>
-      <option value="familie:fahrradsitze">Fahrradsitze & Anhänger</option>
-    </optgroup>
-
-    <optgroup label="Tiere">
-      <option value="tiere:hundeboxen-kaefige">Hundeboxen & Käfige</option>
-      <option value="tiere:pferdeanhaenger">Pferdeanhänger</option>
-      <option value="tiere:aquarien">Aquarien & Terrarien</option>
-      <option value="tiere:tier-transport">Tier-Transportzubehör</option>
-      <option value="tiere:stallzubehoer">Stallzubehör</option>
-    </optgroup>
-
-    <optgroup label="Mode & Accessoires">
-      <option value="mode:abendmode">Abendkleider & Anzüge</option>
-      <option value="mode:trachten-kostueme">Trachten & Kostüme</option>
-      <option value="mode:taschen">Taschen & Rucksäcke</option>
-      <option value="mode:schmuck">Schmuck & Accessoires</option>
-      <option value="mode:businesskleidung">Businesskleidung</option>
-    </optgroup>
-
-    <optgroup label="Dienstleistungen">
-      <option value="dienst:umzug-transport">Umzug & Transport</option>
-      <option value="dienst:partyservice">Partyservice & Catering</option>
-      <option value="dienst:handwerker">Handwerker & Bau</option>
-      <option value="dienst:technik-verleih">Technik-Verleih</option>
-      <option value="dienst:eventmanagement">Eventmanagement</option>
-    </optgroup>
-
-    <optgroup label="Gewerbe & Industrie">
-      <option value="gewerbe:baumaschinen">Baumaschinen</option>
-      <option value="gewerbe:stapler">Stapler & Fördertechnik</option>
-      <option value="gewerbe:buero">Büroausstattung</option>
-      <option value="gewerbe:messestaende">Messestände & Ausrüstung</option>
-      <option value="gewerbe:werkstatt">Werkstattausrüstung</option>
-    </optgroup>
-
-    <optgroup label="Gesundheit & Reha">
-      <option value="gesundheit:rollstuehle">Rollstühle & Gehhilfen</option>
-      <option value="gesundheit:pflegebetten">Pflegebetten</option>
-      <option value="gesundheit:medizintechnik">Medizintechnik</option>
-      <option value="gesundheit:massage">Massagegeräte</option>
-    </optgroup>
-
-    <optgroup label="Bildung & Veranstaltungen">
-      <option value="bildung:seminarraeume">Seminarräume</option>
-      <option value="bildung:schulungsmaterial">Schulungsmaterialien</option>
-      <option value="bildung:projektoren">Projektoren & Whiteboards</option>
-      <option value="bildung:eventtechnik">Eventtechnik</option>
-    </optgroup>
-
-    <optgroup label="Sonstiges">
-      <option value="sonstiges">Alles andere</option>
-    </optgroup>
+  <select id="sub-category" aria-label="Unterkategorie auswählen" style="display:none;" required>
+    <option value="">Bitte Hauptkategorie wählen</option>
   </select>
 
   <div style="position: relative; flex: 1; min-width: 200px;">
@@ -542,6 +447,7 @@
 
   <button type="submit">Suchen</button>
 </form>
+
 
   </section>
 
@@ -600,6 +506,60 @@
 
     let userSession = null;
     let selectedAddressData = null;
+
+    const categories = {
+  fahrzeuge: [
+    { value: 'autos-transporter', text: 'Autos & Transporter' },
+    { value: 'motorräder-roller', text: 'Motorräder & Roller' },
+    { value: 'fahrräder-ebikes', text: 'Fahrräder & E-Bikes' },
+    { value: 'wohnmobile-wohnwagen', text: 'Wohnmobile & Wohnwagen' },
+    { value: 'boote-jetskis', text: 'Boote & Jetskis' },
+    { value: 'anhaenger', text: 'Anhänger' }
+  ],
+  technik: [
+    { value: 'computer-laptops', text: 'Computer & Laptops' },
+    { value: 'smartphones-tablets', text: 'Smartphones & Tablets' },
+    { value: 'kameras-foto', text: 'Kameras & Fotozubehör' },
+    { value: 'film-video', text: 'Film- & Videotechnik' },
+    { value: 'drohnen', text: 'Drohnen' },
+    { value: 'beamer-praesentation', text: 'Beamer & Präsentationstechnik' },
+    { value: 'dj-audio', text: 'DJ- & Audio-Equipment' }
+  ],
+  haus: [
+    { value: 'moebel', text: 'Möbel & Einrichtung' },
+    { value: 'haushaltsgeraete', text: 'Haushaltsgeräte' },
+    { value: 'gartengeraete', text: 'Gartengeräte & Zubehör' },
+    { value: 'werkzeuge', text: 'Werkzeuge' },
+    { value: 'maschinen-bau', text: 'Maschinen & Baugeräte' },
+    { value: 'dekoration', text: 'Dekoration' },
+    { value: 'reinigung', text: 'Reinigungstechnik' }
+  ],
+  // Hier können alle weiteren Kategorien ergänzt werden...
+  sonstiges: [
+    { value: 'sonstiges', text: 'Alles andere' }
+  ]
+};
+
+document.getElementById('main-category').addEventListener('change', (e) => {
+  const main = e.target.value;
+  const subSelect = document.getElementById('sub-category');
+  subSelect.innerHTML = '';
+  
+  if (!main || !categories[main]) {
+    subSelect.style.display = 'none';
+    subSelect.innerHTML = '<option value="">Bitte Hauptkategorie wählen</option>';
+    return;
+  }
+
+  subSelect.style.display = 'block';
+  subSelect.innerHTML = '<option value="">Bitte wählen</option>';
+  categories[main].forEach(sub => {
+    const option = document.createElement('option');
+    option.value = `${main}:${sub.value}`;
+    option.textContent = sub.text;
+    subSelect.appendChild(option);
+  });
+});
 
     async function init() {
       const { data: { session } } = await supabase.auth.getSession();
