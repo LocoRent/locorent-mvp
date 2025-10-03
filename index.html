@@ -404,56 +404,39 @@
 
   <section class="hero" aria-label="Suchbereich">
     <h2>Finde das perfekte Mietobjekt</h2>
-<form class="search-form" onsubmit="event.preventDefault(); search();" role="search" aria-label="Suchformular">
-  <input type="text" placeholder="Was suchst du?" id="search-input" aria-label="Suchbegriff eingeben" />
-
-<select id="main-category" aria-label="Kategorie auswählen">
-  <option value="">Bitte wählen</option>
-  <option value="fahrzeuge">Fahrzeuge</option>
-  <option value="technik">Elektronik & Technik</option>
-  <option value="haus">Haus & Garten</option>
-  <option value="freizeit">Freizeit & Hobby</option>
-  <option value="sport">Sport & Outdoor</option>
-  <option value="musik">Musik, Film & Kultur</option>
-  <option value="familie">Familie, Kind & Baby</option>
-  <option value="tiere">Tiere</option>
-  <option value="mode">Mode & Accessoires</option>
-  <option value="dienst">Dienstleistungen</option>
-  <option value="gewerbe">Gewerbe & Industrie</option>
-  <option value="gesundheit">Gesundheit & Reha</option>
-  <option value="bildung">Bildung & Veranstaltungen</option>
-  <option value="sonstiges">Sonstiges</option>
-</select>
-
-<select id="sub-category" aria-label="Unterkategorie auswählen" style="display:none;">
-  <option value="">Unterkategorie wählen (optional)</option>
-</select>
-
-
-  <select id="sub-category" aria-label="Unterkategorie auswählen" style="display:none;" required>
-    <option value="">Bitte Hauptkategorie wählen</option>
-  </select>
-
-  <div style="position: relative; flex: 1; min-width: 200px;">
-    <input type="text" placeholder="Ort" id="location-input" autocomplete="off" aria-label="Ort eingeben" />
-    <div id="suggestions" role="listbox" aria-label="Ortsvorschläge"></div>
-  </div>
-
-  <select id="radius-select" aria-label="Suchradius auswählen">
-    <option value="">Ganzer Ort</option>
-    <option value="5">5 km</option>
-    <option value="10">10 km</option>
-    <option value="20">20 km</option>
-    <option value="30">30 km</option>
-    <option value="50">50 km</option>
-    <option value="100">100 km</option>
-    <option value="200">200 km</option>
-  </select>
-
-  <button type="submit">Suchen</button>
-</form>
-
-
+    <form class="search-form" onsubmit="event.preventDefault(); search();" role="search" aria-label="Suchformular">
+      <input type="text" placeholder="Was suchst du?" id="search-input" aria-label="Suchbegriff eingeben" />
+      <select id="category-select" aria-label="Kategorie auswählen">
+        <option value="">Alle Kategorien</option>
+        <option value="fahrzeuge">Fahrzeuge</option>
+        <option value="transporter">Transporter</option>
+        <option value="boote">Boote</option>
+        <option value="fahrrad">Fahrräder & E-Bikes</option>
+        <option value="werkzeuge">Werkzeuge</option>
+        <option value="maschinen">Maschinen & Baugeräte</option>
+        <option value="party">Party & Event</option>
+        <option value="technik">Technik</option>
+        <option value="haushalt">Haushalt & Möbel</option>
+        <option value="garten">Garten</option>
+        <option value="freizeit">Freizeit & Sport</option>
+        <option value="baby">Baby & Kind</option>
+      </select>
+      <div style="position: relative; flex: 1; min-width: 200px;">
+        <input type="text" placeholder="Ort" id="location-input" autocomplete="off" aria-label="Ort eingeben" />
+        <div id="suggestions" role="listbox" aria-label="Ortsvorschläge"></div>
+      </div>
+      <select id="radius-select" aria-label="Suchradius auswählen">
+        <option value="">Ganzer Ort</option>
+        <option value="5">5 km</option>
+        <option value="10">10 km</option>
+        <option value="20">20 km</option>
+        <option value="30">30 km</option>
+        <option value="50">50 km</option>
+        <option value="100">100 km</option>
+        <option value="200">200 km</option>
+      </select>
+      <button type="submit">Suchen</button>
+    </form>
   </section>
 
   <section aria-label="Neueste Angebote">
@@ -511,83 +494,6 @@
 
     let userSession = null;
     let selectedAddressData = null;
-    
-const mainSelect = document.getElementById('main-category');
-const subSelect = document.getElementById('sub-category');
-
-mainSelect.addEventListener('change', (e) => {
-  const main = e.target.value;
-
-  subSelect.innerHTML = '<option value="">Unterkategorie wählen (optional)</option>';
-
-  if (!main || !categories[main]) {
-    subSelect.style.display = 'none';
-    return;
-  }
-
-  categories[main].forEach(sub => {
-    const option = document.createElement('option');
-    option.value = `${main}:${sub.value}`;
-    option.textContent = sub.text;
-    subSelect.appendChild(option);
-  });
-
-  subSelect.style.display = 'block';
-});
-
-    const categories = {
-  fahrzeuge: [
-    { value: 'autos-transporter', text: 'Autos & Transporter' },
-    { value: 'motorräder-roller', text: 'Motorräder & Roller' },
-    { value: 'fahrräder-ebikes', text: 'Fahrräder & E-Bikes' },
-    { value: 'wohnmobile-wohnwagen', text: 'Wohnmobile & Wohnwagen' },
-    { value: 'boote-jetskis', text: 'Boote & Jetskis' },
-    { value: 'anhaenger', text: 'Anhänger' }
-  ],
-  technik: [
-    { value: 'computer-laptops', text: 'Computer & Laptops' },
-    { value: 'smartphones-tablets', text: 'Smartphones & Tablets' },
-    { value: 'kameras-foto', text: 'Kameras & Fotozubehör' },
-    { value: 'film-video', text: 'Film- & Videotechnik' },
-    { value: 'drohnen', text: 'Drohnen' },
-    { value: 'beamer-praesentation', text: 'Beamer & Präsentationstechnik' },
-    { value: 'dj-audio', text: 'DJ- & Audio-Equipment' }
-  ],
-  haus: [
-    { value: 'moebel', text: 'Möbel & Einrichtung' },
-    { value: 'haushaltsgeraete', text: 'Haushaltsgeräte' },
-    { value: 'gartengeraete', text: 'Gartengeräte & Zubehör' },
-    { value: 'werkzeuge', text: 'Werkzeuge' },
-    { value: 'maschinen-bau', text: 'Maschinen & Baugeräte' },
-    { value: 'dekoration', text: 'Dekoration' },
-    { value: 'reinigung', text: 'Reinigungstechnik' }
-  ],
-  // Hier können alle weiteren Kategorien ergänzt werden...
-  sonstiges: [
-    { value: 'sonstiges', text: 'Alles andere' }
-  ]
-};
-
-document.getElementById('main-category').addEventListener('change', (e) => {
-  const main = e.target.value;
-  const subSelect = document.getElementById('sub-category');
-  subSelect.innerHTML = '';
-  
-  if (!main || !categories[main]) {
-    subSelect.style.display = 'none';
-    subSelect.innerHTML = '<option value="">Bitte Hauptkategorie wählen</option>';
-    return;
-  }
-
-  subSelect.style.display = 'block';
-  subSelect.innerHTML = '<option value="">Bitte wählen</option>';
-  categories[main].forEach(sub => {
-    const option = document.createElement('option');
-    option.value = `${main}:${sub.value}`;
-    option.textContent = sub.text;
-    subSelect.appendChild(option);
-  });
-});
 
     async function init() {
       const { data: { session } } = await supabase.auth.getSession();
