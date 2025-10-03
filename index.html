@@ -406,26 +406,21 @@
     <h2>Finde das perfekte Mietobjekt</h2>
     <form class="search-form" onsubmit="event.preventDefault(); search();" role="search" aria-label="Suchformular">
       <input type="text" placeholder="Was suchst du?" id="search-input" aria-label="Suchbegriff eingeben" />
-<select id="main-category" onchange="updateSubcategories()" aria-label="Hauptkategorie auswählen">
-  <option value="">Hauptkategorie wählen</option>
-  <option value="fahrzeuge">Fahrzeuge</option>
-  <option value="elektronik">Elektronik & Technik</option>
-  <option value="haus-garten">Haus & Garten</option>
-  <option value="freizeit">Freizeit & Hobby</option>
-  <option value="sport">Sport & Outdoor</option>
-  <option value="musik-film-kultur">Musik, Film & Kultur</option>
-  <option value="familie">Familie, Kind & Baby</option>
-  <option value="tiere">Tiere</option>
-  <option value="mode">Mode & Accessoires</option>
-  <option value="dienstleistungen">Dienstleistungen / Gewerbe</option>
-  <option value="gesundheit">Gesundheit & Reha</option>
-  <option value="bildung">Bildung & Veranstaltungen</option>
-  <option value="sonstiges">Sonstiges</option>
-</select>
-
-<select id="sub-category" aria-label="Unterkategorie auswählen">
-  <option value="">Unterkategorie wählen</option>
-</select>
+      <select id="category-select" aria-label="Kategorie auswählen">
+        <option value="">Alle Kategorien</option>
+        <option value="fahrzeuge">Fahrzeuge</option>
+        <option value="transporter">Transporter</option>
+        <option value="boote">Boote</option>
+        <option value="fahrrad">Fahrräder & E-Bikes</option>
+        <option value="werkzeuge">Werkzeuge</option>
+        <option value="maschinen">Maschinen & Baugeräte</option>
+        <option value="party">Party & Event</option>
+        <option value="technik">Technik</option>
+        <option value="haushalt">Haushalt & Möbel</option>
+        <option value="garten">Garten</option>
+        <option value="freizeit">Freizeit & Sport</option>
+        <option value="baby">Baby & Kind</option>
+      </select>
       <div style="position: relative; flex: 1; min-width: 200px;">
         <input type="text" placeholder="Ort" id="location-input" autocomplete="off" aria-label="Ort eingeben" />
         <div id="suggestions" role="listbox" aria-label="Ortsvorschläge"></div>
@@ -500,100 +495,6 @@
     let userSession = null;
     let selectedAddressData = null;
 
-      const subcategories = {
-    fahrzeuge: [
-      { value: "auto-suv", text: "Auto & SUV" },
-      { value: "motorrad-roller", text: "Motorrad & Roller" },
-      { value: "fahrrad-ebike", text: "Fahrrad & E-Bike" },
-      { value: "wohnmobil-camper", text: "Wohnmobil & Camper" },
-      { value: "boote-wassersport", text: "Boote & Wassersportgeräte" },
-      { value: "anhaenger-transport", text: "Anhänger & Transportmittel" }
-    ],
-    elektronik: [
-      { value: "computer-laptops", text: "Computer & Laptops" },
-      { value: "smartphones-tablets", text: "Smartphones & Tablets" },
-      { value: "kameras-zubehoer", text: "Kameras & Zubehör" },
-      { value: "gaming-unterhaltung", text: "Gaming & Unterhaltung" },
-      { value: "audio-lautsprecher", text: "Audio & Lautsprecher" },
-      { value: "werkzeuge-maschinen", text: "Werkzeuge & Maschinen" }
-    ],
-    "haus-garten": [
-      { value: "moebel-einrichtung", text: "Möbel & Einrichtung" },
-      { value: "werkzeuge-maschinen", text: "Werkzeuge & Maschinen" },
-      { value: "dekoration-beleuchtung", text: "Dekoration & Beleuchtung" }
-    ],
-    freizeit: [
-      { value: "party-event", text: "Party & Eventzubehör" },
-      { value: "basteln-diy", text: "Basteln & DIY" },
-      { value: "spiele-spielzeug", text: "Brettspiele & Spielzeug" },
-      { value: "foto-video", text: "Foto & Video" },
-      { value: "drohnen-modellbau", text: "Drohnen & Modellbau" }
-    ],
-    sport: [
-      { value: "fitnessgeraete", text: "Fitnessgeräte" },
-      { value: "camping-wandern", text: "Camping & Wandern" },
-      { value: "wintersport", text: "Wintersport" },
-      { value: "wassersport", text: "Wassersport" },
-      { value: "fahrradzubehoer", text: "Fahrradzubehör" }
-    ],
-    "musik-film-kultur": [
-      { value: "musikinstrumente", text: "Musikinstrumente" },
-      { value: "dj-audio", text: "DJ & Audioequipment" },
-      { value: "film-kamera", text: "Film & Kameraequipment" },
-      { value: "buecher-medien", text: "Bücher & Medien" }
-    ],
-    familie: [
-      { value: "kinderwagen-babyschalen", text: "Kinderwagen & Babyschalen" },
-      { value: "spielzeug-spiele", text: "Spielzeug & Spiele" },
-      { value: "kinderzimmer-moebel", text: "Möbel für Kinderzimmer" }
-    ],
-    tiere: [
-      { value: "transportboxen", text: "Transportboxen" },
-      { value: "reitzubehoer", text: "Reitzubehör" }
-    ],
-    mode: [
-      { value: "kleidung", text: "Kleidung" },
-      { value: "schuhe", text: "Schuhe" },
-      { value: "taschen-rucksaecke", text: "Taschen & Rucksäcke" },
-      { value: "schmuck-uhren", text: "Schmuck & Uhren" }
-    ],
-    dienstleistungen: [
-      { value: "handwerk-reparatur", text: "Handwerk & Reparatur" },
-      { value: "umzug-transport", text: "Umzug & Transport" },
-      { value: "reinigung-haushaltshilfe", text: "Reinigung & Haushaltshilfe" },
-      { value: "eventservice-catering", text: "Eventservice & Catering" },
-      { value: "maschinen-werkzeuge", text: "Maschinen & Werkzeuge" },
-      { value: "buero-ausstattung", text: "Büro & Ausstattung" },
-      { value: "lager-transportmittel", text: "Lager & Transportmittel" },
-      { value: "verkaufsstaende-equipment", text: "Verkaufsstände & Equipment" }
-    ],
-    gesundheit: [
-      { value: "medizinische-geraete", text: "Medizinische Geräte" },
-      { value: "physiotherapie-hilfsmittel", text: "Physiotherapie & Hilfsmittel" },
-      { value: "pflege-mobilitaet", text: "Pflege & Mobilitätshilfen" }
-    ],
-    bildung: [
-      { value: "kursraeume-seminar", text: "Kursräume & Seminarraum" },
-      { value: "workshop-schulungsmaterial", text: "Workshop- & Schulungsmaterial" },
-      { value: "technik-praesentation", text: "Technik für Präsentationen" },
-      { value: "eventausstattung", text: "Eventausstattung" }
-    ],
-    sonstiges: [
-      { value: "alles-andere", text: "Alles andere" }
-    ]
-  };
-
-  function updateSubcategories() {
-    const mainCat = document.getElementById("main-category").value;
-    const subCatSelect = document.getElementById("sub-category");
-    subCatSelect.innerHTML = '<option value="">Unterkategorie wählen</option>';
-    if (subcategories[mainCat]) {
-      subcategories[mainCat].forEach(sub => {
-        const opt = document.createElement("option");
-        opt.value = sub.value;
-        opt.textContent = sub.text;
-        subCatSelect.appendChild(opt);
-      });
     async function init() {
       const { data: { session } } = await supabase.auth.getSession();
       userSession = session;
