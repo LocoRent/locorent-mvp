@@ -724,14 +724,17 @@ card.innerHTML = `
       }
     });
 
-    function search() {
-      const keyword = document.getElementById("search-input").value.trim();
-      const category = document.getElementById("category-select").value.trim();
-      const location = document.getElementById("location-input").value.trim();
-      const radius = document.getElementById("radius-select").value.trim();
-      const params = new URLSearchParams({ keyword, category, location, radius });
-      window.location.href = `search_results.html?${params.toString()}`;
-    }
+function search() {
+  const keyword = document.getElementById("search-input").value.trim();
+  const category = document.getElementById("category-select").value.trim();
+  const subcategory = document.getElementById("subcategory-select").value.trim();
+  const location = document.getElementById("location-input").value.trim();
+  const radius = document.getElementById("radius-select").value.trim();
+
+  const params = new URLSearchParams({ keyword, category, subcategory, location, radius });
+  window.location.href = `search_results.html?${params.toString()}`;
+}
+
 
     document.getElementById('nav-toggle').addEventListener('click', () => {
       const nav = document.getElementById('nav-links');
