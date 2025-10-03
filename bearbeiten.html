@@ -327,22 +327,124 @@
     <label for="title">Titel</label>
     <input type="text" id="title" required maxlength="50" />
 
-    <label for="category">Kategorie</label>
-    <select id="category" required>
-      <option value="">Bitte wählen</option>
-      <option value="fahrzeuge">Fahrzeuge</option>
-      <option value="transporter">Transporter</option>
-      <option value="boote">Boote</option>
-      <option value="fahrrad">Fahrräder & E-Bikes</option>
-      <option value="werkzeuge">Werkzeuge</option>
-      <option value="maschinen">Maschinen & Baugeräte</option>
-      <option value="party">Party & Event</option>
-      <option value="technik">Technik</option>
-      <option value="haushalt">Haushalt & Möbel</option>
-      <option value="garten">Garten</option>
-      <option value="freizeit">Freizeit & Sport</option>
-      <option value="baby">Baby & Kind</option>
-    </select>
+<label for="category">Kategorie</label>
+<select id="category" required>
+  <option value="">Bitte wählen</option>
+
+  <optgroup label="Fahrzeuge">
+    <option value="fahrzeuge:autos-transporter">Autos & Transporter</option>
+    <option value="fahrzeuge:motorräder-roller">Motorräder & Roller</option>
+    <option value="fahrzeuge:fahrräder-ebikes">Fahrräder & E-Bikes</option>
+    <option value="fahrzeuge:wohnmobile-wohnwagen">Wohnmobile & Wohnwagen</option>
+    <option value="fahrzeuge:boote-jetskis">Boote & Jetskis</option>
+    <option value="fahrzeuge:anhaenger">Anhänger</option>
+  </optgroup>
+
+  <optgroup label="Elektronik & Technik">
+    <option value="technik:computer-laptops">Computer & Laptops</option>
+    <option value="technik:smartphones-tablets">Smartphones & Tablets</option>
+    <option value="technik:kameras-foto">Kameras & Fotozubehör</option>
+    <option value="technik:film-video">Film- & Videotechnik</option>
+    <option value="technik:drohnen">Drohnen</option>
+    <option value="technik:beamer-praesentation">Beamer & Präsentationstechnik</option>
+    <option value="technik:dj-audio">DJ- & Audio-Equipment</option>
+  </optgroup>
+
+  <optgroup label="Haus & Garten">
+    <option value="haus:moebel">Möbel & Einrichtung</option>
+    <option value="haus:haushaltsgeraete">Haushaltsgeräte</option>
+    <option value="garten:gartengeraete">Gartengeräte & Zubehör</option>
+    <option value="haus:werkzeuge">Werkzeuge</option>
+    <option value="haus:maschinen-bau">Maschinen & Baugeräte</option>
+    <option value="haus:dekoration">Dekoration</option>
+    <option value="haus:reinigung">Reinigungstechnik</option>
+  </optgroup>
+
+  <optgroup label="Freizeit & Hobby">
+    <option value="freizeit:camping">Camping & Outdoor</option>
+    <option value="freizeit:drohnen-modelle">Drohnen & RC-Modelle</option>
+    <option value="freizeit:spiele-konsolen">Gesellschaftsspiele & Konsolen</option>
+    <option value="freizeit:buecher">Bücher & Lernmaterial</option>
+    <option value="freizeit:sammlerstuecke">Modelleisenbahn & Sammlerstücke</option>
+  </optgroup>
+
+  <optgroup label="Sport & Outdoor">
+    <option value="sport:fitnessgeraete">Fitnessgeräte</option>
+    <option value="sport:ski-wintersport">Ski & Wintersport</option>
+    <option value="sport:wassersport">Wassersport (SUP, Kajaks, Surfen)</option>
+    <option value="sport:teamsport">Teamsport-Ausrüstung</option>
+    <option value="sport:klettern">Klettern & Bergsport</option>
+    <option value="sport:fahrradzubehoer">Fahrradzubehör</option>
+  </optgroup>
+
+  <optgroup label="Musik, Film & Kultur">
+    <option value="musik:instrumente">Musikinstrumente</option>
+    <option value="musik:tontechnik">Tontechnik</option>
+    <option value="musik:lichttechnik">Lichttechnik</option>
+    <option value="musik:kostueme">Kostüme & Theater</option>
+    <option value="musik:event-deko">Event-Deko</option>
+    <option value="musik:buehnen-messebau">Bühnen- & Messebau</option>
+  </optgroup>
+
+  <optgroup label="Familie, Kind & Baby">
+    <option value="familie:kinderwagen">Kinderwagen</option>
+    <option value="familie:spielzeug">Spielzeug & Spiele</option>
+    <option value="familie:kinderzimmer">Kinderzimmermöbel</option>
+    <option value="familie:babyausstattung">Babyausstattung</option>
+    <option value="familie:fahrradsitze">Fahrradsitze & Anhänger</option>
+  </optgroup>
+
+  <optgroup label="Tiere">
+    <option value="tiere:hundeboxen-kaefige">Hundeboxen & Käfige</option>
+    <option value="tiere:pferdeanhaenger">Pferdeanhänger</option>
+    <option value="tiere:aquarien">Aquarien & Terrarien</option>
+    <option value="tiere:tier-transport">Tier-Transportzubehör</option>
+    <option value="tiere:stallzubehoer">Stallzubehör</option>
+  </optgroup>
+
+  <optgroup label="Mode & Accessoires">
+    <option value="mode:abendmode">Abendkleider & Anzüge</option>
+    <option value="mode:trachten-kostueme">Trachten & Kostüme</option>
+    <option value="mode:taschen">Taschen & Rucksäcke</option>
+    <option value="mode:schmuck">Schmuck & Accessoires</option>
+    <option value="mode:businesskleidung">Businesskleidung</option>
+  </optgroup>
+
+  <optgroup label="Dienstleistungen">
+    <option value="dienst:umzug-transport">Umzug & Transport</option>
+    <option value="dienst:partyservice">Partyservice & Catering</option>
+    <option value="dienst:handwerker">Handwerker & Bau</option>
+    <option value="dienst:technik-verleih">Technik-Verleih</option>
+    <option value="dienst:eventmanagement">Eventmanagement</option>
+  </optgroup>
+
+  <optgroup label="Gewerbe & Industrie">
+    <option value="gewerbe:baumaschinen">Baumaschinen</option>
+    <option value="gewerbe:stapler">Stapler & Fördertechnik</option>
+    <option value="gewerbe:buero">Büroausstattung</option>
+    <option value="gewerbe:messestaende">Messestände & Ausrüstung</option>
+    <option value="gewerbe:werkstatt">Werkstattausrüstung</option>
+  </optgroup>
+
+  <optgroup label="Gesundheit & Reha">
+    <option value="gesundheit:rollstuehle">Rollstühle & Gehhilfen</option>
+    <option value="gesundheit:pflegebetten">Pflegebetten</option>
+    <option value="gesundheit:medizintechnik">Medizintechnik</option>
+    <option value="gesundheit:massage">Massagegeräte</option>
+  </optgroup>
+
+  <optgroup label="Bildung & Veranstaltungen">
+    <option value="bildung:seminarraeume">Seminarräume</option>
+    <option value="bildung:schulungsmaterial">Schulungsmaterialien</option>
+    <option value="bildung:projektoren">Projektoren & Whiteboards</option>
+    <option value="bildung:eventtechnik">Eventtechnik</option>
+  </optgroup>
+
+  <optgroup label="Sonstiges">
+    <option value="sonstiges">Alles andere</option>
+  </optgroup>
+</select>
+
 
     <label for="price">Preis pro Tag (€)</label>
     <input type="number" id="price" required min="0" max="999999" />
