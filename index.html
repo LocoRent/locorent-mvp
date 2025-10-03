@@ -404,49 +404,39 @@
 
   <section class="hero" aria-label="Suchbereich">
     <h2>Finde das perfekte Mietobjekt</h2>
-<form class="search-form" onsubmit="event.preventDefault(); search();" role="search" aria-label="Suchformular">
-  <input type="text" placeholder="Was suchst du?" id="search-input" aria-label="Suchbegriff eingeben" />
-
-  <select id="category-select" aria-label="Kategorie auswählen" onchange="updateSubcategory()">
-    <option value="">Alle Kategorien</option>
-    <option value="fahrzeuge">Fahrzeuge</option>
-    <option value="elektronik">Elektronik & Technik</option>
-    <option value="haus-garten">Haus & Garten</option>
-    <option value="freizeit">Freizeit & Hobby</option>
-    <option value="sport">Sport & Outdoor</option>
-    <option value="musik">Musik, Film & Kultur</option>
-    <option value="familie">Familie, Kind & Baby</option>
-    <option value="tiere">Tiere</option>
-    <option value="mode">Mode & Accessoires</option>
-    <option value="dienstleistungen">Dienstleistungen / Gewerbe</option>
-    <option value="gesundheit">Gesundheit & Reha</option>
-    <option value="bildung">Bildung & Veranstaltungen</option>
-    <option value="sonstiges">Sonstiges</option>
-  </select>
-
-  <select id="subcategory-select" aria-label="Unterkategorie auswählen" style="display:none;">
-    <option value="">Alle Unterkategorien</option>
-  </select>
-
-  <div style="position: relative; flex: 1; min-width: 200px;">
-    <input type="text" placeholder="Ort" id="location-input" autocomplete="off" aria-label="Ort eingeben" />
-    <div id="suggestions" role="listbox" aria-label="Ortsvorschläge"></div>
-  </div>
-
-  <select id="radius-select" aria-label="Suchradius auswählen">
-    <option value="">Ganzer Ort</option>
-    <option value="5">5 km</option>
-    <option value="10">10 km</option>
-    <option value="20">20 km</option>
-    <option value="30">30 km</option>
-    <option value="50">50 km</option>
-    <option value="100">100 km</option>
-    <option value="200">200 km</option>
-  </select>
-
-  <button type="submit">Suchen</button>
-</form>
-
+    <form class="search-form" onsubmit="event.preventDefault(); search();" role="search" aria-label="Suchformular">
+      <input type="text" placeholder="Was suchst du?" id="search-input" aria-label="Suchbegriff eingeben" />
+      <select id="category-select" aria-label="Kategorie auswählen">
+        <option value="">Alle Kategorien</option>
+        <option value="fahrzeuge">Fahrzeuge</option>
+        <option value="transporter">Transporter</option>
+        <option value="boote">Boote</option>
+        <option value="fahrrad">Fahrräder & E-Bikes</option>
+        <option value="werkzeuge">Werkzeuge</option>
+        <option value="maschinen">Maschinen & Baugeräte</option>
+        <option value="party">Party & Event</option>
+        <option value="technik">Technik</option>
+        <option value="haushalt">Haushalt & Möbel</option>
+        <option value="garten">Garten</option>
+        <option value="freizeit">Freizeit & Sport</option>
+        <option value="baby">Baby & Kind</option>
+      </select>
+      <div style="position: relative; flex: 1; min-width: 200px;">
+        <input type="text" placeholder="Ort" id="location-input" autocomplete="off" aria-label="Ort eingeben" />
+        <div id="suggestions" role="listbox" aria-label="Ortsvorschläge"></div>
+      </div>
+      <select id="radius-select" aria-label="Suchradius auswählen">
+        <option value="">Ganzer Ort</option>
+        <option value="5">5 km</option>
+        <option value="10">10 km</option>
+        <option value="20">20 km</option>
+        <option value="30">30 km</option>
+        <option value="50">50 km</option>
+        <option value="100">100 km</option>
+        <option value="200">200 km</option>
+      </select>
+      <button type="submit">Suchen</button>
+    </form>
   </section>
 
   <section aria-label="Neueste Angebote">
@@ -504,41 +494,6 @@
 
     let userSession = null;
     let selectedAddressData = null;
-
-    const subcategories = {
-  fahrzeuge: ["Auto & SUV","Motorrad & Roller","Fahrrad & E-Bike","Wohnmobil & Camper","Boote & Wassersportgeräte","Anhänger & Transportmittel"],
-  elektronik: ["Computer & Laptops","Smartphones & Tablets","Kameras & Zubehör","Gaming & Unterhaltung","Audio & Lautsprecher","Werkzeuge & Maschinen"],
-  "haus-garten": ["Möbel & Einrichtung","Werkzeuge & Maschinen","Dekoration & Beleuchtung"],
-  freizeit: ["Party & Eventzubehör","Basteln & DIY","Brettspiele & Spielzeug","Foto & Video","Drohnen & Modellbau"],
-  sport: ["Fitnessgeräte","Camping & Wandern","Wintersport","Wassersport","Fahrradzubehör"],
-  musik: ["Musikinstrumente","DJ & Audioequipment","Film & Kameraequipment","Bücher & Medien"],
-  familie: ["Kinderwagen & Babyschalen","Spielzeug & Spiele","Möbel für Kinderzimmer"],
-  tiere: ["Transportboxen","Reitzubehör"],
-  mode: ["Kleidung","Schuhe","Taschen & Rucksäcke","Schmuck & Uhren"],
-  dienstleistungen: ["Handwerk & Reparatur","Umzug & Transport","Reinigung & Haushaltshilfe","Eventservice & Catering","Maschinen & Werkzeuge","Büro & Ausstattung","Lager & Transportmittel","Verkaufsstände & Equipment"],
-  gesundheit: ["Medizinische Geräte","Physiotherapie & Hilfsmittel","Pflege & Mobilitätshilfen"],
-  bildung: ["Kursräume & Seminarraum","Workshop- & Schulungsmaterial","Technik für Präsentationen","Eventausstattung"],
-  sonstiges: ["Alles andere"]
-};
-
-function updateSubcategory() {
-  const mainCat = document.getElementById("category-select").value;
-  const subCatSelect = document.getElementById("subcategory-select");
-
-  subCatSelect.innerHTML = '<option value="">Alle Unterkategorien</option>';
-
-  if (mainCat && subcategories[mainCat]) {
-    subcategories[mainCat].forEach(sub => {
-      const opt = document.createElement("option");
-      opt.value = sub.toLowerCase().replace(/\s+/g, "-");
-      opt.textContent = sub;
-      subCatSelect.appendChild(opt);
-    });
-    subCatSelect.style.display = "block";
-  } else {
-    subCatSelect.style.display = "none";
-  }
-}
 
     async function init() {
       const { data: { session } } = await supabase.auth.getSession();
@@ -724,17 +679,14 @@ card.innerHTML = `
       }
     });
 
-function search() {
-  const keyword = document.getElementById("search-input").value.trim();
-  const category = document.getElementById("category-select").value.trim();
-  const subcategory = document.getElementById("subcategory-select").value.trim();
-  const location = document.getElementById("location-input").value.trim();
-  const radius = document.getElementById("radius-select").value.trim();
-
-  const params = new URLSearchParams({ keyword, category, subcategory, location, radius });
-  window.location.href = `search_results.html?${params.toString()}`;
-}
-
+    function search() {
+      const keyword = document.getElementById("search-input").value.trim();
+      const category = document.getElementById("category-select").value.trim();
+      const location = document.getElementById("location-input").value.trim();
+      const radius = document.getElementById("radius-select").value.trim();
+      const params = new URLSearchParams({ keyword, category, location, radius });
+      window.location.href = `search_results.html?${params.toString()}`;
+    }
 
     document.getElementById('nav-toggle').addEventListener('click', () => {
       const nav = document.getElementById('nav-links');
