@@ -390,20 +390,23 @@ nav#nav-links {
     <div class="search-row">
       <input type="text" placeholder="Was suchst du?" id="search-input" />
       <select id="category-select">
-        <option value="">Alle Kategorien</option>
-        <option value="fahrzeuge">Fahrzeuge</option>
-        <option value="transporter">Transporter</option>
-        <option value="boote">Boote</option>
-        <option value="fahrrad">Fahrräder & E-Bikes</option>
-        <option value="werkzeuge">Werkzeuge</option>
-        <option value="maschinen">Maschinen & Baugeräte</option>
-        <option value="party">Party & Event</option>
-        <option value="technik">Technik</option>
-        <option value="haushalt">Haushalt & Möbel</option>
-        <option value="garten">Garten</option>
-        <option value="freizeit">Freizeit & Sport</option>
-        <option value="baby">Baby & Kind</option>
-      </select>
+    <option value="">Alle Kategorien</option>
+    <option value="fahrzeuge">Fahrzeuge</option>
+    <option value="elektronik">Elektronik & Technik</option>
+    <option value="haus-garten">Haus & Garten</option>
+    <option value="freizeit">Freizeit & Hobby</option>
+    <option value="sport">Sport & Outdoor</option>
+    <option value="musik">Musik, Film & Kultur</option>
+    <option value="familie">Familie, Kind & Baby</option>
+    <option value="tiere">Tiere</option>
+    <option value="mode">Mode & Accessoires</option>
+    <option value="dienstleistungen">Dienstleistungen / Gewerbe</option>
+    <option value="gesundheit">Gesundheit & Reha</option>
+    <option value="bildung">Bildung & Veranstaltungen</option>
+    <option value="sonstiges">Sonstiges</option>
+<select id="subcategory-select" style="display:none;">
+  <option value="">Alle Unterkategorien</option>
+</select>
       <input type="number" id="min-price" placeholder="Min. Preis" min="0" />
       <input type="number" id="max-price" placeholder="Max. Preis" min="0" />
       <div style="position: relative; flex: 1; min-width: 200px;">
@@ -468,7 +471,59 @@ nav#nav-links {
     );
 
     let userSession = null;
+const subcategories = {
+  fahrzeuge: ["Autos", "Wohnwagen & Wohnmobile", "Motorräder & Roller"],
+  transporter: ["Kleintransporter", "Anhänger", "LKWs"],
+  boote: ["Segelboote", "Motorboote", "Kanus & Kajaks"],
+  fahrrad: ["Fahrräder", "E-Bikes", "Lastenräder"],
+  werkzeuge: ["Akkuschrauber", "Sägen", "Bohrmaschinen", "Leitern"],
+  maschinen: ["Bagger", "Rüttelplatten", "Baustellenzubehör"],
+  party: ["Zelte", "Bierzeltgarnituren", "Licht & Tontechnik"],
+  technik: ["Beamer", "Kameras", "Audio & Video"],
+  haushalt: ["Möbel", "Küchengeräte", "Reinigungsgeräte"],
+  garten: ["Rasenmäher", "Heckenscheren", "Gartenmöbel"],
+  freizeit: ["Campingausrüstung", "Sportgeräte"],
+  baby: ["Kinderwagen", "Babyschalen", "Spielzeug"]
+};
 
+// --- Unterkategorie aktualisieren ---
+function updateSubcategory() {
+  const category = document.getElementById("category-select").value;
+  const subSelect = document.getElementById("subcategory-select");
+
+  subSelect.innerHTML = '<option value="">Alle Unterkategorien</option>';
+  if (category && subcategories[category]) {
+    subcategories[category].forEach(sc => {
+      const opt = document.createElement("option");
+      opt.value = sc.toLowerCase();
+      opt.textContent = sc;
+      subSelect.appendChild(opt);
+    });
+    subSelect.style.display = "block";
+  } else {
+    subSelect.style.display = "none";
+  }
+}
+
+document.getElementById("category-select").addEventListener("change", () => {
+  updateSubcategory();
+});
+
+// --- Bei Initialisierung Filterwerte aus URL setzen ---
+function applyFiltersFromURL(filters) {
+  document.getElementById("search-input").value = filters.title;
+  document.getElementById("category-select").value = filters.category.toLowerCase();
+  document.getElementById("min-price").value = filters.minPrice;
+  document.getElementById("max-price").value = filters.maxPrice;
+  document.getElementById("location-input").value = filters.location;
+  document.getElementById("radius-select").value = filters.radius;
+
+  // Subcategory Dropdown nach Kategorie befüllen
+  updateSubcategory();
+  if (filters.subcategory) {
+    document.getElementById("subcategory-select").value = filters.subcategory.toLowerCase();
+  }
+}
     async function init() {
       const { data: { session } } = await supabase.auth.getSession();
       userSession = session;
@@ -550,16 +605,18 @@ nav#nav-links {
       }
     });
 
-    document.getElementById('search-btn').addEventListener('click', () => {
-      const title = document.getElementById("search-input").value.trim();
-      const category = document.getElementById("category-select").value.trim();
-      const minPrice = document.getElementById("min-price").value.trim();
-      const maxPrice = document.getElementById("max-price").value.trim();
-      const location = document.getElementById("location-input").value.trim();
-      const radius = document.getElementById("radius-select").value.trim();
-      const params = new URLSearchParams({ title, category, minPrice, maxPrice, location, radius });
-      window.location.href = `search_results.html?${params.toString()}`;
-    });
+document.getElementById('search-btn').addEventListener('click', () => {
+  const title = document.getElementById("search-input").value.trim();
+  const category = document.getElementById("category-select").value.trim();
+  const subcategory = document.getElementById("subcategory-select").value.trim(); // NEU
+  const minPrice = document.getElementById("min-price").value.trim();
+  const maxPrice = document.getElementById("max-price").value.trim();
+  const location = document.getElementById("location-input").value.trim();
+  const radius = document.getElementById("radius-select").value.trim();
+
+  const params = new URLSearchParams({ title, category, subcategory, minPrice, maxPrice, location, radius });
+  window.location.href = `search_results.html?${params.toString()}`;
+});
 
     function capitalize(str) {
       return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
@@ -628,6 +685,9 @@ async function loadListings(filters = {}, page = 1) {
 
   if (filters.title) query = query.ilike('title', `%${filters.title}%`);
   if (filters.category) query = query.eq('category', filters.category.toLowerCase());
+    if (filters.subcategory) {
+    query = query.ilike('subcategory', `%${filters.subcategory}%`);
+  }
 
   const min = filters.minPrice ? parseFloat(filters.minPrice) : 0;
   const max = filters.maxPrice ? parseFloat(filters.maxPrice) : null;
@@ -730,6 +790,7 @@ function getFilters() {
   return {
     title: params.get('title') || '',
     category: params.get('category') || '',
+    subcategory: params.get('subcategory') || '', // NEU
     minPrice: params.get('minPrice') || '',
     maxPrice: params.get('maxPrice') || '',
     location: params.get('location') || '',
