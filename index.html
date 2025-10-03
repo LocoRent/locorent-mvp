@@ -404,108 +404,49 @@
 
   <section class="hero" aria-label="Suchbereich">
     <h2>Finde das perfekte Mietobjekt</h2>
-    <form class="search-form" onsubmit="event.preventDefault(); search();" role="search" aria-label="Suchformular">
-      <input type="text" placeholder="Was suchst du?" id="search-input" aria-label="Suchbegriff eingeben" />
-<select id="category-select" aria-label="Kategorie auswählen">
-  <option value="">Alle Kategorien</option>
+<form class="search-form" onsubmit="event.preventDefault(); search();" role="search" aria-label="Suchformular">
+  <input type="text" placeholder="Was suchst du?" id="search-input" aria-label="Suchbegriff eingeben" />
 
-  <!-- Fahrzeuge -->
-  <option value="fahrzeuge_auto">Fahrzeuge → Auto & SUV</option>
-  <option value="fahrzeuge_motorrad">Fahrzeuge → Motorrad & Roller</option>
-  <option value="fahrzeuge_fahrrad">Fahrzeuge → Fahrrad & E-Bike</option>
-  <option value="fahrzeuge_wohnmobil">Fahrzeuge → Wohnmobil & Camper</option>
-  <option value="fahrzeuge_boote">Fahrzeuge → Boote & Wassersportgeräte</option>
-  <option value="fahrzeuge_anhaenger">Fahrzeuge → Anhänger & Transportmittel</option>
+  <select id="category-select" aria-label="Kategorie auswählen" onchange="updateSubcategory()">
+    <option value="">Alle Kategorien</option>
+    <option value="fahrzeuge">Fahrzeuge</option>
+    <option value="elektronik">Elektronik & Technik</option>
+    <option value="haus-garten">Haus & Garten</option>
+    <option value="freizeit">Freizeit & Hobby</option>
+    <option value="sport">Sport & Outdoor</option>
+    <option value="musik">Musik, Film & Kultur</option>
+    <option value="familie">Familie, Kind & Baby</option>
+    <option value="tiere">Tiere</option>
+    <option value="mode">Mode & Accessoires</option>
+    <option value="dienstleistungen">Dienstleistungen / Gewerbe</option>
+    <option value="gesundheit">Gesundheit & Reha</option>
+    <option value="bildung">Bildung & Veranstaltungen</option>
+    <option value="sonstiges">Sonstiges</option>
+  </select>
 
-  <!-- Elektronik & Technik -->
-  <option value="technik_computer">Elektronik & Technik → Computer & Laptops</option>
-  <option value="technik_smartphones">Elektronik & Technik → Smartphones & Tablets</option>
-  <option value="technik_kameras">Elektronik & Technik → Kameras & Zubehör</option>
-  <option value="technik_gaming">Elektronik & Technik → Gaming & Unterhaltung</option>
-  <option value="technik_audio">Elektronik & Technik → Audio & Lautsprecher</option>
-  <option value="technik_werkzeuge">Elektronik & Technik → Werkzeuge & Maschinen</option>
+  <select id="subcategory-select" aria-label="Unterkategorie auswählen" style="display:none;">
+    <option value="">Alle Unterkategorien</option>
+  </select>
 
-  <!-- Haus & Garten -->
-  <option value="haus_moebel">Haus & Garten → Möbel & Einrichtung</option>
-  <option value="haus_werkzeuge">Haus & Garten → Werkzeuge & Maschinen</option>
-  <option value="haus_deko">Haus & Garten → Dekoration & Beleuchtung</option>
+  <div style="position: relative; flex: 1; min-width: 200px;">
+    <input type="text" placeholder="Ort" id="location-input" autocomplete="off" aria-label="Ort eingeben" />
+    <div id="suggestions" role="listbox" aria-label="Ortsvorschläge"></div>
+  </div>
 
-  <!-- Freizeit & Hobby -->
-  <option value="freizeit_party">Freizeit & Hobby → Party & Eventzubehör</option>
-  <option value="freizeit_basteln">Freizeit & Hobby → Basteln & DIY</option>
-  <option value="freizeit_spiele">Freizeit & Hobby → Brettspiele & Spielzeug</option>
-  <option value="freizeit_foto">Freizeit & Hobby → Foto & Video</option>
-  <option value="freizeit_drohnen">Freizeit & Hobby → Drohnen & Modellbau</option>
+  <select id="radius-select" aria-label="Suchradius auswählen">
+    <option value="">Ganzer Ort</option>
+    <option value="5">5 km</option>
+    <option value="10">10 km</option>
+    <option value="20">20 km</option>
+    <option value="30">30 km</option>
+    <option value="50">50 km</option>
+    <option value="100">100 km</option>
+    <option value="200">200 km</option>
+  </select>
 
-  <!-- Sport & Outdoor -->
-  <option value="sport_fitness">Sport & Outdoor → Fitnessgeräte</option>
-  <option value="sport_camping">Sport & Outdoor → Camping & Wandern</option>
-  <option value="sport_wintersport">Sport & Outdoor → Wintersport</option>
-  <option value="sport_wassersport">Sport & Outdoor → Wassersport</option>
-  <option value="sport_fahrrad">Sport & Outdoor → Fahrradzubehör</option>
+  <button type="submit">Suchen</button>
+</form>
 
-  <!-- Musik, Film & Kultur -->
-  <option value="musik_instrumente">Musik, Film & Kultur → Musikinstrumente</option>
-  <option value="musik_dj">Musik, Film & Kultur → DJ & Audioequipment</option>
-  <option value="musik_film">Musik, Film & Kultur → Film & Kameraequipment</option>
-  <option value="musik_buecher">Musik, Film & Kultur → Bücher & Medien</option>
-
-  <!-- Familie, Kind & Baby -->
-  <option value="familie_kinderwagen">Familie, Kind & Baby → Kinderwagen & Babyschalen</option>
-  <option value="familie_spielzeug">Familie, Kind & Baby → Spielzeug & Spiele</option>
-  <option value="familie_moebel">Familie, Kind & Baby → Möbel für Kinderzimmer</option>
-
-  <!-- Tiere -->
-  <option value="tiere_transportboxen">Tiere → Transportboxen</option>
-  <option value="tiere_reitzubehoer">Tiere → Reitzubehör</option>
-
-  <!-- Mode & Accessoires -->
-  <option value="mode_kleidung">Mode & Accessoires → Kleidung</option>
-  <option value="mode_schuhe">Mode & Accessoires → Schuhe</option>
-  <option value="mode_taschen">Mode & Accessoires → Taschen & Rucksäcke</option>
-  <option value="mode_schmuck">Mode & Accessoires → Schmuck & Uhren</option>
-
-  <!-- Dienstleistungen / Gewerbe -->
-  <option value="dienst_handwerk">Dienstleistungen / Gewerbe → Handwerk & Reparatur</option>
-  <option value="dienst_umzug">Dienstleistungen / Gewerbe → Umzug & Transport</option>
-  <option value="dienst_reinigung">Dienstleistungen / Gewerbe → Reinigung & Haushaltshilfe</option>
-  <option value="dienst_event">Dienstleistungen / Gewerbe → Eventservice & Catering</option>
-  <option value="dienst_maschinen">Dienstleistungen / Gewerbe → Maschinen & Werkzeuge</option>
-  <option value="dienst_buero">Dienstleistungen / Gewerbe → Büro & Ausstattung</option>
-  <option value="dienst_lager">Dienstleistungen / Gewerbe → Lager & Transportmittel</option>
-  <option value="dienst_verkauf">Dienstleistungen / Gewerbe → Verkaufsstände & Equipment</option>
-
-  <!-- Gesundheit & Reha -->
-  <option value="gesundheit_medizin">Gesundheit & Reha → Medizinische Geräte</option>
-  <option value="gesundheit_physio">Gesundheit & Reha → Physiotherapie & Hilfsmittel</option>
-  <option value="gesundheit_pflege">Gesundheit & Reha → Pflege & Mobilitätshilfen</option>
-
-  <!-- Bildung & Veranstaltungen -->
-  <option value="bildung_kurse">Bildung & Veranstaltungen → Kursräume & Seminarraum</option>
-  <option value="bildung_workshop">Bildung & Veranstaltungen → Workshop- & Schulungsmaterial</option>
-  <option value="bildung_technik">Bildung & Veranstaltungen → Technik für Präsentationen</option>
-  <option value="bildung_event">Bildung & Veranstaltungen → Eventausstattung</option>
-
-  <!-- Sonstiges -->
-  <option value="sonstiges">Sonstiges → Alles andere</option>
-</select>
-
-      <div style="position: relative; flex: 1; min-width: 200px;">
-        <input type="text" placeholder="Ort" id="location-input" autocomplete="off" aria-label="Ort eingeben" />
-        <div id="suggestions" role="listbox" aria-label="Ortsvorschläge"></div>
-      </div>
-      <select id="radius-select" aria-label="Suchradius auswählen">
-        <option value="">Ganzer Ort</option>
-        <option value="5">5 km</option>
-        <option value="10">10 km</option>
-        <option value="20">20 km</option>
-        <option value="30">30 km</option>
-        <option value="50">50 km</option>
-        <option value="100">100 km</option>
-        <option value="200">200 km</option>
-      </select>
-      <button type="submit">Suchen</button>
-    </form>
   </section>
 
   <section aria-label="Neueste Angebote">
@@ -563,6 +504,41 @@
 
     let userSession = null;
     let selectedAddressData = null;
+
+    const subcategories = {
+  fahrzeuge: ["Auto & SUV","Motorrad & Roller","Fahrrad & E-Bike","Wohnmobil & Camper","Boote & Wassersportgeräte","Anhänger & Transportmittel"],
+  elektronik: ["Computer & Laptops","Smartphones & Tablets","Kameras & Zubehör","Gaming & Unterhaltung","Audio & Lautsprecher","Werkzeuge & Maschinen"],
+  "haus-garten": ["Möbel & Einrichtung","Werkzeuge & Maschinen","Dekoration & Beleuchtung"],
+  freizeit: ["Party & Eventzubehör","Basteln & DIY","Brettspiele & Spielzeug","Foto & Video","Drohnen & Modellbau"],
+  sport: ["Fitnessgeräte","Camping & Wandern","Wintersport","Wassersport","Fahrradzubehör"],
+  musik: ["Musikinstrumente","DJ & Audioequipment","Film & Kameraequipment","Bücher & Medien"],
+  familie: ["Kinderwagen & Babyschalen","Spielzeug & Spiele","Möbel für Kinderzimmer"],
+  tiere: ["Transportboxen","Reitzubehör"],
+  mode: ["Kleidung","Schuhe","Taschen & Rucksäcke","Schmuck & Uhren"],
+  dienstleistungen: ["Handwerk & Reparatur","Umzug & Transport","Reinigung & Haushaltshilfe","Eventservice & Catering","Maschinen & Werkzeuge","Büro & Ausstattung","Lager & Transportmittel","Verkaufsstände & Equipment"],
+  gesundheit: ["Medizinische Geräte","Physiotherapie & Hilfsmittel","Pflege & Mobilitätshilfen"],
+  bildung: ["Kursräume & Seminarraum","Workshop- & Schulungsmaterial","Technik für Präsentationen","Eventausstattung"],
+  sonstiges: ["Alles andere"]
+};
+
+function updateSubcategory() {
+  const mainCat = document.getElementById("category-select").value;
+  const subCatSelect = document.getElementById("subcategory-select");
+
+  subCatSelect.innerHTML = '<option value="">Alle Unterkategorien</option>';
+
+  if (mainCat && subcategories[mainCat]) {
+    subcategories[mainCat].forEach(sub => {
+      const opt = document.createElement("option");
+      opt.value = sub.toLowerCase().replace(/\s+/g, "-");
+      opt.textContent = sub;
+      subCatSelect.appendChild(opt);
+    });
+    subCatSelect.style.display = "block";
+  } else {
+    subCatSelect.style.display = "none";
+  }
+}
 
     async function init() {
       const { data: { session } } = await supabase.auth.getSession();
