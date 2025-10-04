@@ -369,20 +369,24 @@
     <h2>Neues Inserat erstellen</h2>
     <div class="form-group">
       <div class="field"><label for="title-input">Titel</label><input type="text" id="title-input" maxlength="50" /></div>
-<div class="field">
-  <label for="main-category">Hauptkategorie</label>
-  <select id="main-category">
-    <option value="">Bitte wählen</option>
-  </select>
-</div>
-
-<div class="field">
-  <label for="sub-category">Unterkategorie</label>
-  <select id="sub-category" disabled>
-    <option value="">Bitte zuerst Hauptkategorie wählen</option>
-  </select>
-</div>
-
+      <div class="field">
+        <label for="category-input">Kategorie</label>
+        <select id="category-input">
+          <option value="">Bitte wählen</option>
+          <option value="fahrzeuge">Fahrzeuge</option>
+          <option value="transporter">Transporter</option>
+          <option value="boote">Boote</option>
+          <option value="fahrrad">Fahrräder & E-Bikes</option>
+          <option value="werkzeuge">Werkzeuge</option>
+          <option value="maschinen">Maschinen & Baugeräte</option>
+          <option value="party">Party & Event</option>
+          <option value="technik">Technik</option>
+          <option value="haushalt">Haushalt & Möbel</option>
+          <option value="garten">Garten</option>
+          <option value="freizeit">Freizeit & Sport</option>
+          <option value="baby">Baby & Kind</option>
+        </select>
+      </div>
       <div class="field"><label for="price-input">Preis €/Tag</label><input type="number" id="price-input" maxlength="6" oninput="this.value=this.value.slice(0,6)" /></div>
       <div class="field">
         <label for="location-input">Ort</label>
@@ -605,123 +609,6 @@ function renderPreviews() {
     reader.readAsDataURL(file);
   });
 }
-const categories = {
-  "Fahrzeuge": [
-    "Auto & SUV",
-    "Motorrad & Roller",
-    "Fahrrad & E-Bike",
-    "Wohnmobil & Camper",
-    "Boote & Wassersportgeräte",
-    "Anhänger & Transportmittel"
-  ],
-  "Elektronik & Technik": [
-    "Computer & Laptops",
-    "Smartphones & Tablets",
-    "Kameras & Zubehör",
-    "Gaming & Unterhaltung",
-    "Audio & Lautsprecher",
-    "Werkzeuge & Maschinen"
-  ],
-  "Haus & Garten": [
-    "Möbel & Einrichtung",
-    "Werkzeuge & Maschinen",
-    "Dekoration & Beleuchtung"
-  ],
-  "Freizeit & Hobby": [
-    "Party & Eventzubehör",
-    "Basteln & DIY",
-    "Brettspiele & Spielzeug",
-    "Foto & Video",
-    "Drohnen & Modellbau"
-  ],
-  "Sport & Outdoor": [
-    "Fitnessgeräte",
-    "Camping & Wandern",
-    "Wintersport",
-    "Wassersport",
-    "Fahrradzubehör"
-  ],
-  "Musik, Film & Kultur": [
-    "Musikinstrumente",
-    "DJ & Audioequipment",
-    "Film & Kameraequipment",
-    "Bücher & Medien"
-  ],
-  "Familie, Kind & Baby": [
-    "Kinderwagen & Babyschalen",
-    "Spielzeug & Spiele",
-    "Möbel für Kinderzimmer"
-  ],
-  "Tiere": [
-    "Transportboxen",
-    "Reitzubehör"
-  ],
-  "Mode & Accessoires": [
-    "Kleidung",
-    "Schuhe",
-    "Taschen & Rucksäcke",
-    "Schmuck & Uhren"
-  ],
-  "Dienstleistungen / Gewerbe": [
-    "Handwerk & Reparatur",
-    "Umzug & Transport",
-    "Reinigung & Haushaltshilfe",
-    "Eventservice & Catering",
-    "Maschinen & Werkzeuge",
-    "Büro & Ausstattung",
-    "Lager & Transportmittel",
-    "Verkaufsstände & Equipment"
-  ],
-  "Gesundheit & Reha": [
-    "Medizinische Geräte",
-    "Physiotherapie & Hilfsmittel",
-    "Pflege & Mobilitätshilfen"
-  ],
-  "Bildung & Veranstaltungen": [
-    "Kursräume & Seminarraum",
-    "Workshop- & Schulungsmaterial",
-    "Technik für Präsentationen",
-    "Eventausstattung"
-  ],
-  "Sonstiges": [
-    "Alles andere"
-  ]
-};
-
-const mainCategorySelect = document.getElementById("main-category");
-const subCategorySelect = document.getElementById("sub-category");
-
-// Hauptkategorien automatisch füllen
-Object.keys(categories).forEach(key => {
-  const option = document.createElement("option");
-  option.value = key;
-  option.textContent = key.charAt(0).toUpperCase() + key.slice(1);
-  mainCategorySelect.appendChild(option);
-});
-
-// Unterkategorien dynamisch füllen
-mainCategorySelect.addEventListener("change", () => {
-  const selectedMain = mainCategorySelect.value;
-  subCategorySelect.innerHTML = "";
-
-  if (!selectedMain) {
-    subCategorySelect.disabled = true;
-    const defaultOption = document.createElement("option");
-    defaultOption.value = "";
-    defaultOption.textContent = "Bitte zuerst Hauptkategorie wählen";
-    subCategorySelect.appendChild(defaultOption);
-    return;
-  }
-
-  subCategorySelect.disabled = false;
-  categories[selectedMain].forEach(sub => {
-    const option = document.createElement("option");
-    option.value = sub.toLowerCase().replace(/\s+/g, '-');
-    option.textContent = sub;
-    subCategorySelect.appendChild(option);
-  });
-});
-
 document.getElementById("save-btn").addEventListener("click", async () => {
   const { data: sd } = await supabase.auth.getSession();
   const user = sd?.session?.user;
@@ -758,16 +645,12 @@ if (profileError || !profile?.name || !profile?.city) {
   return;
 }
   const title = document.getElementById('title-input').value.trim();
-const mainCategory = mainCategorySelect.value;
-const subCategory = subCategorySelect.value;
-
-if (!mainCategory || !subCategory) return alert("Bitte Haupt- und Unterkategorie auswählen.");
+  const category = document.getElementById('category-input').value;
   const price = parseFloat(document.getElementById('price-input').value);
   const description = document.getElementById('desc-input').value.trim();
   const location = document.getElementById('location-input').value.trim();
 
-if (!title || !price || !mainCategory || !location) return alert("Bitte alle Pflichtfelder ausfüllen.");
-
+  if (!title || !price || !category || !location) return alert("Bitte alle Pflichtfelder ausfüllen.");
   if (!selectedAddressData) return alert("Bitte einen Ort aus der Vorschlagsliste wählen.");
 
   // 👉 Jetzt Bilder hochladen
@@ -797,10 +680,9 @@ if (!title || !price || !mainCategory || !location) return alert("Bitte alle Pfl
 
   const { postal_code, city, lat, lon } = selectedAddressData;
 
-const { error: insertError } = await supabase.from('listings').insert({
+  const { error: insertError } = await supabase.from('listings').insert({
     title,
-    category: mainCategory,
-    subcategory: subCategory,
+    category,
     price_per_day: price,
     description,
     user_id: user.id,
@@ -810,7 +692,7 @@ const { error: insertError } = await supabase.from('listings').insert({
     location,
     postal_code,
     city
-});
+  });
 
   if (insertError) {
     alert("Fehler beim Speichern: " + insertError.message);
