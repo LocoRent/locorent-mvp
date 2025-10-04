@@ -391,19 +391,35 @@ nav#nav-links {
       <input type="text" placeholder="Was suchst du?" id="search-input" />
       <select id="category-select">
         <option value="">Alle Kategorien</option>
-        <option value="fahrzeuge">Fahrzeuge</option>
-        <option value="transporter">Transporter</option>
-        <option value="boote">Boote</option>
-        <option value="fahrrad">Fahrräder & E-Bikes</option>
-        <option value="werkzeuge">Werkzeuge</option>
-        <option value="maschinen">Maschinen & Baugeräte</option>
-        <option value="party">Party & Event</option>
-        <option value="technik">Technik</option>
-        <option value="haushalt">Haushalt & Möbel</option>
-        <option value="garten">Garten</option>
-        <option value="freizeit">Freizeit & Sport</option>
-        <option value="baby">Baby & Kind</option>
-      </select>
+  <option value="auto-suv">Auto & SUV</option>
+  <option value="motorrad-roller">Motorrad & Roller</option>
+  <option value="fahrrad-ebike">Fahrrad & E-Bike</option>
+  <option value="wohnmobil-camper">Wohnmobil & Camper</option>
+  <option value="boote-wassersport">Boote & Wassersport</option>
+  <option value="anhaenger-transportmittel">Anhänger & Transportmittel</option>
+  <option value="computer-laptops">Computer & Laptops</option>
+  <option value="smartphones-tablets">Smartphones & Tablets</option>
+  <option value="foto-film-kameraequipment">Foto-, Film- & Kameraequipment</option>
+  <option value="gaming-unterhaltung">Gaming & Unterhaltung</option>
+  <option value="audio-dj-equipment">Audio & DJ-Equipment</option>
+  <option value="werkzeuge-maschinen">Werkzeuge & Maschinen</option>
+  <option value="event-partyausstattung">Event- & Partyausstattung</option>
+  <option value="basteln-diy">Basteln & DIY</option>
+  <option value="brettspiele-spielzeug">Brettspiele & Spielzeug</option>
+  <option value="drohnen-modellbau">Drohnen & Modellbau</option>
+  <option value="fitnessgeraete">Fitnessgeräte</option>
+  <option value="camping-wandern">Camping & Wandern</option>
+  <option value="wintersport">Wintersport</option>
+  <option value="musikinstrumente">Musikinstrumente</option>
+  <option value="medien-kultur">Medien & Kultur</option>
+  <option value="familie-kind-baby">Familie, Kind & Baby</option>
+  <option value="tiere">Tiere</option>
+  <option value="mode-accessoires">Mode & Accessoires</option>
+  <option value="kursraeume-seminarraum">Kursräume & Seminarraum</option>
+  <option value="workshop-schulungsmaterial">Workshop- & Schulungsmaterial</option>
+  <option value="technik-praesentationen">Technik für Präsentationen</option>
+  <option value="sonstiges">Sonstiges</option>
+</select>
       <input type="number" id="min-price" placeholder="Min. Preis" min="0" />
       <input type="number" id="max-price" placeholder="Max. Preis" min="0" />
       <div style="position: relative; flex: 1; min-width: 200px;">
@@ -468,7 +484,38 @@ nav#nav-links {
     );
 
     let userSession = null;
-
+    
+  // Kategorie-Mapping für die Preview-Boxen
+const categoryMap = {
+  "auto-suv": "Auto & SUV",
+  "motorrad-roller": "Motorrad & Roller",
+  "fahrrad-ebike": "Fahrrad & E-Bike",
+  "wohnmobil-camper": "Wohnmobil & Camper",
+  "boote-wassersport": "Boote & Wassersport",
+  "anhaenger-transportmittel": "Anhänger & Transportmittel",
+  "computer-laptops": "Computer & Laptops",
+  "smartphones-tablets": "Smartphones & Tablets",
+  "foto-film-kameraequipment": "Foto-, Film- & Kameraequipment",
+  "gaming-unterhaltung": "Gaming & Unterhaltung",
+  "audio-dj-equipment": "Audio & DJ-Equipment",
+  "werkzeuge-maschinen": "Werkzeuge & Maschinen",
+  "event-partyausstattung": "Event- & Partyausstattung",
+  "basteln-diy": "Basteln & DIY",
+  "brettspiele-spielzeug": "Brettspiele & Spielzeug",
+  "drohnen-modellbau": "Drohnen & Modellbau",
+  "fitnessgeraete": "Fitnessgeräte",
+  "camping-wandern": "Camping & Wandern",
+  "wintersport": "Wintersport",
+  "musikinstrumente": "Musikinstrumente",
+  "medien-kultur": "Medien & Kultur",
+  "familie-kind-baby": "Familie, Kind & Baby",
+  "tiere": "Tiere",
+  "mode-accessoires": "Mode & Accessoires",
+  "kursraeume-seminarraum": "Kursräume & Seminarraum",
+  "workshop-schulungsmaterial": "Workshop- & Schulungsmaterial",
+  "technik-praesentationen": "Technik für Präsentationen",
+  "sonstiges": "Sonstiges"
+};
     async function init() {
       const { data: { session } } = await supabase.auth.getSession();
       userSession = session;
@@ -669,7 +716,7 @@ async function renderResults(items, totalCount, page) {
       <img src="${item.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" alt="${item.title}" />
       <h3>${item.title}</h3>
       <div class="info">
-        <p><strong>Kategorie:</strong> ${capitalize(item.category) || 'Unbekannt'}</p>
+<p><strong>Kategorie:</strong> ${categoryMap[item.category] || 'Unbekannt'}</p>
         <p><strong>Preis pro Tag:</strong> ${item.price_per_day || 'k. A.'} €</p>
       </div>
       <div class="buttons">
