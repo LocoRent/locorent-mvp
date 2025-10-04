@@ -489,7 +489,14 @@ nav#nav-links {
       updateNav();
 
       const params = new URLSearchParams(window.location.search);
-const filters = getFilters();
+      const filters = {
+  title: decodeURIComponent(params.get('title') || ''),
+        category: params.get('category') || '',
+        minPrice: params.get('minPrice') || '',
+        maxPrice: params.get('maxPrice') || '',
+        location: params.get('location') || '',
+        radius: params.get('radius') || ''
+      };
 
       document.getElementById("search-input").value = filters.title;
 document.getElementById("category-select").value = filters.category;
@@ -734,7 +741,7 @@ async function renderResults(items, totalCount, page) {
 function getFilters() {
   const params = new URLSearchParams(window.location.search);
   return {
-    title: params.get('title') || '',
+  title: decodeURIComponent(params.get('title') || ''),
     category: params.get('category') || '',
     minPrice: params.get('minPrice') || '',
     maxPrice: params.get('maxPrice') || '',
@@ -742,7 +749,6 @@ function getFilters() {
     radius: params.get('radius') || ''
   };
 }
-
      document.getElementById('nav-toggle').addEventListener('click', () => {
       const nav = document.getElementById('nav-links');
       nav.classList.toggle('show');
