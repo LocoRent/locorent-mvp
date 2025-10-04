@@ -775,7 +775,7 @@ async function renderResults(items, totalCount, page) {
 function getFilters() {
   const params = new URLSearchParams(window.location.search);
   return {
-    title: params.get('title') || '',
+  title: decodeURIComponent(params.get('title') || ''),
     category: params.get('category') || '',
     minPrice: params.get('minPrice') || '',
     maxPrice: params.get('maxPrice') || '',
