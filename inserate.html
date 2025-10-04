@@ -369,24 +369,20 @@
     <h2>Neues Inserat erstellen</h2>
     <div class="form-group">
       <div class="field"><label for="title-input">Titel</label><input type="text" id="title-input" maxlength="50" /></div>
-      <div class="field">
-        <label for="category-input">Kategorie</label>
-        <select id="category-input">
-          <option value="">Bitte wählen</option>
-          <option value="fahrzeuge">Fahrzeuge</option>
-          <option value="transporter">Transporter</option>
-          <option value="boote">Boote</option>
-          <option value="fahrrad">Fahrräder & E-Bikes</option>
-          <option value="werkzeuge">Werkzeuge</option>
-          <option value="maschinen">Maschinen & Baugeräte</option>
-          <option value="party">Party & Event</option>
-          <option value="technik">Technik</option>
-          <option value="haushalt">Haushalt & Möbel</option>
-          <option value="garten">Garten</option>
-          <option value="freizeit">Freizeit & Sport</option>
-          <option value="baby">Baby & Kind</option>
-        </select>
-      </div>
+<div class="field">
+  <label for="main-category">Hauptkategorie</label>
+  <select id="main-category">
+    <option value="">Bitte wählen</option>
+  </select>
+</div>
+
+<div class="field">
+  <label for="sub-category">Unterkategorie</label>
+  <select id="sub-category" disabled>
+    <option value="">Bitte zuerst Hauptkategorie wählen</option>
+  </select>
+</div>
+
       <div class="field"><label for="price-input">Preis €/Tag</label><input type="number" id="price-input" maxlength="6" oninput="this.value=this.value.slice(0,6)" /></div>
       <div class="field">
         <label for="location-input">Ort</label>
@@ -534,6 +530,86 @@ let userProfile = {
   name: null,
   city: null
 };
+const categories = {
+  "Fahrzeuge": [
+    "Auto & SUV",
+    "Motorrad & Roller",
+    "Fahrrad & E-Bike",
+    "Wohnmobil & Camper",
+    "Boote & Wassersportgeräte",
+    "Anhänger & Transportmittel"
+  ],
+  "Elektronik & Technik": [
+    "Computer & Laptops",
+    "Smartphones & Tablets",
+    "Kameras & Zubehör",
+    "Gaming & Unterhaltung",
+    "Audio & Lautsprecher",
+    "Werkzeuge & Maschinen"
+  ],
+  "Haus & Garten": [
+    "Möbel & Einrichtung",
+    "Werkzeuge & Maschinen",
+    "Dekoration & Beleuchtung"
+  ],
+  "Freizeit & Hobby": [
+    "Party & Eventzubehör",
+    "Basteln & DIY",
+    "Brettspiele & Spielzeug",
+    "Foto & Video",
+    "Drohnen & Modellbau"
+  ],
+  "Sport & Outdoor": [
+    "Fitnessgeräte",
+    "Camping & Wandern",
+    "Wintersport",
+    "Wassersport",
+    "Fahrradzubehör"
+  ],
+  "Musik, Film & Kultur": [
+    "Musikinstrumente",
+    "DJ & Audioequipment",
+    "Film & Kameraequipment",
+    "Bücher & Medien"
+  ],
+  "Familie, Kind & Baby": [
+    "Kinderwagen & Babyschalen",
+    "Spielzeug & Spiele",
+    "Möbel für Kinderzimmer"
+  ],
+  "Tiere": [
+    "Transportboxen",
+    "Reitzubehör"
+  ],
+  "Mode & Accessoires": [
+    "Kleidung",
+    "Schuhe",
+    "Taschen & Rucksäcke",
+    "Schmuck & Uhren"
+  ],
+  "Dienstleistungen / Gewerbe": [
+    "Handwerk & Reparatur",
+    "Umzug & Transport",
+    "Reinigung & Haushaltshilfe",
+    "Eventservice & Catering",
+    "Maschinen & Werkzeuge",
+    "Büro & Ausstattung",
+    "Lager & Transportmittel",
+    "Verkaufsstände & Equipment"
+  ],
+  "Gesundheit & Reha": [
+    "Medizinische Geräte",
+    "Physiotherapie & Hilfsmittel",
+    "Pflege & Mobilitätshilfen"
+  ],
+  "Bildung & Veranstaltungen": [
+    "Kursräume & Seminarraum",
+    "Workshop- & Schulungsmaterial",
+    "Technik für Präsentationen",
+    "Eventausstattung"
+  ],
+  "Sonstiges": ["Sonstiges"]
+};
 
 async function updateNav() {
   const nav = document.getElementById('nav-links');
@@ -645,7 +721,13 @@ if (profileError || !profile?.name || !profile?.city) {
   return;
 }
   const title = document.getElementById('title-input').value.trim();
-  const category = document.getElementById('category-input').value;
+const mainCategory = document.getElementById('main-category').value;
+const subCategory = document.getElementById('sub-category').value;
+
+if (!mainCategory || !subCategory) {
+  return alert("Bitte Haupt- und Unterkategorie auswählen.");
+}
+
   const price = parseFloat(document.getElementById('price-input').value);
   const description = document.getElementById('desc-input').value.trim();
   const location = document.getElementById('location-input').value.trim();
@@ -680,19 +762,21 @@ if (profileError || !profile?.name || !profile?.city) {
 
   const { postal_code, city, lat, lon } = selectedAddressData;
 
-  const { error: insertError } = await supabase.from('listings').insert({
-    title,
-    category,
-    price_per_day: price,
-    description,
-    user_id: user.id,
-    image_urls: uploadedImageUrls,
-    latitude: lat,
-    longitude: lon,
-    location,
-    postal_code,
-    city
-  });
+const { error: insertError } = await supabase.from('listings').insert({
+  title,
+  main_category: mainCategory,
+  sub_category: subCategory,
+  price_per_day: price,
+  description,
+  user_id: user.id,
+  image_urls: uploadedImageUrls,
+  latitude: lat,
+  longitude: lon,
+  location,
+  postal_code,
+  city
+});
+
 
   if (insertError) {
     alert("Fehler beim Speichern: " + insertError.message);
@@ -858,7 +942,10 @@ const filesToDelete = (listing.image_urls || []).map(url => {
   if (error) alert("Fehler beim Löschen des Inserats.");
   else loadGallery();
 }
-window.addEventListener("DOMContentLoaded", loadGallery);
+window.addEventListener("DOMContentLoaded", () => {
+  renderCategories();
+  loadGallery();
+});
   // Burger-Menü Umschalten
 document.getElementById("nav-toggle").addEventListener("click", function () {
   const nav = document.getElementById("main-nav");
