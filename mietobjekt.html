@@ -210,37 +210,7 @@ document.getElementById('nav-toggle').addEventListener('click',()=>{
   nav.classList.toggle('show');
   document.getElementById('nav-toggle').setAttribute('aria-expanded',nav.classList.contains('show'));
 });
-  // Kategorie-Mapping für die Preview-Boxen
-const categoryMap = {
-  "auto-suv": "Auto & SUV",
-  "motorrad-roller": "Motorrad & Roller",
-  "fahrrad-ebike": "Fahrrad & E-Bike",
-  "wohnmobil-camper": "Wohnmobil & Camper",
-  "boote-wassersport": "Boote & Wassersport",
-  "anhaenger-transportmittel": "Anhänger & Transportmittel",
-  "computer-laptops": "Computer & Laptops",
-  "smartphones-tablets": "Smartphones & Tablets",
-  "foto-film-kameraequipment": "Foto-, Film- & Kameraequipment",
-  "gaming-unterhaltung": "Gaming & Unterhaltung",
-  "audio-dj-equipment": "Audio & DJ-Equipment",
-  "werkzeuge-maschinen": "Werkzeuge & Maschinen",
-  "event-partyausstattung": "Event- & Partyausstattung",
-  "basteln-diy": "Basteln & DIY",
-  "brettspiele-spielzeug": "Brettspiele & Spielzeug",
-  "drohnen-modellbau": "Drohnen & Modellbau",
-  "fitnessgeraete": "Fitnessgeräte",
-  "camping-wandern": "Camping & Wandern",
-  "wintersport": "Wintersport",
-  "musikinstrumente": "Musikinstrumente",
-  "medien-kultur": "Medien & Kultur",
-  "familie-kind-baby": "Familie, Kind & Baby",
-  "tiere": "Tiere",
-  "mode-accessoires": "Mode & Accessoires",
-  "kursraeume-seminarraum": "Kursräume & Seminarraum",
-  "workshop-schulungsmaterial": "Workshop- & Schulungsmaterial",
-  "technik-praesentationen": "Technik für Präsentationen",
-  "sonstiges": "Sonstiges"
-};
+
 async function updateNav(){
   const {data:{session}}=await supabase.auth.getSession();
   const nav=document.getElementById('nav-links');
@@ -279,7 +249,7 @@ async function loadListing(){
     </div>
     <div class="content">
       <h2>${listing.title}</h2>
-<p><strong>Kategorie:</strong> ${categoryMap[item.category] || 'Unbekannt'}</p>
+      <p><strong>Kategorie:</strong> ${capitalize(listing.category)}</p>
       <p><strong>Preis pro Tag:</strong> ${listing.price_per_day} €</p>
       <p><strong>Ort:</strong> ${listing.location||'–'}</p>
       <p><strong>Online seit:</strong> ${formatDate(listing.created_at)}</p>
