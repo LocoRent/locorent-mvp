@@ -643,7 +643,8 @@ async function loadListings(filters = {}, page = 1) {
     .order('created_at', { ascending: false });
 
   if (filters.title) query = query.ilike('title', `%${filters.title}%`);
-  if (filters.category) query = query.eq('category', filters.category.toLowerCase());
+if (filters.category) query = query.eq('category', filters.category.trim());
+
 
   const min = filters.minPrice ? parseFloat(filters.minPrice) : 0;
   const max = filters.maxPrice ? parseFloat(filters.maxPrice) : null;
