@@ -545,6 +545,38 @@ const supabase = window.supabase.createClient(
 let uploadedImageUrls = [];
 let selectedAddressData = null;
 let userSession = null;
+
+  // Kategorie-Mapping für die Preview-Boxen
+const categoryMap = {
+  "auto-suv": "Auto & SUV",
+  "motorrad-roller": "Motorrad & Roller",
+  "fahrrad-ebike": "Fahrrad & E-Bike",
+  "wohnmobil-camper": "Wohnmobil & Camper",
+  "boote-wassersport": "Boote & Wassersport",
+  "anhaenger-transportmittel": "Anhänger & Transportmittel",
+  "computer-laptops": "Computer & Laptops",
+  "smartphones-tablets": "Smartphones & Tablets",
+  "foto-film-kameraequipment": "Foto-, Film- & Kameraequipment",
+  "gaming-unterhaltung": "Gaming & Unterhaltung",
+  "audio-dj-equipment": "Audio & DJ-Equipment",
+  "werkzeuge-maschinen": "Werkzeuge & Maschinen",
+  "event-partyausstattung": "Event- & Partyausstattung",
+  "basteln-diy": "Basteln & DIY",
+  "brettspiele-spielzeug": "Brettspiele & Spielzeug",
+  "drohnen-modellbau": "Drohnen & Modellbau",
+  "fitnessgeraete": "Fitnessgeräte",
+  "camping-wandern": "Camping & Wandern",
+  "wintersport": "Wintersport",
+  "musikinstrumente": "Musikinstrumente",
+  "medien-kultur": "Medien & Kultur",
+  "familie-kind-baby": "Familie, Kind & Baby",
+  "tiere": "Tiere",
+  "mode-accessoires": "Mode & Accessoires",
+  "kursraeume-seminarraum": "Kursräume & Seminarraum",
+  "workshop-schulungsmaterial": "Workshop- & Schulungsmaterial",
+  "technik-praesentationen": "Technik für Präsentationen",
+  "sonstiges": "Sonstiges"
+};
   
 // Profil-Daten zwischenspeichern
 let userProfile = {
@@ -822,6 +854,7 @@ const categoryFormatted = categoryMap[i.category] || "Unbekannt";
       <img src="${img}" alt="${i.title}">
       <div class="card-content">
         <h3>${i.title}</h3>
+        <p class="category"><strong>Kategorie:</strong> ${categoryFormatted}</p>
         <p class="price"><strong>Preis pro Tag:</strong> ${i.price_per_day} €</p>
       </div>
       <div class="actions">
