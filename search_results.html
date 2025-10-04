@@ -485,37 +485,6 @@ nav#nav-links {
 
     let userSession = null;
     
-  // Kategorie-Mapping für die Preview-Boxen
-const categoryMap = {
-  "auto-suv": "Auto & SUV",
-  "motorrad-roller": "Motorrad & Roller",
-  "fahrrad-ebike": "Fahrrad & E-Bike",
-  "wohnmobil-camper": "Wohnmobil & Camper",
-  "boote-wassersport": "Boote & Wassersport",
-  "anhaenger-transportmittel": "Anhänger & Transportmittel",
-  "computer-laptops": "Computer & Laptops",
-  "smartphones-tablets": "Smartphones & Tablets",
-  "foto-film-kameraequipment": "Foto-, Film- & Kameraequipment",
-  "gaming-unterhaltung": "Gaming & Unterhaltung",
-  "audio-dj-equipment": "Audio & DJ-Equipment",
-  "werkzeuge-maschinen": "Werkzeuge & Maschinen",
-  "event-partyausstattung": "Event- & Partyausstattung",
-  "basteln-diy": "Basteln & DIY",
-  "brettspiele-spielzeug": "Brettspiele & Spielzeug",
-  "drohnen-modellbau": "Drohnen & Modellbau",
-  "fitnessgeraete": "Fitnessgeräte",
-  "camping-wandern": "Camping & Wandern",
-  "wintersport": "Wintersport",
-  "musikinstrumente": "Musikinstrumente",
-  "medien-kultur": "Medien & Kultur",
-  "familie-kind-baby": "Familie, Kind & Baby",
-  "tiere": "Tiere",
-  "mode-accessoires": "Mode & Accessoires",
-  "kursraeume-seminarraum": "Kursräume & Seminarraum",
-  "workshop-schulungsmaterial": "Workshop- & Schulungsmaterial",
-  "technik-praesentationen": "Technik für Präsentationen",
-  "sonstiges": "Sonstiges"
-};
     async function init() {
       const { data: { session } } = await supabase.auth.getSession();
       userSession = session;
@@ -716,7 +685,6 @@ async function renderResults(items, totalCount, page) {
       <img src="${item.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" alt="${item.title}" />
       <h3>${item.title}</h3>
       <div class="info">
-<p><strong>Kategorie:</strong> ${categoryMap[item.category] || 'Unbekannt'}</p>
         <p><strong>Preis pro Tag:</strong> ${item.price_per_day || 'k. A.'} €</p>
       </div>
       <div class="buttons">
