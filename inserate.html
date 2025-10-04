@@ -605,19 +605,87 @@ function renderPreviews() {
     reader.readAsDataURL(file);
   });
 }
-  const categories = {
-  fahrzeuge: ["PKW", "Motorräder", "Wohnmobile"],
-  transporter: ["Kleintransporter", "LKW", "Anhänger"],
-  boote: ["Segelboote", "Motorboote", "Kajaks"],
-  fahrrad: ["Mountainbike", "E-Bike", "Citybike"],
-  werkzeuge: ["Elektrowerkzeuge", "Handwerkzeuge"],
-  maschinen: ["Bagger", "Rüttelplatte", "Generator"],
-  party: ["Zelte", "Lautsprecher", "Beleuchtung"],
-  technik: ["Laptops", "Smartphones", "Kameras"],
-  haushalt: ["Möbel", "Küchengeräte", "Dekoration"],
-  garten: ["Rasenmäher", "Gartengeräte", "Grill"],
-  freizeit: ["Fahrräder", "Sportgeräte", "Spielgeräte"],
-  baby: ["Kinderwagen", "Spielzeug", "Babybett"]
+const categories = {
+  "Fahrzeuge": [
+    "Auto & SUV",
+    "Motorrad & Roller",
+    "Fahrrad & E-Bike",
+    "Wohnmobil & Camper",
+    "Boote & Wassersportgeräte",
+    "Anhänger & Transportmittel"
+  ],
+  "Elektronik & Technik": [
+    "Computer & Laptops",
+    "Smartphones & Tablets",
+    "Kameras & Zubehör",
+    "Gaming & Unterhaltung",
+    "Audio & Lautsprecher",
+    "Werkzeuge & Maschinen"
+  ],
+  "Haus & Garten": [
+    "Möbel & Einrichtung",
+    "Werkzeuge & Maschinen",
+    "Dekoration & Beleuchtung"
+  ],
+  "Freizeit & Hobby": [
+    "Party & Eventzubehör",
+    "Basteln & DIY",
+    "Brettspiele & Spielzeug",
+    "Foto & Video",
+    "Drohnen & Modellbau"
+  ],
+  "Sport & Outdoor": [
+    "Fitnessgeräte",
+    "Camping & Wandern",
+    "Wintersport",
+    "Wassersport",
+    "Fahrradzubehör"
+  ],
+  "Musik, Film & Kultur": [
+    "Musikinstrumente",
+    "DJ & Audioequipment",
+    "Film & Kameraequipment",
+    "Bücher & Medien"
+  ],
+  "Familie, Kind & Baby": [
+    "Kinderwagen & Babyschalen",
+    "Spielzeug & Spiele",
+    "Möbel für Kinderzimmer"
+  ],
+  "Tiere": [
+    "Transportboxen",
+    "Reitzubehör"
+  ],
+  "Mode & Accessoires": [
+    "Kleidung",
+    "Schuhe",
+    "Taschen & Rucksäcke",
+    "Schmuck & Uhren"
+  ],
+  "Dienstleistungen / Gewerbe": [
+    "Handwerk & Reparatur",
+    "Umzug & Transport",
+    "Reinigung & Haushaltshilfe",
+    "Eventservice & Catering",
+    "Maschinen & Werkzeuge",
+    "Büro & Ausstattung",
+    "Lager & Transportmittel",
+    "Verkaufsstände & Equipment"
+  ],
+  "Gesundheit & Reha": [
+    "Medizinische Geräte",
+    "Physiotherapie & Hilfsmittel",
+    "Pflege & Mobilitätshilfen"
+  ],
+  "Bildung & Veranstaltungen": [
+    "Kursräume & Seminarraum",
+    "Workshop- & Schulungsmaterial",
+    "Technik für Präsentationen",
+    "Eventausstattung"
+  ],
+  "Sonstiges": [
+    "Alles andere"
+  ]
 };
 
 const mainCategorySelect = document.getElementById("main-category");
