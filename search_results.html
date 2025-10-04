@@ -564,16 +564,18 @@ document.getElementById("category-select").value = filters.category;
       }
     });
 
-    document.getElementById('search-btn').addEventListener('click', () => {
-      const title = document.getElementById("search-input").value.trim();
-      const category = document.getElementById("category-select").value.trim();
-      const minPrice = document.getElementById("min-price").value.trim();
-      const maxPrice = document.getElementById("max-price").value.trim();
-      const location = document.getElementById("location-input").value.trim();
-      const radius = document.getElementById("radius-select").value.trim();
-      const params = new URLSearchParams({ title, category, minPrice, maxPrice, location, radius });
-      window.location.href = `search_results.html?${params.toString()}`;
-    });
+document.getElementById('search-btn').addEventListener('click', () => {
+  const title = document.getElementById("search-input").value.trim();
+  const category = document.getElementById("category-select")?.value.trim() || '';
+  const minPrice = document.getElementById("min-price")?.value.trim() || '';
+  const maxPrice = document.getElementById("max-price")?.value.trim() || '';
+  const location = document.getElementById("location-input")?.value.trim() || '';
+  const radius = document.getElementById("radius-select")?.value.trim() || '';
+
+  // URL zusammenstellen
+  const params = new URLSearchParams({ title, category, minPrice, maxPrice, location, radius });
+  window.location.href = `search_results.html?${params.toString()}`;
+});
 
     function capitalize(str) {
       return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
