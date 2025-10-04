@@ -205,7 +205,13 @@ let currentUser=null;
 let listingOwnerId=null;
 let isFavorite=false;
 
-  const categoryMap = {
+document.getElementById('nav-toggle').addEventListener('click',()=>{
+  const nav=document.getElementById('nav-links');
+  nav.classList.toggle('show');
+  document.getElementById('nav-toggle').setAttribute('aria-expanded',nav.classList.contains('show'));
+});
+  // Kategorie-Mapping für die Preview-Boxen
+const categoryMap = {
   "auto-suv": "Auto & SUV",
   "motorrad-roller": "Motorrad & Roller",
   "fahrrad-ebike": "Fahrrad & E-Bike",
@@ -235,12 +241,6 @@ let isFavorite=false;
   "technik-praesentationen": "Technik für Präsentationen",
   "sonstiges": "Sonstiges"
 };
-document.getElementById('nav-toggle').addEventListener('click',()=>{
-  const nav=document.getElementById('nav-links');
-  nav.classList.toggle('show');
-  document.getElementById('nav-toggle').setAttribute('aria-expanded',nav.classList.contains('show'));
-});
-
 async function updateNav(){
   const {data:{session}}=await supabase.auth.getSession();
   const nav=document.getElementById('nav-links');
