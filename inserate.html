@@ -369,24 +369,20 @@
     <h2>Neues Inserat erstellen</h2>
     <div class="form-group">
       <div class="field"><label for="title-input">Titel</label><input type="text" id="title-input" maxlength="50" /></div>
-      <div class="field">
-        <label for="category-input">Kategorie</label>
-        <select id="category-input">
-          <option value="">Bitte wählen</option>
-          <option value="fahrzeuge">Fahrzeuge</option>
-          <option value="transporter">Transporter</option>
-          <option value="boote">Boote</option>
-          <option value="fahrrad">Fahrräder & E-Bikes</option>
-          <option value="werkzeuge">Werkzeuge</option>
-          <option value="maschinen">Maschinen & Baugeräte</option>
-          <option value="party">Party & Event</option>
-          <option value="technik">Technik</option>
-          <option value="haushalt">Haushalt & Möbel</option>
-          <option value="garten">Garten</option>
-          <option value="freizeit">Freizeit & Sport</option>
-          <option value="baby">Baby & Kind</option>
-        </select>
-      </div>
+<div class="field">
+  <label for="main-category">Hauptkategorie</label>
+  <select id="main-category">
+    <option value="">Bitte wählen</option>
+  </select>
+</div>
+
+<div class="field">
+  <label for="sub-category">Unterkategorie</label>
+  <select id="sub-category" disabled>
+    <option value="">Bitte zuerst Hauptkategorie wählen</option>
+  </select>
+</div>
+
       <div class="field"><label for="price-input">Preis €/Tag</label><input type="number" id="price-input" maxlength="6" oninput="this.value=this.value.slice(0,6)" /></div>
       <div class="field">
         <label for="location-input">Ort</label>
@@ -609,6 +605,55 @@ function renderPreviews() {
     reader.readAsDataURL(file);
   });
 }
+  const categories = {
+  fahrzeuge: ["PKW", "Motorräder", "Wohnmobile"],
+  transporter: ["Kleintransporter", "LKW", "Anhänger"],
+  boote: ["Segelboote", "Motorboote", "Kajaks"],
+  fahrrad: ["Mountainbike", "E-Bike", "Citybike"],
+  werkzeuge: ["Elektrowerkzeuge", "Handwerkzeuge"],
+  maschinen: ["Bagger", "Rüttelplatte", "Generator"],
+  party: ["Zelte", "Lautsprecher", "Beleuchtung"],
+  technik: ["Laptops", "Smartphones", "Kameras"],
+  haushalt: ["Möbel", "Küchengeräte", "Dekoration"],
+  garten: ["Rasenmäher", "Gartengeräte", "Grill"],
+  freizeit: ["Fahrräder", "Sportgeräte", "Spielgeräte"],
+  baby: ["Kinderwagen", "Spielzeug", "Babybett"]
+};
+
+const mainCategorySelect = document.getElementById("main-category");
+const subCategorySelect = document.getElementById("sub-category");
+
+// Hauptkategorien automatisch füllen
+Object.keys(categories).forEach(key => {
+  const option = document.createElement("option");
+  option.value = key;
+  option.textContent = key.charAt(0).toUpperCase() + key.slice(1);
+  mainCategorySelect.appendChild(option);
+});
+
+// Unterkategorien dynamisch füllen
+mainCategorySelect.addEventListener("change", () => {
+  const selectedMain = mainCategorySelect.value;
+  subCategorySelect.innerHTML = "";
+
+  if (!selectedMain) {
+    subCategorySelect.disabled = true;
+    const defaultOption = document.createElement("option");
+    defaultOption.value = "";
+    defaultOption.textContent = "Bitte zuerst Hauptkategorie wählen";
+    subCategorySelect.appendChild(defaultOption);
+    return;
+  }
+
+  subCategorySelect.disabled = false;
+  categories[selectedMain].forEach(sub => {
+    const option = document.createElement("option");
+    option.value = sub.toLowerCase().replace(/\s+/g, '-');
+    option.textContent = sub;
+    subCategorySelect.appendChild(option);
+  });
+});
+
 document.getElementById("save-btn").addEventListener("click", async () => {
   const { data: sd } = await supabase.auth.getSession();
   const user = sd?.session?.user;
@@ -645,7 +690,10 @@ if (profileError || !profile?.name || !profile?.city) {
   return;
 }
   const title = document.getElementById('title-input').value.trim();
-  const category = document.getElementById('category-input').value;
+const mainCategory = mainCategorySelect.value;
+const subCategory = subCategorySelect.value;
+
+if (!mainCategory || !subCategory) return alert("Bitte Haupt- und Unterkategorie auswählen.");
   const price = parseFloat(document.getElementById('price-input').value);
   const description = document.getElementById('desc-input').value.trim();
   const location = document.getElementById('location-input').value.trim();
