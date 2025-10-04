@@ -572,7 +572,6 @@ document.getElementById('search-btn').addEventListener('click', () => {
   const maxPrice = document.getElementById("max-price")?.value.trim() || '';
   const location = document.getElementById("location-input")?.value.trim() || '';
   const radius = document.getElementById("radius-select")?.value.trim() || '';
-
   // URL zusammenstellen
   const params = new URLSearchParams({ title, category, minPrice, maxPrice, location, radius });
   window.location.href = `search_results.html?${params.toString()}`;
