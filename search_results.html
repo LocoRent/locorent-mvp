@@ -476,7 +476,7 @@ nav#nav-links {
 
       const params = new URLSearchParams(window.location.search);
       const filters = {
-        title: params.get('title') || '',
+  title: decodeURIComponent(params.get('title') || ''),
         category: params.get('category') || '',
         minPrice: params.get('minPrice') || '',
         maxPrice: params.get('maxPrice') || '',
