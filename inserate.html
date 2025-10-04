@@ -369,41 +369,24 @@
     <h2>Neues Inserat erstellen</h2>
     <div class="form-group">
       <div class="field"><label for="title-input">Titel</label><input type="text" id="title-input" maxlength="50" /></div>
-<div class="field">
-  <label for="category-input">Kategorie</label>
-  <select id="category-input">
-    <option value="">Bitte wählen</option>
-    <option value="Auto & Suv">Auto & SUV</option>
-    <option value="Motorrad & Roller">Motorrad & Roller</option>
-    <option value="Fahrrad & E-Bike">Fahrrad & E-Bike</option>
-    <option value="Wohnmobil & Camper">Wohnmobil & Camper</option>
-    <option value="Boote & Wassersport">Boote & Wassersport</option>
-    <option value="Anhaenger & Transport">Anhänger & Transportmittel</option>
-    <option value="Computer & Laptops">Computer & Laptops</option>
-    <option value="Smartphones & Tablets">Smartphones & Tablets</option>
-    <option value="Foto & Film">Foto-, Film- & Kameraequipment</option>
-    <option value="Gaming & Unterhaltung">Gaming & Unterhaltung</option>
-    <option value="Audio & Dj">Audio & DJ-Equipment</option>
-    <option value="Werkzeuge & Maschinen">Werkzeuge & Maschinen</option>
-    <option value="Event & Party">Event- & Partyausstattung</option>
-    <option value="Basteln & Diy">Basteln & DIY</option>
-    <option value="Brettspiele & Spielzeug">Brettspiele & Spielzeug</option>
-    <option value="Drohnen & Modellbau">Drohnen & Modellbau</option>
-    <option value="Fitnessgeraete">Fitnessgeräte</option>
-    <option value="Camping & Wandern">Camping & Wandern</option>
-    <option value="Wintersport">Wintersport</option>
-    <option value="Musikinstrumente">Musikinstrumente</option>
-    <option value="Medien & Kultur">Medien & Kultur</option>
-    <option value="Kind & Baby">Familie, Kind & Baby</option>
-    <option value="Tiere">Tiere</option>
-    <option value="Mode & Accessoires">Mode & Accessoires</option>
-    <option value="Kursraum & Seminar">Kursräume & Seminarraum</option>
-    <option value="Workshop & Schulung">Workshop- & Schulungsmaterial</option>
-    <option value="Technik & Praesentation">Technik für Präsentationen</option>
-    <option value="Sonstiges">Sonstiges</option>
-  </select>
-</div>
-
+      <div class="field">
+        <label for="category-input">Kategorie</label>
+        <select id="category-input">
+          <option value="">Bitte wählen</option>
+          <option value="fahrzeuge">Fahrzeuge</option>
+          <option value="transporter">Transporter</option>
+          <option value="boote">Boote</option>
+          <option value="fahrrad">Fahrräder & E-Bikes</option>
+          <option value="werkzeuge">Werkzeuge</option>
+          <option value="maschinen">Maschinen & Baugeräte</option>
+          <option value="party">Party & Event</option>
+          <option value="technik">Technik</option>
+          <option value="haushalt">Haushalt & Möbel</option>
+          <option value="garten">Garten</option>
+          <option value="freizeit">Freizeit & Sport</option>
+          <option value="baby">Baby & Kind</option>
+        </select>
+      </div>
       <div class="field"><label for="price-input">Preis €/Tag</label><input type="number" id="price-input" maxlength="6" oninput="this.value=this.value.slice(0,6)" /></div>
       <div class="field">
         <label for="location-input">Ort</label>
@@ -813,8 +796,7 @@ if (listings.length === 0) {
   gallery.innerHTML = '';
   listings.forEach(i => {
     const img = i.image_urls?.[0] || 'https://via.placeholder.com/300x150?text=Kein+Bild';
-const categoryFormatted = i.category ? (i.category.charAt(0).toUpperCase() + i.category.slice(1)) : 'Unbekannt';
-
+    const categoryFormatted = i.category ? (i.category.charAt(0).toUpperCase() + i.category.slice(1).toLowerCase()) : 'Unbekannt';
 
     const div = document.createElement('div');
     div.className = 'card';
