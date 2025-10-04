@@ -373,35 +373,34 @@
 <label for="category-input">Kategorie</label>
 <select id="category-input">
   <option value="">Bitte wählen</option>
-  <option value="auto-suv">Auto & SUV</option>
-  <option value="motorrad-roller">Motorrad & Roller</option>
-  <option value="fahrrad-ebike">Fahrrad & E-Bike</option>
-  <option value="wohnmobil-camper">Wohnmobil & Camper</option>
-  <option value="boote-wassersport">Boote & Wassersport</option>
-  <option value="anhaenger-transportmittel">Anhänger & Transportmittel</option>
-  <option value="computer-laptops">Computer & Laptops</option>
-  <option value="smartphones-tablets">Smartphones & Tablets</option>
-  <option value="foto-film-kameraequipment">Foto-, Film- & Kameraequipment</option>
-  <option value="gaming-unterhaltung">Gaming & Unterhaltung</option>
-  <option value="audio-dj-equipment">Audio & DJ-Equipment</option>
-  <option value="werkzeuge-maschinen">Werkzeuge & Maschinen</option>
-  <option value="event-partyausstattung">Event- & Partyausstattung</option>
-  <option value="basteln-diy">Basteln & DIY</option>
-  <option value="brettspiele-spielzeug">Brettspiele & Spielzeug</option>
-  <option value="drohnen-modellbau">Drohnen & Modellbau</option>
-  <option value="fitnessgeraete">Fitnessgeräte</option>
-  <option value="camping-wandern">Camping & Wandern</option>
-  <option value="wintersport">Wintersport</option>
-  <option value="musikinstrumente">Musikinstrumente</option>
-  <option value="medien-kultur">Medien & Kultur</option>
-  <option value="familie-kind-baby">Familie, Kind & Baby</option>
-  <option value="tiere">Tiere</option>
-  <option value="mode-accessoires">Mode & Accessoires</option>
-  <option value="kursraeume-seminarraum">Kursräume & Seminarraum</option>
-  <option value="workshop-schulungsmaterial">Workshop- & Schulungsmaterial</option>
-  <option value="technik-praesentationen">Technik für Präsentationen</option>
-  <option value="sonstiges">Sonstiges</option>
-</select>
+<option value="anhaenger-transportmittel">Anhänger & Transportmittel</option>
+<option value="audio-dj-equipment">Audio & DJ-Equipment</option>
+<option value="auto-suv">Auto & SUV</option>
+<option value="basteln-diy">Basteln & DIY</option>
+<option value="beauty">Beauty</option>
+<option value="brettspiele-spielzeug">Brettspiele & Spielzeug</option>
+<option value="camping-wandern">Camping & Wandern</option>
+<option value="computer-laptops">Computer & Laptops</option>
+<option value="drohnen-modellbau">Drohnen & Modellbau</option>
+<option value="event-partyausstattung">Event- & Partyausstattung</option>
+<option value="fitnessgeraete">Fitnessgeräte</option>
+<option value="foto-film-kameraequipment">Foto-, Film- & Kameraequipment</option>
+<option value="gaming-unterhaltung">Gaming & Unterhaltung</option>
+<option value="kursraeume-seminarraum">Kursräume & Seminarraum</option>
+<option value="medien-kultur">Medien & Kultur</option>
+<option value="motorrad-roller">Motorrad & Roller</option>
+<option value="musikinstrumente">Musikinstrumente</option>
+<option value="smartphones-tablets">Smartphones & Tablets</option>
+<option value="sport">Sport</option>
+<option value="technik-praesentationen">Technik für Präsentationen</option>
+<option value="workshop-schulungsmaterial">Workshop- & Schulungsmaterial</option>
+<option value="tiere">Tiere</option>
+<option value="wohnmobil-camper">Wohnmobil & Camper</option>
+<option value="boote-wassersport">Boote & Wassersport</option>
+<option value="mode-accessoires">Mode & Accessoires</option>
+<option value="sonstiges">Sonstiges</option>
+<option value="fahrrad-ebike">Fahrrad & E-Bike</option>
+<option value="werkzeuge-maschinen">Werkzeuge & Maschinen</option>
 
       </div>
       <div class="field"><label for="price-input">Preis €/Tag</label><input type="number" id="price-input" maxlength="6" oninput="this.value=this.value.slice(0,6)" /></div>
@@ -548,35 +547,36 @@ let userSession = null;
 
   // Kategorie-Mapping für die Preview-Boxen
 const categoryMap = {
-  "auto-suv": "Auto & SUV",
-  "motorrad-roller": "Motorrad & Roller",
-  "fahrrad-ebike": "Fahrrad & E-Bike",
-  "wohnmobil-camper": "Wohnmobil & Camper",
-  "boote-wassersport": "Boote & Wassersport",
   "anhaenger-transportmittel": "Anhänger & Transportmittel",
+  "audio-dj-equipment": "Audio & DJ-Equipment",
+  "auto-suv": "Auto & SUV",
+  "basteln-diy": "Basteln & DIY",
+  "beauty": "Beauty",
+  "brettspiele-spielzeug": "Brettspiele & Spielzeug",
+  "camping-wandern": "Camping & Wandern",
   "computer-laptops": "Computer & Laptops",
-  "smartphones-tablets": "Smartphones & Tablets",
+  "drohnen-modellbau": "Drohnen & Modellbau",
+  "event-partyausstattung": "Event- & Partyausstattung",
+  "fitnessgeraete": "Fitnessgeräte",
   "foto-film-kameraequipment": "Foto-, Film- & Kameraequipment",
   "gaming-unterhaltung": "Gaming & Unterhaltung",
-  "audio-dj-equipment": "Audio & DJ-Equipment",
-  "werkzeuge-maschinen": "Werkzeuge & Maschinen",
-  "event-partyausstattung": "Event- & Partyausstattung",
-  "basteln-diy": "Basteln & DIY",
-  "brettspiele-spielzeug": "Brettspiele & Spielzeug",
-  "drohnen-modellbau": "Drohnen & Modellbau",
-  "fitnessgeraete": "Fitnessgeräte",
-  "camping-wandern": "Camping & Wandern",
-  "wintersport": "Wintersport",
-  "musikinstrumente": "Musikinstrumente",
-  "medien-kultur": "Medien & Kultur",
-  "familie-kind-baby": "Familie, Kind & Baby",
-  "tiere": "Tiere",
-  "mode-accessoires": "Mode & Accessoires",
+  "fahrrad-ebike": "Fahrrad & E-Bike",
   "kursraeume-seminarraum": "Kursräume & Seminarraum",
-  "workshop-schulungsmaterial": "Workshop- & Schulungsmaterial",
+  "medien-kultur": "Medien & Kultur",
+  "motorrad-roller": "Motorrad & Roller",
+  "musikinstrumente": "Musikinstrumente",
+  "smartphones-tablets": "Smartphones & Tablets",
+  "sport": "Sport",
   "technik-praesentationen": "Technik für Präsentationen",
-  "sonstiges": "Sonstiges"
+  "workshop-schulungsmaterial": "Workshop- & Schulungsmaterial",
+  "tiere": "Tiere",
+  "wohnmobil-camper": "Wohnmobil & Camper",
+  "boote-wassersport": "Boote & Wassersport",
+  "mode-accessoires": "Mode & Accessoires",
+  "sonstiges": "Sonstiges",
+  "werkzeuge-maschinen": "Werkzeuge & Maschinen"
 };
+
   
 // Profil-Daten zwischenspeichern
 let userProfile = {
