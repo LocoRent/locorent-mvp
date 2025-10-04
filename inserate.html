@@ -732,7 +732,10 @@ if (!mainCategory || !subCategory) {
   const description = document.getElementById('desc-input').value.trim();
   const location = document.getElementById('location-input').value.trim();
 
-  if (!title || !price || !category || !location) return alert("Bitte alle Pflichtfelder ausfüllen.");
+if (!title || !price || !mainCategory || !subCategory || !location) {
+  return alert("Bitte alle Pflichtfelder ausfüllen.");
+}
+
   if (!selectedAddressData) return alert("Bitte einen Ort aus der Vorschlagsliste wählen.");
 
   // 👉 Jetzt Bilder hochladen
