@@ -631,7 +631,7 @@ card.innerHTML = `
   <img src="${item.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" alt="${item.title}" />
   <h3>${item.title}</h3>
   <div class="info">
-    <p><strong>Kategorie:</strong> ${capitalize(item.category) || 'Unbekannt'}</p>
+<p><strong>Kategorie:</strong> ${categoryMap[item.category] || 'Unbekannt'}</p>
     <p><strong>Preis pro Tag:</strong> ${item.price_per_day || 'k. A.'} €</p>
   </div>
   <div class="buttons">
