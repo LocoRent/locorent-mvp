@@ -610,19 +610,19 @@ window.location.href = `search_results.html?${params.toString()}`;
       }
     }
 
-    async function geocodeLocation(query) {
-      try {
-const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`);
-
-        const json = await res.json();
-        if (json.length > 0) {
-          return { lat: parseFloat(json[0].lat), lon: parseFloat(json[0].lon) };
-        }
-      } catch (error) {
-        console.error('Geocode-Fehler:', error);
-      }
-      return null;
+async function geocodeLocation(query) {
+  try {
+    const res = await fetch(`https://corsproxy.io/?https://nominatim.openstreetmap.org/search?format=json&accept-language=de&limit=1&q=${encodeURIComponent(query)}`);
+    const json = await res.json();
+    if (json.length > 0) {
+      return { lat: parseFloat(json[0].lat), lon: parseFloat(json[0].lon) };
     }
+  } catch (error) {
+    console.error('Geocode-Fehler:', error);
+  }
+  return null;
+}
+
 
     function getDistance(lat1, lon1, lat2, lon2) {
       const R = 6371;
@@ -668,7 +668,24 @@ if (filters.category) query = query.eq('category', filters.category);
 
   renderResults(data, count, page);
 }
+let results = data;
 
+// --- Standort-Filterung ---
+if (filters.location && filters.radius) {
+  const geo = await geocodeLocation(filters.location);
+  if (geo) {
+    results = results.filter(item => {
+      if (!item.lat || !item.lon) return false; // nur Inserate mit Koordinaten
+      const dist = getDistance(geo.lat, geo.lon, item.lat, item.lon);
+      return dist <= parseFloat(filters.radius);
+    });
+  }
+}
+
+// Anzahl neu berechnen
+const filteredCount = results.length;
+
+renderResults(results, filteredCount, page);
 async function renderResults(items, totalCount, page) {
   const container = document.getElementById("results");
   container.innerHTML = "";
