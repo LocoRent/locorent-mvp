@@ -644,8 +644,8 @@ async function loadListings(filters = {}, page = 1) {
     .select('*', { count: 'exact' }) // Gesamtanzahl der Ergebnisse mit abrufen
     .order('created_at', { ascending: false });
 
-if (filters.title) query = query.ilike('title', `%${filters.title}%`);
-if (filters.category) query = query.eq('category', filters.category);
+  if (filters.title) query = query.ilike('title', `%${filters.title}%`);
+  if (filters.category) query = query.eq('category', filters.category);
 
   const min = filters.minPrice ? parseFloat(filters.minPrice) : 0;
   const max = filters.maxPrice ? parseFloat(filters.maxPrice) : null;
@@ -654,6 +654,38 @@ if (filters.category) query = query.eq('category', filters.category);
   } else {
     query = query.gte('price_per_day', min);
   }
+
+  // LIMIT & OFFSET für Pagination
+  const from = (page - 1) * pageSize;
+  const to = from + pageSize - 1;
+  query = query.range(from, to);
+
+  const { data, count, error } = await query;
+  if (error) {
+    console.error(error);
+    return;
+  }
+
+  let results = data;
+
+  // --- Standort-Filterung ---
+  if (filters.location && filters.radius) {
+    const geo = await geocodeLocation(filters.location);
+    if (geo) {
+      results = results.filter(item => {
+        if (!item.lat || !item.lon) return false; // nur Inserate mit Koordinaten
+        const dist = getDistance(geo.lat, geo.lon, item.lat, item.lon);
+        return dist <= parseFloat(filters.radius);
+      });
+    }
+  }
+
+  // Anzahl neu berechnen nach Filter
+  const filteredCount = results.length;
+
+  renderResults(results, filteredCount, page);
+}
+
 
   // LIMIT & OFFSET für Pagination
   const from = (page - 1) * pageSize;
