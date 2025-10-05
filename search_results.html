@@ -484,8 +484,9 @@ const supabase = window.supabase.createClient(
 
 let userSession = null;
 let currentPage = 1;
-const pageSize = 24; // pro Seite
+const pageSize = 24;
 
+// --- INIT ---
 async function init() {
   const { data: { session } } = await supabase.auth.getSession();
   userSession = session;
@@ -519,7 +520,7 @@ async function init() {
   loadListings(filters, currentPage);
 }
 
-// --- Navigation ---
+// --- NAVIGATION ---
 function updateNav() {
   const nav = document.getElementById('nav-links');
   nav.innerHTML = userSession?.user ? 
@@ -539,7 +540,7 @@ async function logout(event) {
   window.location.href = "login.html";
 }
 
-// --- Ort Auto-Complete ---
+// --- LOCATION AUTOCOMPLETE ---
 document.getElementById('location-input').addEventListener('input', async (e) => {
   const value = e.target.value.trim();
   const suggestionsBox = document.getElementById('suggestions');
@@ -568,7 +569,7 @@ document.getElementById('location-input').addEventListener('input', async (e) =>
   }
 });
 
-// --- Such-Button ---
+// --- SEARCH BUTTON ---
 document.getElementById('search-btn').addEventListener('click', () => {
   const title = document.getElementById("search-input").value.trim();
   const category = document.getElementById("category-select")?.value.trim() || '';
@@ -580,7 +581,7 @@ document.getElementById('search-btn').addEventListener('click', () => {
   window.location.href = `search_results.html?${params.toString()}`;
 });
 
-// --- Favoriten ---
+// --- FAVORITES ---
 async function checkIfFavorite(listingId) {
   if (!userSession?.user) return false;
   const { data } = await supabase
@@ -609,20 +610,7 @@ async function toggleFavorite(listingId) {
   }
 }
 
-// --- Geocode & Entfernung ---
-async function geocodeLocation(query) {
-  try {
-    const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`);
-    const json = await res.json();
-    if (json.length > 0) {
-      return { lat: parseFloat(json[0].lat), lon: parseFloat(json[0].lon) };
-    }
-  } catch (error) {
-    console.error('Geocode-Fehler:', error);
-  }
-  return null;
-}
-
+// --- DISTANCE HELPER ---
 function getDistance(lat1, lon1, lat2, lon2) {
   const R = 6371; // km
   const toRad = deg => deg * (Math.PI / 180);
@@ -635,7 +623,7 @@ function getDistance(lat1, lon1, lat2, lon2) {
   return R * c;
 }
 
-// --- Hauptfunktion: Listings laden ---
+// --- LOAD LISTINGS ---
 async function loadListings(filters = {}, page = 1) {
   let query = supabase.from('listings')
     .select('*', { count: 'exact' })
@@ -652,7 +640,6 @@ async function loadListings(filters = {}, page = 1) {
     query = query.gte('price_per_day', min);
   }
 
-  // Pagination
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
   query = query.range(from, to);
@@ -660,7 +647,7 @@ async function loadListings(filters = {}, page = 1) {
   const { data, count, error } = await query;
   if (error) return console.error(error);
 
-  // --- Ort & Radius Filter ---
+  // --- Filter nach Location (Koordinaten) & Radius ---
   let filteredData = data;
   if (filters.location) {
     filteredData = await filterByLocationAndRadius(filteredData, filters.location, filters.radius);
@@ -669,30 +656,40 @@ async function loadListings(filters = {}, page = 1) {
   renderResults(filteredData, filteredData.length, page);
 }
 
-// --- Ort + Radius Logik ---
+// --- FILTER BY LOCATION + RADIUS ---
 async function filterByLocationAndRadius(listings, locationName, radiusKm) {
   if (!locationName) return listings;
 
-  const normalizedLocation = locationName.trim().toLowerCase();
-  const locCoords = await geocodeLocation(locationName); // { lat, lon }
+  // Geocode Location
+  const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(locationName)}&limit=1`);
+  const json = await res.json();
+  if (!json || json.length === 0) return listings;
+
+  const loc = json[0];
+  const locLat = parseFloat(loc.lat);
+  const locLon = parseFloat(loc.lon);
+
+  const bbox = loc.boundingbox.map(Number); // [south, north, west, east]
 
   return listings.filter(item => {
-    const itemCity = item.city?.trim().toLowerCase();
-    const hasCoords = item.latitude && item.longitude;
+    if (!item.location || !item.location.lat || !item.location.lon) return false;
 
-    const isExactCity = itemCity && itemCity === normalizedLocation;
+    const lat = parseFloat(item.location.lat);
+    const lon = parseFloat(item.location.lon);
 
-    let isInRadius = false;
-    if (radiusKm && hasCoords && locCoords) {
-      const distance = getDistance(locCoords.lat, locCoords.lon, item.latitude, item.longitude);
-      isInRadius = distance <= parseFloat(radiusKm);
+    const inLocation = lat >= bbox[0] && lat <= bbox[1] && lon >= bbox[2] && lon <= bbox[3];
+
+    let inRadius = false;
+    if (radiusKm) {
+      const distance = getDistance(locLat, locLon, lat, lon);
+      inRadius = distance <= parseFloat(radiusKm);
     }
 
-    return isExactCity || isInRadius;
+    return inLocation || inRadius;
   });
 }
 
-// --- Render Results ---
+// --- RENDER RESULTS ---
 async function renderResults(items, totalCount, page) {
   const container = document.getElementById("results");
   container.innerHTML = "";
@@ -738,6 +735,7 @@ async function renderResults(items, totalCount, page) {
   // --- Pagination ---
   const pagination = document.createElement("div");
   pagination.style.cssText = "grid-column:1/-1;display:flex;justify-content:center;gap:10px;margin-top:20px;";
+
   const totalPages = Math.ceil(totalCount / pageSize);
 
   if (page > 1) {
@@ -759,7 +757,7 @@ async function renderResults(items, totalCount, page) {
   container.appendChild(pagination);
 }
 
-// --- Filter aus URL ---
+// --- HELPERS ---
 function getFilters() {
   const params = new URLSearchParams(window.location.search);
   return {
@@ -772,7 +770,7 @@ function getFilters() {
   };
 }
 
-// --- Mobile Nav Toggle ---
+// --- MOBILE NAV ---
 document.getElementById('nav-toggle').addEventListener('click', () => {
   const nav = document.getElementById('nav-links');
   nav.classList.toggle('show');
