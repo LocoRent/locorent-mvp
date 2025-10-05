@@ -545,7 +545,7 @@ document.getElementById("category-select").value = filters.category;
         return;
       }
       try {
-        const res = await fetch(`https://corsproxy.io/?https://nominatim.openstreetmap.org/search?format=json&accept-language=de&countrycodes=de&addressdetails=1&limit=6&q=${encodeURIComponent(value)}`);
+const res = await fetch(`https://corsproxy.io/?https://nominatim.openstreetmap.org/search?format=json&accept-language=de&countrycodes=de&addressdetails=1&limit=6&q=${encodeURIComponent(value)}`);
         const results = await res.json();
         suggestionsBox.innerHTML = '';
         results.forEach(r => {
@@ -574,7 +574,7 @@ document.getElementById('search-btn').addEventListener('click', () => {
   const radius = document.getElementById("radius-select")?.value.trim() || '';
   // URL zusammenstellen
   const params = new URLSearchParams({ title, category, minPrice, maxPrice, location, radius });
-  window.location.href = `search_results.html?${params.toString()}`;
+window.location.href = `search_results.html?${params.toString()}`;
 });
 
     function capitalize(str) {
@@ -611,7 +611,8 @@ document.getElementById('search-btn').addEventListener('click', () => {
 
     async function geocodeLocation(query) {
       try {
-        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`);
+const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`);
+
         const json = await res.json();
         if (json.length > 0) {
           return { lat: parseFloat(json[0].lat), lon: parseFloat(json[0].lon) };
@@ -642,7 +643,7 @@ async function loadListings(filters = {}, page = 1) {
     .select('*', { count: 'exact' }) // Gesamtanzahl der Ergebnisse mit abrufen
     .order('created_at', { ascending: false });
 
-  if (filters.title) query = query.ilike('title', `%${filters.title}%`);
+if (filters.title) query = query.ilike('title', `%${filters.title}%`);
 if (filters.category) query = query.eq('category', filters.category);
 
   const min = filters.minPrice ? parseFloat(filters.minPrice) : 0;
