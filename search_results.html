@@ -666,17 +666,18 @@ async function loadListings(filters = {}, page = 1) {
 
   let filteredData = data;
 
-  // --- Umkreisfilter ---
-  if (filters.location && filters.radius) {
-    const coords = await geocodeLocation(filters.location);
-    if (coords) {
-      filteredData = data.filter(item => {
-        if (!item.lat || !item.lon) return false;
-        const dist = getDistance(coords.lat, coords.lon, item.lat, item.lon);
-        return dist <= parseFloat(filters.radius);
-      });
-    }
+// --- Umkreisfilter ---
+if (filters.location && filters.radius) {
+  const coords = await geocodeLocation(filters.location);
+  if (coords) {
+    filteredData = data.filter(item => {
+      if (!item.latitude || !item.longitude) return false;  // Korrekte Feldnamen
+      const dist = getDistance(coords.lat, coords.lon, item.latitude, item.longitude);
+      return dist <= parseFloat(filters.radius);
+    });
   }
+}
+
 
   renderResults(filteredData, filteredData.length, page);
 }
