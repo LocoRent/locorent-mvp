@@ -639,11 +639,11 @@ const pageSize = 24; // pro Seite 24 Inserate
 
 async function loadListings(filters = {}, page = 1) {
   let query = supabase.from('listings')
-    .select('*', { count: 'exact' }) // Gesamtanzahl der Ergebnisse mit abrufen
+    .select('*', { count: 'exact' })
     .order('created_at', { ascending: false });
 
   if (filters.title) query = query.ilike('title', `%${filters.title}%`);
-if (filters.category) query = query.eq('category', filters.category);
+  if (filters.category) query = query.eq('category', filters.category);
 
   const min = filters.minPrice ? parseFloat(filters.minPrice) : 0;
   const max = filters.maxPrice ? parseFloat(filters.maxPrice) : null;
@@ -653,19 +653,41 @@ if (filters.category) query = query.eq('category', filters.category);
     query = query.gte('price_per_day', min);
   }
 
-  // LIMIT & OFFSET für Pagination
+  // Pagination
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
   query = query.range(from, to);
 
   const { data, count, error } = await query;
-  if (error) {
-    console.error(error);
-    return;
-  }
+  if (error) return console.error(error);
 
-  renderResults(data, count, page);
+  let filteredData = data;
+
+// Ort & Radius Filter
+if (filters.location) {
+  const locCoords = await geocodeLocation(filters.location); // { lat, lon }
+  if (locCoords) {
+    filteredData = filteredData.filter(item => {
+      if (!item.latitude || !item.longitude) return false;
+
+      const distance = getDistance(locCoords.lat, locCoords.lon, item.latitude, item.longitude);
+
+      if (!filters.radius) {
+        // Ganzer Ort: nur exakt übereinstimmender Ort
+        return item.city?.toLowerCase() === filters.location.toLowerCase();
+      } else {
+        // Radius gewählt: entweder innerhalb Radius oder exakt im Ort
+        const isExactCity = item.city?.toLowerCase() === filters.location.toLowerCase();
+        const isInRadius = distance <= parseFloat(filters.radius);
+        return isExactCity || isInRadius;
+      }
+    });
+  }
 }
+
+  renderResults(filteredData, filteredData.length, page);
+}
+
 
 async function renderResults(items, totalCount, page) {
   const container = document.getElementById("results");
