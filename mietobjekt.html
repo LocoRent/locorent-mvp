@@ -21,7 +21,7 @@
 }
 
 *, *::before, *::after { box-sizing:border-box; }
-html, body { margin:0; padding:0; width:100%; font-family:var(--font-primary); background:var(--background); color:var(--text-dark); min-height:100vh; display:flex; flex-direction:column; }
+html, body { margin:0; padding:0; width:100%; font-family:var(--font-primary); background:var(--background); color:var(--text-dark); min-height:100vh; display:flex; flex-direction:column;overflow-x: hidden; /* Verhindert horizontales Scrollen */ }
 
 /* Header */
   header {
@@ -115,7 +115,10 @@ footer ul li a:hover { color: var(--accent); }
 footer small { display:block; margin-top:2rem; text-align:center; opacity:0.85; }
 
 /* Responsive */
-@media(max-width:900px){ main { grid-template-columns:1fr; gap:1.8rem; } }
+@media(max-width:900px){ main { grid-template-columns:1fr; gap:1.8rem;    display: flex;            /* von Grid auf Flex umstellen */
+    flex-direction: column;   /* Boxen untereinander */
+    gap: 1.8rem;              /* Abstand zwischen Boxen */
+    padding: 0 1rem;          /* Abstand links und rechts */ } }
 @media(max-width:720px){
   header {
     flex-direction: row;          /* Logo links, Burger rechts */
@@ -150,13 +153,13 @@ footer small { display:block; margin-top:2rem; text-align:center; opacity:0.85; 
     border-radius: 6px;
   }
   .main-image {
-    width: 100%;
-    max-width: 100%;
-    height: auto;
-    max-height: 280px;
-    object-fit: contain;
-    display: block;
-  }
+  width: 100%;
+  max-width: 100%;   /* passt sich immer dem Container an */
+  height: auto;      /* proportional skalieren */
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;    /* zentriert das Bild horizontal */
+}
 
   .gallery {
     width: 100%;
@@ -171,8 +174,29 @@ footer small { display:block; margin-top:2rem; text-align:center; opacity:0.85; 
   }
 
 
-  .thumbnails img{width:70px;height:50px;}
+.thumbnails {
+  display: flex;
+  gap: 0.4rem;       /* kleiner Abstand zwischen Bildern */
+  overflow-x: auto;   /* horizontal scrollen, wenn zu viele Thumbnails */
+  margin: 1rem 0 0 0;
+  padding-bottom: 0.5rem; /* verhindert Scrollbar-Überlappung */
+  max-width: 100%;    /* nie breiter als Container */
+  justify-content: flex-start; /* linksbündig */
 }
+
+.thumbnails img {
+  width: 70px;  /* kleinere Thumbnails auf Mobile */
+  height: 50px;
+  object-fit: cover;
+  border-radius: 10px;
+  cursor: pointer;
+}
+  .gallery, .content, .vendor-info {
+  width: 100%;       /* volle Breite des Containers */
+  max-width: 100%;   /* nicht breiter */
+  box-sizing: border-box; /* Padding wird eingerechnet */
+}
+  }
 </style>
 </head>
 <body>
