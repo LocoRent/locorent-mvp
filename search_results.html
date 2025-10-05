@@ -476,7 +476,7 @@ nav#nav-links {
     </div>
   </footer>
 
-  <script>
+<script>
 const supabase = window.supabase.createClient(
   'https://flnjalgqtkqycsaymmbd.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
@@ -517,7 +517,7 @@ async function init() {
     currentCategoryDiv.textContent = "";
   }
 
-  loadListings(filters, currentPage);
+  await loadListings(filters, currentPage);
 }
 
 // --- NAVIGATION ---
@@ -593,7 +593,32 @@ async function checkIfFavorite(listingId) {
   return !!data;
 }
 
-// --- LOAD LISTINGS MIT LOCATION & RADIUS ---
+async function toggleFavorite(listingId) {
+  if (!userSession?.user) return false;
+  const isFav = await checkIfFavorite(listingId);
+  if (isFav) {
+    await supabase.from('favorites').delete().eq('user_id', userSession.user.id).eq('listing_id', listingId);
+    return false;
+  } else {
+    await supabase.from('favorites').insert({ user_id: userSession.user.id, listing_id: listingId });
+    return true;
+  }
+}
+
+// --- DISTANCE HELPER ---
+function getDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371; // km
+  const toRad = deg => deg * (Math.PI / 180);
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a = Math.sin(dLat / 2) ** 2 +
+            Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+            Math.sin(dLon / 2) ** 2;
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
+// --- LOAD LISTINGS ---
 async function loadListings(filters = {}, page = 1) {
   let query = supabase.from('listings')
     .select('*', { count: 'exact' })
@@ -617,7 +642,6 @@ async function loadListings(filters = {}, page = 1) {
   const { data, count, error } = await query;
   if (error) return console.error(error);
 
-  // --- Location & Radius Filter ---
   let filteredData = data;
 
   if (filters.location) {
@@ -628,77 +652,27 @@ async function loadListings(filters = {}, page = 1) {
       const loc = geoJson[0];
       const locLat = parseFloat(loc.lat);
       const locLon = parseFloat(loc.lon);
-      const bbox = loc.boundingbox.map(Number); // [south, north, west, east]
+      const bbox = loc.boundingbox.map(Number);
 
       filteredData = filteredData.filter(item => {
         if (!item.location || !item.location.lat || !item.location.lon) return false;
-
         const lat = parseFloat(item.location.lat);
         const lon = parseFloat(item.location.lon);
 
-        // Ganzer Ort: innerhalb Bounding Box
         const inLocation = lat >= bbox[0] && lat <= bbox[1] && lon >= bbox[2] && lon <= bbox[3];
 
-        // Radius
         let inRadius = false;
         if (filters.radius && filters.radius !== "") {
           const distance = getDistance(locLat, locLon, lat, lon);
           inRadius = distance <= parseFloat(filters.radius);
         }
 
-        // Zeige, wenn Inserat innerhalb Ort oder innerhalb Radius
         return inLocation || inRadius;
       });
     }
   }
 
   renderResults(filteredData, filteredData.length, page);
-}
-
-// --- DISTANCE HELPER ---
-function getDistance(lat1, lon1, lat2, lon2) {
-  const R = 6371; // km
-  const toRad = deg => deg * (Math.PI / 180);
-  const dLat = toRad(lat2 - lat1);
-  const dLon = toRad(lon2 - lon1);
-  const a = Math.sin(dLat / 2) ** 2 +
-            Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
-            Math.sin(dLon / 2) ** 2;
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
-}
-
-// --- FILTER BY LOCATION + RADIUS ---
-async function filterByLocationAndRadius(listings, locationName, radiusKm) {
-  if (!locationName) return listings;
-
-  // Geocode Location
-  const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(locationName)}&limit=1`);
-  const json = await res.json();
-  if (!json || json.length === 0) return listings;
-
-  const loc = json[0];
-  const locLat = parseFloat(loc.lat);
-  const locLon = parseFloat(loc.lon);
-
-  const bbox = loc.boundingbox.map(Number); // [south, north, west, east]
-
-  return listings.filter(item => {
-    if (!item.location || !item.location.lat || !item.location.lon) return false;
-
-    const lat = parseFloat(item.location.lat);
-    const lon = parseFloat(item.location.lon);
-
-    const inLocation = lat >= bbox[0] && lat <= bbox[1] && lon >= bbox[2] && lon <= bbox[3];
-
-    let inRadius = false;
-    if (radiusKm) {
-      const distance = getDistance(locLat, locLon, lat, lon);
-      inRadius = distance <= parseFloat(radiusKm);
-    }
-
-    return inLocation || inRadius;
-  });
 }
 
 // --- RENDER RESULTS ---
@@ -769,7 +743,7 @@ async function renderResults(items, totalCount, page) {
   container.appendChild(pagination);
 }
 
-// --- HELPERS ---
+// --- GET FILTERS ---
 function getFilters() {
   const params = new URLSearchParams(window.location.search);
   return {
@@ -791,6 +765,7 @@ document.getElementById('nav-toggle').addEventListener('click', () => {
 });
 
 init();
-  </script>
+</script>
+
 </body>
 </html>
