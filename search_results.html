@@ -545,7 +545,8 @@ document.getElementById("category-select").value = filters.category;
         return;
       }
       try {
-const res = await fetch(`https://corsproxy.io/?https://nominatim.openstreetmap.org/search?format=json&accept-language=de&countrycodes=de&addressdetails=1&limit=6&q=${encodeURIComponent(value)}`);
+const res = await fetch(`https://corsproxy.io/?https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`);
+
         const results = await res.json();
         suggestionsBox.innerHTML = '';
         results.forEach(r => {
