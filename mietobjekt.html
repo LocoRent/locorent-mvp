@@ -150,14 +150,26 @@ footer small { display:block; margin-top:2rem; text-align:center; opacity:0.85; 
     border-radius: 6px;
   }
   .main-image {
-    width: 100%;        /* Bild füllt maximal den Container */
-    max-width: 100%;    /* niemals größer als der Container */
-    height: auto;       /* Höhe passt sich proportional an */
-    max-height: 280px;  /* deine bisherige Begrenzung */
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    max-height: 280px;
     object-fit: contain;
     display: block;
-    margin: 0 auto;     /* zentrieren */
   }
+
+  .gallery {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  main {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
 
   .thumbnails img{width:70px;height:50px;}
 }
