@@ -634,16 +634,16 @@ document.getElementById('search-btn').addEventListener('click', () => {
       return R * c;
     }
 
-let currentPage = 1;
+    let currentPage = 1;
 const pageSize = 24; // pro Seite 24 Inserate
 
 async function loadListings(filters = {}, page = 1) {
   let query = supabase.from('listings')
-    .select('*', { count: 'exact' })
+    .select('*', { count: 'exact' }) // Gesamtanzahl der Ergebnisse mit abrufen
     .order('created_at', { ascending: false });
 
   if (filters.title) query = query.ilike('title', `%${filters.title}%`);
-  if (filters.category) query = query.eq('category', filters.category);
+if (filters.category) query = query.eq('category', filters.category);
 
   const min = filters.minPrice ? parseFloat(filters.minPrice) : 0;
   const max = filters.maxPrice ? parseFloat(filters.maxPrice) : null;
@@ -664,30 +664,8 @@ async function loadListings(filters = {}, page = 1) {
     return;
   }
 
-let filteredData = data;
-
-// --- Ganzer Ort (kein Radius) ---
-if (filters.location && !filters.radius) {
-  filteredData = data.filter(item => 
-    item.city?.toLowerCase() === filters.location.toLowerCase()
-  );
+  renderResults(data, count, page);
 }
-
-// --- Umkreisfilter ---
-if (filters.location && filters.radius) {
-  const coords = await geocodeLocation(filters.location);
-  if (coords) {
-    filteredData = data.filter(item => {
-      if (!item.latitude || !item.longitude) return false;
-      const dist = getDistance(coords.lat, coords.lon, item.latitude, item.longitude);
-      return dist <= parseFloat(filters.radius);
-    });
-  }
-}
-
-  renderResults(filteredData, filteredData.length, page);
-}
-
 
 async function renderResults(items, totalCount, page) {
   const container = document.getElementById("results");
