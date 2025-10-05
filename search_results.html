@@ -664,26 +664,26 @@ async function loadListings(filters = {}, page = 1) {
     return;
   }
 
-  let filteredData = data;
+let filteredData = data;
 
-  // --- Ort- und Radiusfilter ---
-  if (filters.location) {
-    const coords = await geocodeLocation(filters.location);
+// --- Ganzer Ort (kein Radius) ---
+if (filters.location && !filters.radius) {
+  filteredData = data.filter(item => 
+    item.city?.toLowerCase() === filters.location.toLowerCase()
+  );
+}
 
+// --- Umkreisfilter ---
+if (filters.location && filters.radius) {
+  const coords = await geocodeLocation(filters.location);
+  if (coords) {
     filteredData = data.filter(item => {
       if (!item.latitude || !item.longitude) return false;
-
-      if (filters.radius) {
-        // Radiusfilter
-        const dist = getDistance(coords.lat, coords.lon, item.latitude, item.longitude);
-        return dist <= parseFloat(filters.radius);
-      } else {
-        // Ganzer Ort: nur exakt der Ort
-        const itemLocation = (item.city || item.town || item.village || "").toLowerCase();
-        return itemLocation === filters.location.toLowerCase();
-      }
+      const dist = getDistance(coords.lat, coords.lon, item.latitude, item.longitude);
+      return dist <= parseFloat(filters.radius);
     });
   }
+}
 
   renderResults(filteredData, filteredData.length, page);
 }
