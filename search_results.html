@@ -634,7 +634,7 @@ document.getElementById('search-btn').addEventListener('click', () => {
       return R * c;
     }
 
-    let currentPage = 1;
+let currentPage = 1;
 const pageSize = 24; // pro Seite 24 Inserate
 
 async function loadListings(filters = {}, page = 1) {
@@ -666,18 +666,27 @@ async function loadListings(filters = {}, page = 1) {
 
   let filteredData = data;
 
-// --- Umkreisfilter ---
-if (filters.location && filters.radius) {
-  const coords = await geocodeLocation(filters.location);
-  if (coords) {
+  // --- Ort- und Radiusfilter ---
+  if (filters.location) {
+    const coords = await geocodeLocation(filters.location);
+
     filteredData = data.filter(item => {
-      if (!item.latitude || !item.longitude) return false;  // Korrekte Feldnamen
-      const dist = getDistance(coords.lat, coords.lon, item.latitude, item.longitude);
-      return dist <= parseFloat(filters.radius);
+      if (!item.latitude || !item.longitude) return false;
+
+      if (filters.radius) {
+        // Radiusfilter
+        const dist = getDistance(coords.lat, coords.lon, item.latitude, item.longitude);
+        return dist <= parseFloat(filters.radius);
+      } else {
+        // Ganzer Ort: nur exakt der Ort
+        const itemLocation = (item.city || item.town || item.village || "").toLowerCase();
+        return itemLocation === filters.location.toLowerCase();
+      }
     });
   }
-}
 
+  renderResults(filteredData, filteredData.length, page);
+}
 
   renderResults(filteredData, filteredData.length, page);
 }
