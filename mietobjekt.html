@@ -149,7 +149,16 @@ footer small { display:block; margin-top:2rem; text-align:center; opacity:0.85; 
     background: rgba(255,255,255,0.1);
     border-radius: 6px;
   }
-  .main-image{max-height:280px;}
+.main-image {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  max-height: 280px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+}
+
   .thumbnails img{width:70px;height:50px;}
 }
 </style>
