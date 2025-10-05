@@ -477,94 +477,98 @@ nav#nav-links {
   </footer>
 
   <script>
-    const supabase = window.supabase.createClient(
-      'https://flnjalgqtkqycsaymmbd.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-    );
+const supabase = window.supabase.createClient(
+  'https://flnjalgqtkqycsaymmbd.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+);
 
-    let userSession = null;
-    
-    async function init() {
-      const { data: { session } } = await supabase.auth.getSession();
-      userSession = session;
-      updateNav();
+let userSession = null;
+let currentPage = 1;
+const pageSize = 24; // pro Seite
 
-      const params = new URLSearchParams(window.location.search);
-      const filters = {
-  title: decodeURIComponent(params.get('title') || ''),
-        category: params.get('category') || '',
-        minPrice: params.get('minPrice') || '',
-        maxPrice: params.get('maxPrice') || '',
-        location: params.get('location') || '',
-        radius: params.get('radius') || ''
+async function init() {
+  const { data: { session } } = await supabase.auth.getSession();
+  userSession = session;
+  updateNav();
+
+  const params = new URLSearchParams(window.location.search);
+  const filters = {
+    title: decodeURIComponent(params.get('title') || ''),
+    category: params.get('category') || '',
+    minPrice: params.get('minPrice') || '',
+    maxPrice: params.get('maxPrice') || '',
+    location: params.get('location') || '',
+    radius: params.get('radius') || ''
+  };
+
+  document.getElementById("search-input").value = filters.title;
+  document.getElementById("category-select").value = filters.category;
+  document.getElementById("min-price").value = filters.minPrice;
+  document.getElementById("max-price").value = filters.maxPrice;
+  document.getElementById("location-input").value = filters.location;
+  document.getElementById("radius-select").value = filters.radius;
+
+  const currentCategoryDiv = document.getElementById("current-category");
+  if (filters.category) {
+    const prettyCategory = filters.category.charAt(0).toUpperCase() + filters.category.slice(1);
+    currentCategoryDiv.textContent = `Suchergebnisse für Kategorie: ${prettyCategory}`;
+  } else {
+    currentCategoryDiv.textContent = "";
+  }
+
+  loadListings(filters, currentPage);
+}
+
+// --- Navigation ---
+function updateNav() {
+  const nav = document.getElementById('nav-links');
+  nav.innerHTML = userSession?.user ? 
+    `<a href="index.html">Start</a>
+     <a href="profil.html">Mein Profil</a>
+     <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+     <a href="favoriten.html">Meine Favoriten</a>
+     <a href="inserate.html">Meine Inserate</a>
+     <a href="#" onclick="logout(event)">Logout</a>` :
+    `<a href="index.html">Start</a>
+     <a href="login.html">Einloggen</a>`;
+}
+
+async function logout(event) {
+  event.preventDefault();
+  await supabase.auth.signOut();
+  window.location.href = "login.html";
+}
+
+// --- Ort Auto-Complete ---
+document.getElementById('location-input').addEventListener('input', async (e) => {
+  const value = e.target.value.trim();
+  const suggestionsBox = document.getElementById('suggestions');
+  if (value.length < 2) {
+    suggestionsBox.innerHTML = '';
+    return;
+  }
+  try {
+    const res = await fetch(`https://corsproxy.io/?https://nominatim.openstreetmap.org/search?format=json&accept-language=de&countrycodes=de&addressdetails=1&limit=6&q=${encodeURIComponent(value)}`);
+    const results = await res.json();
+    suggestionsBox.innerHTML = '';
+    results.forEach(r => {
+      const ort = r.address.city || r.address.town || r.address.village || r.display_name.split(',')[0];
+      const bundesland = r.address.state || '';
+      const display = [ort, bundesland].filter(Boolean).join(', ');
+      const div = document.createElement('div');
+      div.textContent = display;
+      div.onclick = () => {
+        document.getElementById('location-input').value = display;
+        suggestionsBox.innerHTML = '';
       };
-
-      document.getElementById("search-input").value = filters.title;
-document.getElementById("category-select").value = filters.category;
-      document.getElementById("min-price").value = filters.minPrice;
-      document.getElementById("max-price").value = filters.maxPrice;
-      document.getElementById("location-input").value = filters.location;
-      document.getElementById("radius-select").value = filters.radius;
-
-      const currentCategoryDiv = document.getElementById("current-category");
-      if (filters.category) {
-        const prettyCategory = filters.category.charAt(0).toUpperCase() + filters.category.slice(1);
-        currentCategoryDiv.textContent = `Suchergebnisse für Kategorie: ${prettyCategory}`;
-      } else {
-        currentCategoryDiv.textContent = "";
-      }
-
-      loadListings(filters);
-    }
-
-    function updateNav() {
-      const nav = document.getElementById('nav-links');
-      nav.innerHTML = userSession?.user ? 
-        `<a href="index.html">Start</a>
-         <a href="profil.html">Mein Profil</a>
-         <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-         <a href="favoriten.html">Meine Favoriten</a>
-         <a href="inserate.html">Meine Inserate</a>
-         <a href="#" onclick="logout(event)">Logout</a>`
-       : 
-        `<a href="index.html">Start</a>
-         <a href="login.html">Einloggen</a>`;
-    }
-
-    async function logout(event) {
-      event.preventDefault();
-      await supabase.auth.signOut();
-      window.location.href = "login.html";
-    }
-
-    document.getElementById('location-input').addEventListener('input', async (e) => {
-      const value = e.target.value.trim();
-      const suggestionsBox = document.getElementById('suggestions');
-      if (value.length < 2) {
-        suggestionsBox.innerHTML = '';
-        return;
-      }
-      try {
-        const res = await fetch(`https://corsproxy.io/?https://nominatim.openstreetmap.org/search?format=json&accept-language=de&countrycodes=de&addressdetails=1&limit=6&q=${encodeURIComponent(value)}`);
-        const results = await res.json();
-        suggestionsBox.innerHTML = '';
-        results.forEach(r => {
-          const ort = r.address.city || r.address.town || r.address.village || r.display_name.split(',')[0];
-          const bundesland = r.address.state || '';
-          const display = [ort, bundesland].filter(Boolean).join(', ');
-          const div = document.createElement('div');
-          div.textContent = display;
-          div.onclick = () => {
-            document.getElementById('location-input').value = display;
-            suggestionsBox.innerHTML = '';
-          };
-          suggestionsBox.appendChild(div);
-        });
-      } catch (error) {
-        console.error('Fehler bei der Ortssuche:', error);
-      }
+      suggestionsBox.appendChild(div);
     });
+  } catch (error) {
+    console.error('Fehler bei der Ortssuche:', error);
+  }
+});
 
+// --- Such-Button ---
 document.getElementById('search-btn').addEventListener('click', () => {
   const title = document.getElementById("search-input").value.trim();
   const category = document.getElementById("category-select")?.value.trim() || '';
@@ -572,71 +576,66 @@ document.getElementById('search-btn').addEventListener('click', () => {
   const maxPrice = document.getElementById("max-price")?.value.trim() || '';
   const location = document.getElementById("location-input")?.value.trim() || '';
   const radius = document.getElementById("radius-select")?.value.trim() || '';
-  // URL zusammenstellen
   const params = new URLSearchParams({ title, category, minPrice, maxPrice, location, radius });
   window.location.href = `search_results.html?${params.toString()}`;
 });
 
-    function capitalize(str) {
-      return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
+// --- Favoriten ---
+async function checkIfFavorite(listingId) {
+  if (!userSession?.user) return false;
+  const { data } = await supabase
+    .from('favorites')
+    .select('*')
+    .eq('user_id', userSession.user.id)
+    .eq('listing_id', listingId)
+    .maybeSingle();
+  return !!data;
+}
+
+async function toggleFavorite(listingId) {
+  if (!userSession?.user) return false;
+  const { data } = await supabase
+    .from('favorites')
+    .select('*')
+    .eq('user_id', userSession.user.id)
+    .eq('listing_id', listingId)
+    .maybeSingle();
+  if (data) {
+    await supabase.from('favorites').delete().eq('id', data.id);
+    return false;
+  } else {
+    await supabase.from('favorites').insert({ user_id: userSession.user.id, listing_id: listingId });
+    return true;
+  }
+}
+
+// --- Geocode & Entfernung ---
+async function geocodeLocation(query) {
+  try {
+    const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`);
+    const json = await res.json();
+    if (json.length > 0) {
+      return { lat: parseFloat(json[0].lat), lon: parseFloat(json[0].lon) };
     }
+  } catch (error) {
+    console.error('Geocode-Fehler:', error);
+  }
+  return null;
+}
 
-    async function checkIfFavorite(listingId) {
-      if (!userSession?.user) return false;
-      const { data } = await supabase
-        .from('favorites')
-        .select('*')
-        .eq('user_id', userSession.user.id)
-        .eq('listing_id', listingId)
-        .maybeSingle();
-      return !!data;
-    }
+function getDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371; // km
+  const toRad = deg => deg * (Math.PI / 180);
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a = Math.sin(dLat / 2) ** 2 +
+            Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+            Math.sin(dLon / 2) ** 2;
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
 
-    async function toggleFavorite(listingId) {
-      if (!userSession?.user) return false;
-      const { data } = await supabase
-        .from('favorites')
-        .select('*')
-        .eq('user_id', userSession.user.id)
-        .eq('listing_id', listingId)
-        .maybeSingle();
-      if (data) {
-        await supabase.from('favorites').delete().eq('id', data.id);
-        return false;
-      } else {
-        await supabase.from('favorites').insert({ user_id: userSession.user.id, listing_id: listingId });
-        return true;
-      }
-    }
-
-    async function geocodeLocation(query) {
-      try {
-        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`);
-        const json = await res.json();
-        if (json.length > 0) {
-          return { lat: parseFloat(json[0].lat), lon: parseFloat(json[0].lon) };
-        }
-      } catch (error) {
-        console.error('Geocode-Fehler:', error);
-      }
-      return null;
-    }
-
-    function getDistance(lat1, lon1, lat2, lon2) {
-      const R = 6371;
-      const toRad = deg => deg * (Math.PI / 180);
-      const dLat = toRad(lat2 - lat1);
-      const dLon = toRad(lon2 - lon1);
-      const a = Math.sin(dLat / 2) ** 2 +
-                Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
-                Math.sin(dLon / 2) ** 2;
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-      return R * c;
-    }
-
-    let currentPage = 1;
-const pageSize = 24; // pro Seite 24 Inserate
-
+// --- Hauptfunktion: Listings laden ---
 async function loadListings(filters = {}, page = 1) {
   let query = supabase.from('listings')
     .select('*', { count: 'exact' })
@@ -661,40 +660,45 @@ async function loadListings(filters = {}, page = 1) {
   const { data, count, error } = await query;
   if (error) return console.error(error);
 
+  // --- Ort & Radius Filter ---
   let filteredData = data;
-
-// Ort & Radius Filter
-if (filters.location) {
-  const locCoords = await geocodeLocation(filters.location); // { lat, lon }
-  if (locCoords) {
-    filteredData = filteredData.filter(item => {
-      if (!item.latitude || !item.longitude) return false;
-
-      const distance = getDistance(locCoords.lat, locCoords.lon, item.latitude, item.longitude);
-
-      if (!filters.radius) {
-        // Ganzer Ort: nur exakt übereinstimmender Ort
-        return item.city?.toLowerCase() === filters.location.toLowerCase();
-      } else {
-        // Radius gewählt: entweder innerhalb Radius oder exakt im Ort
-        const isExactCity = item.city?.toLowerCase() === filters.location.toLowerCase();
-        const isInRadius = distance <= parseFloat(filters.radius);
-        return isExactCity || isInRadius;
-      }
-    });
+  if (filters.location) {
+    filteredData = await filterByLocationAndRadius(filteredData, filters.location, filters.radius);
   }
-}
 
   renderResults(filteredData, filteredData.length, page);
 }
 
+// --- Ort + Radius Logik ---
+async function filterByLocationAndRadius(listings, locationName, radiusKm) {
+  if (!locationName) return listings;
 
+  const normalizedLocation = locationName.trim().toLowerCase();
+  const locCoords = await geocodeLocation(locationName); // { lat, lon }
+
+  return listings.filter(item => {
+    const itemCity = item.city?.trim().toLowerCase();
+    const hasCoords = item.latitude && item.longitude;
+
+    const isExactCity = itemCity && itemCity === normalizedLocation;
+
+    let isInRadius = false;
+    if (radiusKm && hasCoords && locCoords) {
+      const distance = getDistance(locCoords.lat, locCoords.lon, item.latitude, item.longitude);
+      isInRadius = distance <= parseFloat(radiusKm);
+    }
+
+    return isExactCity || isInRadius;
+  });
+}
+
+// --- Render Results ---
 async function renderResults(items, totalCount, page) {
   const container = document.getElementById("results");
   container.innerHTML = "";
 
   if (items.length === 0) {
-    container.innerHTML = "<p style='grid-column: 1/-1; text-align:center; color:#666;'>Keine Ergebnisse gefunden.</p>";
+    container.innerHTML = "<p style='grid-column:1/-1;text-align:center;color:#666;'>Keine Ergebnisse gefunden.</p>";
     return;
   }
 
@@ -731,19 +735,15 @@ async function renderResults(items, totalCount, page) {
     container.appendChild(card);
   }
 
-  // --- Pagination-Buttons unten ---
+  // --- Pagination ---
   const pagination = document.createElement("div");
-  pagination.style.cssText = "grid-column:1/-1; display:flex; justify-content:center; gap:10px; margin-top:20px;";
-
+  pagination.style.cssText = "grid-column:1/-1;display:flex;justify-content:center;gap:10px;margin-top:20px;";
   const totalPages = Math.ceil(totalCount / pageSize);
 
   if (page > 1) {
     const prevBtn = document.createElement("button");
     prevBtn.textContent = "← Zurück";
-    prevBtn.onclick = () => {
-      currentPage--;
-      loadListings(getFilters(), currentPage);
-    };
+    prevBtn.onclick = () => { currentPage--; loadListings(getFilters(), currentPage); };
     pagination.appendChild(prevBtn);
   }
 
@@ -752,20 +752,18 @@ async function renderResults(items, totalCount, page) {
   if (page < totalPages) {
     const nextBtn = document.createElement("button");
     nextBtn.textContent = "Weiter →";
-    nextBtn.onclick = () => {
-      currentPage++;
-      loadListings(getFilters(), currentPage);
-    };
+    nextBtn.onclick = () => { currentPage++; loadListings(getFilters(), currentPage); };
     pagination.appendChild(nextBtn);
   }
 
   container.appendChild(pagination);
 }
 
+// --- Filter aus URL ---
 function getFilters() {
   const params = new URLSearchParams(window.location.search);
   return {
-  title: decodeURIComponent(params.get('title') || ''),
+    title: decodeURIComponent(params.get('title') || ''),
     category: params.get('category') || '',
     minPrice: params.get('minPrice') || '',
     maxPrice: params.get('maxPrice') || '',
@@ -773,15 +771,15 @@ function getFilters() {
     radius: params.get('radius') || ''
   };
 }
-     document.getElementById('nav-toggle').addEventListener('click', () => {
-      const nav = document.getElementById('nav-links');
-      nav.classList.toggle('show');
 
-      const toggle = document.getElementById('nav-toggle');
-      const expanded = nav.classList.contains('show');
-      toggle.setAttribute('aria-expanded', expanded);
-    });
-   
+// --- Mobile Nav Toggle ---
+document.getElementById('nav-toggle').addEventListener('click', () => {
+  const nav = document.getElementById('nav-links');
+  nav.classList.toggle('show');
+  const toggle = document.getElementById('nav-toggle');
+  toggle.setAttribute('aria-expanded', nav.classList.contains('show'));
+});
+
 init();
   </script>
 </body>
