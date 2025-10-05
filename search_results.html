@@ -655,9 +655,9 @@ async function loadListings(filters = {}, page = 1) {
       const bbox = loc.boundingbox.map(Number);
 
       filteredData = filteredData.filter(item => {
-        if (!item.location || !item.location.lat || !item.location.lon) return false;
-        const lat = parseFloat(item.location.lat);
-        const lon = parseFloat(item.location.lon);
+        if (item.latitude === null || item.longitude === null) return false;
+        const lat = parseFloat(item.latitude);
+        const lon = parseFloat(item.longitude);
 
         const inLocation = lat >= bbox[0] && lat <= bbox[1] && lon >= bbox[2] && lon <= bbox[3];
 
