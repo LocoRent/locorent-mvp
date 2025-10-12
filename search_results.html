@@ -672,7 +672,16 @@ async function loadListings(filters = {}, page = 1) {
     }
   }
 
-  renderResults(filteredData, filteredData.length, page);
+    // --- Pagination-Zähler korrigieren ---
+  let effectiveCount = count;
+
+  // Wenn nach Standort gefiltert wird, ist die tatsächliche Menge kleiner
+  if (filters.location) {
+    effectiveCount = filteredData.length;
+  }
+
+  // Ergebnisse anzeigen mit korrekter Gesamtzahl
+  renderResults(filteredData, effectiveCount, page);
 }
 
 // --- RENDER RESULTS ---
