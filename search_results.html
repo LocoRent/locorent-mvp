@@ -620,57 +620,55 @@ function getDistance(lat1, lon1, lat2, lon2) {
 
 // --- LOAD LISTINGS ---
 async function loadListings(filters = {}, page = 1) {
+  const pageSize = 24; // oder dein Wert
+
+  // 🔹 1. Alle Daten laden (ohne Range!)
   let query = supabase.from('listings')
     .select('*', { count: 'exact' })
     .order('created_at', { ascending: false });
 
   if (filters.title) query = query.ilike('title', `%${filters.title}%`);
   if (filters.category) query = query.eq('category', filters.category);
-
-  const min = filters.minPrice ? parseFloat(filters.minPrice) : 0;
-  const max = filters.maxPrice ? parseFloat(filters.maxPrice) : null;
-  if (max !== null && !isNaN(max)) {
-    query = query.gte('price_per_day', min).lte('price_per_day', max);
-  } else {
-    query = query.gte('price_per_day', min);
-  }
-
-  const from = (page - 1) * pageSize;
-  const to = from + pageSize - 1;
-  query = query.range(from, to);
+  if (filters.price_min) query = query.gte('price_per_day', filters.price_min);
+  if (filters.price_max) query = query.lte('price_per_day', filters.price_max);
 
   const { data, count, error } = await query;
-  if (error) return console.error(error);
+  if (error) {
+    console.error(error);
+    return;
+  }
 
   let filteredData = data;
 
+  // 🔹 2. Standortfilterung
   if (filters.location) {
-    // Geocode Input-Location
-    const geoRes = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(filters.location)}&limit=1`);
-    const geoJson = await geoRes.json();
-    if (geoJson && geoJson.length > 0) {
-      const loc = geoJson[0];
-      const locLat = parseFloat(loc.lat);
-      const locLon = parseFloat(loc.lon);
-      const bbox = loc.boundingbox.map(Number);
+    try {
+      const geoRes = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(filters.location)}&limit=1`);
+      const geoJson = await geoRes.json();
 
-      filteredData = filteredData.filter(item => {
-        if (item.latitude === null || item.longitude === null) return false;
-        const lat = parseFloat(item.latitude);
-        const lon = parseFloat(item.longitude);
+      if (geoJson && geoJson.length > 0) {
+        const loc = geoJson[0];
+        const locLat = parseFloat(loc.lat);
+        const locLon = parseFloat(loc.lon);
+        const radius = parseFloat(filters.radius) || 10; // Standard 10 km
 
-        const inLocation = lat >= bbox[0] && lat <= bbox[1] && lon >= bbox[2] && lon <= bbox[3];
-
-        let inRadius = false;
-        if (filters.radius && filters.radius !== "") {
-          const distance = getDistance(locLat, locLon, lat, lon);
-          inRadius = distance <= parseFloat(filters.radius);
-        }
-
-        return inLocation || inRadius;
-      });
+        filteredData = filteredData.filter(item => {
+          if (item.latitude == null || item.longitude == null) return false;
+          const distance = getDistance(locLat, locLon, item.latitude, item.longitude);
+          return distance <= radius;
+        });
+      }
+    } catch (err) {
+      console.error("Fehler beim Standort-Filter:", err);
     }
   }
+
+  // 🔹 3. Lokale Pagination
+  const start = (page - 1) * pageSize;
+  const paginatedData = filteredData.slice(start, start + pageSize);
+
+  renderResults(paginatedData, filteredData.length, page);
+}
 
     // --- Pagination-Zähler korrigieren ---
   let effectiveCount = count;
