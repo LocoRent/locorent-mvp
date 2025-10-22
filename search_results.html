@@ -667,21 +667,6 @@ async function loadListings(filters = {}, page = 1) {
   const start = (page - 1) * pageSize;
   const paginatedData = filteredData.slice(start, start + pageSize);
 
-  renderResults(paginatedData, filteredData.length, page);
-}
-
-    // --- Pagination-Zähler korrigieren ---
-  let effectiveCount = count;
-
-  // Wenn nach Standort gefiltert wird, ist die tatsächliche Menge kleiner
-  if (filters.location) {
-    effectiveCount = filteredData.length;
-  }
-
-  // Ergebnisse anzeigen mit korrekter Gesamtzahl
-  renderResults(filteredData, effectiveCount, page);
-}
-
 // --- RENDER RESULTS ---
 async function renderResults(items, totalCount, page) {
   const container = document.getElementById("results");
