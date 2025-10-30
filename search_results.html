@@ -486,140 +486,49 @@ let userSession = null;
 let currentPage = 1;
 const pageSize = 24;
 
-// --- INIT ---
+// --- SESSION INIT ---
 async function init() {
   const { data: { session } } = await supabase.auth.getSession();
   userSession = session;
   updateNav();
 
   const params = new URLSearchParams(window.location.search);
-  const filters = {
-    title: decodeURIComponent(params.get('title') || ''),
-    category: params.get('category') || '',
-    minPrice: params.get('minPrice') || '',
-    maxPrice: params.get('maxPrice') || '',
-    location: params.get('location') || '',
-    radius: params.get('radius') || ''
-  };
-
-  document.getElementById("search-input").value = filters.title;
-  document.getElementById("category-select").value = filters.category;
-  document.getElementById("min-price").value = filters.minPrice;
-  document.getElementById("max-price").value = filters.maxPrice;
-  document.getElementById("location-input").value = filters.location;
-  document.getElementById("radius-select").value = filters.radius;
-
-  const currentCategoryDiv = document.getElementById("current-category");
-  if (filters.category) {
-    const prettyCategory = filters.category.charAt(0).toUpperCase() + filters.category.slice(1);
-    currentCategoryDiv.textContent = `Suchergebnisse für Kategorie: ${prettyCategory}`;
-  } else {
-    currentCategoryDiv.textContent = "";
-  }
-
+  const filters = getFilters();
   await loadListings(filters, currentPage);
 }
 
-// --- NAVIGATION ---
+// --- NAV ---
 function updateNav() {
   const nav = document.getElementById('nav-links');
-  nav.innerHTML = userSession?.user ? 
+  nav.innerHTML = userSession?.user ?
     `<a href="index.html">Start</a>
-     <a href="profil.html">Mein Profil</a>
-     <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-     <a href="favoriten.html">Meine Favoriten</a>
-     <a href="inserate.html">Meine Inserate</a>
+     <a href="profil.html">Profil</a>
      <a href="#" onclick="logout(event)">Logout</a>` :
     `<a href="index.html">Start</a>
-     <a href="login.html">Einloggen</a>`;
+     <a href="login.html">Login</a>`;
 }
 
-async function logout(event) {
-  event.preventDefault();
+async function logout(e) {
+  e.preventDefault();
   await supabase.auth.signOut();
   window.location.href = "login.html";
 }
 
-// --- LOCATION AUTOCOMPLETE ---
-document.getElementById('location-input').addEventListener('input', async (e) => {
-  const value = e.target.value.trim();
-  const suggestionsBox = document.getElementById('suggestions');
-  if (value.length < 2) {
-    suggestionsBox.innerHTML = '';
-    return;
-  }
-  try {
-    const res = await fetch(`https://corsproxy.io/?https://nominatim.openstreetmap.org/search?format=json&accept-language=de&countrycodes=de&addressdetails=1&limit=6&q=${encodeURIComponent(value)}`);
-    const results = await res.json();
-    suggestionsBox.innerHTML = '';
-    results.forEach(r => {
-      const ort = r.address.city || r.address.town || r.address.village || r.display_name.split(',')[0];
-      const bundesland = r.address.state || '';
-      const display = [ort, bundesland].filter(Boolean).join(', ');
-      const div = document.createElement('div');
-      div.textContent = display;
-      div.onclick = () => {
-        document.getElementById('location-input').value = display;
-        suggestionsBox.innerHTML = '';
-      };
-      suggestionsBox.appendChild(div);
-    });
-  } catch (error) {
-    console.error('Fehler bei der Ortssuche:', error);
-  }
-});
-
-// --- SEARCH BUTTON ---
-document.getElementById('search-btn').addEventListener('click', () => {
-  const title = document.getElementById("search-input").value.trim();
-  const category = document.getElementById("category-select")?.value.trim() || '';
-  const minPrice = document.getElementById("min-price")?.value.trim() || '';
-  const maxPrice = document.getElementById("max-price")?.value.trim() || '';
-  const location = document.getElementById("location-input")?.value.trim() || '';
-  const radius = document.getElementById("radius-select")?.value.trim() || '';
-  const params = new URLSearchParams({ title, category, minPrice, maxPrice, location, radius });
-  window.location.href = `search_results.html?${params.toString()}`;
-});
-
-// --- FAVORITES ---
-async function checkIfFavorite(listingId) {
-  if (!userSession?.user) return false;
-  const { data } = await supabase
-    .from('favorites')
-    .select('*')
-    .eq('user_id', userSession.user.id)
-    .eq('listing_id', listingId)
-    .maybeSingle();
-  return !!data;
-}
-
-async function toggleFavorite(listingId) {
-  if (!userSession?.user) return false;
-  const isFav = await checkIfFavorite(listingId);
-  if (isFav) {
-    await supabase.from('favorites').delete().eq('user_id', userSession.user.id).eq('listing_id', listingId);
-    return false;
-  } else {
-    await supabase.from('favorites').insert({ user_id: userSession.user.id, listing_id: listingId });
-    return true;
-  }
-}
-
-// --- DISTANCE HELPER ---
+// --- DISTANCE CALC ---
 function getDistance(lat1, lon1, lat2, lon2) {
-  const R = 6371; // km
-  const toRad = deg => deg * (Math.PI / 180);
+  const R = 6371;
+  const toRad = d => d * (Math.PI / 180);
   const dLat = toRad(lat2 - lat1);
   const dLon = toRad(lon2 - lon1);
   const a = Math.sin(dLat / 2) ** 2 +
             Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
             Math.sin(dLon / 2) ** 2;
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-// --- LOAD LISTINGS ---
+// --- LOAD LISTINGS (NEU MIT FUNKTIONIERENDEM STANDORTFILTER) ---
 async function loadListings(filters = {}, page = 1) {
+  // 1️⃣ Daten holen (ohne Pagination)
   let query = supabase.from('listings')
     .select('*', { count: 'exact' })
     .order('created_at', { ascending: false });
@@ -629,130 +538,89 @@ async function loadListings(filters = {}, page = 1) {
 
   const min = filters.minPrice ? parseFloat(filters.minPrice) : 0;
   const max = filters.maxPrice ? parseFloat(filters.maxPrice) : null;
-  if (max !== null && !isNaN(max)) {
-    query = query.gte('price_per_day', min).lte('price_per_day', max);
-  } else {
-    query = query.gte('price_per_day', min);
-  }
+  if (max !== null && !isNaN(max)) query = query.gte('price_per_day', min).lte('price_per_day', max);
+  else query = query.gte('price_per_day', min);
 
-  const from = (page - 1) * pageSize;
-  const to = from + pageSize - 1;
-  query = query.range(from, to);
+  const { data, error } = await query;
+  if (error) { console.error(error); return; }
 
-  const { data, count, error } = await query;
-  if (error) return console.error(error);
+  let filteredData = data || [];
 
-  let filteredData = data;
-
+  // 2️⃣ Standortfilter
   if (filters.location) {
-    // Geocode Input-Location
-    const geoRes = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(filters.location)}&limit=1`);
-    const geoJson = await geoRes.json();
-    if (geoJson && geoJson.length > 0) {
-      const loc = geoJson[0];
-      const locLat = parseFloat(loc.lat);
-      const locLon = parseFloat(loc.lon);
-      const bbox = loc.boundingbox.map(Number);
+    try {
+      const geoRes = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(filters.location)}&limit=1`);
+      const geoJson = await geoRes.json();
+      if (geoJson && geoJson.length > 0) {
+        const loc = geoJson[0];
+        const locLat = parseFloat(loc.lat);
+        const locLon = parseFloat(loc.lon);
+        const radius = filters.radius ? parseFloat(filters.radius) : null;
 
-      filteredData = filteredData.filter(item => {
-        if (item.latitude === null || item.longitude === null) return false;
-        const lat = parseFloat(item.latitude);
-        const lon = parseFloat(item.longitude);
-
-        const inLocation = lat >= bbox[0] && lat <= bbox[1] && lon >= bbox[2] && lon <= bbox[3];
-
-        let inRadius = false;
-        if (filters.radius && filters.radius !== "") {
-          const distance = getDistance(locLat, locLon, lat, lon);
-          inRadius = distance <= parseFloat(filters.radius);
-        }
-
-        return inLocation || inRadius;
-      });
+        filteredData = filteredData.filter(item => {
+          if (!item.latitude || !item.longitude) return false;
+          const distance = getDistance(locLat, locLon, parseFloat(item.latitude), parseFloat(item.longitude));
+          return !radius || distance <= radius;
+        });
+      }
+    } catch (err) {
+      console.error("Fehler bei Standortfilterung:", err);
     }
   }
 
-    // --- Pagination-Zähler korrigieren ---
-  let effectiveCount = count;
+  // 3️⃣ Pagination nach Filterung
+  const totalCount = filteredData.length;
+  const from = (page - 1) * pageSize;
+  const paginated = filteredData.slice(from, from + pageSize);
 
-  // Wenn nach Standort gefiltert wird, ist die tatsächliche Menge kleiner
-  if (filters.location) {
-    effectiveCount = filteredData.length;
-  }
-
-  // Ergebnisse anzeigen mit korrekter Gesamtzahl
-  renderResults(filteredData, effectiveCount, page);
+  renderResults(paginated, totalCount, page);
 }
 
 // --- RENDER RESULTS ---
-async function renderResults(items, totalCount, page) {
+function renderResults(items, totalCount, page) {
   const container = document.getElementById("results");
   container.innerHTML = "";
 
   if (items.length === 0) {
-    container.innerHTML = "<p style='grid-column:1/-1;text-align:center;color:#666;'>Keine Ergebnisse gefunden.</p>";
+    container.innerHTML = "<p style='grid-column:1/-1;text-align:center;'>Keine Ergebnisse gefunden.</p>";
     return;
   }
 
-  for (const item of items) {
+  items.forEach(item => {
     const card = document.createElement("div");
     card.className = "result-card";
-    const isFavorite = await checkIfFavorite(item.id);
-
     card.innerHTML = `
       <img src="${item.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" alt="${item.title}" />
       <h3>${item.title}</h3>
-      <div class="info">
-        <p><strong>Preis pro Tag:</strong> ${item.price_per_day || 'k. A.'} €</p>
-      </div>
+      <p><strong>${item.price_per_day || 'k. A.'} € / Tag</strong></p>
       <div class="buttons">
         <button onclick="window.location.href='mietobjekt.html?id=${item.id}'">Details ansehen</button>
-        <button class="fav-btn">${isFavorite ? "Favorit entfernen" : "Zu Favoriten"}</button>
       </div>
     `;
-
-    const favBtn = card.querySelector(".fav-btn");
-    if (userSession?.user) {
-      favBtn.addEventListener("click", async (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const toggled = await toggleFavorite(item.id);
-        favBtn.innerText = toggled ? "Favorit entfernen" : "Zu Favoriten";
-      });
-    } else {
-      favBtn.disabled = true;
-      favBtn.innerText = "Login erforderlich";
-    }
-
     container.appendChild(card);
-  }
+  });
 
-  // --- Pagination ---
+  // Pagination
   const pagination = document.createElement("div");
   pagination.style.cssText = "grid-column:1/-1;display:flex;justify-content:center;gap:10px;margin-top:20px;";
-
   const totalPages = Math.ceil(totalCount / pageSize);
-
   if (page > 1) {
-    const prevBtn = document.createElement("button");
-    prevBtn.textContent = "← Zurück";
-    prevBtn.onclick = () => { currentPage--; loadListings(getFilters(), currentPage); };
-    pagination.appendChild(prevBtn);
+    const prev = document.createElement("button");
+    prev.textContent = "← Zurück";
+    prev.onclick = () => { currentPage--; loadListings(getFilters(), currentPage); };
+    pagination.appendChild(prev);
   }
-
   pagination.appendChild(document.createTextNode(`Seite ${page} von ${totalPages}`));
-
   if (page < totalPages) {
-    const nextBtn = document.createElement("button");
-    nextBtn.textContent = "Weiter →";
-    nextBtn.onclick = () => { currentPage++; loadListings(getFilters(), currentPage); };
-    pagination.appendChild(nextBtn);
+    const next = document.createElement("button");
+    next.textContent = "Weiter →";
+    next.onclick = () => { currentPage++; loadListings(getFilters(), currentPage); };
+    pagination.appendChild(next);
   }
-
   container.appendChild(pagination);
 }
 
-// --- GET FILTERS ---
+// --- FILTER HELPER ---
 function getFilters() {
   const params = new URLSearchParams(window.location.search);
   return {
@@ -765,16 +633,7 @@ function getFilters() {
   };
 }
 
-// --- MOBILE NAV ---
-document.getElementById('nav-toggle').addEventListener('click', () => {
-  const nav = document.getElementById('nav-links');
-  nav.classList.toggle('show');
-  const toggle = document.getElementById('nav-toggle');
-  toggle.setAttribute('aria-expanded', nav.classList.contains('show'));
-});
-
 init();
 </script>
-
 </body>
 </html>
