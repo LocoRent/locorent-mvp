@@ -641,29 +641,51 @@ async function loadListings(filters = {}, page = 1) {
 
   let filteredData = data || [];
 
-  if (filters.location) {
-    try {
-      const geoRes = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(filters.location)}&limit=1`
-      );
-      const geoJson = await geoRes.json();
+if (filters.location) {
+  try {
+    const geoRes = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&accept-language=de&q=${encodeURIComponent(filters.location)}&limit=1`
+    );
+    const geoJson = await geoRes.json();
 
-      if (geoJson && geoJson.length > 0) {
-        const loc = geoJson[0];
-        const locLat = parseFloat(loc.lat);
-        const locLon = parseFloat(loc.lon);
-        const radius = filters.radius ? parseFloat(filters.radius) : 50;
+    if (geoJson && geoJson.length > 0) {
+      const loc = geoJson[0];
+      const locLat = parseFloat(loc.lat);
+      const locLon = parseFloat(loc.lon);
+      const radius = filters.radius ? parseFloat(filters.radius) : null;
 
-        filteredData = filteredData.filter(item => {
-          if (!item.latitude || !item.longitude) return false;
-          const distance = getDistance(locLat, locLon, parseFloat(item.latitude), parseFloat(item.longitude));
-          return distance <= radius;
-        });
-      }
-    } catch (err) {
-      console.error('Fehler bei Standortfilterung:', err);
+      // Stadtname aus Nominatim-Daten extrahieren
+      const ortName = (
+        loc.address.city ||
+        loc.address.town ||
+        loc.address.village ||
+        loc.display_name.split(',')[0]
+      ).toLowerCase().trim();
+
+      filteredData = filteredData.filter(item => {
+        if (!item.latitude || !item.longitude) return false;
+
+        // Wenn kein Radius gesetzt → "Ganzer Ort" → exakter Stadtvergleich
+        if (!radius) {
+          const itemCity = (item.city || '').toLowerCase().trim();
+          return itemCity.includes(ortName);
+        }
+
+        // Wenn Radius vorhanden → Entfernung prüfen
+        const distance = getDistance(
+          locLat,
+          locLon,
+          parseFloat(item.latitude),
+          parseFloat(item.longitude)
+        );
+        return distance <= radius;
+      });
     }
+  } catch (err) {
+    console.error('Fehler bei Standortfilterung:', err);
   }
+}
+
 
   const totalCount = filteredData.length;
   const from = (page - 1) * pageSize;
