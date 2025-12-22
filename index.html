@@ -501,7 +501,7 @@
   </footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  // 1️⃣ Supabase korrekt initialisieren
+  // 1️⃣ Supabase korrekt initialisieren (v2)
   const supabaseUrl = 'https://flnjalgqtkqycsaymmbd.supabase.co';
   const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q';
 
@@ -512,9 +512,10 @@
   // 2️⃣ Init-Funktion
   async function init() {
     try {
-      const { data: { session }, error } = await supabase.auth.getSession();
+      const { data, error } = await sb.auth.getSession();
       if (error) console.error('Auth Error:', error);
-      userSession = session || null;
+
+      userSession = data?.session || null;
 
       updateNav();              // Header / Navigation
       await loadNewestOffers(); // Neueste Angebote
@@ -544,7 +545,7 @@
   async function logout(event) {
     event.preventDefault();
     try {
-      await supabase.auth.signOut();
+      await sb.auth.signOut();
       window.location.href = "login.html";
     } catch (err) {
       console.error('Logout Fehler:', err);
@@ -558,7 +559,7 @@
     container.innerHTML = '<p>⏳ Lade Angebote…</p>';
 
     try {
-      const { data, error } = await supabase
+      const { data, error } = await sb
         .from('listings')
         .select('*')
         .order(orderBy, { ascending: false })
@@ -625,7 +626,7 @@
 
   async function checkIfFavorite(listingId) {
     if (!userSession?.user) return false;
-    const { data } = await supabase
+    const { data } = await sb
       .from('favorites')
       .select('*')
       .eq('user_id', userSession.user.id)
@@ -636,7 +637,7 @@
 
   async function toggleFavorite(listingId) {
     if (!userSession?.user) return false;
-    const { data } = await supabase
+    const { data } = await sb
       .from('favorites')
       .select('*')
       .eq('user_id', userSession.user.id)
@@ -644,10 +645,10 @@
       .maybeSingle();
 
     if (data) {
-      await supabase.from('favorites').delete().eq('id', data.id);
+      await sb.from('favorites').delete().eq('id', data.id);
       return false;
     } else {
-      await supabase.from('favorites').insert({ user_id: userSession.user.id, listing_id: listingId });
+      await sb.from('favorites').insert({ user_id: userSession.user.id, listing_id: listingId });
       return true;
     }
   }
