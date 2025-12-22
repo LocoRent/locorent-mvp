@@ -499,18 +499,17 @@
     </div>
     <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
   </footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  // 1️⃣ Supabase korrekt initialisieren
+  const supabaseUrl = 'https://flnjalgqtkqycsaymmbd.supabase.co';
+  const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q';
 
- <script>
-  // 1️⃣ Supabase initialisieren
-  window.sb = window.sb || window.supabase.createClient(
-    'https://flnjalgqtkqycsaymmbd.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-  );
+  window.sb = window.sb || supabase.createClient(supabaseUrl, supabaseAnonKey);
 
   let userSession = null;
-  let selectedAddressData = null;
 
-  // 2️⃣ Initialisierung
+  // 2️⃣ Init-Funktion
   async function init() {
     try {
       const { data: { session }, error } = await supabase.auth.getSession();
@@ -519,13 +518,13 @@
 
       updateNav();              // Header / Navigation
       await loadNewestOffers(); // Neueste Angebote
-      await loadPopularOffers(); // Beliebte Angebote
+      await loadPopularOffers();// Beliebte Angebote
     } catch (err) {
       console.error('Init Fehler:', err);
     }
   }
 
-  // 3️⃣ Navigation aktualisieren
+  // 3️⃣ Header / Navigation
   function updateNav() {
     const nav = document.getElementById('nav-links');
     nav.innerHTML = userSession?.user ? `
@@ -541,7 +540,7 @@
     `;
   }
 
-  // 4️⃣ Logout Funktion
+  // 4️⃣ Logout
   async function logout(event) {
     event.preventDefault();
     try {
@@ -581,13 +580,8 @@
     }
   }
 
-  async function loadNewestOffers() {
-    await loadOffers('created_at', 'newest-offers');
-  }
-
-  async function loadPopularOffers() {
-    await loadOffers('views', 'popular-offers');
-  }
+  async function loadNewestOffers() { await loadOffers('created_at', 'newest-offers'); }
+  async function loadPopularOffers() { await loadOffers('views', 'popular-offers'); }
 
   // 6️⃣ Angebote rendern
   async function renderOffers(items, containerId) {
@@ -599,7 +593,6 @@
       card.className = 'result-card';
 
       const isFav = userSession?.user ? await checkIfFavorite(item.id) : false;
-
       const imgUrl = item.image_urls?.[0] || 'https://via.placeholder.com/400x200';
 
       card.innerHTML = `
@@ -659,7 +652,7 @@
     }
   }
 
-  // 7️⃣ Suche weiterleiten
+  // 7️⃣ Suchfunktion
   function search() {
     const keyword = document.getElementById("search-input").value.trim();
     const category = document.getElementById("category-select").value.trim();
@@ -673,13 +666,11 @@
   document.getElementById('nav-toggle').addEventListener('click', () => {
     const nav = document.getElementById('nav-links');
     nav.classList.toggle('show');
-    const toggle = document.getElementById('nav-toggle');
-    toggle.setAttribute('aria-expanded', nav.classList.contains('show'));
+    document.getElementById('nav-toggle').setAttribute('aria-expanded', nav.classList.contains('show'));
   });
 
   // 9️⃣ Init ausführen
   init();
 </script>
-
 </body>
 </html>
