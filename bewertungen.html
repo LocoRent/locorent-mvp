@@ -429,11 +429,10 @@ footer small {
   </div>
   <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
 </footer>
-
 <script>
   const supabase = window.supabase.createClient(
     'https://flnjalgqtkqycsaymmbd.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGlHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
   );
 
   async function updateNav() {
@@ -460,6 +459,9 @@ footer small {
 
   let reviews = [];
   let userId;
+  let currentPage = 1;
+  const reviewsPerPage = 5;
+  let currentFilter = 'all';
 
   function renderStars(rating) {
     let stars = "";
@@ -470,11 +472,17 @@ footer small {
   }
 
   function renderReviews(list) {
-    if (list.length === 0) {
+    const filtered = currentFilter === 'all' ? list : list.filter(r => r.rating === parseInt(currentFilter));
+    const totalPages = Math.ceil(filtered.length / reviewsPerPage);
+    const start = (currentPage - 1) * reviewsPerPage;
+    const paginated = filtered.slice(start, start + reviewsPerPage);
+
+    if (paginated.length === 0) {
       document.getElementById("review-list").innerHTML = "<p>Keine Bewertungen gefunden.</p>";
       return;
     }
-    document.getElementById("review-list").innerHTML = list.map(r => {
+
+    document.getElementById("review-list").innerHTML = paginated.map(r => {
       const userInitials = r.from_user?.name ? r.from_user.name.split(' ').map(n => n[0]).join('').toUpperCase() : "?";
       const date = new Date(r.created_at).toLocaleDateString();
       return `
@@ -487,6 +495,33 @@ footer small {
           </div>
         </article>`;
     }).join('');
+
+    renderPagination(totalPages);
+  }
+
+  function renderPagination(totalPages) {
+    const container = document.getElementById("review-pagination") || document.createElement("div");
+    container.id = "review-pagination";
+    container.style.textAlign = "center";
+    container.style.marginTop = "1.5rem";
+
+    if (!document.getElementById("review-pagination")) {
+      document.getElementById("review-list").after(container);
+    }
+
+    if (totalPages <= 1) {
+      container.innerHTML = "";
+      return;
+    }
+
+    container.innerHTML = Array.from({length: totalPages}, (_, i) => i + 1)
+      .map(page => `<button class="page-btn" ${page===currentPage?'disabled':''} onclick="goToPage(${page})">${page}</button>`)
+      .join(" ");
+  }
+
+  function goToPage(page) {
+    currentPage = page;
+    renderReviews(reviews);
   }
 
   async function loadReviews() {
@@ -496,16 +531,20 @@ footer small {
       document.getElementById("review-list").innerText = "Keine Vermieter-ID übergeben.";
       return;
     }
+    document.getElementById("review-list").innerText = "⏳ Lade Bewertungen…";
     const { data, error } = await supabase
       .from("reviews")
       .select("rating, comment, from_user_id, created_at, from_user:from_user_id(name)")
       .eq("to_user_id", userId)
       .order("created_at", { ascending: false });
+
     if (error || !Array.isArray(data)) {
       document.getElementById("review-list").innerHTML = "<p>Keine Bewertungen gefunden.</p>";
       return;
     }
+
     reviews = data;
+    currentPage = 1;
     renderReviews(reviews);
   }
 
@@ -518,18 +557,24 @@ footer small {
     } else {
       sorted.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
     }
-    renderReviews(sorted);
+    reviews = sorted;
+    currentPage = 1;
+    renderReviews(reviews);
   }
 
-  document.getElementById("sort-select").addEventListener("change", (e) => {
-    sortReviews(e.target.value);
+  document.getElementById("sort-select").addEventListener("change", e => sortReviews(e.target.value));
+  document.body.addEventListener("change", e => {
+    if (e.target.id === "star-filter") {
+      currentFilter = e.target.value;
+      currentPage = 1;
+      renderReviews(reviews);
+    }
   });
 
   document.getElementById("nav-toggle").addEventListener("click", () => {
     const nav = document.getElementById("nav-links");
     nav.classList.toggle("show");
-    const expanded = nav.classList.contains("show");
-    document.getElementById("nav-toggle").setAttribute("aria-expanded", expanded);
+    document.getElementById("nav-toggle").setAttribute('aria-expanded', nav.classList.contains("show"));
   });
 
   updateNav();
