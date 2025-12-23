@@ -330,59 +330,66 @@
     </div>
     <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
   </footer>
+<script>
+  // Supabase v2 Client
+  const sb = supabase.createClient(
+    'https://flnjalgqtkqycsaymmbd.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+  );
 
-  <script>
-    const supabase = window.supabase.createClient(
-      'https://flnjalgqtkqycsaymmbd.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-    );
+  let userSession = null;
 
-    let userSession = null;
+  async function init() {
+    try {
+      const { data, error } = await sb.auth.getSession();
+      if (error) console.error('Auth Fehler:', error);
+      userSession = data?.session || null;
 
-    async function init() {
-      const { data: { session } } = await supabase.auth.getSession();
-      userSession = session;
       updateNav();
-      loadPopularOffers();
+      await loadPopularOffers();
+    } catch (err) {
+      console.error('Init Fehler:', err);
     }
+  }
 
-    function updateNav() {
-      const nav = document.getElementById('nav-links');
-      nav.innerHTML = userSession?.user ? `
-        <a href="index.html">Start</a>
-        <a href="profil.html">Mein Profil</a>
-        <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-        <a href="favoriten.html">Meine Favoriten</a>
-        <a href="inserate.html">Meine Inserate</a>
-        <a href="#" onclick="logout(event)">Logout</a>
-      ` : `
-        <a href="index.html">Start</a>
-        <a href="login.html">Einloggen</a>
-      `;
-    }
+  function updateNav() {
+    const nav = document.getElementById('nav-links');
+    nav.innerHTML = userSession?.user ? `
+      <a href="index.html">Start</a>
+      <a href="profil.html">Mein Profil</a>
+      <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+      <a href="favoriten.html">Meine Favoriten</a>
+      <a href="inserate.html">Meine Inserate</a>
+      <a href="#" onclick="logout(event)">Logout</a>
+    ` : `
+      <a href="index.html">Start</a>
+      <a href="login.html">Einloggen</a>
+    `;
+  }
 
-    async function logout(event) {
-      event.preventDefault();
-      await supabase.auth.signOut();
+  async function logout(event) {
+    event.preventDefault();
+    try {
+      await sb.auth.signOut();
       window.location.href = "login.html";
+    } catch (err) {
+      console.error('Logout Fehler:', err);
     }
+  }
 
-    async function loadPopularOffers() {
-      const container = document.getElementById('popular-offers');
-      container.setAttribute('aria-busy', 'true');
-      container.innerHTML = '<p>⏳ Lade Angebote…</p>';
+  async function loadPopularOffers() {
+    const container = document.getElementById('popular-offers');
+    container.setAttribute('aria-busy', 'true');
+    container.innerHTML = '<p>⏳ Lade Angebote…</p>';
 
-      const { data, error } = await supabase
+    try {
+      const { data, error } = await sb
         .from('listings')
         .select('*')
         .order('views', { ascending: false })
         .limit(20);
 
-      if (error) {
-        container.innerHTML = '<p>Fehler beim Laden der beliebten Angebote.</p>';
-        console.error('Fehler bei loadPopularOffers:', error);
-        return;
-      }
+      if (error) throw error;
 
       if (!data || data.length === 0) {
         container.innerHTML = '<p>Keine Angebote gefunden.</p>';
@@ -421,49 +428,56 @@
 
         container.appendChild(card);
       }
+    } catch (err) {
+      container.innerHTML = '<p>Fehler beim Laden der beliebten Angebote.</p>';
+      console.error('Fehler bei loadPopularOffers:', err);
     }
+  }
 
-    async function checkIfFavorite(listingId) {
-      if (!userSession?.user) return false;
-      const { data } = await supabase
-        .from('favorites')
-        .select('*')
-        .eq('user_id', userSession.user.id)
-        .eq('listing_id', listingId)
-        .maybeSingle();
-      return !!data;
+  async function checkIfFavorite(listingId) {
+    if (!userSession?.user) return false;
+    const { data, error } = await sb
+      .from('favorites')
+      .select('*')
+      .eq('user_id', userSession.user.id)
+      .eq('listing_id', listingId)
+      .maybeSingle();
+    if (error) console.error('checkIfFavorite Fehler:', error);
+    return !!data;
+  }
+
+  async function toggleFavorite(listingId) {
+    if (!userSession?.user) return false;
+    const { data, error } = await sb
+      .from('favorites')
+      .select('*')
+      .eq('user_id', userSession.user.id)
+      .eq('listing_id', listingId)
+      .maybeSingle();
+    if (error) console.error('toggleFavorite Fehler (select):', error);
+
+    if (data) {
+      await sb.from('favorites').delete().eq('id', data.id);
+      return false;
+    } else {
+      await sb.from('favorites').insert({ user_id: userSession.user.id, listing_id: listingId });
+      return true;
     }
+  }
 
-    async function toggleFavorite(listingId) {
-      if (!userSession?.user) return false;
-      const { data } = await supabase
-        .from('favorites')
-        .select('*')
-        .eq('user_id', userSession.user.id)
-        .eq('listing_id', listingId)
-        .maybeSingle();
-      if (data) {
-        await supabase.from('favorites').delete().eq('id', data.id);
-        return false;
-      } else {
-        await supabase.from('favorites').insert({ user_id: userSession.user.id, listing_id: listingId });
-        return true;
-      }
-    }
+  function capitalize(str) {
+    return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
+  }
 
-    function capitalize(str) {
-      return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
-    }
+  // Mobile Menü
+  document.getElementById('nav-toggle').addEventListener('click', () => {
+    const nav = document.getElementById('nav-links');
+    nav.classList.toggle('show');
+    document.getElementById('nav-toggle').setAttribute('aria-expanded', nav.classList.contains('show'));
+  });
 
-    document.getElementById('nav-toggle').addEventListener('click', () => {
-      const nav = document.getElementById('nav-links');
-      nav.classList.toggle('show');
-      const toggle = document.getElementById('nav-toggle');
-      const expanded = nav.classList.contains('show');
-      toggle.setAttribute('aria-expanded', expanded);
-    });
+  init();
+</script>
 
-    init();
-  </script>
 </body>
 </html>
