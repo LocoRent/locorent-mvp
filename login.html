@@ -386,9 +386,8 @@
     © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
   </div>
 </footer>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+  // Supabase Client initialisieren
   const supabase = window.supabase.createClient(
     'https://flnjalgqtkqycsaymmbd.supabase.co',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
@@ -397,45 +396,63 @@
   const form = document.getElementById('login-form');
   const messageDiv = document.getElementById('message');
 
+  // Formular-Submit handler
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    messageDiv.textContent = '';
-    messageDiv.className = 'message';
+    showMessage('', ''); // Reset Message
 
     const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value;
+
+    if (!email || !password) {
+      showMessage('❌ Bitte E-Mail und Passwort eingeben.', 'error');
+      return;
+    }
 
     try {
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
       if (error) {
-        messageDiv.textContent = '❌ ' + error.message;
-        messageDiv.classList.add('error');
+        showMessage('❌ ' + error.message, 'error');
       } else {
-        messageDiv.textContent = '✅ Login erfolgreich!';
-        messageDiv.classList.add('success');
-        setTimeout(() => {
-          window.location.href = 'index.html';
-        }, 1000);
+        showMessage('✅ Login erfolgreich! Weiterleitung...', 'success');
+        setTimeout(() => window.location.href = 'index.html', 1000);
       }
     } catch (err) {
-      messageDiv.textContent = '❌ Unerwarteter Fehler: ' + err.message;
-      messageDiv.classList.add('error');
+      showMessage('❌ Unerwarteter Fehler: ' + err.message, 'error');
+      console.error(err);
     }
   });
 
+  // Funktion zur Anzeige von Meldungen
+  function showMessage(text, type) {
+    messageDiv.textContent = text;
+    messageDiv.className = 'message';
+    if (type) messageDiv.classList.add(type);
+  }
+
+  // Passwort-Anzeige umschalten
   function togglePassword() {
     const pwField = document.getElementById('password');
     pwField.type = pwField.type === 'password' ? 'text' : 'password';
   }
 
-  // Burger-Menü
+  // Burger-Menü für mobile Navigation
   document.getElementById('nav-toggle').addEventListener('click', () => {
     const nav = document.getElementById('nav-links');
     nav.classList.toggle('show');
-    const expanded = nav.classList.contains('show');
-    document.getElementById('nav-toggle').setAttribute('aria-expanded', expanded);
+    document.getElementById('nav-toggle').setAttribute('aria-expanded', nav.classList.contains('show'));
   });
+
+  // Optional: Überprüfen, ob bereits ein Benutzer eingeloggt ist und ggf. Weiterleitung
+  async function checkLoggedIn() {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session?.user) {
+      window.location.href = 'index.html';
+    }
+  }
+
+  checkLoggedIn();
 </script>
 
 </body>
