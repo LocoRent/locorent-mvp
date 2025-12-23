@@ -408,9 +408,8 @@
     </div>
     <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
   </footer>
-
 <script>
-const supabase = window.supabase.createClient(
+const sb = supabase.createClient(
   'https://flnjalgqtkqycsaymmbd.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
 );
@@ -423,23 +422,33 @@ let existingImageUrls = [];
 let selectedAddressData = null;
 
 async function loadData() {
-  const { data, error } = await supabase.from('listings').select('*').eq('id', listingId).single();
-  if (error) return alert("Fehler beim Laden.");
-  document.getElementById('title').value = data.title || '';
-  document.getElementById('category').value = data.category || '';
-  document.getElementById('price').value = data.price_per_day || '';
-  document.getElementById('desc').value = data.description || '';
-  document.getElementById('location').value = data.location || '';
-  imageUrls = data.image_urls || [];
-  existingImageUrls = [...imageUrls];
-  selectedAddressData = {
-    postal_code: data.postal_code || '',
-    city: data.city || '',
-    location: data.location || '',
-    lat: data.latitude || null,
-    lon: data.longitude || null
-  };
-  renderGallery();
+  try {
+    const { data, error } = await sb.from('listings').select('*').eq('id', listingId).maybeSingle();
+    if (error) throw error;
+    if (!data) return alert("Inserat nicht gefunden.");
+
+    document.getElementById('title').value = data.title || '';
+    document.getElementById('category').value = data.category || '';
+    document.getElementById('price').value = data.price_per_day || '';
+    document.getElementById('desc').value = data.description || '';
+    document.getElementById('location').value = data.location || '';
+
+    imageUrls = data.image_urls || [];
+    existingImageUrls = [...imageUrls];
+
+    selectedAddressData = {
+      postal_code: data.postal_code || '',
+      city: data.city || '',
+      location: data.location || '',
+      lat: data.latitude || null,
+      lon: data.longitude || null
+    };
+
+    renderGallery();
+  } catch (err) {
+    console.error("Fehler beim Laden:", err);
+    alert("Fehler beim Laden der Daten.");
+  }
 }
 
 function renderGallery() {
@@ -466,14 +475,10 @@ function removeImage(index) {
 }
 
 document.getElementById('dropzone').addEventListener('click', () => {
-  if (imageUrls.length >= 1) {
-    alert("Maximal 1 Bild erlaubt.");
-    return;
-  }
+  if (imageUrls.length >= 1) return alert("Maximal 1 Bild erlaubt.");
   const input = document.createElement('input');
   input.type = 'file';
   input.accept = 'image/*';
-  input.multiple = true;
   input.onchange = () => handleFiles(input.files);
   input.click();
 });
@@ -521,13 +526,7 @@ document.getElementById('location').addEventListener('input', async (e) => {
       div.role = "option";
       div.onclick = () => {
         document.getElementById('location').value = display;
-        selectedAddressData = {
-          postal_code: plz,
-          city: ort,
-          location: display,
-          lat: parseFloat(r.lat),
-          lon: parseFloat(r.lon)
-        };
+        selectedAddressData = { postal_code: plz, city: ort, location: display, lat: parseFloat(r.lat), lon: parseFloat(r.lon) };
         suggestionsBox.innerHTML = '';
       };
       div.onkeydown = (evt) => {
@@ -550,102 +549,56 @@ async function saveChanges() {
   const description = document.getElementById('desc').value.trim();
   const location = document.getElementById('location').value.trim();
 
-  if (!title || !category || !price || !location) {
-    alert("Alle Pflichtfelder ausfüllen.");
-    return;
-  }
-  if (!selectedAddressData) {
-    alert("Bitte Ort aus Vorschlagsliste wählen.");
-    return;
-  }
+  if (!title || !category || !price || !location) return alert("Alle Pflichtfelder ausfüllen.");
+  if (!selectedAddressData) return alert("Bitte Ort aus Vorschlagsliste wählen.");
 
   const finalImageUrls = [...existingImageUrls];
 
   for (let file of newImageFiles) {
-    const compressed = await imageCompression(file, {
-      maxSizeMB: 0.5,
-      maxWidthOrHeight: 800,
-      useWebWorker: true
-    });
-
-    if (compressed.size > 2 * 1024 * 1024) {
-      alert("Bild zu groß (max. 2 MB)");
-      continue;
-    }
+    const compressed = await imageCompression(file, { maxSizeMB: 0.5, maxWidthOrHeight: 800, useWebWorker: true });
+    if (compressed.size > 2*1024*1024) { alert("Bild zu groß (max. 2 MB)"); continue; }
 
     const path = `listing-images/${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
-    const { error: uploadError } = await supabase.storage.from('listing-images').upload(path, compressed);
+    const { error: uploadError } = await sb.storage.from('listing-images').upload(path, compressed);
+    if (uploadError) { alert("Fehler beim Upload: " + uploadError.message); continue; }
 
-    if (uploadError) {
-      alert("Fehler beim Upload: " + uploadError.message);
-      continue;
-    }
-
-    const { data } = supabase.storage.from('listing-images').getPublicUrl(path);
+    const { data } = sb.storage.from('listing-images').getPublicUrl(path);
     finalImageUrls.push(data.publicUrl);
   }
 
   if (deletedImageUrls.length > 0) {
     const deletePaths = deletedImageUrls.map(url => {
-      try {
-        return new URL(url).pathname.replace(/^\/storage\/v1\/object\/public\/listing-images\//, '');
-      } catch {
-        return null;
-      }
+      try { return new URL(url).pathname.replace(/^\/storage\/v1\/object\/public\/listing-images\//, ''); } catch { return null; }
     }).filter(Boolean);
-
     if (deletePaths.length > 0) {
-      const { error: delError } = await supabase.storage.from('listing-images').remove(deletePaths);
+      const { error: delError } = await sb.storage.from('listing-images').remove(deletePaths);
       if (delError) console.warn("Fehler beim Löschen:", delError.message);
     }
   }
 
   const { postal_code, city, lat, lon } = selectedAddressData;
+  const updates = { title, category, price_per_day: price, description, location, postal_code, city, latitude: lat, longitude: lon, image_urls: finalImageUrls };
 
-  const updates = {
-    title,
-    category,
-    price_per_day: price,
-    description,
-    location,
-    postal_code,
-    city,
-    latitude: lat,
-    longitude: lon,
-    image_urls: finalImageUrls
-  };
-
-  const { error } = await supabase.from('listings').update(updates).eq('id', listingId);
+  const { error } = await sb.from('listings').update(updates).eq('id', listingId);
   if (error) alert("Fehler beim Speichern: " + error.message);
-  else {
-    alert("Änderungen gespeichert!");
-    window.location.href = "inserate.html";
+  else { alert("Änderungen gespeichert!"); window.location.href="inserate.html"; }
+}
+
+async function init() {
+  try {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session?.user) { alert("Nicht eingeloggt – du wirst weitergeleitet."); window.location.href="login.html"; return; }
+
+    updateNav(session);
+    loadData();
+  } catch (err) {
+    console.error("Fehler beim Initialisieren:", err);
   }
 }
 
-(async () => {
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session || !session.user) {
-    alert("Nicht eingeloggt – du wirst weitergeleitet.");
-    window.location.href = "login.html";
-    return;
-  }
-  loadData();
-})();
-
-document.getElementById('nav-toggle').addEventListener('click', () => {
+function updateNav(session) {
   const nav = document.getElementById('nav-links');
-  nav.classList.toggle('show');
-  const toggle = document.getElementById('nav-toggle');
-  const expanded = nav.classList.contains('show');
-  toggle.setAttribute('aria-expanded', expanded);
-});
-
-async function updateNav() {
-  const { data: { session } } = await supabase.auth.getSession();
-  const nav = document.getElementById('nav-links');
-  const userSession = session;
-  nav.innerHTML = userSession?.user ? `
+  nav.innerHTML = session?.user ? `
     <a href="index.html">Start</a>
     <a href="profil.html">Mein Profil</a>
     <a href="nachrichten-inbox.html">📨 Nachrichten</a>
@@ -660,11 +613,18 @@ async function updateNav() {
 
 async function logout(event) {
   event.preventDefault();
-  await supabase.auth.signOut();
+  await sb.auth.signOut();
   window.location.href = "login.html";
 }
 
-updateNav();
+document.getElementById('nav-toggle').addEventListener('click', () => {
+  const nav = document.getElementById('nav-links');
+  nav.classList.toggle('show');
+  document.getElementById('nav-toggle').setAttribute('aria-expanded', nav.classList.contains('show'));
+});
+
+init();
 </script>
+
 </body>
 </html>
