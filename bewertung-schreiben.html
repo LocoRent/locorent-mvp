@@ -368,126 +368,136 @@ button[type="submit"]:active {
     </div>
     <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
   </footer>
+<script>
+const sb = supabase.createClient(
+  'https://flnjalgqtkqycsaymmbd.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+);
 
-  <script>
-    const supabase = window.supabase.createClient(
-      'https://flnjalgqtkqycsaymmbd.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-    );
+let userSession = null;
 
-    let userSession = null;
+async function init() {
+  const { data: { session }, error } = await sb.auth.getSession();
+  if (error) console.error("Fehler beim Abrufen der Session:", error);
+  userSession = session;
+  updateNav();
+}
 
-    async function init() {
-      const { data: { session } } = await supabase.auth.getSession();
-      userSession = session;
-      updateNav();
-    }
+function updateNav() {
+  const nav = document.getElementById('nav-links');
+  nav.innerHTML = userSession?.user ? `
+    <a href="index.html">Start</a>
+    <a href="profil.html">Mein Profil</a>
+    <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+    <a href="favoriten.html">Meine Favoriten</a>
+    <a href="inserate.html">Meine Inserate</a>
+    <a href="#" onclick="logout(event)">Logout</a>
+  ` : `
+    <a href="index.html">Start</a>
+    <a href="login.html">Einloggen</a>
+  `;
+}
 
-    function updateNav() {
-      const nav = document.getElementById('nav-links');
-      nav.innerHTML = userSession?.user ? `
-        <a href="index.html">Start</a>
-        <a href="profil.html">Mein Profil</a>
-        <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-        <a href="favoriten.html">Meine Favoriten</a>
-        <a href="inserate.html">Meine Inserate</a>
-        <a href="#" onclick="logout(event)">Logout</a>
-      ` : `
-        <a href="index.html">Start</a>
-        <a href="login.html">Einloggen</a>
-      `;
-    }
+async function logout(event) {
+  event.preventDefault();
+  await sb.auth.signOut();
+  window.location.href = "login.html";
+}
 
-    async function logout(event) {
-      event.preventDefault();
-      await supabase.auth.signOut();
-      window.location.href = "login.html";
-    }
+document.getElementById('nav-toggle').addEventListener('click', () => {
+  const nav = document.getElementById('nav-links');
+  nav.classList.toggle('show');
+  document.getElementById('nav-toggle').setAttribute('aria-expanded', nav.classList.contains('show'));
+});
 
-    document.getElementById('nav-toggle').addEventListener('click', () => {
-      const nav = document.getElementById('nav-links');
-      nav.classList.toggle('show');
-      const expanded = nav.classList.contains('show');
-      document.getElementById('nav-toggle').setAttribute('aria-expanded', expanded);
-    });
+init();
 
-    init();
+// Sternebewertung
+const stars = document.querySelectorAll('.star');
+const ratingInput = document.getElementById('rating');
+const message = document.getElementById('message');
 
-    const stars = document.querySelectorAll('.star');
-    const ratingInput = document.getElementById('rating');
-    const message = document.getElementById('message');
-
-    stars.forEach((star, i) => {
-      star.addEventListener('click', () => {
-        const value = parseInt(star.dataset.value);
-        ratingInput.value = value;
-        updateStars(value);
-      });
-      star.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
-          e.preventDefault();
-          const nextIndex = (i + 1) % stars.length;
-          stars[nextIndex].focus();
-        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
-          e.preventDefault();
-          const prevIndex = (i - 1 + stars.length) % stars.length;
-          stars[prevIndex].focus();
-        } else if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          star.click();
-        }
-      });
-    });
-
-    function updateStars(value) {
-      stars.forEach(s => {
-        const starVal = parseInt(s.dataset.value);
-        s.classList.toggle('selected', starVal <= value);
-        s.setAttribute('aria-checked', starVal === value ? 'true' : 'false');
-        s.tabIndex = starVal === value ? 0 : -1;
-      });
-    }
-
-    document.getElementById('comment').addEventListener('input', e => {
-      document.getElementById('charCount').textContent = e.target.value.length;
-      message.textContent = '';
-    });
-
-    document.getElementById('review-form').addEventListener('submit', async e => {
+stars.forEach((star, i) => {
+  star.addEventListener('click', () => {
+    const value = parseInt(star.dataset.value);
+    ratingInput.value = value;
+    updateStars(value);
+  });
+  star.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
       e.preventDefault();
-      const rating = parseInt(ratingInput.value);
-      const comment = document.getElementById('comment').value.trim();
-      if (!rating || rating < 1 || rating > 5) {
-        message.textContent = 'Bitte eine Bewertung zwischen 1 und 5 Sternen abgeben.';
-        return;
-      }
-      if (comment.length === 0) {
-        message.textContent = 'Bitte einen Kommentar eingeben.';
-        return;
-      }
-      const params = new URLSearchParams(window.location.search);
-      const toUser = params.get('id');
-      const { data: { session } } = await supabase.auth.getSession();
-      const user = session?.user;
-      if (!user || !toUser) {
-        alert('Fehlende Daten – bitte einloggen oder Link prüfen.');
-        return;
-      }
-      const { error } = await supabase.from('reviews').insert({
-        to_user_id: toUser,
-        from_user_id: user.id,
-        rating,
-        comment,
-      });
-      if (error) {
-        message.textContent = 'Fehler beim Speichern.';
-      } else {
-        message.textContent = '✅ Bewertung gespeichert!';
-        setTimeout(() => {
-          window.location.href = `vermieter-profil.html?id=${toUser}`;
-        }, 1500);
-      }
-    });
-  </script>
+      stars[(i + 1) % stars.length].focus();
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      stars[(i - 1 + stars.length) % stars.length].focus();
+    } else if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      star.click();
+    }
+  });
+});
+
+function updateStars(value) {
+  stars.forEach(s => {
+    const starVal = parseInt(s.dataset.value);
+    s.classList.toggle('selected', starVal <= value);
+    s.setAttribute('aria-checked', starVal === value ? 'true' : 'false');
+    s.tabIndex = starVal === value ? 0 : -1;
+  });
+}
+
+// Zeichenanzahl Kommentar
+document.getElementById('comment').addEventListener('input', e => {
+  document.getElementById('charCount').textContent = e.target.value.length;
+  message.textContent = '';
+  message.className = '';
+});
+
+// Bewertungsformular
+document.getElementById('review-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const rating = parseInt(ratingInput.value);
+  const comment = document.getElementById('comment').value.trim();
+  const params = new URLSearchParams(window.location.search);
+  const toUser = params.get('id');
+
+  if (!userSession?.user || !toUser) {
+    alert('Bitte einloggen oder den Link prüfen.');
+    return;
+  }
+
+  if (!rating || rating < 1 || rating > 5) {
+    message.textContent = 'Bitte eine Bewertung zwischen 1 und 5 Sternen abgeben.';
+    message.className = 'error';
+    return;
+  }
+
+  if (!comment) {
+    message.textContent = 'Bitte einen Kommentar eingeben.';
+    message.className = 'error';
+    return;
+  }
+
+  const { error } = await sb.from('reviews').insert({
+    to_user_id: toUser,
+    from_user_id: userSession.user.id,
+    rating,
+    comment,
+    created_at: new Date().toISOString()
+  });
+
+  if (error) {
+    message.textContent = 'Fehler beim Speichern.';
+    message.className = 'error';
+  } else {
+    message.textContent = '✅ Bewertung gespeichert!';
+    message.className = 'success';
+    setTimeout(() => {
+      window.location.href = `vermieter-profil.html?id=${toUser}`;
+    }, 1500);
+  }
+});
+</script>
+
 </body>
 </html>
