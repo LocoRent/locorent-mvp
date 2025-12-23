@@ -550,51 +550,104 @@
     </div>
     <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
   </footer>
+<script>
+  // Supabase Client initialisieren
+  const supabase = window.supabase.createClient(
+    'https://flnjalgqtkqycsaymmbd.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+  );
 
-  <script>
-    const supabase = window.supabase.createClient(
-      'https://flnjalgqtkqycsaymmbd.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-    );
+  let userSession = null;
 
-    let userSession = null;
+  // Initialisierung beim Laden der Seite
+  async function init() {
+    await checkUserSession();
+    setupNavToggle();
+    // Optional: Kategorien dynamisch laden
+    // await loadCategories();
+  }
 
-    async function init() {
-      const { data: { session } } = await supabase.auth.getSession();
-      userSession = session;
-      updateNav();
-    }
+  // Prüft, ob ein Benutzer eingeloggt ist
+  async function checkUserSession() {
+    const { data: { session }, error } = await supabase.auth.getSession();
+    if (error) console.error('Fehler beim Abrufen der Session:', error);
+    userSession = session;
+    updateNav();
+  }
 
-    function updateNav() {
-      const nav = document.getElementById('nav-links');
-      nav.innerHTML = userSession?.user ? `
-        <a href="index.html">Start</a>
-        <a href="profil.html">Mein Profil</a>
-        <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-        <a href="favoriten.html">Meine Favoriten</a>
-        <a href="inserate.html">Meine Inserate</a>
-        <a href="#" onclick="logout(event)">Logout</a>
-      ` : `
-        <a href="index.html">Start</a>
-        <a href="login.html">Einloggen</a>
-      `;
-    }
+  // Navigation abhängig vom Login-Status aktualisieren
+  function updateNav() {
+    const nav = document.getElementById('nav-links');
+    nav.innerHTML = userSession?.user ? `
+      <a href="index.html">Start</a>
+      <a href="profil.html">Mein Profil</a>
+      <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+      <a href="favoriten.html">Meine Favoriten</a>
+      <a href="inserate.html">Meine Inserate</a>
+      <a href="#" onclick="logout(event)">Logout</a>
+    ` : `
+      <a href="index.html">Start</a>
+      <a href="login.html">Einloggen</a>
+      <a href="register.html">Registrieren</a>
+    `;
+  }
 
-    async function logout(event) {
-      event.preventDefault();
-      await supabase.auth.signOut();
-      window.location.href = "login.html";
-    }
+  // Logout-Funktion
+  async function logout(event) {
+    event.preventDefault();
+    const { error } = await supabase.auth.signOut();
+    if (error) console.error('Fehler beim Logout:', error);
+    window.location.href = "login.html";
+  }
 
-    document.getElementById('nav-toggle').addEventListener('click', () => {
-      const nav = document.getElementById('nav-links');
+  // Burger-Menü für mobile Navigation
+  function setupNavToggle() {
+    const toggle = document.getElementById('nav-toggle');
+    const nav = document.getElementById('nav-links');
+    toggle.addEventListener('click', () => {
       nav.classList.toggle('show');
-      const toggle = document.getElementById('nav-toggle');
       const expanded = nav.classList.contains('show');
       toggle.setAttribute('aria-expanded', expanded);
     });
+  }
 
-    init();
-  </script>
+  // Optional: Kategorien dynamisch aus Supabase laden
+  /*
+  async function loadCategories() {
+    const { data, error } = await supabase.from('categories').select('*').order('name');
+    if (error) {
+      console.error('Fehler beim Laden der Kategorien:', error);
+      return;
+    }
+
+    const grid = document.querySelector('.category-grid');
+    grid.innerHTML = ''; // Bestehende statische Kategorien löschen
+
+    data.forEach(cat => {
+      const card = document.createElement('a');
+      card.href = `search_results.html?category=${encodeURIComponent(cat.slug)}`;
+      card.className = 'category-card';
+      card.setAttribute('tabindex', '0');
+      card.setAttribute('aria-label', `${cat.name} mieten`);
+      card.innerHTML = `
+        <div class="category-image-wrapper">
+          <img src="${cat.image_url}" alt="${cat.alt_text}" class="category-image" loading="lazy">
+          <div class="image-overlay"></div>
+        </div>
+        <h3>${cat.name}</h3>
+        <p>${cat.description}</p>
+        <span class="category-cta">Hier klicken →
+          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg>
+        </span>
+      `;
+      grid.appendChild(card);
+    });
+  }
+  */
+
+  // Seite initialisieren
+  init();
+</script>
+
 </body>
 </html>
