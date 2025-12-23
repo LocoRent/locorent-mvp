@@ -354,20 +354,20 @@
   </div>
   <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
 </footer>
-
 <script>
   const supabase = window.supabase.createClient(
     'https://flnjalgqtkqycsaymmbd.supabase.co',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
   );
+
   let currentPage = 1;
   const pageSize = 24;
 
+  // Navigation toggle mobile
   document.getElementById('nav-toggle').addEventListener('click', () => {
     const nav = document.getElementById('nav-links');
     nav.classList.toggle('show');
-    const expanded = nav.classList.contains('show');
-    document.getElementById('nav-toggle').setAttribute('aria-expanded', expanded);
+    document.getElementById('nav-toggle').setAttribute('aria-expanded', nav.classList.contains('show'));
   });
 
   async function logout(event) {
@@ -404,23 +404,24 @@
       .select('listing_id', { count: 'exact' })
       .eq('user_id', user.id);
 
+    const container = document.getElementById('favorites-list');
+
     if (error || !favorites.length) {
-      document.getElementById('favorites-list').innerHTML = "<p>Du hast noch keine Favoriten.</p>";
+      container.innerHTML = "<p>Du hast noch keine Favoriten.</p>";
       return;
     }
 
     const totalCount = favorites.length;
     const from = (page - 1) * pageSize;
     const to = from + pageSize;
-
     const pagedFavorites = favorites.slice(from, to);
 
     const favoriteListings = await Promise.all(
-      pagedFavorites.map(async (favorite) => {
+      pagedFavorites.map(async (fav) => {
         const { data } = await supabase
           .from('listings')
           .select('*')
-          .eq('id', favorite.listing_id)
+          .eq('id', fav.listing_id)
           .single();
         return data;
       })
@@ -438,48 +439,44 @@
       return;
     }
 
-listings.forEach(listing => {
-  const card = document.createElement("div");
-  card.className = "result-card";
-  card.innerHTML = `
-    <img src="${listing.image_urls?.[0] || 'https://via.placeholder.com/400x220'}" alt="${listing.title}" />
-    <h3>${listing.title}</h3>
-    <div class="info">
-      <p><strong>Kategorie:</strong> ${capitalize(listing.category) || 'Unbekannt'}</p>
-      <p><strong>Preis pro Tag:</strong> ${listing.price_per_day || 'k. A.'} €</p>
-    </div>
-    <div class="btn-group">
-      <button onclick="window.location.href='mietobjekt.html?id=${listing.id}'">Details ansehen</button>
-      <button onclick="removeFromFavorites('${listing.id}', event)">Favorit entfernen</button>
-    </div>
-  `;
-  container.appendChild(card);
-});
-    
+    listings.forEach(listing => {
+      const card = document.createElement("div");
+      card.className = "result-card";
+      card.innerHTML = `
+        <img src="${listing.image_urls?.[0] || 'https://via.placeholder.com/400x220'}" alt="${listing.title}" />
+        <h3>${listing.title}</h3>
+        <div class="info">
+          <p><strong>Kategorie:</strong> ${capitalize(listing.category) || 'Unbekannt'}</p>
+          <p><strong>Preis pro Tag:</strong> ${listing.price_per_day || 'k. A.'} €</p>
+        </div>
+        <div class="btn-group">
+          <button onclick="window.location.href='mietobjekt.html?id=${listing.id}'">Details ansehen</button>
+          <button onclick="removeFromFavorites('${listing.id}', event)">Favorit entfernen</button>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+
+    // Pagination
     const pagination = document.createElement("div");
     pagination.style.cssText = "grid-column:1/-1; display:flex; justify-content:center; gap:10px; margin-top:20px;";
-
     const totalPages = Math.ceil(totalCount / pageSize);
 
     if (page > 1) {
       const prevBtn = document.createElement("button");
       prevBtn.textContent = "← Zurück";
-      prevBtn.onclick = () => {
-        currentPage--;
-        loadFavorites(currentPage);
-      };
+      prevBtn.onclick = () => { currentPage--; loadFavorites(currentPage); };
       pagination.appendChild(prevBtn);
     }
 
-    pagination.appendChild(document.createTextNode(`Seite ${page} von ${totalPages}`));
+    const pageIndicator = document.createElement("span");
+    pageIndicator.textContent = `Seite ${page} von ${totalPages}`;
+    pagination.appendChild(pageIndicator);
 
     if (page < totalPages) {
       const nextBtn = document.createElement("button");
       nextBtn.textContent = "Weiter →";
-      nextBtn.onclick = () => {
-        currentPage++;
-        loadFavorites(currentPage);
-      };
+      nextBtn.onclick = () => { currentPage++; loadFavorites(currentPage); };
       pagination.appendChild(nextBtn);
     }
 
@@ -489,7 +486,6 @@ listings.forEach(listing => {
   async function removeFromFavorites(listingId, event) {
     event.preventDefault();
     event.stopPropagation();
-
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
@@ -499,15 +495,16 @@ listings.forEach(listing => {
       .eq('user_id', user.id)
       .eq('listing_id', listingId);
 
-    setTimeout(() => loadFavorites(currentPage), 300);
+    loadFavorites(currentPage);
   }
 
   function capitalize(str) {
     return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
   }
 
-  loadFavorites();
   updateNav();
+  loadFavorites(currentPage);
 </script>
+
 </body>
 </html>
