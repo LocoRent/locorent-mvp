@@ -533,16 +533,20 @@
   </style>
 </footer>
 <script>
-const supabase = window.supabase.createClient(
-  'https://flnjalgqtkqycsaymmbd.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-);
+/* ===== SUPABASE INIT ===== */
+if (!window.supabaseClient) {
+  window.supabaseClient = window.supabase.createClient(
+    'https://flnjalgqtkqycsaymmbd.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+  );
+}
+const supabase = window.supabaseClient;
 
+/* ===== GLOBALS ===== */
 let uploadedImageFiles = [];
 let selectedAddressData = null;
 let userSession = null;
 
-// Kategorie Mapping
 const categoryMap = {
   "anhaenger-transportmittel": "Anhänger & Transportmittel",
   "audio-dj-equipment": "Audio & DJ-Equipment",
@@ -573,7 +577,7 @@ const categoryMap = {
   "sonstiges": "Sonstiges"
 };
 
-// ===== NAVIGATION =====
+/* ===== NAVIGATION ===== */
 function updateNav() {
   const nav = document.getElementById('main-nav');
   if (!nav) return;
@@ -596,7 +600,7 @@ async function logout(event) {
   window.location.href = "login.html";
 }
 
-// ===== BURGER MENU =====
+/* ===== BURGER MENU ===== */
 document.getElementById("nav-toggle").addEventListener("click", function () {
   const nav = document.getElementById("main-nav");
   nav.classList.toggle("show");
@@ -604,7 +608,7 @@ document.getElementById("nav-toggle").addEventListener("click", function () {
   this.setAttribute("aria-expanded", !expanded);
 });
 
-// ===== IMAGE UPLOAD =====
+/* ===== IMAGE UPLOAD ===== */
 document.getElementById("dropzone").addEventListener("click", () => {
   if (uploadedImageFiles.length >= 1) return alert("Nur 1 Bild erlaubt.");
   const input = document.createElement("input");
@@ -656,7 +660,7 @@ function renderPreviews() {
   });
 }
 
-// ===== LOCATION SUGGESTIONS =====
+/* ===== LOCATION SUGGESTIONS ===== */
 const locationInput = document.getElementById('location-input');
 const suggestionBox = document.getElementById('suggestions');
 
@@ -691,17 +695,15 @@ locationInput.addEventListener('input', async () => {
   }
 });
 
-// ===== CREATE LISTING =====
+/* ===== CREATE LISTING ===== */
 document.getElementById("save-btn").addEventListener("click", async () => {
   const { data: sd } = await supabase.auth.getSession();
   const user = sd?.session?.user;
   if (!user) return alert("Nicht eingeloggt!");
 
-  // Max 10 Inserate
   const { data: existingListings } = await supabase.from('listings').select('id').eq('user_id', user.id);
   if (existingListings?.length >= 10) return alert("Maximal 10 Inserate erlaubt.");
 
-  // Profil prüfen
   const { data: profile } = await supabase.from('profiles').select('name, city').eq('id', user.id).single();
   if (!profile?.name || !profile?.city) {
     const warningEl = document.getElementById('profile-warning');
@@ -711,7 +713,6 @@ document.getElementById("save-btn").addEventListener("click", async () => {
     return;
   }
 
-  // Felder prüfen
   const title = document.getElementById('title-input').value.trim();
   const category = document.getElementById('category-input').value;
   const price = parseFloat(document.getElementById('price-input').value);
@@ -720,7 +721,6 @@ document.getElementById("save-btn").addEventListener("click", async () => {
   if (!title || !price || !category || !location) return alert("Bitte alle Pflichtfelder ausfüllen.");
   if (!selectedAddressData) return alert("Bitte einen Ort aus der Vorschlagsliste wählen.");
 
-  // Bilder hochladen
   let uploadedImageUrls = [];
   for (let file of uploadedImageFiles) {
     const compressed = await imageCompression(file, { maxSizeMB:0.5, maxWidthOrHeight:800, useWebWorker:true });
@@ -749,7 +749,7 @@ document.getElementById("save-btn").addEventListener("click", async () => {
   loadGallery();
 });
 
-// ===== LOAD GALLERY =====
+/* ===== LOAD GALLERY ===== */
 async function loadGallery() {
   const { data: sd } = await supabase.auth.getSession();
   userSession = sd?.session;
@@ -785,7 +785,7 @@ async function loadGallery() {
   });
 }
 
-// ===== DELETE LISTING =====
+/* ===== DELETE LISTING ===== */
 async function deleteListing(id) {
   if (!confirm("Wirklich löschen?")) return;
   const { data: listing } = await supabase.from('listings').select('image_urls').eq('id', id).single();
