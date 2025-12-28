@@ -355,117 +355,104 @@
   <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
 </footer>
 <script>
-const supabase = window.supabase.createClient(
-  'https://flnjalgqtkqycsaymmbd.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-);
+/* ===== SUPABASE INIT ===== */
+if (!window.supabaseClient) {
+  window.supabaseClient = window.supabase.createClient(
+    'https://flnjalgqtkqycsaymmbd.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+  );
+}
+var supabase = window.supabaseClient;
 
+/* ===== NAVIGATION ===== */
+async function updateNav() {
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    const nav = document.getElementById("nav-links");
+    nav.innerHTML = session?.user ? `
+      <a href="index.html">Start</a>
+      <a href="profil.html">Mein Profil</a>
+      <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+      <a href="favoriten.html">Meine Favoriten</a>
+      <a href="inserate.html">Meine Inserate</a>
+      <a href="#" onclick="logout(event)">Logout</a>
+    ` : `
+      <a href="index.html">Start</a>
+      <a href="login.html">Einloggen</a>
+    `;
+  } catch (err) {
+    console.error("Fehler beim Laden der Navigation:", err);
+  }
+}
+
+/* ===== LOGOUT ===== */
+async function logout(event) {
+  event.preventDefault();
+  try {
+    await supabase.auth.signOut();
+    window.location.href = "login.html";
+  } catch (err) {
+    console.error("Fehler beim Logout:", err);
+  }
+}
+
+/* ===== MOBILE NAV TOGGLE ===== */
+document.getElementById("nav-toggle").addEventListener("click", () => {
+  const nav = document.getElementById("nav-links");
+  nav.classList.toggle("show");
+  document.getElementById("nav-toggle").setAttribute("aria-expanded", nav.classList.contains("show"));
+});
+
+/* ===== FAVORITEN HANDLING ===== */
 let currentPage = 1;
 const pageSize = 24;
 
-// Kategorie-Mapping
-const categoryMap = {
-  "anhaenger-transportmittel": "Anhänger & Transportmittel",
-  "audio-dj-equipment": "Audio & DJ-Equipment",
-  "auto-suv": "Auto & SUV",
-  "basteln-diy": "Basteln & DIY",
-  "beauty": "Beauty",
-  "brettspiele-spielzeug": "Brettspiele & Spielzeug",
-  "camping-wandern": "Camping & Wandern",
-  "computer-laptops": "Computer & Laptops",
-  "drohnen-modellbau": "Drohnen & Modellbau",
-  "event-partyausstattung": "Event- & Partyausstattung",
-  "fitnessgeraete": "Fitnessgeräte",
-  "foto-film-kameraequipment": "Foto-, Film- & Kameraequipment",
-  "gaming-unterhaltung": "Gaming & Unterhaltung",
-  "garten-aussenbereich": "Garten & Außenbereich",
-  "fahrrad-ebike": "Fahrrad & E-Bike",
-  "kursraeume-seminarraum": "Kursräume & Seminarraum",
-  "medien-kultur": "Medien & Kultur",
-  "motorrad-roller": "Motorrad & Roller",
-  "musikinstrumente": "Musikinstrumente",
-  "smartphones-tablets": "Smartphones & Tablets",
-  "sport": "Sport",
-  "tiere": "Tiere",
-  "wohnmobil-camper": "Wohnmobil & Camper",
-  "boote-wassersport": "Boote & Wassersport",
-  "mode-accessoires": "Mode & Accessoires",
-  "werkzeuge-maschinen": "Werkzeuge & Maschinen",
-  "sonstiges": "Sonstiges"
-};
-
-// Burger-Menü
-document.getElementById('nav-toggle').addEventListener('click', () => {
-  const nav = document.getElementById('nav-links');
-  nav.classList.toggle('show');
-  document.getElementById('nav-toggle').setAttribute('aria-expanded', nav.classList.contains('show'));
-});
-
-// Logout
-async function logout(event) {
-  event.preventDefault();
-  await supabase.auth.signOut();
-  window.location.href = "login.html";
-}
-
-// Navigation aktualisieren
-async function updateNav() {
-  const { data: { session } } = await supabase.auth.getSession();
-  const nav = document.getElementById('nav-links');
-  nav.innerHTML = session?.user ? `
-    <a href="index.html">Start</a>
-    <a href="profil.html">Mein Profil</a>
-    <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-    <a href="favoriten.html">Meine Favoriten</a>
-    <a href="inserate.html">Meine Inserate</a>
-    <a href="#" onclick="logout(event)">Logout</a>
-  ` : `
-    <a href="index.html">Start</a>
-    <a href="login.html">Einloggen</a>
-  `;
-}
-
-// Favoriten laden
 async function loadFavorites(page = 1) {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return window.location.href = "login.html";
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      window.location.href = "login.html";
+      return;
+    }
 
-  const { data: favorites, error } = await supabase
-    .from('favorites')
-    .select('listing_id', { count: 'exact' })
-    .eq('user_id', user.id);
+    const { data: favorites, error } = await supabase
+      .from('favorites')
+      .select('listing_id', { count: 'exact' })
+      .eq('user_id', user.id);
 
-  if (error || !favorites.length) {
-    document.getElementById('favorites-list').innerHTML = "<p>Du hast noch keine Favoriten.</p>";
-    return;
+    if (error || !favorites.length) {
+      document.getElementById('favorites-list').innerHTML = "<p>Du hast noch keine Favoriten.</p>";
+      return;
+    }
+
+    const totalCount = favorites.length;
+    const from = (page - 1) * pageSize;
+    const to = from + pageSize;
+
+    const pagedFavorites = favorites.slice(from, to);
+
+    const favoriteListings = await Promise.all(
+      pagedFavorites.map(async (favorite) => {
+        const { data } = await supabase
+          .from('listings')
+          .select('*')
+          .eq('id', favorite.listing_id)
+          .single();
+        return data;
+      })
+    );
+
+    renderFavorites(favoriteListings, totalCount, page);
+  } catch (err) {
+    console.error("Fehler beim Laden der Favoriten:", err);
   }
-
-  const totalCount = favorites.length;
-  const from = (page - 1) * pageSize;
-  const to = from + pageSize;
-
-  const pagedFavorites = favorites.slice(from, to);
-
-  const favoriteListings = await Promise.all(
-    pagedFavorites.map(async (fav) => {
-      const { data } = await supabase
-        .from('listings')
-        .select('*')
-        .eq('id', fav.listing_id)
-        .single();
-      return data;
-    })
-  );
-
-  renderFavorites(favoriteListings, totalCount, page);
 }
 
-// Favoriten rendern
 function renderFavorites(listings, totalCount, page) {
   const container = document.getElementById("favorites-list");
   container.innerHTML = "";
 
-  if (listings.length === 0) {
+  if (!listings.length) {
     container.innerHTML = "<p>Keine Favoriten auf dieser Seite.</p>";
     return;
   }
@@ -477,7 +464,7 @@ function renderFavorites(listings, totalCount, page) {
       <img src="${listing.image_urls?.[0] || 'https://via.placeholder.com/400x220'}" alt="${listing.title}" />
       <h3>${listing.title}</h3>
       <div class="info">
-        <p><strong>Kategorie:</strong> ${categoryMap[listing.category] || 'Unbekannt'}</p>
+        <p><strong>Kategorie:</strong> ${capitalize(listing.category) || 'Unbekannt'}</p>
         <p><strong>Preis pro Tag:</strong> ${listing.price_per_day || 'k. A.'} €</p>
       </div>
       <div class="btn-group">
@@ -512,28 +499,32 @@ function renderFavorites(listings, totalCount, page) {
   container.appendChild(pagination);
 }
 
-// Favoriten entfernen
 async function removeFromFavorites(listingId, event) {
   event.preventDefault();
   event.stopPropagation();
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
 
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return;
+    await supabase
+      .from('favorites')
+      .delete()
+      .eq('user_id', user.id)
+      .eq('listing_id', listingId);
 
-  await supabase
-    .from('favorites')
-    .delete()
-    .eq('user_id', user.id)
-    .eq('listing_id', listingId);
-
-  loadFavorites(currentPage);
+    setTimeout(() => loadFavorites(currentPage), 300);
+  } catch (err) {
+    console.error("Fehler beim Entfernen des Favoriten:", err);
+  }
 }
 
-// Seite laden
-window.addEventListener('DOMContentLoaded', () => {
-  updateNav();
-  loadFavorites();
-});
+function capitalize(str) {
+  return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
+}
+
+/* ===== INITIAL LOAD ===== */
+updateNav();
+loadFavorites();
 </script>
 
 </body>
