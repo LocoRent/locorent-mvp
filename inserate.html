@@ -532,271 +532,77 @@
     }
   </style>
 </footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const supabase = window.supabase.createClient(
-  'https://flnjalgqtkqycsaymmbd.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-);
+  // Supabase Client initialisieren
+  const supabase = window.supabase.createClient(
+    "https://flnjalgqtkqycsaymmbd.supabase.co",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q"
+  );
 
-let userSession = null;
-let uploadedImageFiles = [];
-let selectedAddressData = null;
-
-// Kategorie-Mapping
-const categoryMap = {
-  "anhaenger-transportmittel": "Anhänger & Transportmittel",
-  "audio-dj-equipment": "Audio & DJ-Equipment",
-  "auto-suv": "Auto & SUV",
-  "basteln-diy": "Basteln & DIY",
-  "beauty": "Beauty",
-  "brettspiele-spielzeug": "Brettspiele & Spielzeug",
-  "camping-wandern": "Camping & Wandern",
-  "computer-laptops": "Computer & Laptops",
-  "drohnen-modellbau": "Drohnen & Modellbau",
-  "event-partyausstattung": "Event- & Partyausstattung",
-  "fitnessgeraete": "Fitnessgeräte",
-  "foto-film-kameraequipment": "Foto-, Film- & Kameraequipment",
-  "gaming-unterhaltung": "Gaming & Unterhaltung",
-  "garten-aussenbereich": "Garten & Außenbereich",
-  "fahrrad-ebike": "Fahrrad & E-Bike",
-  "kursraeume-seminarraum": "Kursräume & Seminarraum",
-  "medien-kultur": "Medien & Kultur",
-  "motorrad-roller": "Motorrad & Roller",
-  "musikinstrumente": "Musikinstrumente",
-  "smartphones-tablets": "Smartphones & Tablets",
-  "sport": "Sport",
-  "tiere": "Tiere",
-  "werkzeuge-maschinen": "Werkzeuge & Maschinen",
-  "wohnmobil-camper": "Wohnmobil & Camper",
-  "boote-wassersport": "Boote & Wassersport",
-  "mode-accessoires": "Mode & Accessoires",
-  "sonstiges": "Sonstiges"
-};
-
-// ---------- Initialisierung ----------
-async function init() {
-  const { data: { session } } = await supabase.auth.getSession();
-  userSession = session;
-  updateNav();
-  loadGallery();
-}
-init();
-
-// ---------- Navigation ----------
-function updateNav() {
-  const nav = document.getElementById('main-nav');
-  if (!nav) return;
-  nav.innerHTML = userSession?.user ? `
-    <a href="index.html">Start</a>
-    <a href="profil.html">Mein Profil</a>
-    <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-    <a href="favoriten.html">Meine Favoriten</a>
-    <a href="inserate.html">Meine Inserate</a>
-    <a href="#" onclick="logout(event)">Logout</a>
-  ` : `
-    <a href="index.html">Start</a>
-    <a href="login.html">Einloggen</a>
-  `;
-}
-
-async function logout(event) {
-  event.preventDefault();
-  await supabase.auth.signOut();
-  window.location.href = "login.html";
-}
-
-// ---------- Burger-Menü ----------
-document.getElementById("nav-toggle").addEventListener("click", function() {
-  const nav = document.getElementById("main-nav");
-  nav.classList.toggle("show");
-  const expanded = this.getAttribute("aria-expanded") === "true";
-  this.setAttribute("aria-expanded", !expanded);
-});
-
-// ---------- Bild Upload ----------
-const dropzone = document.getElementById("dropzone");
-dropzone.addEventListener("click", () => {
-  if (uploadedImageFiles.length >= 1) return alert("Nur 1 Bild erlaubt.");
-  const input = document.createElement("input");
-  input.type = "file";
-  input.accept = "image/*";
-  input.onchange = () => handleFiles(input.files);
-  input.click();
-});
-
-async function handleFiles(files) {
-  for (let file of files) {
-    if (uploadedImageFiles.length >= 1) break;
-    if (!file.type.startsWith("image/")) continue;
-    uploadedImageFiles.push(file);
+  // Session prüfen – wie beim Login
+  async function checkLoggedIn() {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) {
+      window.location.href = "login.html";
+    }
   }
-  renderPreviews();
-}
+  checkLoggedIn();
 
-function removePreview(index) {
-  uploadedImageFiles.splice(index, 1);
-  renderPreviews();
-}
+  // Form – Produkt erstellen (minimal – wie Login)
+  const form = document.getElementById("product-form");
+  const messageBox = document.getElementById("message");
 
-function renderPreviews() {
-  const container = document.getElementById("preview-gallery");
-  container.innerHTML = '';
-  uploadedImageFiles.forEach((file, i) => {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      const box = document.createElement("div");
-      box.className = "preview-box";
-      box.innerHTML = `
-        <div class="img-wrapper"><img src="${e.target.result}" /></div>
-        <button class="remove-btn" onclick="removePreview(${i})">×</button>
-      `;
-      container.appendChild(box);
-    };
-    reader.readAsDataURL(file);
-  });
-}
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    showMessage("");
 
-// ---------- Ortssuche ----------
-const locationInput = document.getElementById('location-input');
-const suggestionBox = document.getElementById('suggestions');
+    const title = document.getElementById("title").value.trim();
+    const description = document.getElementById("description").value.trim();
+    const price = document.getElementById("price").value.trim();
+    const location = document.getElementById("location").value.trim();
+    const category = document.getElementById("category").value.trim();
 
-locationInput.addEventListener('input', async (e) => {
-  const value = e.target.value.trim();
-  if (value.length < 2) return suggestionBox.innerHTML = '';
+    if (!title || !price || !location || !category) {
+      return showMessage("❌ Bitte alle Pflichtfelder ausfüllen.", "error");
+    }
 
-  try {
-    const res = await fetch(`https://corsproxy.io/?https://nominatim.openstreetmap.org/search?format=json&accept-language=de&addressdetails=1&countrycodes=de&limit=8&q=${encodeURIComponent(value)}`);
-    const results = await res.json();
-    suggestionBox.innerHTML = '';
-
-    results.filter(r => r.lat && r.lon && r.address).forEach(r => {
-      const ort = r.address.city || r.address.town || r.address.village || r.address.hamlet || r.address.municipality || r.display_name.split(',')[0];
-      const plz = r.address.postcode || '';
-      const display = [ort, r.address.state, r.address.country].filter(Boolean).join(', ');
-
-      const div = document.createElement('div');
-      div.textContent = display;
-      div.onclick = () => {
-        locationInput.value = display;
-        selectedAddressData = { postal_code: plz, city: ort, location: display, lat: parseFloat(r.lat), lon: parseFloat(r.lon) };
-        suggestionBox.innerHTML = '';
-      };
-      suggestionBox.appendChild(div);
-    });
-
-    if (suggestionBox.innerHTML === '') suggestionBox.innerHTML = '<div style="padding:0.5rem;">Kein Ort gefunden</div>';
-  } catch(err) {
-    console.error("Ortssuche-Fehler:", err);
-  }
-});
-
-// ---------- Inserat speichern ----------
-document.getElementById("save-btn").addEventListener("click", async () => {
-  if (!userSession?.user) return alert("Nicht eingeloggt!");
-  const user = userSession.user;
-
-  // Prüfen Profil
-  const { data: profile, error: profileError } = await supabase.from('profiles').select('name, city').eq('id', user.id).single();
-  if (profileError || !profile?.name || !profile?.city) {
-    const warningEl = document.getElementById('profile-warning');
-    warningEl.textContent = "Bitte fülle dein Profil aus (Name & Ort).";
-    warningEl.style.display = "block";
-    setTimeout(() => window.location.href = "profil.html", 4000);
-    return;
-  }
-
-  const title = document.getElementById('title-input').value.trim();
-  const category = document.getElementById('category-input').value;
-  const price = parseFloat(document.getElementById('price-input').value);
-  const description = document.getElementById('desc-input').value.trim();
-  const location = document.getElementById('location-input').value.trim();
-
-  if (!title || !price || !category || !location) return alert("Bitte alle Pflichtfelder ausfüllen.");
-  if (!selectedAddressData) return alert("Bitte einen Ort aus der Vorschlagsliste wählen.");
-
-  // Bilder hochladen
-  const uploadedImageUrls = [];
-  for (let file of uploadedImageFiles) {
-    const compressed = await imageCompression(file, { maxSizeMB: 0.5, maxWidthOrHeight: 800, useWebWorker: true });
-    if (compressed.size > 2*1024*1024) continue;
-
-    const path = `${Date.now()}-${file.name.replace(/\s+/g,'-')}`;
-    const { error } = await supabase.storage.from('listing-images').upload(path, compressed);
-    if (error) { console.error(error); continue; }
-
-    const { data } = supabase.storage.from('listing-images').getPublicUrl(path);
-    uploadedImageUrls.push(data.publicUrl);
-  }
-
-  // Inserat speichern
-  const { postal_code, city, lat, lon } = selectedAddressData;
-  const { error: insertError } = await supabase.from('listings').insert({
-    title, category, price_per_day: price, description, user_id: user.id,
-    image_urls: uploadedImageUrls, latitude: lat, longitude: lon,
-    location, postal_code, city
-  });
-
-  if (insertError) return alert("Fehler beim Speichern: " + insertError.message);
-  alert("Inserat gespeichert!");
-  uploadedImageFiles = [];
-  selectedAddressData = null;
-  renderPreviews();
-  document.querySelectorAll('input, textarea, select').forEach(el => el.value = '');
-  loadGallery();
-});
-
-// ---------- Galerie laden ----------
-async function loadGallery() {
-  if (!userSession?.user) return;
-
-  const { data: listings, error } = await supabase.from('listings').select('*').eq('user_id', userSession.user.id).order('created_at', { ascending: false });
-  const gallery = document.getElementById('gallery');
-  if (error) return gallery.innerHTML = '<p>Fehler beim Laden der Inserate.</p>';
-  if (listings.length === 0) return gallery.innerHTML = '<p>Du hast noch keine Inserate.</p>';
-
-  gallery.innerHTML = '';
-  listings.forEach(i => {
-    const img = i.image_urls?.[0] || 'https://via.placeholder.com/300x150?text=Kein+Bild';
-    const categoryFormatted = categoryMap[i.category] || "Unbekannt";
-    const div = document.createElement('div');
-    div.className = 'card';
-    div.innerHTML = `
-      <img src="${img}" alt="${i.title}">
-      <div class="card-content">
-        <h3>${i.title}</h3>
-        <p class="category"><strong>Kategorie:</strong> ${categoryFormatted}</p>
-        <p class="price"><strong>Preis pro Tag:</strong> ${i.price_per_day} €</p>
-      </div>
-      <div class="actions">
-        <button onclick="window.location.href='bearbeiten.html?id=${i.id}'">Bearbeiten</button>
-        <button class="delete" onclick="deleteListing('${i.id}')">Löschen</button>
-      </div>`;
-    gallery.appendChild(div);
-  });
-}
-
-// ---------- Inserat löschen ----------
-async function deleteListing(id) {
-  if (!confirm("Wirklich löschen?")) return;
-
-  const { data: listing, error: fetchErr } = await supabase.from('listings').select('image_urls').eq('id', id).single();
-  if (fetchErr) return alert("Fehler beim Abrufen: " + fetchErr.message);
-
-  const filesToDelete = (listing.image_urls || []).map(url => {
     try {
-      const urlObj = new URL(url);
-      return urlObj.pathname.replace(/^\/storage\/v1\/object\/public\/listing-images\//, '');
-    } catch { return null; }
-  }).filter(Boolean);
+      // get session user
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        return window.location.href = "login.html";
+      }
 
-  if (filesToDelete.length > 0) {
-    await supabase.storage.from('listing-images').remove(filesToDelete);
+      const user = session.user;
+
+      // Daten speichern
+      const { error } = await supabase.from("products").insert([{
+        user_id: user.id,
+        title,
+        description,
+        price_per_day: price,
+        location,
+        category
+      }]);
+
+      if (error) return showMessage("❌ " + error.message, "error");
+
+      showMessage("✅ Inserat erstellt! Weiterleitung...", "success");
+      setTimeout(() => window.location.href = "index.html", 1100);
+
+    } catch (err) {
+      console.error(err);
+      showMessage("❌ Unerwarteter Fehler: " + err.message, "error");
+    }
+  });
+
+  function showMessage(text, type = "") {
+    if (!messageBox) return;
+    messageBox.textContent = text;
+    messageBox.className = "message";
+    if (type) messageBox.classList.add(type);
   }
-
-  const { error } = await supabase.from('listings').delete().eq('id', id);
-  if (error) alert("Fehler beim Löschen des Inserats.");
-  else loadGallery();
-}
 </script>
 
 </body>
