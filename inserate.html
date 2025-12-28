@@ -532,77 +532,112 @@
     }
   </style>
 </footer>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  // Supabase Client initialisieren
-  const supabase = window.supabase.createClient(
-    "https://flnjalgqtkqycsaymmbd.supabase.co",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q"
-  );
+/* ------------------ SUPABASE INIT ------------------ */
+const SUPABASE_URL = "https://flnjalgqtkqycsaymmbd.supabase.co";
+const SUPABASE_ANON =
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q";
 
-  // Session prüfen – wie beim Login
-  async function checkLoggedIn() {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session?.user) {
-      window.location.href = "login.html";
-    }
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+let userSession = null;
+
+/* ------------------ INIT (Session prüfen) ------------------ */
+async function init() {
+  const { data, error } = await supabase.auth.getSession();
+  userSession = data?.session;
+  updateNav();
+
+  if (!userSession?.user) {
+    alert("Bitte zuerst einloggen.");
+    window.location.href = "login.html";
+    return;
   }
-  checkLoggedIn();
 
-  // Form – Produkt erstellen (minimal – wie Login)
-  const form = document.getElementById("product-form");
-  const messageBox = document.getElementById("message");
+  loadGallery();
+}
+document.addEventListener("DOMContentLoaded", init);
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    showMessage("");
+/* ------------------ NAVIGATION DYNAMIC ------------------ */
+function updateNav() {
+  const nav = document.getElementById("main-nav");
+  if (!nav) return;
 
-    const title = document.getElementById("title").value.trim();
-    const description = document.getElementById("description").value.trim();
-    const price = document.getElementById("price").value.trim();
-    const location = document.getElementById("location").value.trim();
-    const category = document.getElementById("category").value.trim();
+  nav.innerHTML = userSession?.user ? `
+    <a href="index.html">Start</a>
+    <a href="profil.html">Mein Profil</a>
+    <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+    <a href="favoriten.html">Meine Favoriten</a>
+    <a href="inserate.html">Meine Inserate</a>
+    <a href="#" onclick="logout(event)">Logout</a>
+  ` : `
+    <a href="index.html">Start</a>
+    <a href="login.html">Einloggen</a>
+  `;
+}
 
-    if (!title || !price || !location || !category) {
-      return showMessage("❌ Bitte alle Pflichtfelder ausfüllen.", "error");
-    }
+/* ------------------ LOGOUT ------------------ */
+async function logout(e) {
+  e.preventDefault();
+  await supabase.auth.signOut();
+  window.location.href = "login.html";
+}
 
-    try {
-      // get session user
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        return window.location.href = "login.html";
-      }
+/* ------------------ INSERATE LADEN ------------------ */
+async function loadGallery() {
+  const gallery = document.getElementById("gallery");
+  if (!gallery) return;
+  gallery.innerHTML = `<div class="loader"></div>`;
 
-      const user = session.user;
+  const { data, error } = await supabase
+    .from("listings")
+    .select("*")
+    .eq("user_id", userSession.user.id)
+    .order("created_at", { ascending: false });
 
-      // Daten speichern
-      const { error } = await supabase.from("products").insert([{
-        user_id: user.id,
-        title,
-        description,
-        price_per_day: price,
-        location,
-        category
-      }]);
-
-      if (error) return showMessage("❌ " + error.message, "error");
-
-      showMessage("✅ Inserat erstellt! Weiterleitung...", "success");
-      setTimeout(() => window.location.href = "index.html", 1100);
-
-    } catch (err) {
-      console.error(err);
-      showMessage("❌ Unerwarteter Fehler: " + err.message, "error");
-    }
-  });
-
-  function showMessage(text, type = "") {
-    if (!messageBox) return;
-    messageBox.textContent = text;
-    messageBox.className = "message";
-    if (type) messageBox.classList.add(type);
+  if (error) {
+    gallery.innerHTML = `<p>Fehler beim Laden.</p>`;
+    return;
   }
+
+  if (!data.length) {
+    gallery.innerHTML = `<p>Keine Inserate vorhanden.</p>`;
+    return;
+  }
+
+  gallery.innerHTML = data
+    .map(item => {
+      let img = item.image_urls?.[0] ?? "https://via.placeholder.com/150";
+      return `
+      <div class="card">
+        <img src="${img}" />
+        <div class="card-content">
+          <h3>${item.title}</h3>
+          <p class="price">${item.price_per_day} €/Tag</p>
+          <p class="category">${item.category || ""}</p>
+        </div>
+        <div class="actions">
+          <button onclick="editListing('${item.id}')">Bearbeiten</button>
+          <button class="delete" onclick="deleteListing('${item.id}')">Löschen</button>
+        </div>
+      </div>
+      `;
+    })
+    .join("");
+}
+
+async function deleteListing(id) {
+  if (!confirm("Inserat wirklich löschen?")) return;
+
+  const { error } = await supabase.from("listings").delete().eq("id", id);
+  if (error) return alert("Fehler beim Löschen.");
+
+  loadGallery();
+}
+
+function editListing(id) {
+  window.location.href = `inserat-bearbeiten.html?id=${id}`;
+}
 </script>
 
 </body>
