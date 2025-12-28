@@ -403,13 +403,11 @@ if (!window.supabaseClient) {
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
   );
 }
-// benutze nur window.supabaseClient, keine neue Deklaration!
-const supabase = window.supabaseClient;
 
 /* ===== NAVIGATION ===== */
 async function updateNav() {
   try {
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { session } } = await window.supabaseClient.auth.getSession();
     const nav = document.getElementById("nav-links");
     nav.innerHTML = session?.user ? `
       <a href="index.html">Start</a>
@@ -431,7 +429,7 @@ async function updateNav() {
 async function logout(event) {
   event.preventDefault();
   try {
-    await supabase.auth.signOut();
+    await window.supabaseClient.auth.signOut();
     window.location.href = "login.html";
   } catch (err) {
     console.error("Fehler beim Logout:", err);
@@ -464,6 +462,5 @@ function initAccordion() {
   initAccordion();
 })();
 </script>
-
 </body>
 </html>
