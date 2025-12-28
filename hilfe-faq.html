@@ -446,7 +446,8 @@ document.getElementById("nav-toggle").addEventListener("click", () => {
 
 /* ===== ACCORDION LOGIC ===== */
 function initAccordion() {
-  document.querySelectorAll('.accordion-header').forEach(button => {
+  const headers = document.querySelectorAll('.accordion-header');
+  headers.forEach(button => {
     button.addEventListener('click', () => {
       const expanded = button.getAttribute('aria-expanded') === 'true';
       button.setAttribute('aria-expanded', !expanded);
