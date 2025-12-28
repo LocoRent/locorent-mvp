@@ -430,158 +430,150 @@ footer small {
   <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
 </footer>
 <script>
-/* ===== SUPABASE INIT ===== */
-if (!window.supabaseClient) {
-  window.supabaseClient = window.supabase.createClient(
+  const supabase = window.supabase.createClient(
     'https://flnjalgqtkqycsaymmbd.supabase.co',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGlHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
   );
-}
-var supabase = window.supabaseClient;
 
-/* ===== NAVIGATION ===== */
-document.getElementById("nav-toggle").addEventListener("click", () => {
-  const nav = document.getElementById("nav-links");
-  nav.classList.toggle("show");
-  document.getElementById("nav-toggle").setAttribute('aria-expanded', nav.classList.contains("show"));
-});
-
-async function updateNav() {
-  const { data: { session } } = await supabase.auth.getSession();
-  const nav = document.getElementById("nav-links");
-  nav.innerHTML = session?.user ? `
-    <a href="index.html">Start</a>
-    <a href="profil.html">Mein Profil</a>
-    <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-    <a href="favoriten.html">Meine Favoriten</a>
-    <a href="inserate.html">Meine Inserate</a>
-    <a href="#" onclick="logout(event)">Logout</a>
-  ` : `
-    <a href="index.html">Start</a>
-    <a href="login.html">Einloggen</a>
-  `;
-}
-
-async function logout(event) {
-  event.preventDefault();
-  await supabase.auth.signOut();
-  window.location.href = "login.html";
-}
-
-/* ===== REVIEWS HANDLING ===== */
-let reviews = [];
-let userId;
-let currentPage = 1;
-const reviewsPerPage = 5;
-let currentFilter = 'all';
-
-function renderStars(rating) {
-  let stars = "";
-  for (let i = 1; i <= 5; i++) stars += i <= rating ? "★" : "☆";
-  return `<span class="stars" aria-label="${rating} von 5 Sternen">${stars}</span>`;
-}
-
-function renderReviews(list) {
-  const filtered = currentFilter === 'all' ? list : list.filter(r => r.rating === parseInt(currentFilter));
-  const totalPages = Math.ceil(filtered.length / reviewsPerPage);
-  const start = (currentPage - 1) * reviewsPerPage;
-  const paginated = filtered.slice(start, start + reviewsPerPage);
-
-  if (paginated.length === 0) {
-    document.getElementById("review-list").innerHTML = "<p>Keine Bewertungen gefunden.</p>";
-    return;
+  async function updateNav() {
+    const { data: { session } } = await supabase.auth.getSession();
+    const nav = document.getElementById("nav-links");
+    nav.innerHTML = session?.user ? `
+      <a href="index.html">Start</a>
+      <a href="profil.html">Mein Profil</a>
+      <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+      <a href="favoriten.html">Meine Favoriten</a>
+      <a href="inserate.html">Meine Inserate</a>
+      <a href="#" onclick="logout(event)">Logout</a>
+    ` : `
+      <a href="index.html">Start</a>
+      <a href="login.html">Einloggen</a>
+    `;
   }
 
-  document.getElementById("review-list").innerHTML = paginated.map(r => {
-    const userInitials = r.from_user?.name ? r.from_user.name.split(' ').map(n => n[0]).join('').toUpperCase() : "?";
-    const date = new Date(r.created_at).toLocaleDateString();
-    return `
-      <article class="review-item" tabindex="0" aria-label="Bewertung von ${r.from_user?.name || 'Unbekannt'}, ${r.rating} von 5 Sternen">
-        <div class="avatar" aria-hidden="true">${userInitials}</div>
-        <div class="review-content">
-          <strong class="review-rating">${renderStars(r.rating)}</strong>
-          <p class="review-text">${r.comment}</p>
-          <div class="review-meta">Von <strong>${r.from_user?.name || 'Unbekannt'}</strong> am ${date}</div>
-        </div>
-      </article>`;
-  }).join('');
-
-  renderPagination(totalPages);
-}
-
-function renderPagination(totalPages) {
-  const container = document.getElementById("review-pagination") || document.createElement("div");
-  container.id = "review-pagination";
-  container.style.textAlign = "center";
-  container.style.marginTop = "1.5rem";
-
-  if (!document.getElementById("review-pagination")) {
-    document.getElementById("review-list").after(container);
+  async function logout(event) {
+    event.preventDefault();
+    await supabase.auth.signOut();
+    window.location.href = "login.html";
   }
 
-  if (totalPages <= 1) {
-    container.innerHTML = "";
-    return;
+  let reviews = [];
+  let userId;
+  let currentPage = 1;
+  const reviewsPerPage = 5;
+
+  function renderStars(rating) {
+    let stars = "";
+    for (let i = 1; i <= 5; i++) {
+      stars += i <= rating ? "★" : "☆";
+    }
+    return `<span class="stars" aria-label="${rating} von 5 Sternen">${stars}</span>`;
   }
 
-  container.innerHTML = Array.from({length: totalPages}, (_, i) => i + 1)
-    .map(page => `<button class="page-btn" ${page===currentPage?'disabled':''} onclick="goToPage(${page})">${page}</button>`)
-    .join(" ");
-}
+  function renderReviews() {
+    const totalPages = Math.ceil(reviews.length / reviewsPerPage);
+    const start = (currentPage - 1) * reviewsPerPage;
+    const paginated = reviews.slice(start, start + reviewsPerPage);
 
-function goToPage(page) {
-  currentPage = page;
-  renderReviews(reviews);
-}
+    if (paginated.length === 0) {
+      document.getElementById("review-list").innerHTML = "<p>Keine Bewertungen gefunden.</p>";
+      return;
+    }
 
-async function loadReviews() {
-  const params = new URLSearchParams(window.location.search);
-  userId = params.get("id");
-  if (!userId) {
-    document.getElementById("review-list").innerText = "Keine Vermieter-ID übergeben.";
-    return;
+    document.getElementById("review-list").innerHTML = paginated.map(r => {
+      const userInitials = r.from_user?.name 
+        ? r.from_user.name.split(' ').map(n => n[0]).join('').toUpperCase() 
+        : "?";
+      const date = new Date(r.created_at).toLocaleDateString();
+      return `
+        <article class="review-item" tabindex="0" aria-label="Bewertung von ${r.from_user?.name || 'Unbekannt'}, ${r.rating} von 5 Sternen">
+          <div class="avatar" aria-hidden="true">${userInitials}</div>
+          <div class="review-content">
+            <strong class="review-rating">${renderStars(r.rating)}</strong>
+            <p class="review-text">${r.comment}</p>
+            <div class="review-meta">Von <strong>${r.from_user?.name || 'Unbekannt'}</strong> am ${date}</div>
+          </div>
+        </article>`;
+    }).join('');
+
+    renderPagination(totalPages);
   }
-  document.getElementById("review-list").innerText = "⏳ Lade Bewertungen…";
 
-  const { data, error } = await supabase
-    .from("reviews")
-    .select("rating, comment, from_user_id, created_at, from_user:from_user_id(name)")
-    .eq("to_user_id", userId)
-    .order("created_at", { ascending: false });
+  function renderPagination(totalPages) {
+    const container = document.getElementById("review-pagination") || document.createElement("div");
+    container.id = "review-pagination";
+    container.style.textAlign = "center";
+    container.style.marginTop = "1.5rem";
 
-  if (error || !Array.isArray(data)) {
-    document.getElementById("review-list").innerHTML = "<p>Keine Bewertungen gefunden.</p>";
-    return;
+    if (!document.getElementById("review-pagination")) {
+      document.getElementById("review-list").after(container);
+    }
+
+    if (totalPages <= 1) {
+      container.innerHTML = "";
+      return;
+    }
+
+    container.innerHTML = Array.from({length: totalPages}, (_, i) => i + 1)
+      .map(page => `<button class="page-btn" ${page===currentPage?'disabled':''} onclick="goToPage(${page})">${page}</button>`)
+      .join(" ");
   }
 
-  reviews = data;
-  currentPage = 1;
-  renderReviews(reviews);
-}
+  function goToPage(page) {
+    currentPage = page;
+    renderReviews();
+  }
 
-function sortReviews(criteria) {
-  let sorted = [...reviews];
-  if (criteria === "highest") sorted.sort((a, b) => b.rating - a.rating);
-  else if (criteria === "lowest") sorted.sort((a, b) => a.rating - b.rating);
-  else sorted.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-  reviews = sorted;
-  currentPage = 1;
-  renderReviews(reviews);
-}
+  async function loadReviews() {
+    const params = new URLSearchParams(window.location.search);
+    userId = params.get("id");
+    if (!userId) {
+      document.getElementById("review-list").innerText = "Keine Vermieter-ID übergeben.";
+      return;
+    }
 
-/* ===== EVENT LISTENERS ===== */
-document.getElementById("sort-select").addEventListener("change", e => sortReviews(e.target.value));
-document.body.addEventListener("change", e => {
-  if (e.target.id === "star-filter") {
-    currentFilter = e.target.value;
+    document.getElementById("review-list").innerText = "⏳ Lade Bewertungen…";
+
+    // Zuerst Reviews ohne Join laden
+    const { data, error } = await supabase
+      .from("reviews")
+      .select("*")
+      .eq("to_user_id", userId)
+      .order("created_at", { ascending: false });
+
+    if (error || !Array.isArray(data)) {
+      document.getElementById("review-list").innerHTML = "<p>Keine Bewertungen gefunden.</p>";
+      return;
+    }
+
+    reviews = data;
+
+    // Usernamen separat laden
+    for (let r of reviews) {
+      if (r.from_user_id) {
+        const { data: userData } = await supabase
+          .from("profiles")
+          .select("name")
+          .eq("id", r.from_user_id)
+          .single();
+        r.from_user = userData || { name: "Unbekannt" };
+      } else {
+        r.from_user = { name: "Unbekannt" };
+      }
+    }
+
     currentPage = 1;
-    renderReviews(reviews);
+    renderReviews();
   }
-});
 
-/* ===== INITIAL LOAD ===== */
-updateNav();
-loadReviews();
+  document.getElementById("nav-toggle").addEventListener("click", () => {
+    const nav = document.getElementById("nav-links");
+    nav.classList.toggle("show");
+    document.getElementById("nav-toggle").setAttribute('aria-expanded', nav.classList.contains("show"));
+  });
+
+  updateNav();
+  loadReviews();
 </script>
 
 </body>
