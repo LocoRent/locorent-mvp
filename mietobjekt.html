@@ -239,23 +239,28 @@ footer small { display:block; margin-top:2rem; text-align:center; opacity:0.85; 
   </div>
   <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
 </footer>
-
 <script>
-const supabase = window.supabase.createClient(
-  'https://flnjalgqtkqycsaymmbd.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-);
+/* ===== SUPABASE INIT ===== */
+if (!window.supabaseClient) {
+  window.supabaseClient = window.supabase.createClient(
+    'https://flnjalgqtkqycsaymmbd.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+  );
+}
+var supabase = window.supabaseClient;
 
-let currentUser=null;
-let listingOwnerId=null;
-let isFavorite=false;
+/* ===== GLOBALS ===== */
+let currentUser = null;
+let listingOwnerId = null;
+let isFavorite = false;
 
-document.getElementById('nav-toggle').addEventListener('click',()=>{
-  const nav=document.getElementById('nav-links');
+document.getElementById('nav-toggle').addEventListener('click', () => {
+  const nav = document.getElementById('nav-links');
   nav.classList.toggle('show');
-  document.getElementById('nav-toggle').setAttribute('aria-expanded',nav.classList.contains('show'));
+  document.getElementById('nav-toggle').setAttribute('aria-expanded', nav.classList.contains('show'));
 });
-  // Kategorie-Mapping für die Preview-Boxen
+
+// Kategorie-Mapping
 const categoryMap = {
   "anhaenger-transportmittel": "Anhänger & Transportmittel",
   "audio-dj-equipment": "Audio & DJ-Equipment",
@@ -287,12 +292,14 @@ const categoryMap = {
   "sonstiges": "Sonstiges",
   "werkzeuge-maschinen": "Werkzeuge & Maschinen"
 };
-async function updateNav(){
-  const {data:{session}}=await supabase.auth.getSession();
-  const nav=document.getElementById('nav-links');
-  if(session?.user){
-    currentUser=session.user;
-    nav.innerHTML=`
+
+/* ===== NAVIGATION ===== */
+async function updateNav() {
+  const { data: { session } } = await supabase.auth.getSession();
+  const nav = document.getElementById('nav-links');
+  if (session?.user) {
+    currentUser = session.user;
+    nav.innerHTML = `
       <a href="index.html">Start</a>
       <a href="profil.html">Mein Profil</a>
       <a href="nachrichten-inbox.html">📨 Nachrichten</a>
@@ -300,32 +307,42 @@ async function updateNav(){
       <a href="inserate.html">Meine Inserate</a>
       <a href="#" onclick="logout()">Logout</a>
     `;
-  }else{
-    nav.innerHTML=`<a href="login.html">Einloggen</a><a href="register.html">Registrieren</a>`;
+  } else {
+    nav.innerHTML = `<a href="login.html">Einloggen</a><a href="register.html">Registrieren</a>`;
   }
 }
 
-async function logout(){await supabase.auth.signOut(); window.location.href="login.html";}
-function capitalize(str){return str?str.charAt(0).toUpperCase()+str.slice(1):'';}
-function formatDate(dateStr){if(!dateStr)return'Unbekannt';const d=new Date(dateStr);return d.toLocaleDateString('de-DE',{year:'numeric',month:'long',day:'numeric'});}
+async function logout() {
+  await supabase.auth.signOut();
+  window.location.href = "login.html";
+}
 
-async function loadListing(){
-  const params=new URLSearchParams(location.search);
-  const listingId=params.get('id');
-  const {data: listing, error}=await supabase.from('listings').select('*').eq('id',listingId).single();
-  if(error||!listing){document.getElementById('listing-details').innerHTML="<p>Fehler beim Laden des Inserats.</p>";return;}
-  listingOwnerId=listing.user_id;
-  const {data: profile}=await supabase.from('profiles').select('name,city,bio').eq('id',listing.user_id).single();
-  const images=listing.image_urls||(listing.image_url?[listing.image_url]:['https://via.placeholder.com/600x400?text=Kein+Bild']);
-  const thumbs=images.map((url,i)=>`<img src="${url}" class="${i===0?'active':''}" alt="Vorschaubild ${i+1}" onclick="switchImage('${url}',this)">`).join('');
-  document.getElementById('listing-details').innerHTML=`
+/* ===== LISTING FUNCTIONS ===== */
+function capitalize(str) { return str ? str.charAt(0).toUpperCase() + str.slice(1) : ''; }
+function formatDate(dateStr) { if (!dateStr) return 'Unbekannt'; const d = new Date(dateStr); return d.toLocaleDateString('de-DE', { year:'numeric', month:'long', day:'numeric' }); }
+
+async function loadListing() {
+  const params = new URLSearchParams(location.search);
+  const listingId = params.get('id');
+  const { data: listing, error } = await supabase.from('listings').select('*').eq('id', listingId).single();
+  if (error || !listing) {
+    document.getElementById('listing-details').innerHTML = "<p>Fehler beim Laden des Inserats.</p>";
+    return;
+  }
+
+  listingOwnerId = listing.user_id;
+  const { data: profile } = await supabase.from('profiles').select('name,city,bio').eq('id', listing.user_id).single();
+  const images = listing.image_urls || (listing.image_url ? [listing.image_url] : ['https://via.placeholder.com/600x400?text=Kein+Bild']);
+  const thumbs = images.map((url, i) => `<img src="${url}" class="${i===0?'active':''}" alt="Vorschaubild ${i+1}" onclick="switchImage('${url}',this)">`).join('');
+  
+  document.getElementById('listing-details').innerHTML = `
     <div class="gallery">
       <img src="${images[0]}" class="main-image" id="mainImage" alt="Bild des Mietobjekts"/>
-      ${images.length>1?`<div class="thumbnails">${thumbs}</div>`:''}
+      ${images.length>1 ? `<div class="thumbnails">${thumbs}</div>` : ''}
     </div>
     <div class="content">
       <h2>${listing.title}</h2>
-<p><strong>Kategorie:</strong> ${categoryMap[listing.category] || capitalize(listing.category)}</p>
+      <p><strong>Kategorie:</strong> ${categoryMap[listing.category] || capitalize(listing.category)}</p>
       <p><strong>Preis pro Tag:</strong> ${listing.price_per_day} €</p>
       <p><strong>Ort:</strong> ${listing.location||'–'}</p>
       <p><strong>Online seit:</strong> ${formatDate(listing.created_at)}</p>
@@ -341,41 +358,43 @@ async function loadListing(){
       <p><strong>Über mich:</strong> ${profile?.bio||'–'}</p>
     </div>
   `;
+
   if(currentUser) await updateFavoriteButton(listing.id);
 }
 
-function switchImage(url,element){
-  document.getElementById("mainImage").src=url;
-  document.querySelectorAll(".thumbnails img").forEach(img=>img.classList.remove("active"));
+function switchImage(url, element) {
+  document.getElementById("mainImage").src = url;
+  document.querySelectorAll(".thumbnails img").forEach(img => img.classList.remove("active"));
   element.classList.add("active");
 }
 
-async function updateFavoriteButton(listingId){
-  const { data } = await supabase.from('favorites').select('*').eq('user_id',currentUser.id).eq('listing_id',listingId).single();
-  isFavorite=!!data;
-  document.getElementById("add-to-favorites").textContent=isFavorite?"Aus Favoriten entfernen":"Zu Favoriten hinzufügen";
+async function updateFavoriteButton(listingId) {
+  const { data } = await supabase.from('favorites').select('*').eq('user_id', currentUser.id).eq('listing_id', listingId).single();
+  isFavorite = !!data;
+  document.getElementById("add-to-favorites").textContent = isFavorite ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufügen";
 }
 
-async function toggleFavorite(listingId){
+async function toggleFavorite(listingId) {
   if(!currentUser) return alert("Bitte einloggen.");
-  const btn=document.getElementById("add-to-favorites");
+  const btn = document.getElementById("add-to-favorites");
   if(isFavorite){
-    const { error }=await supabase.from('favorites').delete().eq('user_id',currentUser.id).eq('listing_id',listingId);
-    if(!error){isFavorite=false;btn.textContent="Zu Favoriten hinzufügen";} else alert("Fehler beim Entfernen aus Favoriten.");
-  }else{
-    const { error }=await supabase.from('favorites').insert({user_id:currentUser.id,listing_id:listingId});
-    if(!error){isFavorite=true;btn.textContent="Aus Favoriten entfernen";} else alert("Fehler beim Hinzufügen zu Favoriten.");
+    const { error } = await supabase.from('favorites').delete().eq('user_id', currentUser.id).eq('listing_id', listingId);
+    if(!error){ isFavorite=false; btn.textContent="Zu Favoriten hinzufügen"; } else alert("Fehler beim Entfernen aus Favoriten.");
+  } else {
+    const { error } = await supabase.from('favorites').insert({ user_id: currentUser.id, listing_id: listingId });
+    if(!error){ isFavorite=true; btn.textContent="Aus Favoriten entfernen"; } else alert("Fehler beim Hinzufügen zu Favoriten.");
   }
 }
 
-function goToChat(){
+function goToChat() {
   if(!currentUser) return alert("Bitte einloggen, um Nachrichten zu senden.");
-  const params=new URLSearchParams(location.search);
-  const listingId=params.get('id');
-  const chatWith=listingOwnerId;
-  window.location.href=`nachrichten.html?listing_id=${listingId}&with=${chatWith}`;
+  const params = new URLSearchParams(location.search);
+  const listingId = params.get('id');
+  const chatWith = listingOwnerId;
+  window.location.href = `nachrichten.html?listing_id=${listingId}&with=${chatWith}`;
 }
 
+/* ===== INITIAL LOAD ===== */
 updateNav();
 loadListing();
 </script>
