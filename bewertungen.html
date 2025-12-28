@@ -430,10 +430,7 @@ footer small {
   <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
 </footer>
 <script>
-  const supabase = window.supabase.createClient(
-    'https://flnjalgqtkqycsaymmbd.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGlHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-  );
+  // Keine erneute Supabase-Initialisierung! Es wird die bereits deklarierte Instanz verwendet.
 
   async function updateNav() {
     const { data: { session } } = await supabase.auth.getSession();
@@ -461,6 +458,7 @@ footer small {
   let userId;
   let currentPage = 1;
   const reviewsPerPage = 5;
+  let currentFilter = 'all';
 
   function renderStars(rating) {
     let stars = "";
@@ -470,10 +468,11 @@ footer small {
     return `<span class="stars" aria-label="${rating} von 5 Sternen">${stars}</span>`;
   }
 
-  function renderReviews() {
-    const totalPages = Math.ceil(reviews.length / reviewsPerPage);
+  function renderReviews(list) {
+    const filtered = currentFilter === 'all' ? list : list.filter(r => r.rating === parseInt(currentFilter));
+    const totalPages = Math.ceil(filtered.length / reviewsPerPage);
     const start = (currentPage - 1) * reviewsPerPage;
-    const paginated = reviews.slice(start, start + reviewsPerPage);
+    const paginated = filtered.slice(start, start + reviewsPerPage);
 
     if (paginated.length === 0) {
       document.getElementById("review-list").innerHTML = "<p>Keine Bewertungen gefunden.</p>";
@@ -481,9 +480,7 @@ footer small {
     }
 
     document.getElementById("review-list").innerHTML = paginated.map(r => {
-      const userInitials = r.from_user?.name 
-        ? r.from_user.name.split(' ').map(n => n[0]).join('').toUpperCase() 
-        : "?";
+      const userInitials = r.from_user?.name ? r.from_user.name.split(' ').map(n => n[0]).join('').toUpperCase() : "?";
       const date = new Date(r.created_at).toLocaleDateString();
       return `
         <article class="review-item" tabindex="0" aria-label="Bewertung von ${r.from_user?.name || 'Unbekannt'}, ${r.rating} von 5 Sternen">
@@ -521,7 +518,7 @@ footer small {
 
   function goToPage(page) {
     currentPage = page;
-    renderReviews();
+    renderReviews(reviews);
   }
 
   async function loadReviews() {
@@ -531,13 +528,11 @@ footer small {
       document.getElementById("review-list").innerText = "Keine Vermieter-ID übergeben.";
       return;
     }
-
     document.getElementById("review-list").innerText = "⏳ Lade Bewertungen…";
 
-    // Zuerst Reviews ohne Join laden
     const { data, error } = await supabase
       .from("reviews")
-      .select("*")
+      .select("rating, comment, from_user_id, created_at, from_user:from_user_id(name)")
       .eq("to_user_id", userId)
       .order("created_at", { ascending: false });
 
@@ -547,24 +542,32 @@ footer small {
     }
 
     reviews = data;
-
-    // Usernamen separat laden
-    for (let r of reviews) {
-      if (r.from_user_id) {
-        const { data: userData } = await supabase
-          .from("profiles")
-          .select("name")
-          .eq("id", r.from_user_id)
-          .single();
-        r.from_user = userData || { name: "Unbekannt" };
-      } else {
-        r.from_user = { name: "Unbekannt" };
-      }
-    }
-
     currentPage = 1;
-    renderReviews();
+    renderReviews(reviews);
   }
+
+  function sortReviews(criteria) {
+    let sorted = [...reviews];
+    if (criteria === "highest") {
+      sorted.sort((a, b) => b.rating - a.rating);
+    } else if (criteria === "lowest") {
+      sorted.sort((a, b) => a.rating - b.rating);
+    } else {
+      sorted.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    }
+    reviews = sorted;
+    currentPage = 1;
+    renderReviews(reviews);
+  }
+
+  document.getElementById("sort-select").addEventListener("change", e => sortReviews(e.target.value));
+  document.body.addEventListener("change", e => {
+    if (e.target.id === "star-filter") {
+      currentFilter = e.target.value;
+      currentPage = 1;
+      renderReviews(reviews);
+    }
+  });
 
   document.getElementById("nav-toggle").addEventListener("click", () => {
     const nav = document.getElementById("nav-links");
@@ -572,6 +575,7 @@ footer small {
     document.getElementById("nav-toggle").setAttribute('aria-expanded', nav.classList.contains("show"));
   });
 
+  // Initialisierung
   updateNav();
   loadReviews();
 </script>
