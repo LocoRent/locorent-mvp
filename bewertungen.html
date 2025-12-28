@@ -430,135 +430,114 @@ footer small {
   <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
 </footer>
 <script>
-  // Supabase einmalig initialisieren, global speichern
-  if (!window.supabaseClient) {
-    window.supabaseClient = supabase.createClient(
-      'https://flnjalgqtkqycsaymmbd.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGl7nvAyx3uxhQYNH_Q'
-    );
+/* ===== SUPABASE INIT ===== */
+if (!window.supabaseClient) {
+  window.supabaseClient = window.supabase.createClient(
+    'https://flnjalgqtkqycsaymmbd.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+  );
+}
+var supabase = window.supabaseClient;
+
+/* ===== NAVIGATION ===== */
+async function updateNav() {
+  const { data: { session } } = await supabase.auth.getSession();
+  const nav = document.getElementById("nav-links");
+  nav.innerHTML = session?.user ? `
+    <a href="index.html">Start</a>
+    <a href="profil.html">Mein Profil</a>
+    <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+    <a href="favoriten.html">Meine Favoriten</a>
+    <a href="inserate.html">Meine Inserate</a>
+    <a href="#" onclick="logout(event)">Logout</a>
+  ` : `
+    <a href="index.html">Start</a>
+    <a href="login.html">Einloggen</a>
+  `;
+}
+
+async function logout(event) {
+  event.preventDefault();
+  await supabase.auth.signOut();
+  window.location.href = "login.html";
+}
+
+document.getElementById("nav-toggle").addEventListener("click", () => {
+  const nav = document.getElementById("nav-links");
+  nav.classList.toggle("show");
+  document.getElementById("nav-toggle").setAttribute("aria-expanded", nav.classList.contains("show"));
+});
+
+/* ===== HILFSFUNKTIONEN ===== */
+function renderStars(rating) {
+  let stars = "";
+  for (let i = 1; i <= 5; i++) {
+    stars += i <= rating ? "★" : "☆";
   }
+  return `<span class="stars" aria-label="${rating} von 5 Sternen">${stars}</span>`;
+}
 
-  const supabaseClient = window.supabaseClient;
-  let reviews = [];
-  let userId;
-
-  // Navigation aktualisieren
-  async function updateNav() {
-    const { data: { session } } = await supabaseClient.auth.getSession();
-    const nav = document.getElementById("nav-links");
-    nav.innerHTML = session?.user ? `
-      <a href="index.html">Start</a>
-      <a href="profil.html">Mein Profil</a>
-      <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-      <a href="favoriten.html">Meine Favoriten</a>
-      <a href="inserate.html">Meine Inserate</a>
-      <a href="#" onclick="logout(event)">Logout</a>
-    ` : `
-      <a href="index.html">Start</a>
-      <a href="login.html">Einloggen</a>
+function renderReviews(list) {
+  const container = document.getElementById("review-list");
+  if (!list || list.length === 0) {
+    container.innerHTML = "<p>Keine Bewertungen gefunden.</p>";
+    return;
+  }
+  container.innerHTML = list.map(r => {
+    const userInitials = r.from_user?.name ? r.from_user.name.split(' ').map(n => n[0]).join('').toUpperCase() : "?";
+    const date = new Date(r.created_at).toLocaleDateString();
+    return `
+      <article class="review-item" tabindex="0" aria-label="Bewertung von ${r.from_user?.name || 'Unbekannt'}, ${r.rating} von 5 Sternen">
+        <div class="avatar" aria-hidden="true">${userInitials}</div>
+        <div class="review-content">
+          <strong class="review-rating">${renderStars(r.rating)}</strong>
+          <p class="review-text">${r.comment}</p>
+          <div class="review-meta">Von <strong>${r.from_user?.name || 'Unbekannt'}</strong> am ${date}</div>
+        </div>
+      </article>
     `;
+  }).join('');
+}
+
+/* ===== REVIEWS LADEN ===== */
+let reviews = [];
+async function loadReviews() {
+  const params = new URLSearchParams(window.location.search);
+  const userId = params.get("id");
+  if (!userId) {
+    document.getElementById("review-list").innerText = "Keine Vermieter-ID übergeben.";
+    return;
   }
 
-  // Logout Funktion
-  async function logout(event) {
-    event.preventDefault();
-    await supabaseClient.auth.signOut();
-    window.location.href = "login.html";
+  const { data, error } = await supabase
+    .from("reviews")
+    .select("rating, comment, from_user_id, created_at, from_user:from_user_id(name)")
+    .eq("to_user_id", userId)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error(error);
+    document.getElementById("review-list").innerText = "Fehler beim Laden der Bewertungen.";
+    return;
   }
 
-  // Sterne rendern
-  function renderStars(rating) {
-    let stars = "";
-    for (let i = 1; i <= 5; i++) {
-      stars += i <= rating ? "★" : "☆";
-    }
-    return `<span class="stars" aria-label="${rating} von 5 Sternen">${stars}</span>`;
-  }
+  reviews = data || [];
+  renderReviews(reviews);
+}
 
-  // Bewertungen rendern
-  function renderReviews(list) {
-    const reviewList = document.getElementById("review-list");
-    if (!list || list.length === 0) {
-      reviewList.innerHTML = "<p>Keine Bewertungen gefunden.</p>";
-      return;
-    }
+/* ===== SORTIERUNG ===== */
+document.getElementById("sort-select").addEventListener("change", (e) => {
+  let sorted = [...reviews];
+  const criteria = e.target.value;
+  if (criteria === "highest") sorted.sort((a, b) => b.rating - a.rating);
+  else if (criteria === "lowest") sorted.sort((a, b) => a.rating - b.rating);
+  else sorted.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+  renderReviews(sorted);
+});
 
-    reviewList.innerHTML = list.map(r => {
-      const userInitials = r.from_user?.name
-        ? r.from_user.name.split(' ').map(n => n[0]).join('').toUpperCase()
-        : "?";
-      const date = new Date(r.created_at).toLocaleDateString();
-      return `
-        <article class="review-item" tabindex="0" aria-label="Bewertung von ${r.from_user?.name || 'Unbekannt'}, ${r.rating} von 5 Sternen">
-          <div class="avatar" aria-hidden="true">${userInitials}</div>
-          <div class="review-content">
-            <strong class="review-rating">${renderStars(r.rating)}</strong>
-            <p class="review-text">${r.comment}</p>
-            <div class="review-meta">Von <strong>${r.from_user?.name || 'Unbekannt'}</strong> am ${date}</div>
-          </div>
-        </article>`;
-    }).join('');
-  }
-
-  // Bewertungen laden
-  async function loadReviews() {
-    const params = new URLSearchParams(window.location.search);
-    userId = params.get("id");
-    const reviewList = document.getElementById("review-list");
-
-    if (!userId) {
-      reviewList.innerText = "Keine Vermieter-ID übergeben.";
-      return;
-    }
-
-    const { data, error } = await supabaseClient
-      .from("reviews")
-      .select("rating, comment, from_user_id, created_at, from_user:from_user_id(name)")
-      .eq("to_user_id", userId)
-      .order("created_at", { ascending: false });
-
-    if (error || !Array.isArray(data)) {
-      reviewList.innerHTML = "<p>Keine Bewertungen gefunden.</p>";
-      return;
-    }
-
-    reviews = data;
-    renderReviews(reviews);
-  }
-
-  // Bewertungen sortieren
-  function sortReviews(criteria) {
-    if (!reviews || reviews.length === 0) return;
-    let sorted = [...reviews];
-
-    switch(criteria) {
-      case "highest":
-        sorted.sort((a, b) => b.rating - a.rating);
-        break;
-      case "lowest":
-        sorted.sort((a, b) => a.rating - b.rating);
-        break;
-      default: // newest
-        sorted.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-    }
-
-    renderReviews(sorted);
-  }
-
-  // Event-Listener
-  document.getElementById("sort-select").addEventListener("change", e => {
-    sortReviews(e.target.value);
-  });
-
-  document.getElementById("nav-toggle").addEventListener("click", () => {
-    const nav = document.getElementById("nav-links");
-    nav.classList.toggle("show");
-    document.getElementById("nav-toggle").setAttribute("aria-expanded", nav.classList.contains("show"));
-  });
-
-  // Initialisierung
-  updateNav();
-  loadReviews();
+/* ===== INITIAL LOAD ===== */
+updateNav();
+loadReviews();
 </script>
 
 </body>
