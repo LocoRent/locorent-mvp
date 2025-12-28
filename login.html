@@ -387,70 +387,76 @@
   </div>
 </footer>
 <script>
-  // ------------------ Supabase Initialisierung ------------------
-  const SUPABASE_URL = "https://flnjalgqtkqycsaymmbd.supabase.co";
-  const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q";
+  // Supabase Client initialisieren
+  const supabase = window.supabase.createClient(
+    'https://flnjalgqtkqycsaymmbd.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+  );
 
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+  const form = document.getElementById('login-form');
+  const messageDiv = document.getElementById('message');
 
-  // ------------------ Elemente ------------------
-  const form = document.getElementById("login-form");
-  const messageDiv = document.getElementById("message");
-
-  // ------------------ Login Submit Handler ------------------
-  form.addEventListener("submit", async (e) => {
+  // Formular-Submit handler
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    showMessage(""); // Reset Message
+    showMessage('', ''); // Reset Message
 
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value;
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
 
     if (!email || !password) {
-      return showMessage("❌ Bitte E-Mail und Passwort eingeben.", "error");
+      showMessage('❌ Bitte E-Mail und Passwort eingeben.', 'error');
+      return;
     }
 
     try {
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
-      if (error) return showMessage("❌ " + error.message, "error");
-
-      showMessage("✅ Login erfolgreich! Weiterleitung ...", "success");
-      setTimeout(() => (window.location.href = "index.html"), 900);
+      if (error) {
+        showMessage('❌ ' + error.message, 'error');
+      } else {
+        showMessage('✅ Login erfolgreich! Weiterleitung...', 'success');
+        setTimeout(() => window.location.href = 'index.html', 1000);
+      }
     } catch (err) {
+      showMessage('❌ Unerwarteter Fehler: ' + err.message, 'error');
       console.error(err);
-      showMessage("❌ Unerwarteter Fehler: " + err.message, "error");
     }
   });
 
-  // ------------------ Message Utility ------------------
+  // Funktion zur Anzeige von Meldungen
   function showMessage(text, type) {
     messageDiv.textContent = text;
-    messageDiv.className = "message";
+    messageDiv.className = 'message';
     if (type) messageDiv.classList.add(type);
   }
 
-  // ------------------ Passwort-Sichtbarkeit ------------------
+  // Passwort-Anzeige umschalten
   function togglePassword() {
-    const pwField = document.getElementById("password");
-    pwField.type = pwField.type === "password" ? "text" : "password";
+    const pwField = document.getElementById('password');
+    pwField.type = pwField.type === 'password' ? 'text' : 'password';
   }
-  window.togglePassword = togglePassword; // damit HTML onclick es aufrufen kann
 
-  // ------------------ Mobile Navigation ------------------
-  const navToggle = document.getElementById("nav-toggle");
-  const navLinks = document.getElementById("nav-links");
-
-  navToggle.addEventListener("click", () => {
-    navLinks.classList.toggle("show");
-    navToggle.setAttribute("aria-expanded", navLinks.classList.contains("show"));
+  // Burger-Menü für mobile Navigation
+  document.getElementById('nav-toggle').addEventListener('click', () => {
+    const nav = document.getElementById('nav-links');
+    nav.classList.toggle('show');
+    document.getElementById('nav-toggle').setAttribute('aria-expanded', nav.classList.contains('show'));
   });
 
-  // ------------------ Auto-Weiterleitung wenn eingeloggt ------------------
-  async function autoRedirectIfLoggedIn() {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (session?.user) window.location.href = "index.html";
+  // Optional: Überprüfen, ob bereits ein Benutzer eingeloggt ist und ggf. Weiterleitung
+  async function checkLoggedIn() {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session && session.user) {
+        window.location.href = 'index.html';
+      }
+    } catch (error) {
+      console.error('Session Error:', error);
+    }
   }
-  autoRedirectIfLoggedIn();
+
+  checkLoggedIn();
 </script>
 
 </body>
