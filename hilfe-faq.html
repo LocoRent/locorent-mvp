@@ -396,88 +396,87 @@
   <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
 </footer>
 <script>
-/* ===== SUPABASE INIT ===== */
-if (!window.supabaseClient) {
-  window.supabaseClient = window.supabase.createClient(
+  // Supabase initialisieren
+  const supabase = window.supabase.createClient(
     'https://flnjalgqtkqycsaymmbd.supabase.co',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
   );
-}
-const supabase = window.supabaseClient;
 
-let userSession = null;
+  let userSession = null;
 
-async function init() {
-  // Session abfragen
-  const { data: { session } } = await supabase.auth.getSession();
-  userSession = session;
-  updateNav();
-}
+  async function init() {
+    // Session abfragen
+    const { data: { session } } = await supabase.auth.getSession();
+    userSession = session;
+    updateNav();
+  }
 
-// Navigation aktualisieren
-function updateNav() {
-  const nav = document.getElementById('nav-links');
-  nav.innerHTML = userSession?.user ? `
-    <a href="index.html">Start</a>
-    <a href="profil.html">Mein Profil</a>
-    <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-    <a href="favoriten.html">Meine Favoriten</a>
-    <a href="inserate.html">Meine Inserate</a>
-    <a href="#" onclick="logout(event)">Logout</a>
-  ` : `
-    <a href="index.html">Start</a>
-    <a href="login.html">Einloggen</a>
-  `;
-}
-
-// Logout
-async function logout(event) {
-  event.preventDefault();
-  await supabase.auth.signOut();
-  window.location.href = "login.html";
-}
-
-// Mobile Navigation Toggle
-document.getElementById('nav-toggle').addEventListener('click', () => {
-  const nav = document.getElementById('nav-links');
-  nav.classList.toggle('show');
-  const expanded = nav.classList.contains('show');
-  document.getElementById('nav-toggle').setAttribute('aria-expanded', expanded);
-});
-
-// Mobile Nav automatisch schließen bei Klick auf Link
-document.querySelectorAll('#nav-links a').forEach(link => {
-  link.addEventListener('click', () => {
+  // Navigation aktualisieren
+  function updateNav() {
     const nav = document.getElementById('nav-links');
-    if (nav.classList.contains('show')) nav.classList.remove('show');
-    document.getElementById('nav-toggle').setAttribute('aria-expanded', false);
+    nav.innerHTML = userSession?.user ? `
+      <a href="index.html">Start</a>
+      <a href="profil.html">Mein Profil</a>
+      <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+      <a href="favoriten.html">Meine Favoriten</a>
+      <a href="inserate.html">Meine Inserate</a>
+      <a href="#" onclick="logout(event)">Logout</a>
+    ` : `
+      <a href="index.html">Start</a>
+      <a href="login.html">Einloggen</a>
+    `;
+  }
+
+  // Logout
+  async function logout(event) {
+    event.preventDefault();
+    await supabase.auth.signOut();
+    window.location.href = "login.html";
+  }
+
+  // Mobile Navigation Toggle
+  const navToggle = document.getElementById('nav-toggle');
+  navToggle.addEventListener('click', () => {
+    const nav = document.getElementById('nav-links');
+    nav.classList.toggle('show');
+    const expanded = nav.classList.contains('show');
+    navToggle.setAttribute('aria-expanded', expanded);
   });
-});
 
-// Accordion Logic: nur ein FAQ gleichzeitig offen + Smooth Animation
-document.querySelectorAll('.accordion-header').forEach(button => {
-  button.addEventListener('click', () => {
-    const isExpanded = button.getAttribute('aria-expanded') === 'true';
-
-    // Alle Accordion-Items schließen
-    document.querySelectorAll('.accordion-header').forEach(btn => {
-      btn.setAttribute('aria-expanded', false);
-      const content = document.getElementById(btn.getAttribute('aria-controls'));
-      content.setAttribute('aria-hidden', true);
-      content.style.maxHeight = null;
-    });
-
-    // Falls vorher geschlossen, öffne das angeklickte
-    if (!isExpanded) {
-      button.setAttribute('aria-expanded', true);
-      const content = document.getElementById(button.getAttribute('aria-controls'));
-      content.setAttribute('aria-hidden', false);
-      content.style.maxHeight = content.scrollHeight + "px";
+  // Mobile Nav automatisch schließen bei Klick auf Link
+  document.addEventListener('click', (e) => {
+    const nav = document.getElementById('nav-links');
+    if (nav.classList.contains('show') && e.target.closest('#nav-links a')) {
+      nav.classList.remove('show');
+      navToggle.setAttribute('aria-expanded', false);
     }
   });
-});
 
-init();
+  // Accordion Logic: nur ein Item offen
+  document.querySelectorAll('.accordion-header').forEach(button => {
+    button.addEventListener('click', () => {
+      const isExpanded = button.getAttribute('aria-expanded') === 'true';
+
+      // Alle Items schließen
+      document.querySelectorAll('.accordion-header').forEach(btn => {
+        btn.setAttribute('aria-expanded', false);
+        const content = document.getElementById(btn.getAttribute('aria-controls'));
+        content.setAttribute('aria-hidden', true);
+        content.style.maxHeight = null;
+      });
+
+      // Angeclicktes Item öffnen, falls es vorher geschlossen war
+      if (!isExpanded) {
+        button.setAttribute('aria-expanded', true);
+        const content = document.getElementById(button.getAttribute('aria-controls'));
+        content.setAttribute('aria-hidden', false);
+        content.style.maxHeight = content.scrollHeight + "px";
+      }
+    });
+  });
+
+  // Init starten
+  init();
 </script>
 
 </body>
