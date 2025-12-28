@@ -387,72 +387,70 @@
   </div>
 </footer>
 <script>
-  // Supabase Client initialisieren
-  const supabase = window.supabase.createClient(
-    'https://flnjalgqtkqycsaymmbd.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-  );
+  // ------------------ Supabase Initialisierung ------------------
+  const SUPABASE_URL = "https://flnjalgqtkqycsaymmbd.supabase.co";
+  const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q";
 
-  const form = document.getElementById('login-form');
-  const messageDiv = document.getElementById('message');
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
-  // Formular-Submit handler
-  form.addEventListener('submit', async (e) => {
+  // ------------------ Elemente ------------------
+  const form = document.getElementById("login-form");
+  const messageDiv = document.getElementById("message");
+
+  // ------------------ Login Submit Handler ------------------
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    showMessage('', ''); // Reset Message
+    showMessage(""); // Reset Message
 
-    const email = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value;
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
 
     if (!email || !password) {
-      showMessage('❌ Bitte E-Mail und Passwort eingeben.', 'error');
-      return;
+      return showMessage("❌ Bitte E-Mail und Passwort eingeben.", "error");
     }
 
     try {
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
-      if (error) {
-        showMessage('❌ ' + error.message, 'error');
-      } else {
-        showMessage('✅ Login erfolgreich! Weiterleitung...', 'success');
-        setTimeout(() => window.location.href = 'index.html', 1000);
-      }
+      if (error) return showMessage("❌ " + error.message, "error");
+
+      showMessage("✅ Login erfolgreich! Weiterleitung ...", "success");
+      setTimeout(() => (window.location.href = "index.html"), 900);
     } catch (err) {
-      showMessage('❌ Unerwarteter Fehler: ' + err.message, 'error');
       console.error(err);
+      showMessage("❌ Unerwarteter Fehler: " + err.message, "error");
     }
   });
 
-  // Funktion zur Anzeige von Meldungen
+  // ------------------ Message Utility ------------------
   function showMessage(text, type) {
     messageDiv.textContent = text;
-    messageDiv.className = 'message';
+    messageDiv.className = "message";
     if (type) messageDiv.classList.add(type);
   }
 
-  // Passwort-Anzeige umschalten
+  // ------------------ Passwort-Sichtbarkeit ------------------
   function togglePassword() {
-    const pwField = document.getElementById('password');
-    pwField.type = pwField.type === 'password' ? 'text' : 'password';
+    const pwField = document.getElementById("password");
+    pwField.type = pwField.type === "password" ? "text" : "password";
   }
+  window.togglePassword = togglePassword; // damit HTML onclick es aufrufen kann
 
-  // Burger-Menü für mobile Navigation
-  document.getElementById('nav-toggle').addEventListener('click', () => {
-    const nav = document.getElementById('nav-links');
-    nav.classList.toggle('show');
-    document.getElementById('nav-toggle').setAttribute('aria-expanded', nav.classList.contains('show'));
+  // ------------------ Mobile Navigation ------------------
+  const navToggle = document.getElementById("nav-toggle");
+  const navLinks = document.getElementById("nav-links");
+
+  navToggle.addEventListener("click", () => {
+    navLinks.classList.toggle("show");
+    navToggle.setAttribute("aria-expanded", navLinks.classList.contains("show"));
   });
 
-  // Optional: Überprüfen, ob bereits ein Benutzer eingeloggt ist und ggf. Weiterleitung
-  async function checkLoggedIn() {
+  // ------------------ Auto-Weiterleitung wenn eingeloggt ------------------
+  async function autoRedirectIfLoggedIn() {
     const { data: { session } } = await supabase.auth.getSession();
-    if (session?.user) {
-      window.location.href = 'index.html';
-    }
+    if (session?.user) window.location.href = "index.html";
   }
-
-  checkLoggedIn();
+  autoRedirectIfLoggedIn();
 </script>
 
 </body>
