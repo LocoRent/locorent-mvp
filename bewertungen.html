@@ -429,13 +429,16 @@ footer small {
   </div>
   <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
 </footer>
-  <script>
-// --- Supabase Client nur einmal deklarieren ---
-const supabase = supabase.createClient(
-  'https://flnjalgqtkqycsaymmbd.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGlHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-);
+<script>
+// --- Supabase Client nur einmal global initialisieren ---
+if (!window.supabaseClient) {
+  window.supabaseClient = supabase.createClient(
+    'https://flnjalgqtkqycsaymmbd.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGlHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+  );
+}
 var supabase = window.supabaseClient;
+
 // --- Navigation ---
 async function updateNav() {
   const { data: { session } } = await supabase.auth.getSession();
@@ -584,5 +587,6 @@ document.getElementById("nav-toggle").addEventListener("click", () => {
 updateNav();
 loadReviews();
 </script>
+
 </body>
 </html>
