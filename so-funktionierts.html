@@ -340,21 +340,25 @@
     </div>
     <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
   </footer>
- <script>
-  // Supabase nur initialisieren, wenn noch nicht vorhanden
-  if (typeof supabase === 'undefined') {
-    window.supabase = window.supabase.createClient(
-      'https://flnjalgqtkqycsaymmbd.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-    );
-  }
+<script>
+  // Supabase v2 Client
+  const sb = supabase.createClient(
+    'https://flnjalgqtkqycsaymmbd.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+  );
 
   let userSession = null;
 
   async function init() {
-    const { data: { session } } = await supabase.auth.getSession();
-    userSession = session;
-    updateNav();
+    try {
+      const { data, error } = await sb.auth.getSession();
+      if (error) console.error('Auth Fehler:', error);
+
+      userSession = data?.session || null;
+      updateNav();
+    } catch (err) {
+      console.error('Init Fehler:', err);
+    }
   }
 
   function updateNav() {
@@ -374,15 +378,19 @@
 
   async function logout(event) {
     event.preventDefault();
-    await supabase.auth.signOut();
-    window.location.href = "login.html";
+    try {
+      await sb.auth.signOut();
+      window.location.href = "login.html";
+    } catch (err) {
+      console.error('Logout Fehler:', err);
+    }
   }
 
+  // Mobile Menü
   document.getElementById('nav-toggle').addEventListener('click', () => {
     const nav = document.getElementById('nav-links');
     nav.classList.toggle('show');
-    const toggle = document.getElementById('nav-toggle');
-    toggle.setAttribute('aria-expanded', nav.classList.contains('show'));
+    document.getElementById('nav-toggle').setAttribute('aria-expanded', nav.classList.contains('show'));
   });
 
   init();
