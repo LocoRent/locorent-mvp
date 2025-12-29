@@ -623,244 +623,217 @@ main {
   <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
 </footer>
 <script>
-const supabase = window.supabase.createClient(
-  'https://flnjalgqtkqycsaymmbd.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-);
+  // Supabase v2 Client
+  const sb = supabase.createClient(
+    'https://flnjalgqtkqycsaymmbd.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+  );
 
-document.addEventListener('DOMContentLoaded', () => {
-  updateNav();
-  loadProfile();
-});
+  let userSession = null;
 
-// --- Navigation ---
-async function updateNav() {
-  const { data: { session } } = await supabase.auth.getSession();
-  const nav = document.getElementById('nav-links');
-  if (!nav) return;
-  if (session?.user) {
-    nav.innerHTML = `
+  async function init() {
+    try {
+      const { data, error } = await sb.auth.getSession();
+      if (error) console.error('Auth Fehler:', error);
+      userSession = data?.session || null;
+      updateNav();
+      if(userSession?.user) loadProfile();
+    } catch (err) {
+      console.error('Init Fehler:', err);
+    }
+  }
+
+  function updateNav() {
+    const nav = document.getElementById('nav-links');
+    nav.innerHTML = userSession?.user ? `
       <a href="index.html">Start</a>
       <a href="profil.html" aria-current="page">Mein Profil</a>
       <a href="nachrichten-inbox.html">📨 Nachrichten</a>
       <a href="favoriten.html">Meine Favoriten</a>
       <a href="inserate.html">Meine Inserate</a>
       <a href="#" onclick="logout(event)">Logout</a>
-    `;
-  } else {
-    nav.innerHTML = `
+    ` : `
       <a href="index.html">Start</a>
       <a href="login.html">Einloggen</a>
     `;
   }
-}
 
-async function logout(e) {
-  e.preventDefault();
-  await supabase.auth.signOut();
-  window.location.href = "login.html";
-}
-
-// --- Profil laden ---
-async function loadProfile() {
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session?.user) {
-    window.location.href = "login.html";
-    return;
+  async function logout(event) {
+    event.preventDefault();
+    try {
+      await sb.auth.signOut();
+      window.location.href = "login.html";
+    } catch (err) {
+      console.error('Logout Fehler:', err);
+    }
   }
 
-  const user = session.user;
-  document.getElementById('email').value = user.email;
+  // Mobile Menü Toggle
+  document.getElementById('nav-toggle').addEventListener('click', () => {
+    const nav = document.getElementById('nav-links');
+    nav.classList.toggle('show');
+    document.getElementById('nav-toggle').setAttribute('aria-expanded', nav.classList.contains('show'));
+  });
 
-  const { data: profile, error } = await supabase
-    .from('profiles')
-    .select('name, city, bio')
-    .eq('id', user.id)
-    .single();
+  // --- Profil laden ---
+  async function loadProfile() {
+    const user = userSession.user;
+    if(!user) return;
 
-  if (error) { alert("Fehler beim Laden des Profils."); return; }
+    document.getElementById('email').value = user.email;
 
-  if (profile) {
-    document.getElementById('name').value = profile.name || '';
-    document.getElementById('city').value = profile.city || '';
-    document.getElementById('bio').value = profile.bio || '';
+    // Profile aus DB
+    const { data: profile, error } = await sb
+      .from('profiles')
+      .select('name, city, bio')
+      .eq('id', user.id)
+      .single();
+
+    if(profile) {
+      document.getElementById('name').value = profile.name || '';
+      document.getElementById('city').value = profile.city || '';
+      document.getElementById('bio').value = profile.bio || '';
+    }
+
+    loadReviews(user.id);
+    loadStats(user.id);
   }
 
-  loadReviews(user.id);
-  loadStats(user.id);
+  // --- Reviews laden ---
+  async function loadReviews(userId) {
+    const container = document.getElementById('reviews-list');
+    container.innerHTML = '⏳ Lade Bewertungen…';
 
-  const reviewsLink = document.getElementById('show-all-reviews');
-  if (reviewsLink && user.id) {
-    reviewsLink.href = `bewertungen.html?id=${encodeURIComponent(user.id)}`;
-  }
-}
+    const { data: reviews } = await sb
+      .from('reviews')
+      .select('rating, comment, created_at, from_user:from_user_id(name, avatar_url)')
+      .eq('to_user_id', userId)
+      .order('created_at', { ascending: false })
+      .limit(5);
 
-// --- Bewertungen ---
-async function loadReviews(userId) {
-  const container = document.getElementById('reviews-list');
-  container.innerHTML = '⏳ Lade Bewertungen…';
-
-  const { data: reviews, error } = await supabase
-    .from('reviews')
-    .select('rating, comment, created_at, from_user:from_user_id(name, avatar_url)')
-    .eq('to_user_id', userId)
-    .order('created_at', { ascending: false })
-    .limit(5);
-
-  if (error || !reviews || reviews.length === 0) {
-    container.innerHTML = "<p>Keine Bewertungen vorhanden.</p>";
-    return;
-  }
-
-  container.innerHTML = reviews.map(r => `
-    <article class="review-item" tabindex="0" aria-label="Bewertung ${r.rating} von 5 Sternen von ${r.from_user?.name || 'Unbekannt'}">
-      <div class="review-header">
-        <div class="review-avatar" style="background-image: url('${r.from_user?.avatar_url || ''}');">
-          ${!r.from_user?.avatar_url ? (r.from_user?.name ? r.from_user.name.split(' ').map(n => n[0]).join('').toUpperCase() : '') : ''}
-        </div>
-        <div class="reviewer-name">${r.from_user?.name || 'Unbekannt'}</div>
-        <div class="review-rating">${createStarIcons(r.rating)}</div>
-        <time class="review-date" datetime="${new Date(r.created_at).toISOString()}">Verfasst am ${new Date(r.created_at).toLocaleDateString()}</time>
-      </div>
-      <p class="review-text">${r.comment || ''}</p>
-    </article>
-  `).join('');
-}
-
-// --- Stats laden ---
-async function loadStats(userId) {
-  const { data: inserate } = await supabase.from('listings').select('id').eq('user_id', userId);
-  const { data: bewertungen } = await supabase.from('reviews').select('id').eq('to_user_id', userId);
-
-  document.getElementById('stat-inserate').textContent = `Inserate: ${inserate?.length || 0}`;
-  document.getElementById('stat-bewertungen').textContent = `Bewertungen: ${bewertungen?.length || 0}`;
-}
-
-// --- Sterneanzeige ---
-function createStarIcons(rating) {
-  let full = Math.floor(rating);
-  let half = rating - full >= 0.5;
-  let empty = 5 - full - (half ? 1 : 0);
-  let out = '';
-  for (let i = 0; i < full; i++) out += '<span style="color: #fbc02d;">★</span>';
-  if (half) out += '<span style="color: #fbc02d;">★</span>';
-  for (let i = 0; i < empty; i++) out += '<span style="color: #ccc;">☆</span>';
-  return out;
-}
-
-// --- Passwortstärke ---
-const pwInput = document.getElementById('password');
-const pwStrengthBar = document.getElementById('pw-strength');
-const pwStrengthLabel = document.getElementById('strength-label');
-
-if (pwInput) {
-  pwInput.addEventListener('input', () => {
-    const val = pwInput.value;
-    if (!val) {
-      pwStrengthBar.className = '';
-      pwStrengthLabel.textContent = '–';
-      pwStrengthBar.querySelector('div').style.width = '0';
+    if(!reviews || reviews.length === 0) {
+      container.innerHTML = "<p>Keine Bewertungen vorhanden.</p>";
       return;
     }
-    const result = zxcvbn(val);
-    let strength = 'weak';
-    let label = 'Schwach';
-    switch(result.score) {
-      case 2: strength = 'fair'; label = 'Fair'; break;
-      case 3: strength = 'good'; label = 'Gut'; break;
-      case 4: strength = 'strong'; label = 'Stark'; break;
-    }
-    if (result.score < 2) { strength = 'weak'; label = 'Schwach'; }
-    pwStrengthBar.className = strength;
-    pwStrengthLabel.textContent = label;
-  });
-}
 
-// --- Passwort ändern ---
-async function changePassword() {
-  const password = pwInput.value.trim();
-  if (!password) { alert("Bitte gib ein neues Passwort ein."); return; }
-  const btn = document.getElementById('change-pw-btn');
-  btn.disabled = true;
-  try {
-    const { error } = await supabase.auth.updateUser({ password });
-    if (error) throw error;
-    alert("Passwort erfolgreich geändert!");
-    pwInput.value = '';
-    pwStrengthBar.className = '';
-    pwStrengthLabel.textContent = '–';
-  } catch (err) {
-    alert("Fehler beim Ändern des Passworts: " + err.message);
-  } finally { btn.disabled = false; }
-}
+    container.innerHTML = reviews.map(r => `
+      <div class="review-item" tabindex="0">
+        <div class="review-header">
+          <div class="review-avatar" style="background-image:url('${r.from_user?.avatar_url || ''}');">
+            ${!r.from_user?.avatar_url ? (r.from_user?.name ? r.from_user.name.split(' ').map(n => n[0]).join('').toUpperCase() : '') : ''}
+          </div>
+          <div class="reviewer-name">${r.from_user?.name || 'Unbekannt'}</div>
+          <div class="review-rating">${createStars(r.rating)}</div>
+        </div>
+        <p class="review-text">${r.comment || ''}</p>
+      </div>
+    `).join('');
+  }
 
-// --- City Autocomplete ---
-const cityInput = document.getElementById('city');
-const citySuggestions = document.getElementById('city-suggestions');
+  function createStars(rating) {
+    let full = Math.floor(rating);
+    let half = rating - full >= 0.5;
+    let empty = 5 - full - (half ? 1 : 0);
+    let out = '';
+    for(let i=0;i<full;i++) out+='<span style="color:#fbc02d;">★</span>';
+    if(half) out+='<span style="color:#fbc02d;">★</span>';
+    for(let i=0;i<empty;i++) out+='<span style="color:#ccc;">☆</span>';
+    return out;
+  }
 
-cityInput.addEventListener('input', async e => {
-  const value = e.target.value.trim();
-  if (value.length < 2) { citySuggestions.innerHTML = ''; cityInput.setAttribute('aria-expanded','false'); return; }
-  try {
-    const res = await fetch(`https://corsproxy.io/?https://nominatim.openstreetmap.org/search?format=json&accept-language=de&addressdetails=1&countrycodes=de&limit=8&q=${encodeURIComponent(value)}`);
-    const results = await res.json();
-    const filtered = results.filter(r => r.lat && r.lon && r.address);
-    citySuggestions.innerHTML = '';
-    cityInput.setAttribute('aria-expanded','true');
-    filtered.forEach(r => {
-      const ort = r.address.city || r.address.town || r.address.village || r.address.hamlet || r.address.municipality || r.display_name.split(',')[0];
-      const bundesland = r.address.state || '';
-      const land = r.address.country || 'Deutschland';
-      const display = [ort, bundesland, land].filter(Boolean).join(', ');
-      const div = document.createElement('div');
-      div.textContent = display;
-      div.setAttribute('role','option');
-      div.tabIndex = 0;
-      div.onclick = () => { cityInput.value = display; citySuggestions.innerHTML=''; cityInput.setAttribute('aria-expanded','false'); };
-      div.onkeydown = e => { if(e.key==='Enter'||e.key===' ') { e.preventDefault(); div.click(); } };
-      citySuggestions.appendChild(div);
+  // --- Statistiken ---
+  async function loadStats(userId) {
+    const { data: inserate } = await sb.from('listings').select('id').eq('user_id', userId);
+    const { data: bewertungen } = await sb.from('reviews').select('id').eq('to_user_id', userId);
+    document.getElementById('stat-inserate').textContent = `Inserate: ${inserate?.length || 0}`;
+    document.getElementById('stat-bewertungen').textContent = `Bewertungen: ${bewertungen?.length || 0}`;
+  }
+
+  // --- Passwortstärke ---
+  const pwInput = document.getElementById('password');
+  const pwStrengthBar = document.getElementById('pw-strength')?.querySelector('div');
+  const pwStrengthLabel = document.getElementById('strength-label');
+
+  if(pwInput) {
+    pwInput.addEventListener('input', ()=>{
+      const val = pwInput.value;
+      if(!val) { pwStrengthBar.style.width='0'; pwStrengthLabel.textContent='–'; return; }
+      const result = zxcvbn(val);
+      let scoreLabels = ['Schwach','Fair','Gut','Stark','Stark'];
+      pwStrengthLabel.textContent = scoreLabels[result.score] || '–';
+      let widths = ['25%','50%','75%','100%','100%'];
+      pwStrengthBar.style.width = widths[result.score] || '0';
+      let colors = ['#d32f2f','#fbc02d','#388e3c','#2e7d32','#2e7d32'];
+      pwStrengthBar.style.backgroundColor = colors[result.score] || '#eee';
     });
-    if(filtered.length===0) citySuggestions.innerHTML = '<div style="padding:0.5rem;">Kein Ort gefunden</div>';
-  } catch(err) { console.error("Fehler bei Ortssuche:", err); }
-});
+  }
 
-// --- Profil speichern ---
-async function saveProfile() {
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session?.user) { alert("Nicht eingeloggt!"); return; }
-  const userId = session.user.id;
-  const updates = {
-    id: userId,
-    name: document.getElementById('name').value.trim(),
-    city: document.getElementById('city').value.trim(),
-    bio: document.getElementById('bio').value.trim()
-  };
+  // --- Passwort ändern ---
+  async function changePassword() {
+    const password = pwInput.value.trim();
+    if(!password){ alert('Bitte gib ein neues Passwort ein.'); return; }
+    const btn = document.getElementById('change-pw-btn');
+    btn.disabled = true;
+    try {
+      const { error } = await sb.auth.updateUser({ password });
+      if(error) throw error;
+      alert('Passwort erfolgreich geändert!');
+      pwInput.value=''; pwStrengthBar.style.width='0'; pwStrengthLabel.textContent='–';
+    } catch(err) {
+      alert('Fehler beim Ändern des Passworts: '+err.message);
+    } finally { btn.disabled=false; }
+  }
 
-  if (updates.name.length < 2 || updates.name.length > 20) { alert("Name muss zwischen 2 und 20 Zeichen sein."); return; }
-  if (updates.city.length < 2 || updates.city.length > 50) { alert("Wohnort muss zwischen 2 und 50 Zeichen sein."); return; }
-  if (updates.bio.length > 150) { alert("Bio darf maximal 150 Zeichen haben."); return; }
-
-  const btn = document.getElementById('save-btn');
-  btn.disabled = true;
-  try {
-    const { error } = await supabase.from('profiles').upsert(updates);
-    if (error) throw error;
-    alert("Profil erfolgreich gespeichert!");
-  } catch(err) { alert("Fehler beim Speichern: " + err.message); }
-  finally { btn.disabled = false; }
-}
-
-// --- Mobile Nav Toggle ---
-const navToggle = document.getElementById('nav-toggle');
-const navLinks = document.getElementById('nav-links');
-
-if(navToggle && navLinks) {
-  navToggle.addEventListener('click', () => {
-    navLinks.classList.toggle('show');
-    const expanded = navToggle.getAttribute('aria-expanded') === 'true';
-    navToggle.setAttribute('aria-expanded', !expanded);
+  // --- City Autocomplete ---
+  const cityInput = document.getElementById('city');
+  const citySuggestions = document.getElementById('city-suggestions');
+  cityInput?.addEventListener('input', async e=>{
+    const value = e.target.value.trim();
+    if(value.length<2){ citySuggestions.innerHTML=''; cityInput.setAttribute('aria-expanded','false'); return; }
+    try {
+      const res = await fetch(`https://corsproxy.io/?https://nominatim.openstreetmap.org/search?format=json&accept-language=de&addressdetails=1&countrycodes=de&limit=8&q=${encodeURIComponent(value)}`);
+      const results = await res.json();
+      citySuggestions.innerHTML=''; cityInput.setAttribute('aria-expanded','true');
+      results.filter(r=>r.lat && r.lon && r.address).forEach(r=>{
+        const ort = r.address.city || r.address.town || r.address.village || r.address.hamlet || r.address.municipality || r.display_name.split(',')[0];
+        const bundesland = r.address.state || '';
+        const land = r.address.country || 'Deutschland';
+        const div = document.createElement('div');
+        div.textContent = [ort,bundesland,land].filter(Boolean).join(', ');
+        div.tabIndex=0; div.setAttribute('role','option');
+        div.onclick=()=>{ cityInput.value=div.textContent; citySuggestions.innerHTML=''; cityInput.setAttribute('aria-expanded','false'); };
+        div.onkeydown=e=>{ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); div.click(); } };
+        citySuggestions.appendChild(div);
+      });
+      if(results.length===0) citySuggestions.innerHTML='<div style="padding:0.5rem;">Kein Ort gefunden</div>';
+    } catch(err){ console.error('Ortssuche Fehler:',err); }
   });
-}
+
+  // --- Profil speichern ---
+  async function saveProfile() {
+    if(!userSession?.user){ alert('Nicht eingeloggt!'); return; }
+    const userId = userSession.user.id;
+    const updates = {
+      id:userId,
+      name:document.getElementById('name').value.trim(),
+      city:document.getElementById('city').value.trim(),
+      bio:document.getElementById('bio').value.trim()
+    };
+    if(updates.name.length<2){ alert('Name mindestens 2 Zeichen'); return; }
+    if(updates.name.length>20){ alert('Name maximal 20 Zeichen'); return; }
+    if(updates.city.length<2){ alert('Bitte gib einen gültigen Wohnort ein'); return; }
+    if(updates.city.length>50){ alert('Wohnort maximal 50 Zeichen'); return; }
+    if(updates.bio.length>150){ alert('Bio maximal 150 Zeichen'); return; }
+
+    const btn = document.getElementById('save-btn'); btn.disabled=true;
+    try{
+      const { error } = await sb.from('profiles').upsert(updates);
+      if(error) throw error;
+      alert('Profil erfolgreich gespeichert!');
+    } catch(err){ alert('Fehler beim Speichern: '+err.message); } finally{ btn.disabled=false; }
+  }
+
+  init();
 </script>
 
 </body>
