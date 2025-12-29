@@ -387,66 +387,61 @@
   </div>
   <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
 </footer>
+<!-- Supabase + globales Nav-System -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-/* ==== Supabase global nur 1× laden ==== */
-if (!window.__locorent_supabase__) {
-  window.__locorent_supabase__ = window.supabase.createClient(
-    "https://flnjalgqtkqycsaymmbd.supabase.co",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q"
-  );
-}
-const supabase = window.__locorent_supabase__;
+  // globale Supabase-Instanz nur einmal erzeugen
+  if (!window.supabaseClient) {
+    window.supabaseClient = window.supabase.createClient(
+      "https://flnjalgqtkqycsaymmbd.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q"
+    );
+  }
 
-let userSession = null;
+  // Alias wie gewohnt
+  const supabase = window.supabaseClient;
 
-/* ===== Navigation + Session ===== */
-async function init() {
-  try {
+  /* ---------------- NAVIGATION basierend auf Login-Status ---------------- */
+  async function updateNav() {
     const { data: { session } } = await supabase.auth.getSession();
-    userSession = session;
+    const nav = document.getElementById("nav-links");
+    if (!nav) return;
+
+    nav.innerHTML = session?.user ? `
+      <a href="index.html">Start</a>
+      <a href="profil.html">Mein Profil</a>
+      <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+      <a href="favoriten.html">Meine Favoriten</a>
+      <a href="inserate.html">Meine Inserate</a>
+      <a href="#" onclick="logout(event)">Logout</a>
+    ` : `
+      <a href="index.html">Start</a>
+      <a href="login.html">Einloggen</a>
+    `;
+  }
+
+  /* ---------------- GLOBAL Logout ---------------- */
+  async function logout(event) {
+    event.preventDefault();
+    await supabase.auth.signOut();
+    window.location.href = "login.html";
+  }
+
+  /* ---------------- Mobile Menü ---------------- */
+  document.addEventListener("DOMContentLoaded", () => {
     updateNav();
-  } catch (err) {
-    console.error("Init-Fehler:", err);
-  }
-}
 
-function updateNav() {
-  const nav = document.getElementById("nav-links");
-  if (!nav) return;
+    const navToggle = document.getElementById("nav-toggle");
+    const navLinks = document.getElementById("nav-links");
 
-  nav.innerHTML = userSession?.user ? `
-    <a href="index.html">Start</a>
-    <a href="profil.html">Mein Profil</a>
-    <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-    <a href="favoriten.html">Meine Favoriten</a>
-    <a href="inserate.html">Meine Inserate</a>
-    <a href="#" onclick="logout(event)">Logout</a>
-  ` : `
-    <a href="index.html">Start</a>
-    <a href="login.html">Einloggen</a>
-  `;
-}
-
-async function logout(event) {
-  event.preventDefault();
-  await supabase.auth.signOut();
-  window.location.href = "login.html";
-}
-
-/* ===== Mobile Menü ===== */
-document.addEventListener("DOMContentLoaded", () => {
-  init();
-
-  const toggle = document.getElementById("nav-toggle");
-  const nav = document.getElementById("nav-links");
-
-  if (toggle && nav) {
-    toggle.addEventListener("click", () => {
-      nav.classList.toggle("show");
-      toggle.setAttribute("aria-expanded", nav.classList.contains("show"));
-    });
-  }
-});
+    if (navToggle) {
+      navToggle.addEventListener("click", () => {
+        navLinks.classList.toggle("show");
+        const expanded = navLinks.classList.contains("show");
+        navToggle.setAttribute("aria-expanded", expanded);
+      });
+    }
+  });
 </script>
 
 </body>
