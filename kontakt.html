@@ -298,16 +298,17 @@
   </div>
   <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
 </footer>
-
 <script>
-  const supabase = window.supabase.createClient(
+  // Supabase Client – eindeutiger Name (kein Konflikt mit anderen Seiten)
+  const supa = window.supabase.createClient(
     'https://flnjalgqtkqycsaymmbd.supabase.co',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
   );
 
   async function updateNav() {
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { session } } = await supa.auth.getSession();
     const nav = document.getElementById("nav-links");
+
     nav.innerHTML = session?.user ? `
       <a href="index.html">Start</a>
       <a href="profil.html">Mein Profil</a>
@@ -318,12 +319,13 @@
     ` : `
       <a href="index.html">Start</a>
       <a href="login.html">Einloggen</a>
+      <a href="register.html">Registrieren</a>
     `;
   }
 
   async function logout(event) {
     event.preventDefault();
-    await supabase.auth.signOut();
+    await supa.auth.signOut();
     window.location.href = "login.html";
   }
 
@@ -331,7 +333,9 @@
     const nav = document.getElementById("nav-links");
     nav.classList.toggle("show");
     const expanded = nav.classList.contains("show");
-    document.getElementById("nav-toggle").setAttribute("aria-expanded", expanded);
+    document
+      .getElementById("nav-toggle")
+      .setAttribute("aria-expanded", expanded);
   });
 
   updateNav();
