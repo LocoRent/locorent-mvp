@@ -133,18 +133,18 @@
     © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
   </div>
 </footer>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const supabase = window.supabase.createClient(
-  'https://flnjalgqtkqycsaymmbd.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-);
+  // Supabase v2 Client initialisieren
+  const supabase = window.supabase.createClient(
+    'https://flnjalgqtkqycsaymmbd.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+  );
 
-
+  // DOM Elemente
   const form = document.getElementById('register-form');
   const messageDiv = document.getElementById('message');
 
+  // Passwort Sichtbarkeit toggeln
   function togglePassword() {
     const pwField = document.getElementById('password');
     pwField.type = pwField.type === 'password' ? 'text' : 'password';
@@ -154,6 +154,7 @@ const supabase = window.supabase.createClient(
     pwField.type = pwField.type === 'password' ? 'text' : 'password';
   }
 
+  // Formular-Submit
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     messageDiv.textContent = '';
@@ -163,6 +164,7 @@ const supabase = window.supabase.createClient(
     const password = document.getElementById('password').value;
     const passwordConfirm = document.getElementById('passwordConfirm').value;
 
+    // Passwort bestätigen
     if (password !== passwordConfirm) {
       messageDiv.textContent = '❌ Passwörter stimmen nicht überein.';
       messageDiv.classList.add('error');
@@ -170,6 +172,7 @@ const supabase = window.supabase.createClient(
     }
 
     try {
+      // Supabase Registrierung
       const { data, error } = await supabase.auth.signUp({ email, password });
 
       if (error) {
@@ -182,6 +185,8 @@ const supabase = window.supabase.createClient(
       } else {
         messageDiv.textContent = '✅ Registrierung erfolgreich! Bitte E-Mail bestätigen.';
         messageDiv.classList.add('success');
+
+        // Nach 3 Sekunden zur Login-Seite weiterleiten
         setTimeout(() => { window.location.href = 'login.html'; }, 3000);
       }
     } catch (err) {
@@ -190,6 +195,7 @@ const supabase = window.supabase.createClient(
     }
   });
 
+  // Mobile Menü Toggle
   document.getElementById('nav-toggle').addEventListener('click', () => {
     const nav = document.getElementById('nav-links');
     nav.classList.toggle('show');
