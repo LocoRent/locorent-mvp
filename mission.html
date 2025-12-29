@@ -388,27 +388,30 @@
   <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
 </footer>
 <script>
-/* ===== SUPABASE INIT ===== */
+/* ==== Supabase global nur 1× laden ==== */
 if (!window.__locorent_supabase__) {
   window.__locorent_supabase__ = window.supabase.createClient(
-    'https://flnjalgqtkqycsaymmbd.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+    "https://flnjalgqtkqycsaymmbd.supabase.co",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q"
   );
 }
 const supabase = window.__locorent_supabase__;
 
 let userSession = null;
 
-/* ===== AUTH STATE ===== */
+/* ===== Navigation + Session ===== */
 async function init() {
-  const { data: { session } } = await supabase.auth.getSession();
-  userSession = session;
-  updateNav();
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    userSession = session;
+    updateNav();
+  } catch (err) {
+    console.error("Init-Fehler:", err);
+  }
 }
 
-/* ===== NAV ===== */
 function updateNav() {
-  const nav = document.getElementById('nav-links');
+  const nav = document.getElementById("nav-links");
   if (!nav) return;
 
   nav.innerHTML = userSession?.user ? `
@@ -424,24 +427,23 @@ function updateNav() {
   `;
 }
 
-/* ===== LOGOUT ===== */
 async function logout(event) {
   event.preventDefault();
   await supabase.auth.signOut();
   window.location.href = "login.html";
 }
 
-/* ===== DOM READY ===== */
-document.addEventListener('DOMContentLoaded', () => {
+/* ===== Mobile Menü ===== */
+document.addEventListener("DOMContentLoaded", () => {
   init();
 
-  const toggle = document.getElementById('nav-toggle');
-  const nav = document.getElementById('nav-links');
+  const toggle = document.getElementById("nav-toggle");
+  const nav = document.getElementById("nav-links");
 
   if (toggle && nav) {
-    toggle.addEventListener('click', () => {
-      nav.classList.toggle('show');
-      toggle.setAttribute('aria-expanded', nav.classList.contains('show'));
+    toggle.addEventListener("click", () => {
+      nav.classList.toggle("show");
+      toggle.setAttribute("aria-expanded", nav.classList.contains("show"));
     });
   }
 });
