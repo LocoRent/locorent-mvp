@@ -133,20 +133,19 @@
     © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
   </div>
 </footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   // Supabase v2 Client initialisieren
-  const sb = supabase.createClient(
+  const sb = window.supabase.createClient(
     'https://flnjalgqtkqycsaymmbd.supabase.co',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
   );
 
   let userSession = null;
-  const form = document.getElementById('register-form');
-  const messageDiv = document.getElementById('message');
 
   async function init() {
     try {
-      // Session abrufen
+      // Aktuelle Session abrufen
       const { data, error } = await sb.auth.getSession();
       if (error) console.error('Auth Fehler:', error);
 
@@ -183,7 +182,10 @@
     }
   }
 
-  // Formular-Submit
+  // Registrierung
+  const form = document.getElementById('register-form');
+  const messageDiv = document.getElementById('message');
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     messageDiv.textContent = '';
@@ -201,6 +203,7 @@
 
     try {
       const { data, error } = await sb.auth.signUp({ email, password });
+
       if (error) {
         if (error.message.toLowerCase().includes("already registered")) {
           messageDiv.textContent = '❌ Diese E-Mail-Adresse ist bereits registriert. Bitte einloggen.';
@@ -218,6 +221,17 @@
       messageDiv.classList.add('error');
     }
   });
+
+  // Passwort anzeigen/ausblenden
+  function togglePassword() {
+    const pwField = document.getElementById('password');
+    pwField.type = pwField.type === 'password' ? 'text' : 'password';
+  }
+
+  function togglePasswordConfirm() {
+    const pwField = document.getElementById('passwordConfirm');
+    pwField.type = pwField.type === 'password' ? 'text' : 'password';
+  }
 
   // Mobile Menü
   document.getElementById('nav-toggle').addEventListener('click', () => {
