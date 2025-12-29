@@ -281,124 +281,128 @@ footer small {
   </div>
   <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
 </footer>
-
-
 <script>
-const supabase = window.supabase.createClient(
-  'https://flnjalgqtkqycsaymmbd.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-);
+  // Supabase v2 Client
+  const sb = supabase.createClient(
+    'https://flnjalgqtkqycsaymmbd.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+  );
 
-let currentPage = 1;
-const pageSize = 20;
+  let currentPage = 1;
+  const pageSize = 20;
 
-document.getElementById('nav-toggle').addEventListener('click', () => {
-  const nav = document.getElementById('main-nav');
-  nav.classList.toggle('show');
-  document.getElementById('nav-toggle').setAttribute('aria-expanded', nav.classList.contains('show'));
-});
-
-async function logout(event) {
-  event.preventDefault();
-  await supabase.auth.signOut();
-  window.location.href = "login.html";
-}
-
-function timeAgo(dateString) {
-  const date = new Date(dateString);
-  const diff = (Date.now() - date.getTime()) / 1000;
-  if (diff < 60) return "gerade eben";
-  if (diff < 3600) return `${Math.floor(diff / 60)} Min.`;
-  if (diff < 86400) return `${Math.floor(diff / 3600)} Std.`;
-  return `${Math.floor(diff / 86400)} Tg.`;
-}
-
-async function loadInboxList(page = 1) {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return window.location.href = "login.html";
-
-  const { data: messages } = await supabase.from('messages')
-    .select('*')
-    .or(`sender_id.eq.${user.id},receiver_id.eq.${user.id}`)
-    .order('created_at', { ascending: false });
-
-  const inbox = document.getElementById('inbox');
-  inbox.innerHTML = '';
-
-  if (!messages || messages.length === 0) {
-    inbox.innerHTML = "<p>Keine Nachrichten gefunden.</p>";
-    document.getElementById('pagination').innerHTML = '';
-    return;
-  }
-
-  const uniqueChats = new Map();
-  messages.forEach(msg => {
-    const otherId = msg.sender_id === user.id ? msg.receiver_id : msg.sender_id;
-    const key = `${msg.listing_id}_${otherId}`;
-    if (!uniqueChats.has(key)) uniqueChats.set(key, msg);
+  // Mobile Menü
+  document.getElementById('nav-toggle').addEventListener('click', () => {
+    const nav = document.getElementById('main-nav');
+    nav.classList.toggle('show');
+    document.getElementById('nav-toggle').setAttribute('aria-expanded', nav.classList.contains('show'));
   });
 
-  const chatArray = Array.from(uniqueChats.values());
-  const totalCount = chatArray.length;
-  const from = (page-1)*pageSize;
-  const to = from + pageSize;
-  const pagedChats = chatArray.slice(from, to);
-
-  for(const msg of pagedChats) {
-    const otherId = msg.sender_id === user.id ? msg.receiver_id : msg.sender_id;
-    const [{data: userData}, {data: listingData}] = await Promise.all([
-      supabase.from('profiles').select('name, avatar_url').eq('id', otherId).single(),
-      supabase.from('listings').select('title, image_urls').eq('id', msg.listing_id).single()
-    ]);
-
-    const name = userData?.name || 'Unbekannt';
-    const avatar = userData?.avatar_url || null;
-    const title = listingData?.title || 'Inserat gelöscht';
-    const image = listingData?.image_urls?.[0] || '';
-
-    const item = document.createElement('div');
-    item.className = 'chat-item';
-    item.tabIndex = 0;
-    item.onclick = () => window.location.href = `nachrichten.html?listing_id=${msg.listing_id}&with=${otherId}`;
-
-    item.innerHTML = `
-      <div class="chat-avatar">${avatar ? `<img src="${avatar}" alt="${name}" />` : `<span>${name.charAt(0)}</span>`}</div>
-      ${image ? `<img src="${image}" alt="${title}" style="width:60px;height:60px;object-fit:cover;border-radius:6px;margin-right:1rem;">` : ''}
-      <div class="chat-content">
-        <div class="chat-name">${name}</div>
-        <div class="chat-title">${title}</div>
-        <div class="chat-preview">💬 ${msg.content.slice(0,80)}${msg.content.length>80?'…':''}</div>
-      </div>
-      <div class="chat-time">${timeAgo(msg.created_at)}</div>
-    `;
-    inbox.appendChild(item);
+  async function logout(event) {
+    event.preventDefault();
+    try {
+      await sb.auth.signOut();
+      window.location.href = "login.html";
+    } catch(err) {
+      console.error('Logout Fehler:', err);
+    }
   }
 
-  // Pagination
-  const pagination = document.getElementById('pagination');
-  pagination.innerHTML = '';
-  const totalPages = Math.ceil(totalCount/pageSize);
-
-  if(page > 1){
-    const prevBtn = document.createElement('button');
-    prevBtn.textContent = "← Zurück";
-    prevBtn.onclick = () => { currentPage--; loadInboxList(currentPage); };
-    pagination.appendChild(prevBtn);
+  function timeAgo(dateString) {
+    const date = new Date(dateString);
+    const diff = (Date.now() - date.getTime()) / 1000;
+    if(diff < 60) return "gerade eben";
+    if(diff < 3600) return `${Math.floor(diff/60)} Min.`;
+    if(diff < 86400) return `${Math.floor(diff/3600)} Std.`;
+    return `${Math.floor(diff/86400)} Tg.`;
   }
 
-  const pageIndicator = document.createElement('span');
-  pageIndicator.textContent = `Seite ${page} von ${totalPages}`;
-  pagination.appendChild(pageIndicator);
+  async function loadInboxList(page = 1) {
+    const { data: { user } } = await sb.auth.getUser();
+    if(!user) return window.location.href = "login.html";
 
-  if(page < totalPages){
-    const nextBtn = document.createElement('button');
-    nextBtn.textContent = "Weiter →";
-    nextBtn.onclick = () => { currentPage++; loadInboxList(currentPage); };
-    pagination.appendChild(nextBtn);
+    const { data: messages } = await sb.from('messages')
+      .select('*')
+      .or(`sender_id.eq.${user.id},receiver_id.eq.${user.id}`)
+      .order('created_at', { ascending: false });
+
+    const inbox = document.getElementById('inbox');
+    inbox.innerHTML = '';
+
+    if(!messages || messages.length === 0){
+      inbox.innerHTML = "<p>Keine Nachrichten gefunden.</p>";
+      document.getElementById('pagination').innerHTML = '';
+      return;
+    }
+
+    const uniqueChats = new Map();
+    messages.forEach(msg => {
+      const otherId = msg.sender_id === user.id ? msg.receiver_id : msg.sender_id;
+      const key = `${msg.listing_id}_${otherId}`;
+      if(!uniqueChats.has(key)) uniqueChats.set(key, msg);
+    });
+
+    const chatArray = Array.from(uniqueChats.values());
+    const totalCount = chatArray.length;
+    const from = (page-1)*pageSize;
+    const to = from + pageSize;
+    const pagedChats = chatArray.slice(from, to);
+
+    for(const msg of pagedChats){
+      const otherId = msg.sender_id === user.id ? msg.receiver_id : msg.sender_id;
+      const [{data: userData}, {data: listingData}] = await Promise.all([
+        sb.from('profiles').select('name, avatar_url').eq('id', otherId).single(),
+        sb.from('listings').select('title, image_urls').eq('id', msg.listing_id).single()
+      ]);
+
+      const name = userData?.name || 'Unbekannt';
+      const avatar = userData?.avatar_url || null;
+      const title = listingData?.title || 'Inserat gelöscht';
+      const image = listingData?.image_urls?.[0] || '';
+
+      const item = document.createElement('div');
+      item.className = 'chat-item';
+      item.tabIndex = 0;
+      item.onclick = () => window.location.href = `nachrichten.html?listing_id=${msg.listing_id}&with=${otherId}`;
+
+      item.innerHTML = `
+        <div class="chat-avatar">${avatar ? `<img src="${avatar}" alt="${name}" />` : `<span>${name.charAt(0)}</span>`}</div>
+        ${image ? `<img src="${image}" alt="${title}" class="chat-image">` : ''}
+        <div class="chat-content">
+          <div class="chat-name">${name}</div>
+          <div class="chat-title">${title}</div>
+          <div class="chat-preview">💬 ${msg.content.slice(0,80)}${msg.content.length>80?'…':''}</div>
+        </div>
+        <div class="chat-time">${timeAgo(msg.created_at)}</div>
+      `;
+      inbox.appendChild(item);
+    }
+
+    // Pagination
+    const pagination = document.getElementById('pagination');
+    pagination.innerHTML = '';
+    const totalPages = Math.ceil(totalCount/pageSize);
+
+    if(page > 1){
+      const prevBtn = document.createElement('button');
+      prevBtn.textContent = "← Zurück";
+      prevBtn.onclick = () => { currentPage--; loadInboxList(currentPage); };
+      pagination.appendChild(prevBtn);
+    }
+
+    const pageIndicator = document.createElement('span');
+    pageIndicator.textContent = `Seite ${page} von ${totalPages}`;
+    pagination.appendChild(pageIndicator);
+
+    if(page < totalPages){
+      const nextBtn = document.createElement('button');
+      nextBtn.textContent = "Weiter →";
+      nextBtn.onclick = () => { currentPage++; loadInboxList(currentPage); };
+      pagination.appendChild(nextBtn);
+    }
   }
-}
 
-loadInboxList();
+  loadInboxList();
 </script>
 
 </body>
