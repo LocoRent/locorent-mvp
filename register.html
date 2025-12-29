@@ -135,23 +135,52 @@
 </footer>
 <script>
   // Supabase v2 Client initialisieren
-  const supabase = window.supabase.createClient(
+  const sb = supabase.createClient(
     'https://flnjalgqtkqycsaymmbd.supabase.co',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
   );
 
-  // DOM Elemente
+  let userSession = null;
   const form = document.getElementById('register-form');
   const messageDiv = document.getElementById('message');
 
-  // Passwort Sichtbarkeit toggeln
-  function togglePassword() {
-    const pwField = document.getElementById('password');
-    pwField.type = pwField.type === 'password' ? 'text' : 'password';
+  async function init() {
+    try {
+      // Session abrufen
+      const { data, error } = await sb.auth.getSession();
+      if (error) console.error('Auth Fehler:', error);
+
+      userSession = data?.session || null;
+      updateNav();
+    } catch (err) {
+      console.error('Init Fehler:', err);
+    }
   }
-  function togglePasswordConfirm() {
-    const pwField = document.getElementById('passwordConfirm');
-    pwField.type = pwField.type === 'password' ? 'text' : 'password';
+
+  function updateNav() {
+    const nav = document.getElementById('nav-links');
+    nav.innerHTML = userSession?.user ? `
+      <a href="index.html">Start</a>
+      <a href="profil.html">Mein Profil</a>
+      <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+      <a href="favoriten.html">Meine Favoriten</a>
+      <a href="inserate.html">Meine Inserate</a>
+      <a href="#" onclick="logout(event)">Logout</a>
+    ` : `
+      <a href="index.html">Start</a>
+      <a href="login.html">Einloggen</a>
+      <a href="register.html">Registrieren</a>
+    `;
+  }
+
+  async function logout(event) {
+    event.preventDefault();
+    try {
+      await sb.auth.signOut();
+      window.location.href = "login.html";
+    } catch (err) {
+      console.error('Logout Fehler:', err);
+    }
   }
 
   // Formular-Submit
@@ -164,7 +193,6 @@
     const password = document.getElementById('password').value;
     const passwordConfirm = document.getElementById('passwordConfirm').value;
 
-    // Passwort bestätigen
     if (password !== passwordConfirm) {
       messageDiv.textContent = '❌ Passwörter stimmen nicht überein.';
       messageDiv.classList.add('error');
@@ -172,9 +200,7 @@
     }
 
     try {
-      // Supabase Registrierung
-      const { data, error } = await supabase.auth.signUp({ email, password });
-
+      const { data, error } = await sb.auth.signUp({ email, password });
       if (error) {
         if (error.message.toLowerCase().includes("already registered")) {
           messageDiv.textContent = '❌ Diese E-Mail-Adresse ist bereits registriert. Bitte einloggen.';
@@ -185,8 +211,6 @@
       } else {
         messageDiv.textContent = '✅ Registrierung erfolgreich! Bitte E-Mail bestätigen.';
         messageDiv.classList.add('success');
-
-        // Nach 3 Sekunden zur Login-Seite weiterleiten
         setTimeout(() => { window.location.href = 'login.html'; }, 3000);
       }
     } catch (err) {
@@ -195,12 +219,14 @@
     }
   });
 
-  // Mobile Menü Toggle
+  // Mobile Menü
   document.getElementById('nav-toggle').addEventListener('click', () => {
     const nav = document.getElementById('nav-links');
     nav.classList.toggle('show');
     document.getElementById('nav-toggle').setAttribute('aria-expanded', nav.classList.contains('show'));
   });
+
+  init();
 </script>
 
 </body>
