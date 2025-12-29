@@ -622,16 +622,22 @@ main {
   </div>
   <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
 </footer>
-
 <script>
 const supabase = window.supabase.createClient(
   'https://flnjalgqtkqycsaymmbd.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
 );
 
+document.addEventListener('DOMContentLoaded', () => {
+  updateNav();
+  loadProfile();
+});
+
+// --- Navigation ---
 async function updateNav() {
   const { data: { session } } = await supabase.auth.getSession();
   const nav = document.getElementById('nav-links');
+  if (!nav) return;
   if (session?.user) {
     nav.innerHTML = `
       <a href="index.html">Start</a>
@@ -655,6 +661,7 @@ async function logout(e) {
   window.location.href = "login.html";
 }
 
+// --- Profil laden ---
 async function loadProfile() {
   const { data: { session } } = await supabase.auth.getSession();
   if (!session?.user) {
@@ -665,21 +672,13 @@ async function loadProfile() {
   const user = session.user;
   document.getElementById('email').value = user.email;
 
-  const reviewsLink = document.getElementById('show-all-reviews');
-  if (reviewsLink && user.id) {
-    reviewsLink.href = `bewertungen.html?id=${encodeURIComponent(user.id)}`;
-  }
-
   const { data: profile, error } = await supabase
     .from('profiles')
     .select('name, city, bio')
     .eq('id', user.id)
     .single();
 
-  if (error) {
-    alert("Fehler beim Laden des Profils.");
-    return;
-  }
+  if (error) { alert("Fehler beim Laden des Profils."); return; }
 
   if (profile) {
     document.getElementById('name').value = profile.name || '';
@@ -689,8 +688,14 @@ async function loadProfile() {
 
   loadReviews(user.id);
   loadStats(user.id);
+
+  const reviewsLink = document.getElementById('show-all-reviews');
+  if (reviewsLink && user.id) {
+    reviewsLink.href = `bewertungen.html?id=${encodeURIComponent(user.id)}`;
+  }
 }
 
+// --- Bewertungen ---
 async function loadReviews(userId) {
   const container = document.getElementById('reviews-list');
   container.innerHTML = '⏳ Lade Bewertungen…';
@@ -722,21 +727,16 @@ async function loadReviews(userId) {
   `).join('');
 }
 
+// --- Stats laden ---
 async function loadStats(userId) {
-  const { data: inserate } = await supabase
-    .from('listings')
-    .select('id')
-    .eq('user_id', userId);
-
-  const { data: bewertungen } = await supabase
-    .from('reviews')
-    .select('id')
-    .eq('to_user_id', userId);
+  const { data: inserate } = await supabase.from('listings').select('id').eq('user_id', userId);
+  const { data: bewertungen } = await supabase.from('reviews').select('id').eq('to_user_id', userId);
 
   document.getElementById('stat-inserate').textContent = `Inserate: ${inserate?.length || 0}`;
   document.getElementById('stat-bewertungen').textContent = `Bewertungen: ${bewertungen?.length || 0}`;
 }
 
+// --- Sterneanzeige ---
 function createStarIcons(rating) {
   let full = Math.floor(rating);
   let half = rating - full >= 0.5;
@@ -748,6 +748,7 @@ function createStarIcons(rating) {
   return out;
 }
 
+// --- Passwortstärke ---
 const pwInput = document.getElementById('password');
 const pwStrengthBar = document.getElementById('pw-strength');
 const pwStrengthLabel = document.getElementById('strength-label');
@@ -769,20 +770,16 @@ if (pwInput) {
       case 3: strength = 'good'; label = 'Gut'; break;
       case 4: strength = 'strong'; label = 'Stark'; break;
     }
-    if (result.score < 2) {
-      strength = 'weak'; label = 'Schwach';
-    }
+    if (result.score < 2) { strength = 'weak'; label = 'Schwach'; }
     pwStrengthBar.className = strength;
     pwStrengthLabel.textContent = label;
   });
 }
 
+// --- Passwort ändern ---
 async function changePassword() {
   const password = pwInput.value.trim();
-  if (!password) {
-    alert("Bitte gib ein neues Passwort ein.");
-    return;
-  }
+  if (!password) { alert("Bitte gib ein neues Passwort ein."); return; }
   const btn = document.getElementById('change-pw-btn');
   btn.disabled = true;
   try {
@@ -794,27 +791,22 @@ async function changePassword() {
     pwStrengthLabel.textContent = '–';
   } catch (err) {
     alert("Fehler beim Ändern des Passworts: " + err.message);
-  } finally {
-    btn.disabled = false;
-  }
+  } finally { btn.disabled = false; }
 }
 
+// --- City Autocomplete ---
 const cityInput = document.getElementById('city');
 const citySuggestions = document.getElementById('city-suggestions');
 
 cityInput.addEventListener('input', async e => {
   const value = e.target.value.trim();
-  if (value.length < 2) {
-    citySuggestions.innerHTML = '';
-    cityInput.setAttribute('aria-expanded', 'false');
-    return;
-  }
+  if (value.length < 2) { citySuggestions.innerHTML = ''; cityInput.setAttribute('aria-expanded','false'); return; }
   try {
     const res = await fetch(`https://corsproxy.io/?https://nominatim.openstreetmap.org/search?format=json&accept-language=de&addressdetails=1&countrycodes=de&limit=8&q=${encodeURIComponent(value)}`);
     const results = await res.json();
     const filtered = results.filter(r => r.lat && r.lon && r.address);
     citySuggestions.innerHTML = '';
-    cityInput.setAttribute('aria-expanded', 'true');
+    cityInput.setAttribute('aria-expanded','true');
     filtered.forEach(r => {
       const ort = r.address.city || r.address.town || r.address.village || r.address.hamlet || r.address.municipality || r.display_name.split(',')[0];
       const bundesland = r.address.state || '';
@@ -822,35 +814,20 @@ cityInput.addEventListener('input', async e => {
       const display = [ort, bundesland, land].filter(Boolean).join(', ');
       const div = document.createElement('div');
       div.textContent = display;
-      div.setAttribute('role', 'option');
+      div.setAttribute('role','option');
       div.tabIndex = 0;
-      div.onclick = () => {
-        cityInput.value = display;
-        citySuggestions.innerHTML = '';
-        cityInput.setAttribute('aria-expanded', 'false');
-      };
-      div.onkeydown = e => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          div.click();
-        }
-      };
+      div.onclick = () => { cityInput.value = display; citySuggestions.innerHTML=''; cityInput.setAttribute('aria-expanded','false'); };
+      div.onkeydown = e => { if(e.key==='Enter'||e.key===' ') { e.preventDefault(); div.click(); } };
       citySuggestions.appendChild(div);
     });
-    if (filtered.length === 0) {
-      citySuggestions.innerHTML = '<div style="padding:0.5rem;">Kein Ort gefunden</div>';
-    }
-  } catch (err) {
-    console.error("Fehler bei Ortssuche:", err);
-  }
+    if(filtered.length===0) citySuggestions.innerHTML = '<div style="padding:0.5rem;">Kein Ort gefunden</div>';
+  } catch(err) { console.error("Fehler bei Ortssuche:", err); }
 });
 
+// --- Profil speichern ---
 async function saveProfile() {
   const { data: { session } } = await supabase.auth.getSession();
-  if (!session?.user) {
-    alert("Nicht eingeloggt!");
-    return;
-  }
+  if (!session?.user) { alert("Nicht eingeloggt!"); return; }
   const userId = session.user.id;
   const updates = {
     id: userId,
@@ -858,26 +835,10 @@ async function saveProfile() {
     city: document.getElementById('city').value.trim(),
     bio: document.getElementById('bio').value.trim()
   };
-  if (updates.name.length < 2) {
-  alert("Bitte gib mindestens 2 Zeichen für den Namen ein.");
-  return;
-}
-if (updates.name.length > 20) {
-  alert("Der Name darf maximal 20 Zeichen lang sein.");
-  return;
-}
-if (updates.bio.length > 150) {
-  alert("Der Text im Feld 'Über mich' darf maximal 150 Zeichen lang sein.");
-  return;
-}
-if (updates.city.length < 2) {
-  alert("Bitte gib einen gültigen Wohnort ein.");
-  return;
-}
-if (updates.city.length > 50) {
-  alert("Der Wohnort darf maximal 50 Zeichen lang sein.");
-  return;
-}
+
+  if (updates.name.length < 2 || updates.name.length > 20) { alert("Name muss zwischen 2 und 20 Zeichen sein."); return; }
+  if (updates.city.length < 2 || updates.city.length > 50) { alert("Wohnort muss zwischen 2 und 50 Zeichen sein."); return; }
+  if (updates.bio.length > 150) { alert("Bio darf maximal 150 Zeichen haben."); return; }
 
   const btn = document.getElementById('save-btn');
   btn.disabled = true;
@@ -885,23 +846,22 @@ if (updates.city.length > 50) {
     const { error } = await supabase.from('profiles').upsert(updates);
     if (error) throw error;
     alert("Profil erfolgreich gespeichert!");
-  } catch (err) {
-    alert("Fehler beim Speichern: " + err.message);
-  } finally {
-    btn.disabled = false;
-  }
+  } catch(err) { alert("Fehler beim Speichern: " + err.message); }
+  finally { btn.disabled = false; }
 }
 
-updateNav();
-loadProfile();
-  const navToggle = document.getElementById('nav-toggle');
+// --- Mobile Nav Toggle ---
+const navToggle = document.getElementById('nav-toggle');
 const navLinks = document.getElementById('nav-links');
 
-navToggle.addEventListener('click', () => {
-  navLinks.classList.toggle('show');
-  const expanded = navToggle.getAttribute('aria-expanded') === 'true';
-  navToggle.setAttribute('aria-expanded', !expanded);
-});
+if(navToggle && navLinks) {
+  navToggle.addEventListener('click', () => {
+    navLinks.classList.toggle('show');
+    const expanded = navToggle.getAttribute('aria-expanded') === 'true';
+    navToggle.setAttribute('aria-expanded', !expanded);
+  });
+}
 </script>
+
 </body>
 </html>
