@@ -550,9 +550,16 @@ nav#nav-links {
       const res = await fetch(`https://corsproxy.io/?https://nominatim.openstreetmap.org/search?format=json&accept-language=de&countrycodes=de&addressdetails=1&limit=6&q=${encodeURIComponent(value)}`);
       const results = await res.json();
       suggestionsBox.innerHTML = '';
-      results.forEach(r => {
-        const ort = r.address.city || r.address.town || r.address.village || r.display_name.split(',')[0];
-        const bundesland = r.address.state || '';
+results.forEach(r => {
+  if (!r) return;
+const ort =
+  r.address?.city ||
+  r.address?.town ||
+  r.address?.village ||
+  r.address?.municipality ||
+  r.display_name.split(',')[0];
+
+const bundesland = r.address?.state || '';
         const display = [ort, bundesland].filter(Boolean).join(', ');
         const div = document.createElement('div');
         div.textContent = display;
