@@ -499,47 +499,75 @@ async function handleFiles(files) {
   }
 }
 
-document.getElementById('location').addEventListener('input', async (e) => {
-  const value = e.target.value.trim();
-  const suggestionsBox = document.getElementById('suggestions');
+let debounceTimer;
+
+const locationInput = document.getElementById('location');
+const suggestionBox = document.getElementById('suggestions');
+
+locationInput.addEventListener('input', () => {
+  clearTimeout(debounceTimer);
+
+  const value = locationInput.value.trim();
   if (value.length < 2) {
-    suggestionsBox.innerHTML = '';
+    suggestionBox.innerHTML = '';
     return;
   }
 
-  try {
-    const res = await fetch(`https://corsproxy.io/?https://nominatim.openstreetmap.org/search?format=json&accept-language=de&addressdetails=1&countrycodes=de&limit=8&q=${encodeURIComponent(value)}`);
-    const results = await res.json();
-    const filtered = results.filter(r => r.lat && r.lon && r.address);
-    suggestionsBox.innerHTML = '';
-
-    filtered.forEach(r => {
-      const ort = r.address.city || r.address.town || r.address.village || r.address.hamlet || r.address.municipality || r.display_name.split(',')[0];
-      const bundesland = r.address.state || '';
-      const land = r.address.country || 'Deutschland';
-      const plz = r.address.postcode || '';
-      const display = [ort, bundesland, land].filter(Boolean).join(', ');
-
-      const div = document.createElement('div');
-      div.textContent = display;
-      div.tabIndex = 0;
-      div.role = "option";
-      div.onclick = () => {
-        document.getElementById('location').value = display;
-        selectedAddressData = { postal_code: plz, city: ort, location: display, lat: parseFloat(r.lat), lon: parseFloat(r.lon) };
-        suggestionsBox.innerHTML = '';
-      };
-      div.onkeydown = (evt) => {
-        if (evt.key === 'Enter' || evt.key === ' ') {
-          evt.preventDefault();
-          div.click();
+  debounceTimer = setTimeout(async () => {
+    try {
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&countrycodes=de&limit=5&q=${encodeURIComponent(value)}`,
+        {
+          headers: {
+            "User-Agent": "Locorent-App"
+          }
         }
-      };
-      suggestionsBox.appendChild(div);
-    });
-  } catch (err) {
-    console.error("Fehler bei Ortssuche:", err);
-  }
+      );
+
+      const results = await res.json();
+      suggestionBox.innerHTML = '';
+
+      results.forEach(r => {
+        const city =
+          r.address.city ||
+          r.address.town ||
+          r.address.village ||
+          r.address.municipality ||
+          r.display_name.split(',')[0];
+
+        const state = r.address.state || '';
+        const display = [city, state, "Deutschland"].filter(Boolean).join(', ');
+
+        const div = document.createElement('div');
+        div.textContent = display;
+        div.tabIndex = 0;
+        div.role = "option";
+
+        div.onclick = () => {
+          locationInput.value = display;
+
+          selectedAddressData = {
+            city: city,
+            location: display,
+            lat: parseFloat(r.lat),
+            lon: parseFloat(r.lon),
+            postal_code: r.address.postcode || ''
+          };
+
+          suggestionBox.innerHTML = '';
+        };
+
+        suggestionBox.appendChild(div);
+      });
+
+      if (results.length === 0) {
+        suggestionBox.innerHTML = '<div style="padding:0.5rem;">Kein Ort gefunden</div>';
+      }
+
+    } catch (err) {
+      console.error("Fehler bei Ortssuche:", err);
+    }
+  }, 400);
 });
 
 async function saveChanges() {
