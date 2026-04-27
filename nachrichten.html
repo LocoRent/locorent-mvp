@@ -292,18 +292,31 @@ loadMessages();
 await markChatAsRead(); // 🔴 HIER HIN
 setupRealtime();
 
-  async function loadMessages() {
-    const { data } = await sb.from('messages').select('*').eq('listing_id', listingId).order('created_at');
-    const relevant = data.filter(m => 
-      (m.sender_id === currentUser.id && m.receiver_id === chatWith) || 
-      (m.sender_id === chatWith && m.receiver_id === currentUser.id)
-    );
+async function loadMessages() {
+  const { data } = await sb.from('messages')
+    .select('*')
+    .eq('listing_id', listingId)
+    .order('created_at');
 
-    const container = document.getElementById('chat');
-    container.innerHTML = '';
-    relevant.forEach(renderMessage);
-    container.scrollTop = container.scrollHeight;
-  }
+  // 🔥 HIER NEU:
+  await sb
+    .from('messages')
+    .update({ is_read: true })
+    .eq('receiver_id', currentUser.id)
+    .eq('sender_id', chatWith)
+    .eq('listing_id', listingId)
+    .eq('is_read', false);
+
+  const relevant = data.filter(m => 
+    (m.sender_id === currentUser.id && m.receiver_id === chatWith) || 
+    (m.sender_id === chatWith && m.receiver_id === currentUser.id)
+  );
+
+  const container = document.getElementById('chat');
+  container.innerHTML = '';
+  relevant.forEach(renderMessage);
+  container.scrollTop = container.scrollHeight;
+}
 
   function renderMessage(msg) {
     const wrapper = document.createElement('div');
