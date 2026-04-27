@@ -395,19 +395,18 @@ async function getUnreadCount() {
 
   return count || 0;
 }
-async function init() {
-  try {
-    const { data, error } = await sb.auth.getSession();
-    if (error) console.error('Auth Fehler:', error);
+  async function init() {
+    try {
+      // v2: getSession über sb.auth
+      const { data, error } = await sb.auth.getSession();
+      if (error) console.error('Auth Fehler:', error);
 
-    userSession = data?.session || null;
-
-    await updateNav();
-    subscribeToMessages(); // 👈 NEU
-  } catch (err) {
-    console.error('Init Fehler:', err);
+      userSession = data?.session || null;
+      updateNav();
+    } catch (err) {
+      console.error('Init Fehler:', err);
+    }
   }
-}
 async function updateNav() {
   const nav = document.getElementById('nav-links');
 
@@ -441,24 +440,7 @@ async function updateNav() {
       console.error('Logout Fehler:', err);
     }
   }
-function subscribeToMessages() {
-  if (!userSession?.user) return;
 
-  sb.channel('messages')
-    .on(
-      'postgres_changes',
-      {
-        event: 'INSERT',
-        schema: 'public',
-        table: 'messages',
-        filter: `receiver_id=eq.${userSession.user.id}`
-      },
-      () => {
-        updateNav();
-      }
-    )
-    .subscribe();
-}
   // Mobile Menü
   document.getElementById('nav-toggle').addEventListener('click', () => {
     const nav = document.getElementById('nav-links');
