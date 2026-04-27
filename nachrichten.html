@@ -244,6 +244,22 @@
   const chatWith = urlParams.get('with');
 
   let currentUser = null, partnerName="", partnerAvatar="", channel=null, userProfile=null, isSending=false;
+  
+  async function markChatAsRead() {
+  if (!currentUser) return;
+
+  const { error } = await sb
+    .from('messages')
+    .update({ is_read: true })
+    .eq('receiver_id', currentUser.id)
+    .eq('sender_id', chatWith)
+    .eq('listing_id', listingId)
+    .eq('is_read', false);
+
+  if (error) {
+    console.error('Fehler beim Markieren:', error);
+  }
+}
 
   async function init() {
     const { data: { user } } = await sb.auth.getUser();
@@ -272,9 +288,9 @@
       window.location.href = `vermieter-profil.html?id=${chatWith}`;
     });
 
-    loadMessages();
-    setupRealtime();
-  }
+loadMessages();
+await markChatAsRead(); // 🔴 HIER HIN
+setupRealtime();
 
   async function loadMessages() {
     const { data } = await sb.from('messages').select('*').eq('listing_id', listingId).order('created_at');
