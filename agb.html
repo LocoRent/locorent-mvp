@@ -168,7 +168,15 @@
       margin-bottom: 1rem;
       user-select: none;
     }
-
+.msg-badge {
+  background: red;
+  color: white;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 999px;
+  margin-left: 6px;
+  font-weight: bold;
+}
     footer {
       width: 100%;
       box-sizing: border-box;
@@ -370,7 +378,23 @@
   );
 
   let userSession = null;
+  
+async function getUnreadCount() {
+  if (!userSession?.user) return 0;
 
+  const { count, error } = await sb
+    .from('messages')
+    .select('*', { count: 'exact', head: true })
+    .eq('receiver_id', userSession.user.id)
+    .eq('is_read', false);
+
+  if (error) {
+    console.error('Fehler beim Zählen:', error);
+    return 0;
+  }
+
+  return count || 0;
+}
   async function init() {
     try {
       // v2: getSession über sb.auth
@@ -383,21 +407,29 @@
       console.error('Init Fehler:', err);
     }
   }
+async function updateNav() {
+  const nav = document.getElementById('nav-links');
 
-  function updateNav() {
-    const nav = document.getElementById('nav-links');
-    nav.innerHTML = userSession?.user ? `
+  if (userSession?.user) {
+    const unread = await getUnreadCount();
+
+    nav.innerHTML = `
       <a href="index.html">Start</a>
       <a href="profil.html">Mein Profil</a>
-      <a href="nachrichten-inbox.html">Nachrichten</a>
+      <a href="nachrichten-inbox.html">
+        Nachrichten ${unread > 0 ? `<span class="msg-badge">${unread}</span>` : ''}
+      </a>
       <a href="favoriten.html">Meine Favoriten</a>
       <a href="inserate.html">Meine Inserate</a>
       <a href="#" onclick="logout(event)">Logout</a>
-    ` : `
+    `;
+  } else {
+    nav.innerHTML = `
       <a href="index.html">Start</a>
       <a href="login.html">Einloggen</a>
     `;
   }
+}
 
   async function logout(event) {
     event.preventDefault();
