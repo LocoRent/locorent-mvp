@@ -244,22 +244,6 @@
   const chatWith = urlParams.get('with');
 
   let currentUser = null, partnerName="", partnerAvatar="", channel=null, userProfile=null, isSending=false;
-  
-  async function markChatAsRead() {
-  if (!currentUser) return;
-
-  const { error } = await sb
-    .from('messages')
-    .update({ is_read: true })
-    .eq('receiver_id', currentUser.id)
-    .eq('sender_id', chatWith)
-    .eq('listing_id', listingId)
-    .eq('is_read', false);
-
-  if (error) {
-    console.error('Fehler beim Markieren:', error);
-  }
-}
 
   async function init() {
     const { data: { user } } = await sb.auth.getUser();
@@ -288,35 +272,22 @@
       window.location.href = `vermieter-profil.html?id=${chatWith}`;
     });
 
-loadMessages();
-await markChatAsRead(); // 🔴 HIER HIN
-setupRealtime();
+    loadMessages();
+    setupRealtime();
+  }
 
-async function loadMessages() {
-  const { data } = await sb.from('messages')
-    .select('*')
-    .eq('listing_id', listingId)
-    .order('created_at');
+  async function loadMessages() {
+    const { data } = await sb.from('messages').select('*').eq('listing_id', listingId).order('created_at');
+    const relevant = data.filter(m => 
+      (m.sender_id === currentUser.id && m.receiver_id === chatWith) || 
+      (m.sender_id === chatWith && m.receiver_id === currentUser.id)
+    );
 
-  // 🔥 HIER NEU:
-  await sb
-    .from('messages')
-    .update({ is_read: true })
-    .eq('receiver_id', currentUser.id)
-    .eq('sender_id', chatWith)
-    .eq('listing_id', listingId)
-    .eq('is_read', false);
-
-  const relevant = data.filter(m => 
-    (m.sender_id === currentUser.id && m.receiver_id === chatWith) || 
-    (m.sender_id === chatWith && m.receiver_id === currentUser.id)
-  );
-
-  const container = document.getElementById('chat');
-  container.innerHTML = '';
-  relevant.forEach(renderMessage);
-  container.scrollTop = container.scrollHeight;
-}
+    const container = document.getElementById('chat');
+    container.innerHTML = '';
+    relevant.forEach(renderMessage);
+    container.scrollTop = container.scrollHeight;
+  }
 
   function renderMessage(msg) {
     const wrapper = document.createElement('div');
