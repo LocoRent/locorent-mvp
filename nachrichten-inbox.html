@@ -384,6 +384,12 @@ setInterval(() => {
 
   async function loadInboxList(page = 1) {
     const { data: { user } } = await sb.auth.getUser();
+    await sb
+  .from('messages')
+  .update({ read: true })
+  .eq('receiver_id', user.id)
+  .eq('sender_id', otherUserId)
+  .eq('listing_id', listingId);
     if(!user) return window.location.href = "login.html";
 
     const { data: messages } = await sb.from('messages')
