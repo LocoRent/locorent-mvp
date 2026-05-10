@@ -358,15 +358,14 @@ async function deleteChat(event, listingId, otherId){
     const { error } = await sb
       .from('messages')
       .delete()
-      .or(`
-        and(sender_id.eq.${user.id},receiver_id.eq.${otherId},listing_id.eq.${listingId}),
-        and(sender_id.eq.${otherId},receiver_id.eq.${user.id},listing_id.eq.${listingId})
-      `);
+.or(`and(sender_id.eq.${user.id},receiver_id.eq.${otherId},listing_id.eq.${listingId}),and(sender_id.eq.${otherId},receiver_id.eq.${user.id},listing_id.eq.${listingId})`);
 
     if(error) throw error;
 
     loadInboxList(currentPage);
-
+setInterval(() => {
+  loadInboxList(currentPage);
+}, 5000);
   } catch(err){
 
     console.error(err);
