@@ -114,6 +114,40 @@
   text-overflow: ellipsis;
 }
   .chat-time { font-size: 0.85rem; color: #777; margin-left: 1rem; white-space: nowrap; flex-shrink: 0; }
+    .chat-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+  margin-left: 1rem;
+  flex-shrink: 0;
+}
+
+.unread-badge {
+  background: #e53935;
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 700;
+  min-width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6px;
+}
+
+.delete-chat-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: transform 0.2s ease;
+}
+
+.delete-chat-btn:hover {
+  transform: scale(1.15);
+}
 
   /* Desktop spezifisch */
   @media(min-width: 900px){
@@ -307,7 +341,39 @@ footer small {
       console.error('Logout Fehler:', err);
     }
   }
+async function deleteChat(event, listingId, otherId){
 
+  event.stopPropagation();
+
+  const confirmDelete = confirm(
+    "Möchtest du diesen Chat wirklich löschen?"
+  );
+
+  if(!confirmDelete) return;
+
+  const { data: { user } } = await sb.auth.getUser();
+
+  try {
+
+    const { error } = await sb
+      .from('messages')
+      .delete()
+      .or(`
+        and(sender_id.eq.${user.id},receiver_id.eq.${otherId},listing_id.eq.${listingId}),
+        and(sender_id.eq.${otherId},receiver_id.eq.${user.id},listing_id.eq.${listingId})
+      `);
+
+    if(error) throw error;
+
+    loadInboxList(currentPage);
+
+  } catch(err){
+
+    console.error(err);
+    alert("Chat konnte nicht gelöscht werden.");
+
+  }
+}
   function timeAgo(dateString) {
     const date = new Date(dateString);
     const diff = (Date.now() - date.getTime()) / 1000;
@@ -335,14 +401,56 @@ footer small {
       return;
     }
 
-    const uniqueChats = new Map();
-    messages.forEach(msg => {
-      const otherId = msg.sender_id === user.id ? msg.receiver_id : msg.sender_id;
-      const key = `${msg.listing_id}_${otherId}`;
-      if(!uniqueChats.has(key)) uniqueChats.set(key, msg);
+const uniqueChats = new Map();
+
+messages.forEach(msg => {
+
+  const otherId =
+    msg.sender_id === user.id
+      ? msg.receiver_id
+      : msg.sender_id;
+
+  const key = `${msg.listing_id}_${otherId}`;
+
+  if(!uniqueChats.has(key)) {
+    uniqueChats.set(key, {
+      ...msg,
+      unreadCount: 0
     });
+  }
+
+  const existing = uniqueChats.get(key);
+
+  // Neueste Nachricht speichern
+  if(new Date(msg.created_at) > new Date(existing.created_at)) {
+    existing.content = msg.content;
+    existing.created_at = msg.created_at;
+    existing.sender_id = msg.sender_id;
+  }
+
+  // Ungelesene zählen
+  if(
+    msg.receiver_id === user.id &&
+    !msg.read
+  ) {
+    existing.unreadCount++;
+  }
+
+  uniqueChats.set(key, existing);
+});
 
     const chatArray = Array.from(uniqueChats.values());
+    chatArray.sort((a,b) => {
+
+  // Chats mit ungelesenen zuerst
+  if(b.unreadCount !== a.unreadCount){
+    return b.unreadCount - a.unreadCount;
+  }
+
+  // Danach neueste Nachricht
+  return new Date(b.created_at) - new Date(a.created_at);
+
+});
     const totalCount = chatArray.length;
     const from = (page-1)*pageSize;
     const to = from + pageSize;
@@ -373,7 +481,25 @@ footer small {
           <div class="chat-title">${title}</div>
           <div class="chat-preview">💬 ${msg.content.slice(0,80)}${msg.content.length>80?'…':''}</div>
         </div>
-        <div class="chat-time">${timeAgo(msg.created_at)}</div>
+<div class="chat-right">
+
+  <div class="chat-time">
+    ${timeAgo(msg.created_at)}
+  </div>
+
+  ${msg.unreadCount > 0 ? `
+    <div class="unread-badge">
+      ${msg.unreadCount}
+    </div>
+  ` : ''}
+
+  <button
+    class="delete-chat-btn"
+    onclick="deleteChat(event, '${msg.listing_id}', '${otherId}')">
+    🗑️
+  </button>
+
+</div>
       `;
       inbox.appendChild(item);
     }
