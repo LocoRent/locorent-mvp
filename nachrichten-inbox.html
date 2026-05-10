@@ -220,40 +220,99 @@ footer small {
 }
 
     /* MOBILE */
-    @media (max-width: 720px) {
-        header {
-    padding-left: 1rem;  /* minimaler Abstand links */
-    padding-right: 1rem; /* minimaler Abstand rechts */
-    width: 100%;         /* volle Breite */
-  }
-      #nav-toggle { display: block; }
-      nav#main-nav { width: 100%; flex-direction: column; display: none; margin-top: 1rem; }
-      nav#main-nav.show { display: flex; }
-      nav#main-nav a { margin: 0.4rem 0; padding: 0.5rem 1rem; background-color: rgba(255,255,255,0.1); border-radius: 6px; }
-    }
-    /* Mobile Fix für horizontales Scrollen */
 @media (max-width: 720px) {
+
   html, body {
-    max-width: 100vw;  /* maximale Breite auf Viewport begrenzen */
-    overflow-x: hidden; /* horizontales Scrollen verhindern */
+    max-width: 100vw;
+    overflow-x: hidden;
   }
+
+  header {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    width: 100%;
+  }
+
+  #nav-toggle {
+    display: block;
+  }
+
+  nav#main-nav {
+    width: 100%;
+    flex-direction: column;
+    display: none;
+    margin-top: 1rem;
+  }
+
+  nav#main-nav.show {
+    display: flex;
+  }
+
+  nav#main-nav a {
+    margin: 0.4rem 0;
+    padding: 0.5rem 1rem;
+    background-color: rgba(255,255,255,0.1);
+    border-radius: 6px;
+  }
+
+  /* CHAT MOBILE */
 
   .chat-item {
-    flex-wrap: wrap;        /* Inhalt darf umbrechen */
-    min-width: 0;           /* verhindert Flexbox Überlauf */
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem 0.5rem;
   }
 
-  .chat-avatar, .chat-image {
-    max-width: 100%;        /* Bilder dürfen nicht größer als Container sein */
-    height: auto;           /* Höhe automatisch anpassen */
+  .chat-avatar {
+    width: 55px;
+    height: 55px;
+    margin-right: 0;
+  }
+
+  .chat-image {
+    width: 100%;
+    height: 180px;
+    margin-right: 0;
+    border-radius: 12px;
+    object-fit: cover;
   }
 
   .chat-content {
-    min-width: 0;
-    overflow: hidden;
-    word-wrap: break-word;
+    width: 100%;
   }
-    footer > div {
+
+  .chat-name {
+    font-size: 1rem;
+  }
+
+  .chat-title {
+    font-size: 0.95rem;
+  }
+
+  .chat-preview {
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+
+  .chat-right {
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 0;
+  }
+
+  .chat-time {
+    margin-left: 0;
+    font-size: 0.8rem;
+  }
+
+  .delete-chat-btn {
+    font-size: 1.2rem;
+  }
+
+  footer > div {
     flex-direction: column;
     align-items: flex-start;
   }
@@ -261,6 +320,7 @@ footer small {
   footer > div > div {
     width: 100%;
   }
+
 }
   </style>
 </head>
