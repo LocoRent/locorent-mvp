@@ -554,8 +554,10 @@ messages.forEach(msg => {
       item.tabIndex = 0;
 item.onclick = async () => {
   await markMessagesAsRead(msg.listing_id, otherId);
-  window.location.href =
-    `nachrichten.html?listing_id=${msg.listing_id}&with=${otherId}`;
+await markMessagesAsRead(msg.listing_id, otherId);
+loadUnreadBadge(); // 🔥 wichtig: oben Badge aktualisieren
+window.location.href =
+  `nachrichten.html?listing_id=${msg.listing_id}&with=${otherId}`;
 };
 
       item.innerHTML = `
@@ -571,27 +573,7 @@ item.onclick = async () => {
   <div class="chat-time">
     ${timeAgo(msg.created_at)}
   </div>
-async function loadUnreadBadge() {
-  const { data: { user } } = await sb.auth.getUser();
-  if (!user) return;
 
-  const { data } = await sb
-    .from('messages')
-    .select('id')
-    .eq('receiver_id', user.id)
-    .eq('read', false);
-
-  const badge = document.getElementById('msgBadge');
-
-  const count = data?.length || 0;
-
-  if (count > 0) {
-    badge.style.display = "inline-flex";
-    badge.textContent = count;
-  } else {
-    badge.style.display = "none";
-  }
-}
   ${msg.unreadCount > 0 ? `
     <div class="unread-badge">
       ${msg.unreadCount}
@@ -635,6 +617,27 @@ async function loadUnreadBadge() {
 
   loadInboxList();
   loadUnreadBadge();
+  async function loadUnreadBadge() {
+  const { data: { user } } = await sb.auth.getUser();
+  if (!user) return;
+
+  const { data } = await sb
+    .from('messages')
+    .select('id')
+    .eq('receiver_id', user.id)
+    .eq('read', false);
+
+  const badge = document.getElementById('msgBadge');
+
+  const count = data?.length || 0;
+
+  if (count > 0) {
+    badge.style.display = "inline-flex";
+    badge.textContent = count;
+  } else {
+    badge.style.display = "none";
+  }
+}
 </script>
 
 </body>
