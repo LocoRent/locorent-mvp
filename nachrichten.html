@@ -249,7 +249,7 @@
     const { data: { user } } = await sb.auth.getUser();
     if (!user) return window.location.href = "login.html";
     currentUser = user;
-
+await markAsRead();
     const [{ data: partner }, { data: listing }, { data: profile }] = await Promise.all([
       sb.from('profiles').select('name, avatar_url').eq('id', chatWith).single(),
       sb.from('listings').select('title, price_per_day, image_urls').eq('id', listingId).single(),
@@ -353,6 +353,15 @@
   document.getElementById('message-input').addEventListener('keydown', e => { if (e.key === 'Enter') sendMessage(); });
 
   init();
+  async function markAsRead() {
+  await sb
+    .from('messages')
+    .update({ read: true })
+    .eq('listing_id', listingId)
+    .eq('receiver_id', currentUser.id)
+    .eq('sender_id', chatWith);
+}
+  loadUnreadBadge?.();
 </script>
 
 </body>
