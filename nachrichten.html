@@ -353,14 +353,19 @@ await markAsRead();
   document.getElementById('message-input').addEventListener('keydown', e => { if (e.key === 'Enter') sendMessage(); });
 
   init();
-  await markMessagesAsRead(listingId, chatWith);
-  async function markAsRead() {
+  loadMessages();
+setupRealtime();
+
+await markMessagesAsRead(); // 🔥 DAS FEHLT
+async function markMessagesAsRead() {
+  const { data: { user } } = await sb.auth.getUser();
+
   await sb
     .from('messages')
     .update({ read: true })
-    .eq('listing_id', listingId)
-    .eq('receiver_id', currentUser.id)
-    .eq('sender_id', chatWith);
+    .eq('receiver_id', user.id)
+    .eq('sender_id', chatWith)
+    .eq('listing_id', listingId);
 }
   loadUnreadBadge?.();
 </script>
