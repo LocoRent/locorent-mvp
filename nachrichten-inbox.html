@@ -418,16 +418,7 @@ footer small {
     }
   }
 async function deleteChat(event, listingId, otherId){
-async function markMessagesAsRead(listingId, otherId) {
-  const { data: { user } } = await sb.auth.getUser();
 
-  await sb
-    .from('messages')
-    .update({ read: true })
-    .eq('receiver_id', user.id)
-    .eq('sender_id', otherId)
-    .eq('listing_id', listingId);
-}
   event.stopPropagation();
 
   const confirmDelete = confirm(
@@ -554,10 +545,10 @@ messages.forEach(msg => {
       item.tabIndex = 0;
 item.onclick = async () => {
   await markMessagesAsRead(msg.listing_id, otherId);
-await markMessagesAsRead(msg.listing_id, otherId);
-loadUnreadBadge(); // 🔥 wichtig: oben Badge aktualisieren
-window.location.href =
-  `nachrichten.html?listing_id=${msg.listing_id}&with=${otherId}`;
+  loadUnreadBadge(); // oben Zahl aktualisieren
+  loadInboxList(currentPage); // optional: UI sofort refresh
+  window.location.href =
+    `nachrichten.html?listing_id=${msg.listing_id}&with=${otherId}`;
 };
 
       item.innerHTML = `
@@ -617,6 +608,18 @@ window.location.href =
 
   loadInboxList();
   loadUnreadBadge();
+  async function markMessagesAsRead(listingId, otherId) {
+  const { data: { user } } = await sb.auth.getUser();
+
+  await sb
+    .from('messages')
+    .update({ read: true })
+    .eq('receiver_id', user.id)
+    .eq('sender_id', otherId)
+    .eq('listing_id', listingId);
+
+  loadUnreadBadge(); // 🔥 oben Badge sofort aktualisieren
+}
   async function loadUnreadBadge() {
   const { data: { user } } = await sb.auth.getUser();
   if (!user) return;
