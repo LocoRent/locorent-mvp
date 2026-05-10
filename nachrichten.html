@@ -353,6 +353,7 @@ await markAsRead();
   document.getElementById('message-input').addEventListener('keydown', e => { if (e.key === 'Enter') sendMessage(); });
 
   init();
+  await markMessagesAsRead(listingId, chatWith);
   async function markAsRead() {
   await sb
     .from('messages')
