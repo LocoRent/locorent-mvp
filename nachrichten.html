@@ -244,7 +244,17 @@
   const chatWith = urlParams.get('with');
 
   let currentUser = null, partnerName="", partnerAvatar="", channel=null, userProfile=null, isSending=false;
+async function markMessagesAsRead() {
 
+  await sb
+    .from('messages')
+    .update({ read: true })
+    .eq('receiver_id', currentUser.id)
+    .eq('sender_id', chatWith)
+    .eq('listing_id', listingId)
+    .eq('read', false);
+
+}
   async function init() {
     const { data: { user } } = await sb.auth.getUser();
     if (!user) return window.location.href = "login.html";
@@ -272,8 +282,11 @@
       window.location.href = `vermieter-profil.html?id=${chatWith}`;
     });
 
-    loadMessages();
-    setupRealtime();
+await markMessagesAsRead();
+
+loadMessages();
+
+setupRealtime();
   }
 
   async function loadMessages() {
@@ -343,6 +356,10 @@
     }, payload => {
       const msg = payload.new;
       if (msg.sender_id !== currentUser.id && msg.receiver_id === currentUser.id) {
+        sb
+  .from('messages')
+  .update({ read: true })
+  .eq('id', msg.id);
         renderMessage(msg);
         document.getElementById('chat').scrollTop = document.getElementById('chat').scrollHeight;
       }
