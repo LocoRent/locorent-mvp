@@ -611,10 +611,6 @@ item.onclick = async () => {
 
   loadInboxList();
   loadUnreadBadge();
-  window.addEventListener('pageshow', () => {
-  loadInboxList(currentPage);
-  loadUnreadBadge();
-});
 async function markMessagesAsRead(listingId, otherId) {
 
   const { data: { user } } = await sb.auth.getUser();
