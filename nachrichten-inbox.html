@@ -501,11 +501,8 @@ for (const msg of messages) {
     chat.read = msg.read;
   }
 
-  // 🔥 unread korrekt zählen
-  if (
-    msg.receiver_id === user.id &&
-    msg.read === false
-  ) {
+  // unread zählen
+  if (msg.receiver_id === user.id && msg.read === false) {
     chat.unreadCount++;
   }
 }
