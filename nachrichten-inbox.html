@@ -114,6 +114,40 @@
   text-overflow: ellipsis;
 }
   .chat-time { font-size: 0.85rem; color: #777; margin-left: 1rem; white-space: nowrap; flex-shrink: 0; }
+    .chat-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+  margin-left: 1rem;
+  flex-shrink: 0;
+}
+
+.unread-badge {
+  background: #e53935;
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 700;
+  min-width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6px;
+}
+
+.delete-chat-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: transform 0.2s ease;
+}
+
+.delete-chat-btn:hover {
+  transform: scale(1.15);
+}
 
   /* Desktop spezifisch */
   @media(min-width: 900px){
@@ -184,66 +218,116 @@ footer small {
   text-align: center;
   opacity: 0.85;
 }
-    .delete-btn {
-  margin-left: 10px;
-  background: #e53935;
-  color: white;
-  border: none;
-  padding: 6px 10px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 0.75rem;
-  transition: 0.2s;
-}
 
-.delete-btn:hover {
-  background: #c62828;
-}
+/* =========================
+   MOBILE CHAT UI FIX
+========================= */
 
-    /* MOBILE */
-    @media (max-width: 720px) {
-        header {
-    padding-left: 1rem;  /* minimaler Abstand links */
-    padding-right: 1rem; /* minimaler Abstand rechts */
-    width: 100%;         /* volle Breite */
-  }
-      #nav-toggle { display: block; }
-      nav#main-nav { width: 100%; flex-direction: column; display: none; margin-top: 1rem; }
-      nav#main-nav.show { display: flex; }
-      nav#main-nav a { margin: 0.4rem 0; padding: 0.5rem 1rem; background-color: rgba(255,255,255,0.1); border-radius: 6px; }
-    }
-    /* Mobile Fix für horizontales Scrollen */
 @media (max-width: 720px) {
+
   html, body {
-    max-width: 100vw;  /* maximale Breite auf Viewport begrenzen */
-    overflow-x: hidden; /* horizontales Scrollen verhindern */
+    max-width: 100vw;
+    overflow-x: hidden;
   }
 
+  /* CHAT ITEM = CARD STYLE */
   .chat-item {
-    flex-wrap: wrap;        /* Inhalt darf umbrechen */
-    min-width: 0;           /* verhindert Flexbox Überlauf */
-  }
-
-  .chat-avatar, .chat-image {
-    max-width: 100%;        /* Bilder dürfen nicht größer als Container sein */
-    height: auto;           /* Höhe automatisch anpassen */
-  }
-
-  .chat-content {
-    min-width: 0;
-    overflow: hidden;
-    word-wrap: break-word;
-  }
-    footer > div {
-    flex-direction: column;
+    display: flex;
+    gap: 0.8rem;
+    padding: 0.9rem;
+    border-bottom: 1px solid #eee;
     align-items: flex-start;
+    background: #fff;
   }
 
-  footer > div > div {
-    width: 100%;
+  .chat-item:hover {
+    background: #f5f5f5;
+  }
+
+  /* AVATAR */
+  .chat-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* LISTING IMAGE (klein & clean) */
+  .chat-image {
+    width: 55px;
+    height: 55px;
+    border-radius: 8px;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
+  /* TEXT AREA */
+  .chat-content {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .chat-name {
+    font-size: 0.85rem;
+    opacity: 0.7;
+  }
+
+  .chat-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--primary-dark);
+    line-height: 1.2;
+  }
+
+  .chat-preview {
+    font-size: 0.85rem;
+    color: #666;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+
+  /* RIGHT SIDE (time + badge + delete) */
+  .chat-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+    min-height: 55px;
+    gap: 6px;
+  }
+
+  .chat-time {
+    font-size: 0.7rem;
+    color: #999;
+  }
+
+  .unread-badge {
+    background: #e53935;
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 700;
+    min-width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .delete-chat-btn {
+    font-size: 1rem;
+  }
+
+  /* optional: Vorschau kürzer oder aus */
+  .chat-preview {
+    max-width: 180px;
   }
 }
-
   </style>
 </head>
 <body>
@@ -254,7 +338,17 @@ footer small {
   <nav id="main-nav">
     <a href="index.html">Start</a>
     <a href="profil.html">Mein Profil</a>
-    <a href="nachrichten-inbox.html">Nachrichten</a>
+<a href="nachrichten-inbox.html">
+  📨 Nachrichten <span id="msgBadge" style="
+    background:#e53935;
+    color:#fff;
+    font-size:0.75rem;
+    padding:2px 7px;
+    border-radius:999px;
+    margin-left:5px;
+    display:none;
+  ">0</span>
+</a>
     <a href="favoriten.html">Meine Favoriten</a>
     <a href="inserate.html">Meine Inserate</a>
     <a href="#" onclick="logout(event)">Logout</a>
@@ -323,7 +417,35 @@ footer small {
       console.error('Logout Fehler:', err);
     }
   }
+async function deleteChat(event, listingId, otherId){
 
+  event.stopPropagation();
+
+  const confirmDelete = confirm(
+    "Möchtest du diesen Chat wirklich löschen?"
+  );
+
+  if(!confirmDelete) return;
+
+  const { data: { user } } = await sb.auth.getUser();
+
+  try {
+
+    const { error } = await sb
+      .from('messages')
+      .delete()
+.or(`and(sender_id.eq.${user.id},receiver_id.eq.${otherId},listing_id.eq.${listingId}),and(sender_id.eq.${otherId},receiver_id.eq.${user.id},listing_id.eq.${listingId})`);
+
+    if(error) throw error;
+
+    loadInboxList(currentPage);
+  } catch(err){
+
+    console.error(err);
+    alert("Chat konnte nicht gelöscht werden.");
+
+  }
+}
   function timeAgo(dateString) {
     const date = new Date(dateString);
     const diff = (Date.now() - date.getTime()) / 1000;
@@ -351,14 +473,56 @@ footer small {
       return;
     }
 
-    const uniqueChats = new Map();
-    messages.forEach(msg => {
-      const otherId = msg.sender_id === user.id ? msg.receiver_id : msg.sender_id;
-      const key = `${msg.listing_id}_${otherId}`;
-      if(!uniqueChats.has(key)) uniqueChats.set(key, msg);
+const uniqueChats = new Map();
+
+messages.forEach(msg => {
+
+  const otherId =
+    msg.sender_id === user.id
+      ? msg.receiver_id
+      : msg.sender_id;
+
+  const key = `${msg.listing_id}_${otherId}`;
+
+  if(!uniqueChats.has(key)) {
+    uniqueChats.set(key, {
+      ...msg,
+      unreadCount: 0
     });
+  }
+
+  const existing = uniqueChats.get(key);
+
+  // Neueste Nachricht speichern
+  if(new Date(msg.created_at) > new Date(existing.created_at)) {
+    existing.content = msg.content;
+    existing.created_at = msg.created_at;
+    existing.sender_id = msg.sender_id;
+  }
+
+  // Ungelesene zählen
+  if(
+    msg.receiver_id === user.id &&
+    !msg.read
+  ) {
+    existing.unreadCount++;
+  }
+
+  uniqueChats.set(key, existing);
+});
 
     const chatArray = Array.from(uniqueChats.values());
+    chatArray.sort((a,b) => {
+
+  // Chats mit ungelesenen zuerst
+  if(b.unreadCount !== a.unreadCount){
+    return b.unreadCount - a.unreadCount;
+  }
+
+  // Danach neueste Nachricht
+  return new Date(b.created_at) - new Date(a.created_at);
+
+});
     const totalCount = chatArray.length;
     const from = (page-1)*pageSize;
     const to = from + pageSize;
@@ -379,53 +543,45 @@ footer small {
       const item = document.createElement('div');
       item.className = 'chat-item';
       item.tabIndex = 0;
-      item.onclick = () => window.location.href = `nachrichten.html?listing_id=${msg.listing_id}&with=${otherId}`;
+item.onclick = async () => {
+  await markMessagesAsRead(msg.listing_id, otherId);
+  loadUnreadBadge(); // oben Zahl aktualisieren
+  loadInboxList(currentPage); // optional: UI sofort refresh
+  window.location.href =
+    `nachrichten.html?listing_id=${msg.listing_id}&with=${otherId}`;
+};
 
-item.innerHTML = `
-  <div class="chat-avatar">
-    ${avatar ? `<img src="${avatar}" alt="${name}" />` : `<span>${name.charAt(0)}</span>`}
+      item.innerHTML = `
+        <div class="chat-avatar">${avatar ? `<img src="${avatar}" alt="${name}" />` : `<span>${name.charAt(0)}</span>`}</div>
+        ${image ? `<img src="${image}" alt="${title}" class="chat-image">` : ''}
+        <div class="chat-content">
+          <div class="chat-name">${name}</div>
+          <div class="chat-title">${title}</div>
+          <div class="chat-preview">💬 ${msg.content.slice(0,80)}${msg.content.length>80?'…':''}</div>
+        </div>
+<div class="chat-right">
+
+  <div class="chat-time">
+    ${timeAgo(msg.created_at)}
   </div>
 
-  ${image ? `<img src="${image}" alt="${title}" class="chat-image">` : ''}
+  ${msg.unreadCount > 0 ? `
+    <div class="unread-badge">
+      ${msg.unreadCount}
+    </div>
+  ` : ''}
 
-  <div class="chat-content">
-    <div class="chat-name">${name}</div>
-    <div class="chat-title">${title}</div>
-    <div class="chat-preview">💬 ${msg.content.slice(0,80)}${msg.content.length>80?'…':''}</div>
-  </div>
-
-  <div class="chat-time">${timeAgo(msg.created_at)}</div>
-
-  <button class="delete-btn"
+  <button
+    class="delete-chat-btn"
     onclick="deleteChat(event, '${msg.listing_id}', '${otherId}')">
-    Löschen
+    🗑️
   </button>
-`;
-      
-async function deleteChat(event, listingId, otherId) {
-  event.stopPropagation(); // verhindert Öffnen vom Chat
 
-  const ok = confirm("Willst du diesen Chat wirklich löschen?");
-  if (!ok) return;
+</div>
+      `;
+      inbox.appendChild(item);
+    }
 
-  const { data: { user } } = await sb.auth.getUser();
-
-  const { error } = await sb
-    .from('messages')
-    .delete()
-    .or(
-      `and(sender_id.eq.${user.id},receiver_id.eq.${otherId},listing_id.eq.${listingId}),` +
-      `and(sender_id.eq.${otherId},receiver_id.eq.${user.id},listing_id.eq.${listingId})`
-    );
-
-  if (error) {
-    console.error(error);
-    alert("Fehler beim Löschen");
-    return;
-  }
-
-  loadInboxList(currentPage);
-}
     // Pagination
     const pagination = document.getElementById('pagination');
     pagination.innerHTML = '';
@@ -451,6 +607,43 @@ async function deleteChat(event, listingId, otherId) {
   }
 
   loadInboxList();
+  loadUnreadBadge();
+async function markMessagesAsRead(listingId, otherId) {
+  const { data: { user } } = await sb.auth.getUser();
+
+  await sb
+    .from('messages')
+    .update({ read: true })
+    .or(`
+      and(receiver_id.eq.${user.id},sender_id.eq.${otherId},listing_id.eq.${listingId}),
+      and(receiver_id.eq.${user.id},sender_id.eq.${otherId},listing_id.eq.${listingId})
+    `);
+
+  loadUnreadBadge();
+}
+async function loadUnreadBadge() {
+  const { data: { user } } = await sb.auth.getUser();
+  if (!user) return;
+
+  const { data } = await sb
+    .from('messages')
+    .select('id')
+    .eq('receiver_id', user.id)
+    .eq('read', false);
+
+  const count = data?.length || 0;
+
+  const badge = document.getElementById('msgBadge');
+
+  if (!badge) return;
+
+  if (count > 0) {
+    badge.style.display = "inline-flex";
+    badge.textContent = count;
+  } else {
+    badge.style.display = "none";
+  }
+}
 </script>
 
 </body>
