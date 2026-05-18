@@ -184,6 +184,21 @@ footer small {
   text-align: center;
   opacity: 0.85;
 }
+    .delete-btn {
+  margin-left: 10px;
+  background: #e53935;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.75rem;
+  transition: 0.2s;
+}
+
+.delete-btn:hover {
+  background: #c62828;
+}
 
     /* MOBILE */
     @media (max-width: 720px) {
@@ -228,6 +243,7 @@ footer small {
     width: 100%;
   }
 }
+
   </style>
 </head>
 <body>
@@ -365,19 +381,51 @@ footer small {
       item.tabIndex = 0;
       item.onclick = () => window.location.href = `nachrichten.html?listing_id=${msg.listing_id}&with=${otherId}`;
 
-      item.innerHTML = `
-        <div class="chat-avatar">${avatar ? `<img src="${avatar}" alt="${name}" />` : `<span>${name.charAt(0)}</span>`}</div>
-        ${image ? `<img src="${image}" alt="${title}" class="chat-image">` : ''}
-        <div class="chat-content">
-          <div class="chat-name">${name}</div>
-          <div class="chat-title">${title}</div>
-          <div class="chat-preview">💬 ${msg.content.slice(0,80)}${msg.content.length>80?'…':''}</div>
-        </div>
-        <div class="chat-time">${timeAgo(msg.created_at)}</div>
-      `;
-      inbox.appendChild(item);
-    }
+item.innerHTML = `
+  <div class="chat-avatar">
+    ${avatar ? `<img src="${avatar}" alt="${name}" />` : `<span>${name.charAt(0)}</span>`}
+  </div>
 
+  ${image ? `<img src="${image}" alt="${title}" class="chat-image">` : ''}
+
+  <div class="chat-content">
+    <div class="chat-name">${name}</div>
+    <div class="chat-title">${title}</div>
+    <div class="chat-preview">💬 ${msg.content.slice(0,80)}${msg.content.length>80?'…':''}</div>
+  </div>
+
+  <div class="chat-time">${timeAgo(msg.created_at)}</div>
+
+  <button class="delete-btn"
+    onclick="deleteChat(event, '${msg.listing_id}', '${otherId}')">
+    Löschen
+  </button>
+`;
+      
+async function deleteChat(event, listingId, otherId) {
+  event.stopPropagation(); // verhindert Öffnen vom Chat
+
+  const ok = confirm("Willst du diesen Chat wirklich löschen?");
+  if (!ok) return;
+
+  const { data: { user } } = await sb.auth.getUser();
+
+  const { error } = await sb
+    .from('messages')
+    .delete()
+    .or(
+      `and(sender_id.eq.${user.id},receiver_id.eq.${otherId},listing_id.eq.${listingId}),` +
+      `and(sender_id.eq.${otherId},receiver_id.eq.${user.id},listing_id.eq.${listingId})`
+    );
+
+  if (error) {
+    console.error(error);
+    alert("Fehler beim Löschen");
+    return;
+  }
+
+  loadInboxList(currentPage);
+}
     // Pagination
     const pagination = document.getElementById('pagination');
     pagination.innerHTML = '';
