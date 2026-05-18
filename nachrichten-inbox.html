@@ -501,7 +501,7 @@ for (const msg of messages) {
   }
 
   // unread zählen
-  if (msg.receiver_id === user.id && msg.read === false) {
+if (msg.receiver_id === user.id && !msg.read)
     chat.unreadCount++;
   }
 }
@@ -616,7 +616,7 @@ async function markMessagesAsRead(listingId, otherId) {
     .eq('receiver_id', user.id)
     .eq('sender_id', otherId)
     .eq('listing_id', listingId)
-    .eq('read', false);
+.or('read.eq.false,read.is.null')
 
   if(error){
     console.error(error);
