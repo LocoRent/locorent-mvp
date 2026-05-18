@@ -476,7 +476,6 @@ async function deleteChat(event, listingId, otherId){
 const uniqueChats = new Map();
 
 for (const msg of messages) {
-
   const otherId =
     msg.sender_id === user.id
       ? msg.receiver_id
@@ -493,7 +492,7 @@ for (const msg of messages) {
 
   const chat = uniqueChats.get(key);
 
-  // neueste Nachricht
+  // neueste Nachricht behalten
   if (new Date(msg.created_at) > new Date(chat.created_at)) {
     chat.content = msg.content;
     chat.created_at = msg.created_at;
@@ -506,26 +505,6 @@ for (const msg of messages) {
     chat.unreadCount++;
   }
 }
-
-  const existing = uniqueChats.get(key);
-
-  // Neueste Nachricht speichern
-  if(new Date(msg.created_at) > new Date(existing.created_at)) {
-    existing.content = msg.content;
-    existing.created_at = msg.created_at;
-    existing.sender_id = msg.sender_id;
-  }
-
-  // Ungelesene zählen
-  if(
-    msg.receiver_id === user.id &&
-    !msg.read
-  ) {
-    existing.unreadCount++;
-  }
-
-  uniqueChats.set(key, existing);
-});
 
     const chatArray = Array.from(uniqueChats.values());
     chatArray.sort((a,b) => {
