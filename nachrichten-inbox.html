@@ -555,7 +555,7 @@ item.onclick = async () => {
         <div class="chat-content">
           <div class="chat-name">${name}</div>
           <div class="chat-title">${title}</div>
-          <div class="chat-preview">💬 ${msg.content.slice(0,80)}${msg.content.length>80?'…':''}</div>
+          <div class="chat-preview">💬 ${(msg.content || "").slice(0,80)}${msg.content.length>80?'…':''}</div>
         </div>
 <div class="chat-right">
 
