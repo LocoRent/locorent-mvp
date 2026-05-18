@@ -475,7 +475,7 @@ async function deleteChat(event, listingId, otherId){
 
 const uniqueChats = new Map();
 
-messages.forEach(msg => {
+for (const msg of messages) {
 
   const otherId =
     msg.sender_id === user.id
@@ -484,12 +484,31 @@ messages.forEach(msg => {
 
   const key = `${msg.listing_id}_${otherId}`;
 
-  if(!uniqueChats.has(key)) {
+  if (!uniqueChats.has(key)) {
     uniqueChats.set(key, {
       ...msg,
       unreadCount: 0
     });
   }
+
+  const chat = uniqueChats.get(key);
+
+  // neueste Nachricht
+  if (new Date(msg.created_at) > new Date(chat.created_at)) {
+    chat.content = msg.content;
+    chat.created_at = msg.created_at;
+    chat.sender_id = msg.sender_id;
+    chat.read = msg.read;
+  }
+
+  // 🔥 unread korrekt zählen
+  if (
+    msg.receiver_id === user.id &&
+    msg.read === false
+  ) {
+    chat.unreadCount++;
+  }
+}
 
   const existing = uniqueChats.get(key);
 
@@ -635,17 +654,20 @@ async function loadUnreadBadge() {
   const { data: { user } } = await sb.auth.getUser();
   if (!user) return;
 
-  const { data } = await sb
+  const { data, error } = await sb
     .from('messages')
     .select('id')
     .eq('receiver_id', user.id)
     .eq('read', false);
 
-  const count = data?.length || 0;
+  if (error) {
+    console.error(error);
+    return;
+  }
+
+  const count = data.length;
 
   const badge = document.getElementById('msgBadge');
-
-  if (!badge) return;
 
   if (count > 0) {
     badge.style.display = "inline-flex";
