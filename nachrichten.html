@@ -353,10 +353,11 @@ setupRealtime();
       schema: 'public',
       table: 'messages',
       filter: `listing_id=eq.${listingId}`
-    }, payload => {
+}, async payload => {
       const msg = payload.new;
       if (msg.sender_id !== currentUser.id && msg.receiver_id === currentUser.id) {
         sb
+await sb
   .from('messages')
   .update({ read: true })
   .eq('id', msg.id);
