@@ -544,9 +544,12 @@ messages.forEach(msg => {
       item.className = 'chat-item';
       item.tabIndex = 0;
 item.onclick = async () => {
+
   await markMessagesAsRead(msg.listing_id, otherId);
-  loadUnreadBadge(); // oben Zahl aktualisieren
-  loadInboxList(currentPage); // optional: UI sofort refresh
+
+  // Kurz neu laden damit Badge verschwindet
+  await loadInboxList(currentPage);
+
   window.location.href =
     `nachrichten.html?listing_id=${msg.listing_id}&with=${otherId}`;
 };
@@ -609,17 +612,24 @@ item.onclick = async () => {
   loadInboxList();
   loadUnreadBadge();
 async function markMessagesAsRead(listingId, otherId) {
+
   const { data: { user } } = await sb.auth.getUser();
 
-  await sb
+  const { error } = await sb
     .from('messages')
     .update({ read: true })
-    .or(`
-      and(receiver_id.eq.${user.id},sender_id.eq.${otherId},listing_id.eq.${listingId}),
-      and(receiver_id.eq.${user.id},sender_id.eq.${otherId},listing_id.eq.${listingId})
-    `);
+    .eq('receiver_id', user.id)
+    .eq('sender_id', otherId)
+    .eq('listing_id', listingId)
+    .eq('read', false);
 
+  if(error){
+    console.error(error);
+  }
+
+  // Badge oben aktualisieren
   loadUnreadBadge();
+
 }
 async function loadUnreadBadge() {
   const { data: { user } } = await sb.auth.getUser();
