@@ -244,21 +244,12 @@
   const chatWith = urlParams.get('with');
 
   let currentUser = null, partnerName="", partnerAvatar="", channel=null, userProfile=null, isSending=false;
-async function markMessagesAsRead() {
 
-  await sb
-    .from('messages')
-    .update({ read: true })
-    .eq('receiver_id', currentUser.id)
-    .eq('sender_id', chatWith)
-    .eq('listing_id', listingId)
-    .eq('read', false);
-}
   async function init() {
     const { data: { user } } = await sb.auth.getUser();
     if (!user) return window.location.href = "login.html";
     currentUser = user;
-
+await markAsRead();
     const [{ data: partner }, { data: listing }, { data: profile }] = await Promise.all([
       sb.from('profiles').select('name, avatar_url').eq('id', chatWith).single(),
       sb.from('listings').select('title, price_per_day, image_urls').eq('id', listingId).single(),
@@ -281,11 +272,8 @@ async function markMessagesAsRead() {
       window.location.href = `vermieter-profil.html?id=${chatWith}`;
     });
 
-await markMessagesAsRead();
-
-loadMessages();
-
-setupRealtime();
+    loadMessages();
+    setupRealtime();
   }
 
   async function loadMessages() {
@@ -352,14 +340,9 @@ setupRealtime();
       schema: 'public',
       table: 'messages',
       filter: `listing_id=eq.${listingId}`
-}, async payload => {
+    }, payload => {
       const msg = payload.new;
       if (msg.sender_id !== currentUser.id && msg.receiver_id === currentUser.id) {
-        sb
-await sb
-  .from('messages')
-  .update({ read: true })
-  .eq('id', msg.id);
         renderMessage(msg);
         document.getElementById('chat').scrollTop = document.getElementById('chat').scrollHeight;
       }
@@ -370,6 +353,21 @@ await sb
   document.getElementById('message-input').addEventListener('keydown', e => { if (e.key === 'Enter') sendMessage(); });
 
   init();
+  loadMessages();
+setupRealtime();
+
+await markMessagesAsRead(); // 🔥 DAS FEHLT
+async function markMessagesAsRead() {
+  const { data: { user } } = await sb.auth.getUser();
+
+  await sb
+    .from('messages')
+    .update({ read: true })
+    .eq('receiver_id', user.id)
+    .eq('sender_id', chatWith)
+    .eq('listing_id', listingId);
+}
+  loadUnreadBadge?.();
 </script>
 
 </body>
