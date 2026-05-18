@@ -253,7 +253,6 @@ async function markMessagesAsRead() {
     .eq('sender_id', chatWith)
     .eq('listing_id', listingId)
     .eq('read', false);
-
 }
   async function init() {
     const { data: { user } } = await sb.auth.getUser();
