@@ -109,7 +109,37 @@ main {
     /* MAIN */
     main { max-width: 1200px; margin: 2rem auto 4rem; padding: 0 1rem; flex-grow: 1; }
     h2 { font-size: 2rem; margin-bottom: 1.5rem; color: var(--primary); }
+/* MOBILE NAVIGATION */
+@media (max-width: 768px) {
 
+  #nav-toggle {
+    display: block;
+  }
+
+  nav#main-nav {
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    margin-top: 1rem;
+    gap: 1rem;
+  }
+
+  nav#main-nav.show {
+    display: flex;
+  }
+
+  nav#main-nav a {
+    padding: 0.5rem 0;
+  }
+}
+
+/* MAIN */
+main { 
+  max-width: 1200px; 
+  margin: 2rem auto 4rem; 
+  padding: 0 1rem; 
+  flex-grow: 1; 
+}
  /* CHAT LIST ITEMS */
 .chat-item {
   display: flex;
