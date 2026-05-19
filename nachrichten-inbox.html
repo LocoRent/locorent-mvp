@@ -300,6 +300,55 @@ footer small {
   .chat-preview {
     max-width: 180px;
   }
+/* =========================
+   MOBILE NAVIGATION FIX
+========================= */
+
+@media (max-width: 768px) {
+
+  #nav-toggle {
+    display: block;
+  }
+
+  nav#main-nav {
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    margin-top: 1rem;
+    background: var(--primary);
+    padding: 1rem 0;
+    border-radius: 12px;
+    animation: fadeMenu 0.25s ease;
+  }
+
+  nav#main-nav.show {
+    display: flex;
+  }
+
+  nav#main-nav a {
+    padding: 0.9rem 1.2rem;
+    width: 100%;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+
+  nav#main-nav a:last-child {
+    border-bottom: none;
+  }
+
+  header {
+    align-items: flex-start;
+  }
+}
+
+@keyframes fadeMenu {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
   </style>
 </head>
