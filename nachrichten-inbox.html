@@ -73,50 +73,10 @@
     nav#main-nav a:hover,
     nav#main-nav a:focus { color: var(--accent); outline: none; }
 
-    nav#main-nav a:hover,
-nav#main-nav a:focus {
-  color: var(--accent);
-  outline: none;
-}
-
-/* HIER EINFÜGEN ↓↓↓ */
-
-@media (max-width: 768px) {
-
-  #nav-toggle {
-    display: block;
-  }
-
-  nav#main-nav {
-    display: none;
-    width: 100%;
-    flex-direction: column;
-    margin-top: 1rem;
-    gap: 1rem;
-  }
-
-  nav#main-nav.show {
-    display: flex;
-  }
-
-  nav#main-nav a {
-    padding: 0.5rem 0;
-  }
-}
-
-/* MAIN */
-main {
     /* MAIN */
     main { max-width: 1200px; margin: 2rem auto 4rem; padding: 0 1rem; flex-grow: 1; }
     h2 { font-size: 2rem; margin-bottom: 1.5rem; color: var(--primary); }
 
-/* MAIN */
-main { 
-  max-width: 1200px; 
-  margin: 2rem auto 4rem; 
-  padding: 0 1rem; 
-  flex-grow: 1; 
-}
  /* CHAT LIST ITEMS */
 .chat-item {
   display: flex;
@@ -165,19 +125,14 @@ main {
 
 .delete-chat-btn {
   border: none;
-  background: #e53935;
-  color: white;
-  padding: 6px 12px;
-  border-radius: 8px;
+  background: transparent;
   cursor: pointer;
-  font-size: 0.8rem;
-  font-weight: 600;
-  transition: 0.2s ease;
+  font-size: 1.1rem;
+  transition: transform 0.2s ease;
 }
 
 .delete-chat-btn:hover {
-  background: #c62828;
-  transform: scale(1.03);
+  transform: scale(1.15);
 }
 
   /* Desktop spezifisch */
@@ -338,8 +293,12 @@ footer small {
   }
 
   .delete-chat-btn {
-    font-size: 0.72rem;
-    padding: 5px 10px;
+    font-size: 1rem;
+  }
+
+  /* optional: Vorschau kürzer oder aus */
+  .chat-preview {
+    max-width: 180px;
   }
 }
   </style>
@@ -576,11 +535,11 @@ item.onclick = async () => {
     </div>
   ` : ''}
 
-<button
-  class="delete-chat-btn"
-  onclick="deleteChat(event, '${msg.listing_id}', '${otherId}')">
-  Chat löschen
-</button>
+  <button
+    class="delete-chat-btn"
+    onclick="deleteChat(event, '${msg.listing_id}', '${otherId}')">
+    🗑️
+  </button>
 
 </div>
       `;
