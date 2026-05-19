@@ -125,14 +125,19 @@
 
 .delete-chat-btn {
   border: none;
-  background: transparent;
+  background: #e53935;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 1.1rem;
-  transition: transform 0.2s ease;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: 0.2s ease;
 }
 
 .delete-chat-btn:hover {
-  transform: scale(1.15);
+  background: #c62828;
+  transform: scale(1.03);
 }
 
   /* Desktop spezifisch */
@@ -293,12 +298,8 @@ footer small {
   }
 
   .delete-chat-btn {
-    font-size: 1rem;
-  }
-
-  /* optional: Vorschau kürzer oder aus */
-  .chat-preview {
-    max-width: 180px;
+    font-size: 0.72rem;
+    padding: 5px 10px;
   }
 }
   </style>
@@ -535,11 +536,11 @@ item.onclick = async () => {
     </div>
   ` : ''}
 
-  <button
-    class="delete-chat-btn"
-    onclick="deleteChat(event, '${msg.listing_id}', '${otherId}')">
-    🗑️
-  </button>
+<button
+  class="delete-chat-btn"
+  onclick="deleteChat(event, '${msg.listing_id}', '${otherId}')">
+  Chat löschen
+</button>
 
 </div>
       `;
