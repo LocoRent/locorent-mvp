@@ -228,19 +228,29 @@ footer small {
     width: 100%;
   }
 }
-    .delete-chat-btn {
-  background: #e53935;
-  color: white;
+.chat-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  margin-left: 10px;
+}
+
+/* kleiner Icon-Button statt großer Button */
+.delete-chat-btn {
+  background: transparent;
   border: none;
-  padding: 6px 10px;
-  border-radius: 8px;
-  font-size: 0.8rem;
+  color: #e53935;
+  font-size: 16px;
   cursor: pointer;
-  transition: 0.2s ease;
+  padding: 2px 4px;
+  line-height: 1;
+  transition: 0.2s;
 }
 
 .delete-chat-btn:hover {
-  background: #c62828;
+  color: #b71c1c;
+  transform: scale(1.1);
 }
   </style>
 </head>
@@ -390,14 +400,13 @@ item.innerHTML = `
     <div class="chat-preview">💬 ${msg.content.slice(0,80)}${msg.content.length>80?'…':''}</div>
   </div>
 
-  <div style="display:flex; flex-direction:column; align-items:flex-end; gap:8px;">
-    <div class="chat-time">${timeAgo(msg.created_at)}</div>
+<div class="chat-right">
+  <div class="chat-time">${timeAgo(msg.created_at)}</div>
 
-    <button class="delete-chat-btn"
-      onclick="deleteChat('${msg.listing_id}', '${otherId}', event)">
-      Chat löschen
-    </button>
-  </div>
+  <button class="delete-chat-btn" onclick="deleteChat('${msg.listing_id}', '${otherId}', event)">
+    ✕
+  </button>
+</div>
 `;
       inbox.appendChild(item);
     }
