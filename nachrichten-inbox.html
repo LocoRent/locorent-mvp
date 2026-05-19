@@ -228,6 +228,20 @@ footer small {
     width: 100%;
   }
 }
+    .delete-chat-btn {
+  background: #e53935;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.delete-chat-btn:hover {
+  background: #c62828;
+}
   </style>
 </head>
 <body>
@@ -238,7 +252,7 @@ footer small {
   <nav id="main-nav">
     <a href="index.html">Start</a>
     <a href="profil.html">Mein Profil</a>
-    <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+    <a href="nachrichten-inbox.html">Nachrichten</a>
     <a href="favoriten.html">Meine Favoriten</a>
     <a href="inserate.html">Meine Inserate</a>
     <a href="#" onclick="logout(event)">Logout</a>
@@ -365,16 +379,26 @@ footer small {
       item.tabIndex = 0;
       item.onclick = () => window.location.href = `nachrichten.html?listing_id=${msg.listing_id}&with=${otherId}`;
 
-      item.innerHTML = `
-        <div class="chat-avatar">${avatar ? `<img src="${avatar}" alt="${name}" />` : `<span>${name.charAt(0)}</span>`}</div>
-        ${image ? `<img src="${image}" alt="${title}" class="chat-image">` : ''}
-        <div class="chat-content">
-          <div class="chat-name">${name}</div>
-          <div class="chat-title">${title}</div>
-          <div class="chat-preview">💬 ${msg.content.slice(0,80)}${msg.content.length>80?'…':''}</div>
-        </div>
-        <div class="chat-time">${timeAgo(msg.created_at)}</div>
-      `;
+item.innerHTML = `
+  <div class="chat-avatar">${avatar ? `<img src="${avatar}" alt="${name}" />` : `<span>${name.charAt(0)}</span>`}</div>
+
+  ${image ? `<img src="${image}" alt="${title}" class="chat-image">` : ''}
+
+  <div class="chat-content">
+    <div class="chat-name">${name}</div>
+    <div class="chat-title">${title}</div>
+    <div class="chat-preview">💬 ${msg.content.slice(0,80)}${msg.content.length>80?'…':''}</div>
+  </div>
+
+  <div style="display:flex; flex-direction:column; align-items:flex-end; gap:8px;">
+    <div class="chat-time">${timeAgo(msg.created_at)}</div>
+
+    <button class="delete-chat-btn"
+      onclick="deleteChat('${msg.listing_id}', '${otherId}', event)">
+      Chat löschen
+    </button>
+  </div>
+`;
       inbox.appendChild(item);
     }
 
@@ -403,6 +427,31 @@ footer small {
   }
 
   loadInboxList();
+  async function deleteChat(listingId, otherId, event) {
+  event.stopPropagation();
+
+  const { data: { user } } = await sb.auth.getUser();
+  if (!user) return;
+
+  const confirmDelete = confirm("Möchtest du diesen Chat wirklich löschen?");
+  if (!confirmDelete) return;
+
+  const { error } = await sb
+    .from('messages')
+    .delete()
+    .or(
+      `and(sender_id.eq.${user.id},receiver_id.eq.${otherId},listing_id.eq.${listingId}),` +
+      `and(sender_id.eq.${otherId},receiver_id.eq.${user.id},listing_id.eq.${listingId})`
+    );
+
+  if (error) {
+    console.error(error);
+    alert("Fehler beim Löschen");
+    return;
+  }
+
+  loadInboxList(currentPage);
+}
 </script>
 
 </body>
