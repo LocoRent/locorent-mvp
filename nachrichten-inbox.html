@@ -37,70 +37,73 @@
       overflow-x: hidden;
     }
 
+    /* Header exakt beibehalten */
     header {
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      background-color: var(--primary);
       color: var(--white);
-      padding: 1.25rem 2rem;
+      padding: 1.5rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 1rem;
+      font-weight: 700;
       position: sticky;
       top: 0;
       z-index: 1000;
-      box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
       flex-wrap: wrap;
     }
 
     header h1 {
-      font-size: 1.85rem;
-      margin: 0;
+      font-size: 1.8rem;
       cursor: pointer;
       user-select: none;
-      letter-spacing: 0.2px;
+      margin: 0;
     }
 
     #nav-toggle {
       display: none;
-      background: rgba(255,255,255,0.10);
-      border: 1px solid rgba(255,255,255,0.16);
-      font-size: 1.45rem;
+      background: none;
+      border: none;
+      font-size: 1.8rem;
       color: var(--white);
       cursor: pointer;
-      border-radius: 12px;
-      width: 48px;
-      height: 48px;
-      transition: transform 0.2s ease, background 0.2s ease;
     }
 
-    #nav-toggle:hover {
-      transform: translateY(-1px);
-      background: rgba(255,255,255,0.16);
-    }
-
-    nav#main-nav {
+    nav#nav-links {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.75rem;
-      align-items: center;
+      gap: 1rem;
     }
 
-    nav#main-nav a {
+    nav#nav-links a {
       color: var(--white);
       text-decoration: none;
       font-weight: 600;
-      font-size: 0.98rem;
-      padding: 0.55rem 0.9rem;
-      border-radius: 999px;
-      transition: background 0.25s ease, transform 0.2s ease, color 0.2s ease;
+      font-size: 1rem;
+      position: relative;
+      transition: color 0.3s ease;
     }
 
-    nav#main-nav a:hover,
-    nav#main-nav a:focus {
-      background: rgba(255,255,255,0.12);
+    nav#nav-links a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -4px;
+      width: 0;
+      height: 2px;
+      background-color: var(--accent);
+      transition: width 0.3s ease;
+    }
+
+    nav#nav-links a:hover::after,
+    nav#nav-links a:focus::after {
+      width: 100%;
+    }
+
+    nav#nav-links a:hover,
+    nav#nav-links a:focus {
       color: var(--accent);
       outline: none;
-      transform: translateY(-1px);
     }
 
     main {
@@ -365,25 +368,30 @@
     @media (max-width: 720px) {
       #nav-toggle { display: block; }
 
-      nav#main-nav {
+      nav#nav-links {
         width: 100%;
         flex-direction: column;
         display: none;
         margin-top: 1rem;
-        align-items: stretch;
       }
 
-      nav#main-nav.show { display: flex; }
+      nav#nav-links.show { display: flex; }
 
-      nav#main-nav a {
-        margin: 0.2rem 0;
-        padding: 0.75rem 1rem;
-        background-color: rgba(255,255,255,0.10);
-        border-radius: 12px;
+      nav#nav-links a {
+        margin: 0.4rem 0;
+        padding: 0.5rem 1rem;
+        background-color: rgba(255,255,255,0.1);
+        border-radius: 6px;
+        display: block;
       }
 
-      header {
-        padding: 1rem;
+      footer > div {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      footer > div > div {
+        width: 100%;
       }
 
       main {
@@ -418,15 +426,6 @@
         width: 100%;
         height: 160px;
       }
-
-      footer > div {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      footer > div > div {
-        width: 100%;
-      }
     }
   </style>
 </head>
@@ -434,8 +433,8 @@
 
 <header>
   <h1 tabindex="0" onclick="location.href='index.html'">Locorent</h1>
-  <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="main-nav">☰</button>
-  <nav id="main-nav">
+  <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
+  <nav id="nav-links">
     <a href="index.html">Start</a>
     <a href="profil.html">Mein Profil</a>
     <a href="nachrichten-inbox.html">Nachrichten</a>
@@ -496,7 +495,7 @@
   const pageSize = 20;
 
   document.getElementById('nav-toggle').addEventListener('click', () => {
-    const nav = document.getElementById('main-nav');
+    const nav = document.getElementById('nav-links');
     nav.classList.toggle('show');
     document.getElementById('nav-toggle').setAttribute('aria-expanded', nav.classList.contains('show'));
   });
