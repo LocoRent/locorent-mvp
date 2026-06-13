@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Suchergebnisse – Locorent</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <title>Locorent – Nachhaltig mieten in Deutschland</title>
+  <meta name="description" content="Finde und vermiete nachhaltige Mietobjekte in deiner Nähe bei Locorent." />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
@@ -54,6 +55,7 @@
       z-index: 1000;
       box-shadow: 0 10px 20px rgba(0,0,0,0.1);
       flex-wrap: wrap;
+      width: 100%;
     }
 
     header h1 {
@@ -112,7 +114,7 @@
     .hero {
       width: 100%;
       margin: 0;
-      padding: 2rem 0;
+      padding: 2rem 0 2.5rem;
       background: linear-gradient(135deg, #ffffff 0%, #f1f8e9 100%);
       border-radius: 0;
       box-shadow: none;
@@ -133,19 +135,13 @@
       text-align: left;
     }
 
-    #current-category {
-      margin-top: 0.75rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      text-align: left;
-    }
-
-    .search-row {
+    form.search-form {
       display: grid;
-      grid-template-columns: 2fr 1.3fr 1fr 1fr 1.4fr 0.8fr 1fr 0.9fr;
+      grid-template-columns: 2fr 1.25fr 1.5fr 0.9fr 0.9fr;
       gap: 1rem;
       align-items: end;
       margin-top: 1.5rem;
+      position: relative;
       width: 100%;
     }
 
@@ -162,9 +158,9 @@
       padding-left: 0.1rem;
     }
 
-    .search-row input,
-    .search-row select,
-    .search-row button {
+    form.search-form input,
+    form.search-form select,
+    form.search-form button {
       width: 100%;
       padding: 0.95rem 1rem;
       border: 1px solid rgba(46, 125, 50, 0.18);
@@ -176,23 +172,23 @@
       transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
     }
 
-    .search-row input:focus,
-    .search-row select:focus {
+    form.search-form input:focus,
+    form.search-form select:focus {
       border-color: var(--primary-light);
       box-shadow: 0 0 0 4px rgba(102, 187, 106, 0.16);
     }
 
-    .search-row button {
+    form.search-form button {
       background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
       color: var(--white);
       font-weight: 700;
       cursor: pointer;
       border: none;
-      height: 100%;
       min-height: 52px;
     }
 
-    .search-row button:hover {
+    form.search-form button:hover,
+    form.search-form button:focus {
       transform: translateY(-1px);
       box-shadow: 0 10px 20px rgba(46, 125, 50, 0.18);
     }
@@ -208,7 +204,7 @@
       right: 0;
       max-height: 180px;
       overflow-y: auto;
-      background: white;
+      background: var(--white);
       z-index: 20;
       border: 1px solid rgba(46, 125, 50, 0.15);
       border-radius: 12px;
@@ -221,17 +217,37 @@
       border-bottom: 1px solid #f0f0f0;
     }
 
-    #suggestions div:hover {
+    #suggestions div:hover,
+    #suggestions div:focus {
       background-color: #e8f5e9;
+      outline: none;
+    }
+
+    section {
+      width: 100%;
+    }
+
+    .section-inner {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    section[aria-label] {
+      margin-top: 2rem;
+    }
+
+    section > .section-inner > h2 {
+      font-size: 1.6rem;
+      color: var(--primary-dark);
+      margin: 0 0 1rem;
     }
 
     .category-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 2rem;
-      margin: 2rem;
-      padding: 0 2rem;
-      box-sizing: border-box;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1rem;
     }
 
     .result-card {
@@ -239,23 +255,25 @@
       flex-direction: column;
       justify-content: space-between;
       background-color: var(--white);
-      border-radius: 10px;
-      padding: 1.5rem;
-      box-shadow: 0 2px 8px rgba(46, 125, 50, 0.1);
-      transition: transform 0.3s ease;
+      border-radius: 20px;
+      padding: 1rem;
+      box-shadow: 0 12px 30px rgba(46,125,50,0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
       height: 100%;
     }
 
-    .result-card:hover {
+    .result-card:hover,
+    .result-card:focus-within {
       transform: translateY(-3px);
-      box-shadow: 0 4px 16px rgba(46, 125, 50, 0.18);
+      box-shadow: 0 20px 48px rgba(46,125,50,0.15);
+      outline: none;
     }
 
     .result-card img {
       width: 100%;
-      height: 200px;
+      height: 180px;
       object-fit: cover;
-      border-radius: 8px;
+      border-radius: 14px;
       margin-bottom: 1rem;
     }
 
@@ -276,26 +294,68 @@
     }
 
     .result-card .buttons {
+      margin-top: auto;
       display: flex;
       flex-direction: column;
-      gap: 0.6rem;
-      margin-top: 1rem;
+      gap: 0.5rem;
     }
 
     .result-card .buttons button {
+      margin-top: 0.25rem;
       padding: 0.6rem;
       width: 100%;
       background-color: var(--primary);
-      color: white;
+      color: var(--white);
       border: none;
       border-radius: 8px;
       cursor: pointer;
-      font-weight: 600;
-      transition: background-color 0.3s ease;
+      font-weight: 700;
+      transition: background-color 0.3s ease, transform 0.2s ease;
     }
 
-    .result-card .buttons button:hover {
-      background-color: var(--primary-dark);
+    .result-card .buttons button:hover,
+    .result-card .buttons button:focus {
+      background-color: var(--accent);
+      outline: none;
+      transform: translateY(-1px);
+    }
+
+    .more-link {
+      text-align: right;
+      margin-top: 0.5rem;
+    }
+
+    .btn-more {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25em;
+      font-weight: 700;
+      color: var(--primary);
+      text-decoration: none;
+      border: 2px solid var(--primary);
+      padding: 0.25em 0.75em;
+      border-radius: 24px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      font-size: 0.9rem;
+      user-select: none;
+    }
+
+    .btn-more span {
+      display: inline-block;
+      font-size: 1.2rem;
+      transition: transform 0.3s ease;
+    }
+
+    .btn-more:hover,
+    .btn-more:focus {
+      background-color: var(--primary);
+      color: var(--white);
+      text-decoration: none;
+      outline: none;
+    }
+
+    .btn-more:hover span {
+      transform: translateX(5px);
     }
 
     footer {
@@ -357,7 +417,7 @@
     }
 
     @media (max-width: 1200px) {
-      .search-row {
+      form.search-form {
         grid-template-columns: 1.6fr 1fr 1fr 1fr;
       }
     }
@@ -387,14 +447,15 @@
       }
 
       .hero {
-        padding: 1.25rem 0;
+        padding: 1.25rem 0 1.5rem;
       }
 
-      .hero-inner {
+      .hero-inner,
+      .section-inner {
         padding: 0 0.75rem;
       }
 
-      .search-row {
+      form.search-form {
         grid-template-columns: 1fr;
         gap: 0.85rem;
         margin-top: 1.25rem;
@@ -403,10 +464,6 @@
       .category-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 0.75rem;
-        padding: 0 0.75rem;
-        margin: 2rem 0;
-        max-width: 100%;
-        overflow: hidden;
       }
 
       .result-card {
@@ -428,23 +485,23 @@
   <header>
     <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
     <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
-    <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
+    <nav id="nav-links" role="navigation" aria-label="Hauptnavigation">
+      <!-- Navigation Links werden via JS gesetzt -->
+    </nav>
   </header>
 
-  <section class="hero">
+  <section class="hero" aria-label="Suchbereich">
     <div class="hero-inner">
-      <h2>Suchergebnisse</h2>
-      <div id="current-category"></div>
-
-      <div class="search-row">
+      <h2>Finde das perfekte Mietobjekt</h2>
+      <form class="search-form" onsubmit="event.preventDefault(); search();" role="search" aria-label="Suchformular">
         <div class="search-field">
           <label for="search-input">Suchbegriff</label>
-          <input type="text" placeholder="Was suchst du?" id="search-input" />
+          <input type="text" placeholder="Was suchst du?" id="search-input" aria-label="Suchbegriff eingeben" />
         </div>
 
         <div class="search-field">
           <label for="category-select">Kategorie</label>
-          <select id="category-select">
+          <select id="category-select" aria-label="Kategorie auswählen">
             <option value="">Alle Kategorien</option>
             <option value="anhaenger-transportmittel">Anhänger & Transportmittel</option>
             <option value="audio-dj-equipment">Audio & DJ-Equipment</option>
@@ -476,25 +533,15 @@
           </select>
         </div>
 
-        <div class="search-field">
-          <label for="min-price">Min. Preis</label>
-          <input type="number" id="min-price" placeholder="0 €" min="0" />
-        </div>
-
-        <div class="search-field">
-          <label for="max-price">Max. Preis</label>
-          <input type="number" id="max-price" placeholder="100 €" min="0" />
-        </div>
-
         <div class="search-field location-wrap">
           <label for="location-input">Ort</label>
-          <input type="text" placeholder="Ort" id="location-input" autocomplete="off" />
-          <div id="suggestions"></div>
+          <input type="text" placeholder="Ort" id="location-input" autocomplete="off" aria-label="Ort eingeben" />
+          <div id="suggestions" role="listbox" aria-label="Ortsvorschläge"></div>
         </div>
 
         <div class="search-field">
           <label for="radius-select">Radius</label>
-          <select id="radius-select">
+          <select id="radius-select" aria-label="Suchradius auswählen">
             <option value="">Ganzer Ort</option>
             <option value="5">5 km</option>
             <option value="10">10 km</option>
@@ -506,230 +553,180 @@
           </select>
         </div>
 
-        <div class="search-field">
-          <label for="sort-select">Sortieren</label>
-          <select id="sort-select">
-            <option value="newest">Neueste</option>
-            <option value="price_asc">Günstigste</option>
-            <option value="price_desc">Teuerste</option>
-            <option value="popular">Beliebteste</option>
-          </select>
-        </div>
+        <button type="submit">Suchen</button>
+      </form>
+    </div>
+  </section>
 
-        <button id="search-btn">Suchen</button>
+  <section aria-label="Neueste Angebote">
+    <div class="section-inner">
+      <h2>Neueste Angebote</h2>
+      <div id="newest-offers" class="category-grid" aria-live="polite" aria-busy="true"><p>⏳ Lade Angebote…</p></div>
+      <div class="more-link">
+        <a href="angebote_neueste.html" class="btn-more">MEHR <span>→</span></a>
       </div>
     </div>
   </section>
 
-  <div class="category-grid" id="results">
-    <p>⏳ Lade Ergebnisse…</p>
-  </div>
+  <section aria-label="Beliebte Angebote">
+    <div class="section-inner">
+      <h2>Beliebte Angebote</h2>
+      <div id="popular-offers" class="category-grid" aria-live="polite" aria-busy="true"><p>⏳ Lade Angebote…</p></div>
+      <div class="more-link">
+        <a href="angebote_beliebte.html" class="btn-more">MEHR <span>→</span></a>
+      </div>
+    </div>
+  </section>
 
-  <footer style="background-color: #2e7d32; color: white; padding: 2rem;">
-    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2rem;">
-      <div style="flex: 1; min-width: 200px;">
-        <h4 style="margin-bottom: 0.5rem;">Mieten & Vermieten</h4>
-        <ul style="list-style: none; padding: 0; line-height: 1.8;">
-          <li><a href="so-funktionierts.html" style="color: white; text-decoration: underline;">So funktioniert's</a></li>
-          <li><a href="vermieter-werden.html" style="color: white; text-decoration: underline;">Werde zum Vermieter</a></li>
-          <li><a href="kategorien.html" style="color: white; text-decoration: underline;">Beliebte Kategorien</a></li>
-          <li><a href="vermieter-tipps.html" style="color: white; text-decoration: underline;">Tipps & Tricks für Vermieter</a></li>
-          <li><a href="hilfe-faq.html" style="color: white; text-decoration: underline;">Hilfe und FAQ</a></li>
+  <footer role="contentinfo">
+    <div>
+      <div>
+        <h4>Mieten &amp; Vermieten</h4>
+        <ul>
+          <li><a href="so-funktionierts.html">So funktioniert's</a></li>
+          <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
+          <li><a href="kategorien.html">Beliebte Kategorien</a></li>
+          <li><a href="vermieter-tipps.html">Tipps &amp; Tricks für Vermieter</a></li>
+          <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
         </ul>
       </div>
-      <div style="flex: 1; min-width: 200px;">
-        <h4 style="margin-bottom: 0.5rem;">Wissenswertes</h4>
-        <ul style="list-style: none; padding: 0; line-height: 1.8;">
-          <li><a href="agb.html" style="color: white; text-decoration: underline;">AGB & Impressum</a></li>
-          <li><a href="datenschutz.html" style="color: white; text-decoration: underline;">Datenschutz</a></li>
+      <div>
+        <h4>Wissenswertes</h4>
+        <ul>
+          <li><a href="agb.html">AGB &amp; Impressum</a></li>
+          <li><a href="datenschutz.html">Datenschutz</a></li>
         </ul>
       </div>
-      <div style="flex: 1; min-width: 200px;">
-        <h4 style="margin-bottom: 0.5rem;">Über uns</h4>
-        <ul style="list-style: none; padding: 0; line-height: 1.8;">
-          <li><a href="kontakt.html" style="color: white; text-decoration: underline;">Kontaktieren Sie uns</a></li>
-          <li><a href="social-media.html" style="color: white; text-decoration: underline;">Folgen Sie uns</a></li>
-          <li><a href="mission.html" style="color: white; text-decoration: underline;">Unsere Mission</a></li>
+      <div>
+        <h4>Über uns</h4>
+        <ul>
+          <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
+          <li><a href="social-media.html">Folgen Sie uns</a></li>
+          <li><a href="mission.html">Unsere Mission</a></li>
         </ul>
       </div>
     </div>
-    <div style="margin-top: 2rem; text-align: center; font-size: 0.9rem;">
-      © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
-    </div>
+    <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    const sb = supabase.createClient(
-      'https://flnjalgqtkqycsaymmbd.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-    );
+    // 1️⃣ Supabase korrekt initialisieren (v2)
+    const supabaseUrl = 'https://flnjalgqtkqycsaymmbd.supabase.co';
+    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q';
+
+    window.sb = window.sb || supabase.createClient(supabaseUrl, supabaseAnonKey);
 
     let userSession = null;
-    let currentPage = 1;
-    const pageSize = 24;
-
-    function getCategoryLabel(value) {
-      const map = {
-        "anhaenger-transportmittel": "Anhänger & Transportmittel",
-        "audio-dj-equipment": "Audio & DJ-Equipment",
-        "auto-suv": "Auto & SUV",
-        "basteln-diy": "Basteln & DIY",
-        "beauty": "Beauty",
-        "boote-wassersport": "Boote & Wassersport",
-        "brettspiele-spielzeug": "Brettspiele & Spielzeug",
-        "camping-wandern": "Camping & Wandern",
-        "computer-laptops": "Computer & Laptops",
-        "drohnen-modellbau": "Drohnen & Modellbau",
-        "event-partyausstattung": "Event- & Partyausstattung",
-        "fahrrad-ebike": "Fahrrad & E-Bike",
-        "fitnessgeraete": "Fitnessgeräte",
-        "foto-film-kameraequipment": "Foto-, Film- & Kameraequipment",
-        "gaming-unterhaltung": "Gaming & Unterhaltung",
-        "garten-aussenbereich": "Garten & Außenbereich",
-        "kursraeume-seminarraum": "Kursräume & Seminarraum",
-        "medien-kultur": "Medien & Kultur",
-        "motorrad-roller": "Motorrad & Roller",
-        "musikinstrumente": "Musikinstrumente",
-        "mode-accessoires": "Mode & Accessoires",
-        "smartphones-tablets": "Smartphones & Tablets",
-        "sport": "Sport",
-        "tiere": "Tiere",
-        "werkzeuge-maschinen": "Werkzeuge & Maschinen",
-        "wohnmobil-camper": "Wohnmobil & Camper",
-        "sonstiges": "Sonstiges"
-      };
-      return map[value] || value;
-    }
+    let debounceTimer;
+    let selectedAddressData = null;
 
     async function init() {
-      const { data: { session } } = await sb.auth.getSession();
-      userSession = session;
-      updateNav();
+      try {
+        const { data, error } = await sb.auth.getSession();
+        if (error) console.error('Auth Error:', error);
 
-      const params = new URLSearchParams(window.location.search);
-      const filters = {
-        title: params.get('title') || '',
-        category: params.get('category') || '',
-        minPrice: params.get('minPrice') || '',
-        maxPrice: params.get('maxPrice') || '',
-        location: params.get('location') || '',
-        radius: params.get('radius') || '',
-        sort: params.get('sort') || 'newest'
-      };
-
-      document.getElementById("search-input").value = filters.title;
-      document.getElementById("category-select").value = filters.category;
-      document.getElementById("min-price").value = filters.minPrice;
-      document.getElementById("max-price").value = filters.maxPrice;
-      document.getElementById("location-input").value = filters.location;
-      document.getElementById("radius-select").value = filters.radius;
-      document.getElementById("sort-select").value = filters.sort;
-
-      const currentCategoryDiv = document.getElementById("current-category");
-      currentCategoryDiv.textContent = filters.category
-        ? `Suchergebnisse für Kategorie: ${getCategoryLabel(filters.category)}`
-        : "";
-
-      await loadListings(filters, currentPage);
+        userSession = data?.session || null;
+        updateNav();
+        await loadNewestOffers();
+        await loadPopularOffers();
+      } catch (err) {
+        console.error('Init Fehler:', err);
+      }
     }
 
     function updateNav() {
       const nav = document.getElementById('nav-links');
-      nav.innerHTML = userSession?.user ? 
-        `<a href="index.html">Start</a>
-         <a href="profil.html">Mein Profil</a>
-         <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-         <a href="favoriten.html">Meine Favoriten</a>
-         <a href="inserate.html">Meine Inserate</a>
-         <a href="#" onclick="logout(event)">Logout</a>` :
-        `<a href="index.html">Start</a>
-         <a href="login.html">Einloggen</a>`;
+      nav.innerHTML = userSession?.user ? `
+        <a href="index.html">Start</a>
+        <a href="profil.html">Mein Profil</a>
+        <a href="nachrichten-inbox.html">Nachrichten</a>
+        <a href="favoriten.html">Meine Favoriten</a>
+        <a href="inserate.html">Meine Inserate</a>
+        <a href="#" onclick="logout(event)">Logout</a>
+      ` : `
+        <a href="index.html">Start</a>
+        <a href="login.html">Einloggen</a>
+      `;
     }
 
     async function logout(event) {
       event.preventDefault();
-      await sb.auth.signOut();
-      window.location.href = "login.html";
-    }
-
-    function performSearch() {
-      const title = document.getElementById("search-input").value.trim();
-      const category = document.getElementById("category-select").value.trim();
-      const minPrice = document.getElementById("min-price").value.trim();
-      const maxPrice = document.getElementById("max-price").value.trim();
-      const location = document.getElementById("location-input").value.trim();
-      const radius = document.getElementById("radius-select").value.trim();
-      const sort = document.getElementById("sort-select").value;
-
-      const params = new URLSearchParams();
-
-      if (title) params.set("title", title);
-      if (category) params.set("category", category);
-      if (minPrice) params.set("minPrice", minPrice);
-      if (maxPrice) params.set("maxPrice", maxPrice);
-      if (location) params.set("location", location);
-      if (radius) params.set("radius", radius);
-      if (sort) params.set("sort", sort);
-
-      window.location.href = `search_results.html?${params.toString()}`;
-    }
-
-    document.getElementById('search-btn').addEventListener('click', performSearch);
-
-    ["search-input", "min-price", "max-price", "location-input"].forEach(id => {
-      document.getElementById(id).addEventListener("keydown", (e) => {
-        if (e.key === "Enter") performSearch();
-      });
-    });
-
-    document.getElementById('location-input').addEventListener('input', async (e) => {
-      const value = e.target.value.trim();
-      const suggestionsBox = document.getElementById('suggestions');
-
-      if (value.length < 2) {
-        suggestionsBox.innerHTML = '';
-        return;
+      try {
+        await sb.auth.signOut();
+        window.location.href = "login.html";
+      } catch (err) {
+        console.error('Logout Fehler:', err);
       }
+    }
+
+    async function loadOffers(orderBy, containerId) {
+      const container = document.getElementById(containerId);
+      container.setAttribute('aria-busy', 'true');
+      container.innerHTML = '<p>⏳ Lade Angebote…</p>';
 
       try {
-        const url = `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&accept-language=de&countrycodes=de&limit=6&q=${encodeURIComponent(value)}`;
-        const res = await fetch(url, {
-          headers: { "Accept": "application/json" }
-        });
+        const { data, error } = await sb
+          .from('listings')
+          .select('*')
+          .order(orderBy, { ascending: false })
+          .limit(5);
 
-        const results = await res.json();
-        suggestionsBox.innerHTML = '';
+        if (error) throw error;
+        if (!data || data.length === 0) {
+          container.innerHTML = '<p>Keine Angebote gefunden.</p>';
+          container.removeAttribute('aria-busy');
+          return;
+        }
 
-        results.forEach(r => {
-          const addr = r.address || {};
-          const ort = addr.city || addr.town || addr.village || r.display_name?.split(',')[0] || '';
-          const bundesland = r.address?.state || '';
-          const display = [ort, bundesland].filter(Boolean).join(', ');
-
-          const div = document.createElement('div');
-          div.textContent = display;
-          div.onclick = () => {
-            document.getElementById('location-input').value = display;
-            suggestionsBox.innerHTML = '';
-          };
-          suggestionsBox.appendChild(div);
-        });
-      } catch (error) {
-        console.error('Fehler bei der Ortssuche:', error);
+        container.removeAttribute('aria-busy');
+        await renderOffers(data, containerId);
+      } catch (err) {
+        console.error('Fehler beim Laden von Angeboten:', err);
+        container.innerHTML = '<p>Fehler beim Laden der Angebote.</p>';
+        container.removeAttribute('aria-busy');
       }
-    });
+    }
 
-    function getDistance(lat1, lon1, lat2, lon2) {
-      const R = 6371;
-      const toRad = deg => deg * (Math.PI / 180);
-      const dLat = toRad(lat2 - lat1);
-      const dLon = toRad(lon2 - lon1);
-      const a = Math.sin(dLat / 2) ** 2 +
-                Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
-                Math.sin(dLon / 2) ** 2;
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-      return R * c;
+    async function loadNewestOffers() { await loadOffers('created_at', 'newest-offers'); }
+    async function loadPopularOffers() { await loadOffers('views', 'popular-offers'); }
+
+    async function renderOffers(items, containerId) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
+
+      for (const item of items) {
+        const card = document.createElement('div');
+        card.className = 'result-card';
+
+        const isFav = userSession?.user ? await checkIfFavorite(item.id) : false;
+        const imgUrl = item.image_urls?.[0] || 'https://via.placeholder.com/400x200';
+
+        card.innerHTML = `
+          <img src="${imgUrl}" alt="${item.title || 'Bild'}" />
+          <h3>${item.title || 'Kein Titel'}</h3>
+          <div class="info">
+            <p><strong>Preis pro Tag:</strong> ${item.price_per_day || 'k. A.'} €</p>
+          </div>
+          <div class="buttons">
+            <button onclick="window.location.href='mietobjekt.html?id=${item.id}'">Details ansehen</button>
+            <button class="fav-btn">${isFav ? 'Favorit entfernen' : 'Zu Favoriten'}</button>
+          </div>
+        `;
+
+        const favBtn = card.querySelector('.fav-btn');
+        if (userSession?.user) {
+          favBtn.onclick = async (e) => {
+            e.preventDefault();
+            const nowFav = await toggleFavorite(item.id);
+            favBtn.innerText = nowFav ? 'Favorit entfernen' : 'Zu Favoriten';
+          };
+        } else {
+          favBtn.disabled = true;
+          favBtn.innerText = "Login erforderlich";
+        }
+
+        container.appendChild(card);
+      }
     }
 
     async function checkIfFavorite(listingId) {
@@ -745,9 +742,15 @@
 
     async function toggleFavorite(listingId) {
       if (!userSession?.user) return false;
-      const isFav = await checkIfFavorite(listingId);
-      if (isFav) {
-        await sb.from('favorites').delete().eq('user_id', userSession.user.id).eq('listing_id', listingId);
+      const { data } = await sb
+        .from('favorites')
+        .select('*')
+        .eq('user_id', userSession.user.id)
+        .eq('listing_id', listingId)
+        .maybeSingle();
+
+      if (data) {
+        await sb.from('favorites').delete().eq('id', data.id);
         return false;
       } else {
         await sb.from('favorites').insert({ user_id: userSession.user.id, listing_id: listingId });
@@ -755,210 +758,82 @@
       }
     }
 
-    async function loadListings(filters = {}, page = 1) {
-      let query = sb
-        .from('listings')
-        .select('*', { count: 'exact' });
-
-      if (filters.title) {
-        query = query.ilike('title', `%${filters.title}%`);
-      }
-
-      if (filters.category) {
-        query = query.eq('category', filters.category);
-      }
-
-      const min = filters.minPrice ? parseFloat(filters.minPrice) : null;
-      const max = filters.maxPrice ? parseFloat(filters.maxPrice) : null;
-
-      if (min !== null && !isNaN(min)) {
-        query = query.gte('price_per_day', min);
-      }
-
-      if (max !== null && !isNaN(max)) {
-        query = query.lte('price_per_day', max);
-      }
-
-      switch (filters.sort) {
-        case "price_asc":
-          query = query.order('price_per_day', { ascending: true });
-          break;
-        case "price_desc":
-          query = query.order('price_per_day', { ascending: false });
-          break;
-        case "popular":
-          query = query.order('views', { ascending: false, nullsFirst: false });
-          break;
-        case "newest":
-        default:
-          query = query.order('created_at', { ascending: false });
-          break;
-      }
-
-      const { data, error } = await query;
-
-      if (error) {
-        console.error('Fehler beim Laden der Inserate:', error);
-        document.getElementById("results").innerHTML = "<p>Fehler beim Laden der Inserate.</p>";
-        return;
-      }
-
-      let filteredData = data || [];
-
-      if (filters.location) {
-        try {
-          const geoRes = await fetch(`https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&accept-language=de&q=${encodeURIComponent(filters.location)}&limit=1`);
-          const geoJson = await geoRes.json();
-
-          if (geoJson.length > 0) {
-            const loc = geoJson[0];
-            const locLat = parseFloat(loc.lat);
-            const locLon = parseFloat(loc.lon);
-            const radius = filters.radius ? parseFloat(filters.radius) : null;
-
-            const ortName = (
-              loc.address?.city ||
-              loc.address?.town ||
-              loc.address?.village ||
-              loc.display_name.split(',')[0] ||
-              ''
-            ).toLowerCase().trim();
-
-            filteredData = filteredData.filter(item => {
-              if (!item.latitude || !item.longitude) return false;
-
-              if (!radius) {
-                const itemCity = (item.city || '').toLowerCase().trim();
-                return itemCity.includes(ortName);
-              }
-
-              const distance = getDistance(
-                locLat,
-                locLon,
-                parseFloat(item.latitude),
-                parseFloat(item.longitude)
-              );
-
-              return distance <= radius;
-            });
-          }
-        } catch (err) {
-          console.error('Fehler bei Standortfilterung:', err);
-        }
-      }
-
-      switch (filters.sort) {
-        case "price_asc":
-          filteredData.sort((a, b) => (a.price_per_day || 0) - (b.price_per_day || 0));
-          break;
-        case "price_desc":
-          filteredData.sort((a, b) => (b.price_per_day || 0) - (a.price_per_day || 0));
-          break;
-        case "popular":
-          filteredData.sort((a, b) => (b.views || 0) - (a.views || 0));
-          break;
-        case "newest":
-        default:
-          filteredData.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-          break;
-      }
-
-      const totalCount = filteredData.length;
-      const from = (page - 1) * pageSize;
-      const to = from + pageSize;
-      const paginatedData = filteredData.slice(from, to);
-
-      renderResults(paginatedData, totalCount, page);
-    }
-
-    async function renderResults(items, totalCount, page) {
-      const container = document.getElementById("results");
-      container.innerHTML = "";
-
-      if (!items.length) {
-        container.innerHTML = "<p>Keine passenden Inserate gefunden.</p>";
-        return;
-      }
-
-      for (const item of items) {
-        const card = document.createElement("div");
-        card.className = "result-card";
-        const isFavorite = await checkIfFavorite(item.id);
-
-        card.innerHTML = `
-          <img src="${item.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" alt="${item.title}" />
-          <h3>${item.title}</h3>
-          <div class="info">
-            <p><strong>Preis pro Tag:</strong> ${item.price_per_day || 'k. A.'} €</p>
-          </div>
-          <div class="buttons">
-            <button onclick="window.location.href='mietobjekt.html?id=${item.id}'">Details ansehen</button>
-            <button class="fav-btn">${isFavorite ? "Favorit entfernen" : "Zu Favoriten"}</button>
-          </div>
-        `;
-
-        const favBtn = card.querySelector(".fav-btn");
-        if (userSession?.user) {
-          favBtn.addEventListener("click", async (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            const toggled = await toggleFavorite(item.id);
-            favBtn.innerText = toggled ? "Favorit entfernen" : "Zu Favoriten";
-          });
-        } else {
-          favBtn.disabled = true;
-          favBtn.innerText = "Login erforderlich";
-        }
-
-        container.appendChild(card);
-      }
-
-      const pagination = document.createElement("div");
-      pagination.style.cssText = "grid-column:1/-1;display:flex;justify-content:center;gap:10px;margin-top:20px;";
-      const totalPages = Math.ceil(totalCount / pageSize);
-
-      if (page > 1) {
-        const prevBtn = document.createElement("button");
-        prevBtn.textContent = "← Zurück";
-        prevBtn.onclick = () => {
-          currentPage--;
-          loadListings(getFilters(), currentPage);
-        };
-        pagination.appendChild(prevBtn);
-      }
-
-      pagination.appendChild(document.createTextNode(`Seite ${page} von ${totalPages}`));
-
-      if (page < totalPages) {
-        const nextBtn = document.createElement("button");
-        nextBtn.textContent = "Weiter →";
-        nextBtn.onclick = () => {
-          currentPage++;
-          loadListings(getFilters(), currentPage);
-        };
-        pagination.appendChild(nextBtn);
-      }
-
-      container.appendChild(pagination);
-    }
-
-    function getFilters() {
-      const params = new URLSearchParams(window.location.search);
-      return {
-        title: params.get('title') || '',
-        category: params.get('category') || '',
-        minPrice: params.get('minPrice') || '',
-        maxPrice: params.get('maxPrice') || '',
-        location: params.get('location') || '',
-        radius: params.get('radius') || '',
-        sort: params.get('sort') || 'newest'
-      };
+    function search() {
+      const keyword = document.getElementById("search-input").value.trim();
+      const category = document.getElementById("category-select").value.trim();
+      const location = document.getElementById("location-input").value.trim();
+      const radius = document.getElementById("radius-select").value.trim();
+      const params = new URLSearchParams();
+      if (keyword) params.set("title", keyword);
+      if (category) params.set("category", category);
+      if (location) params.set("location", location);
+      if (radius) params.set("radius", radius);
+      window.location.href = `search_results.html?${params.toString()}`;
     }
 
     document.getElementById('nav-toggle').addEventListener('click', () => {
       const nav = document.getElementById('nav-links');
       nav.classList.toggle('show');
       document.getElementById('nav-toggle').setAttribute('aria-expanded', nav.classList.contains('show'));
+    });
+
+    const locationInput = document.getElementById('location-input');
+    const suggestionBox = document.getElementById('suggestions');
+
+    locationInput.addEventListener('input', () => {
+      clearTimeout(debounceTimer);
+
+      const value = locationInput.value.trim();
+      if (value.length < 2) {
+        suggestionBox.innerHTML = '';
+        return;
+      }
+
+      debounceTimer = setTimeout(async () => {
+        try {
+          const res = await fetch(
+            `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&countrycodes=de&limit=5&q=${encodeURIComponent(value)}`
+          );
+
+          const results = await res.json();
+          suggestionBox.innerHTML = '';
+
+          results.forEach(r => {
+            const city =
+              r.address.city ||
+              r.address.town ||
+              r.address.village ||
+              r.address.municipality ||
+              r.display_name.split(',')[0];
+
+            const state = r.address.state || '';
+            const display = [city, state, "Deutschland"].filter(Boolean).join(', ');
+
+            const div = document.createElement('div');
+            div.textContent = display;
+
+            div.onclick = () => {
+              locationInput.value = display;
+              selectedAddressData = {
+                city: city,
+                location: display,
+                lat: parseFloat(r.lat),
+                lon: parseFloat(r.lon),
+                postal_code: r.address.postcode || ''
+              };
+              suggestionBox.innerHTML = '';
+            };
+
+            suggestionBox.appendChild(div);
+          });
+
+          if (results.length === 0) {
+            suggestionBox.innerHTML = '<div style="padding:0.5rem;">Kein Ort gefunden</div>';
+          }
+        } catch (err) {
+          console.error("Fehler bei Ortssuche:", err);
+        }
+      }, 400);
     });
 
     init();
