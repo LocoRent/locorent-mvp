@@ -435,12 +435,11 @@ nav#nav-links {
         <option value="100">100 km</option>
         <option value="200">200 km</option>
       </select>
-      
       <select id="sort-select">
-    <option value="newest">🆕 Neueste zuerst</option>
-    <option value="popular">🔥 Beliebteste zuerst</option>
-    <option value="price_asc">💰 Günstigste zuerst</option>
-    <option value="price_desc">💎 Teuerste zuerst</option>
+  <option value="newest">Neueste</option>
+  <option value="price_asc">Günstigste</option>
+  <option value="price_desc">Teuerste</option>
+  <option value="popular">Beliebteste</option>
 </select>
       <button id="search-btn">Suchen</button>
     </div>
@@ -501,23 +500,22 @@ nav#nav-links {
     updateNav();
 
     const params = new URLSearchParams(window.location.search);
-    const filters = {
-      title: decodeURIComponent(params.get('title') || ''),
-      category: params.get('category') || '',
-      minPrice: params.get('minPrice') || '',
-      maxPrice: params.get('maxPrice') || '',
-      location: params.get('location') || '',
-      radius: params.get('radius') || '',
-      sort: params.get('sort') || 'newest',
-    };
-
+const filters = {
+  title: decodeURIComponent(params.get('title') || ''),
+  category: params.get('category') || '',
+  minPrice: params.get('minPrice') || '',
+  maxPrice: params.get('maxPrice') || '',
+  location: params.get('location') || '',
+  radius: params.get('radius') || '',
+  sort: params.get('sort') || 'newest'
+};
     document.getElementById("search-input").value = filters.title;
     document.getElementById("category-select").value = filters.category;
     document.getElementById("min-price").value = filters.minPrice;
     document.getElementById("max-price").value = filters.maxPrice;
     document.getElementById("location-input").value = filters.location;
     document.getElementById("radius-select").value = filters.radius;
-  document.getElementById("sort-select").value = filters.sort;
+    document.getElementById("sort-select").value = filters.sort;
 
     const currentCategoryDiv = document.getElementById("current-category");
     currentCategoryDiv.textContent = filters.category
@@ -650,40 +648,35 @@ document.getElementById('search-btn').addEventListener('click', () => {
 
   // --- LOAD LISTINGS ---
   async function loadListings(filters = {}, page = 1) {
-let query = sb
-  .from('listings')
-  .select('*', { count: 'exact' });
-
-    if (filters.title) {
-  query = query.ilike('title', `%${filters.title}%`);
+    let query = sb
+      .from('listings')
+      .select('*', { count: 'exact' })
+      .order('created_at', { ascending: false });
+if (filters.sort === "newest") {
+  query = query.order('created_at', { ascending: false });
 }
 
-if (filters.category) {
-  query = query.eq('category', filters.category);
+if (filters.sort === "price_asc") {
+  query = query.order('price_per_day', { ascending: true });
 }
 
-if (filters.minPrice) {
-  query = query.gte('price_per_day', Number(filters.minPrice));
+if (filters.sort === "price_desc") {
+  query = query.order('price_per_day', { ascending: false });
 }
 
-if (filters.maxPrice) {
-  query = query.lte('price_per_day', Number(filters.maxPrice));
+if (filters.sort === "popular") {
+  query = query.order('views', { ascending: false });
 }
-if(filters.sort === "newest"){
-  query = query.order('created_at', { ascending:false });
-}
+    if (filters.title) query = query.ilike('title', `%${filters.title}%`);
+    if (filters.category) query = query.eq('category', filters.category);
 
-if(filters.sort === "popular"){
-  query = query.order('views', { ascending:false });
-}
-
-if(filters.sort === "price_asc"){
-  query = query.order('price_per_day', { ascending:true });
-}
-
-if(filters.sort === "price_desc"){
-  query = query.order('price_per_day', { ascending:false });
-}
+    const min = filters.minPrice ? parseFloat(filters.minPrice) : 0;
+    const max = filters.maxPrice ? parseFloat(filters.maxPrice) : null;
+    if (max !== null && !isNaN(max)) {
+      query = query.gte('price_per_day', min).lte('price_per_day', max);
+    } else {
+      query = query.gte('price_per_day', min);
+    }
 
     const { data, count, error } = await query;
     if (error) {
@@ -795,18 +788,18 @@ if(filters.sort === "price_desc"){
   }
 
   // --- FILTERS HELPER ---
-  function getFilters() {
-    const params = new URLSearchParams(window.location.search);
-    return {
-      title: decodeURIComponent(params.get('title') || ''),
-      category: params.get('category') || '',
-      minPrice: params.get('minPrice') || '',
-      maxPrice: params.get('maxPrice') || '',
-      location: params.get('location') || '',
-      radius: params.get('radius') || ''
-      sort: params.get('sort') || 'newest'
-    };
-  }
+function getFilters() {
+  const params = new URLSearchParams(window.location.search);
+  return {
+    title: decodeURIComponent(params.get('title') || ''),
+    category: params.get('category') || '',
+    minPrice: params.get('minPrice') || '',
+    maxPrice: params.get('maxPrice') || '',
+    location: params.get('location') || '',
+    radius: params.get('radius') || '',
+    sort: params.get('sort') || 'newest'
+  };
+}
 
   // --- MOBILE NAV ---
   document.getElementById('nav-toggle').addEventListener('click', () => {
