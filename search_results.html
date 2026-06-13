@@ -110,10 +110,10 @@
 
     .hero {
       background-color: var(--white);
-      padding: 3rem 2rem;
+      padding: 3rem 2rem 2rem;
       border-radius: var(--radius);
       box-shadow: 0 12px 30px rgba(46,125,50,0.1);
-      margin: 2rem;
+      margin: 2rem 2rem 0;
       text-align: center;
     }
 
@@ -124,14 +124,19 @@
       color: var(--primary-dark);
     }
 
+    .filter-bar {
+      width: 100%;
+      padding: 0 2rem 2rem;
+    }
+
     .search-row {
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
       justify-content: center;
-      max-width: 1400px;
-      margin: auto;
-      margin-bottom: 2rem;
+      width: 100%;
+      max-width: none;
+      margin: 0;
     }
 
     .search-row input,
@@ -307,13 +312,6 @@
       color: var(--accent);
     }
 
-    footer small {
-      display: block;
-      margin-top: 2rem;
-      text-align: center;
-      opacity: 0.85;
-    }
-
     @media (max-width: 720px) {
       #nav-toggle {
         display: block;
@@ -351,6 +349,14 @@
         width: 100%;
       }
 
+      .hero {
+        margin: 1rem 0.75rem 0;
+      }
+
+      .filter-bar {
+        padding: 0 0.75rem 1.5rem;
+      }
+
       footer > div {
         flex-direction: column;
         align-items: flex-start;
@@ -372,7 +378,9 @@
   <section class="hero">
     <h2>Suchergebnisse</h2>
     <div id="current-category" style="margin-top: 1rem; font-weight: 600; color: var(--primary-dark);"></div>
+  </section>
 
+  <section class="filter-bar">
     <div class="search-row">
       <input type="text" placeholder="Was suchst du?" id="search-input" />
 
@@ -477,7 +485,6 @@
     </div>
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     const sb = supabase.createClient(
       'https://flnjalgqtkqycsaymmbd.supabase.co',
