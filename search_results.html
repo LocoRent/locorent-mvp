@@ -434,7 +434,13 @@ nav#nav-links {
         <option value="50">50 km</option>
         <option value="100">100 km</option>
         <option value="200">200 km</option>
-        
+      </select>
+      <select id="sort-select">
+  <option value="newest">Neueste</option>
+  <option value="price_asc">Günstigste</option>
+  <option value="price_desc">Teuerste</option>
+  <option value="popular">Beliebteste</option>
+</select>
       <button id="search-btn">Suchen</button>
     </div>
   </section>
@@ -442,15 +448,7 @@ nav#nav-links {
   <div class="category-grid" id="results">
     <p>⏳ Lade Ergebnisse…</p>
   </div>
-<div style="display:flex; align-items:center; gap:0.5rem; min-width:200px;">
-  <label for="sort-select" style="font-weight:600;">Sortieren:</label>
-  <select id="sort-select">
-    <option value="newest">Neueste</option>
-    <option value="price_asc">Günstigste</option>
-    <option value="price_desc">Teuerste</option>
-    <option value="popular">Beliebteste</option>
-  </select>
-</div>
+
   <footer style="background-color: #2e7d32; color: white; padding: 2rem;">
     <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2rem;">
       <div style="flex: 1; min-width: 200px;">
@@ -649,25 +647,27 @@ document.getElementById('search-btn').addEventListener('click', () => {
   }
 
   // --- LOAD LISTINGS ---
-async function loadListings(filters = {}, page = 1) {
-  let query = sb
-    .from('listings')
-    .select('*', { count: 'exact' });
-
-  if (filters.sort === "price_asc") {
-    query = query.order('price_per_day', { ascending: true });
-  } else if (filters.sort === "price_desc") {
-    query = query.order('price_per_day', { ascending: false });
-  } else if (filters.sort === "popular") {
-    query = query.order('views', { ascending: false });
-  } else {
-    query = query.order('created_at', { ascending: false });
-  }
-if (filters.title) {
-  query = query.or(
-    `title.ilike.%${filters.title}%,description.ilike.%${filters.title}%`
-  );
+  async function loadListings(filters = {}, page = 1) {
+    let query = sb
+      .from('listings')
+      .select('*', { count: 'exact' })
+      .order('created_at', { ascending: false });
+if (filters.sort === "newest") {
+  query = query.order('created_at', { ascending: false });
 }
+
+if (filters.sort === "price_asc") {
+  query = query.order('price_per_day', { ascending: true });
+}
+
+if (filters.sort === "price_desc") {
+  query = query.order('price_per_day', { ascending: false });
+}
+
+if (filters.sort === "popular") {
+  query = query.order('views', { ascending: false });
+}
+    if (filters.title) query = query.ilike('title', `%${filters.title}%`);
     if (filters.category) query = query.eq('category', filters.category);
 
     const min = filters.minPrice ? parseFloat(filters.minPrice) : 0;
