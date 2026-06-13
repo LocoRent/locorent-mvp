@@ -6,197 +6,431 @@
 <title>Mietobjekt – Locorent</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 :root {
   --primary: #2e7d32;
   --primary-dark: #1b5e20;
-  --background: #f1f8e9;
-  --white: #fff;
-  --text-dark: #0f2e13;
+  --primary-soft: #edf7ee;
+  --background: linear-gradient(180deg, #f3f9f1 0%, #eef6ea 100%);
+  --white: #ffffff;
+  --text-dark: #12301a;
+  --text-muted: #5f6f62;
   --accent: #b9f6ca;
-  --radius: 18px;
-  --shadow-light: rgba(46,125,50,0.08);
-  --shadow-strong: rgba(46,125,50,0.25);
+  --radius: 20px;
+  --shadow-light: 0 10px 28px rgba(0,0,0,0.06);
+  --shadow-strong: 0 18px 40px rgba(46,125,50,0.14);
   --font-primary: 'Poppins', sans-serif;
 }
 
-*, *::before, *::after { box-sizing:border-box; }
-html, body { margin:0; padding:0; width:100%; font-family:var(--font-primary); background:var(--background); color:var(--text-dark); min-height:100vh; display:flex; flex-direction:column;overflow-x: hidden; /* Verhindert horizontales Scrollen */ }
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  font-family: var(--font-primary);
+  background: var(--background);
+  color: var(--text-dark);
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+body {
+  line-height: 1.65;
+}
 
 /* Header */
-  header {
-    background-color: var(--primary);
-    color: var(--white);
-    padding: 1.5rem 2rem; /* genau wie in Nachrichten.html */
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: 700;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-    flex-wrap: wrap;
-  }
+header {
+  background: rgba(46,125,50,0.96);
+  backdrop-filter: blur(10px);
+  color: var(--white);
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+  flex-wrap: wrap;
+}
 
-  header h1 {
-    font-size: 1.8rem;
-    font-weight: 700; /* fett */
-    margin: 0;
-    cursor: pointer;
-  }
-    nav a {
-    color: var(--white);
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 1rem;
-  }
-#nav-toggle { display:none; background:none; border:none; font-size:1.6rem; color:var(--white); font-weight:700; cursor:pointer; }
-nav#nav-links { display:flex; flex-wrap:wrap; gap:1rem; }
-nav#nav-links a { color:var(--white); text-decoration:none; font-weight:700; font-size:1rem; position:relative; transition: color 0.3s ease; }
-nav#nav-links a::after { content:''; position:absolute; left:0; bottom:-4px; width:0; height:2px; background-color:var(--accent); transition: width 0.3s ease; }
-nav#nav-links a:hover::after, nav#nav-links a:focus::after { width:100%; }
-nav#nav-links a:hover, nav#nav-links a:focus { color:var(--accent); outline:none; }
+header h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0;
+  cursor: pointer;
+  letter-spacing: 0.2px;
+}
 
-/* Main Desktop modernisiert */
+#nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.6rem;
+  color: var(--white);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+nav#nav-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+nav#nav-links a {
+  color: var(--white);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1rem;
+  position: relative;
+  transition: color 0.25s ease, transform 0.2s ease;
+}
+
+nav#nav-links a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0;
+  height: 2px;
+  background-color: var(--accent);
+  transition: width 0.25s ease;
+}
+
+nav#nav-links a:hover::after,
+nav#nav-links a:focus::after {
+  width: 100%;
+}
+
+nav#nav-links a:hover,
+nav#nav-links a:focus {
+  color: var(--accent);
+  outline: none;
+}
+
+/* Main */
 main {
   width: 100%;
   max-width: 1400px;
-  margin: 3rem auto 4rem;
+  margin: 2.5rem auto 4rem;
   padding: 0 1.5rem;
   display: grid;
-  grid-template-columns: 2fr 2.5fr 1.5fr;
-  gap: 3rem;
+  grid-template-columns: 1.25fr 1.2fr 0.9fr;
+  gap: 1.8rem;
+  align-items: start;
 }
 
-.gallery, .content, .vendor-info {
-  background: #fff;
-  padding: 1.8rem;
-  border-radius: 22px;
-  box-shadow: 0 12px 36px rgba(0,0,0,0.08);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+.gallery,
+.content,
+.vendor-info {
+  background: rgba(255,255,255,0.88);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(46,125,50,0.08);
+  padding: 1.6rem;
+  border-radius: 24px;
+  box-shadow: var(--shadow-light);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-.gallery:hover, .content:hover, .vendor-info:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 16px 40px rgba(0,0,0,0.12);
+.gallery:hover,
+.content:hover,
+.vendor-info:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-strong);
 }
 
 /* Galerie */
-.gallery { display: flex; flex-direction: column; gap: 0.8rem; }
-.main-image { width: 100%; max-height: 550px; object-fit: contain; border-radius: 18px; cursor: pointer; transition: transform 0.3s ease; }
-.main-image:hover { transform: scale(1.04); }
-.thumbnails { display:flex; gap:0.6rem; overflow-x:auto; margin-top:1rem; }
-.thumbnails img { width:90px; height:65px; object-fit:cover; border-radius:10px; border:2px solid transparent; cursor:pointer; transition:border-color 0.3s, transform 0.2s; flex-shrink:0; }
-.thumbnails img.active { border-color: var(--primary); box-shadow:0 0 10px var(--primary); transform: scale(1.06); }
+.gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.main-image {
+  width: 100%;
+  max-height: 560px;
+  object-fit: contain;
+  border-radius: 18px;
+  cursor: pointer;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+  background: #fff;
+}
+
+.main-image:hover {
+  transform: scale(1.02);
+}
+
+.thumbnails {
+  display: flex;
+  gap: 0.6rem;
+  overflow-x: auto;
+  margin-top: 0.9rem;
+  padding-bottom: 0.4rem;
+  scroll-snap-type: x mandatory;
+}
+
+.thumbnails img {
+  width: 92px;
+  height: 66px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  flex-shrink: 0;
+  scroll-snap-align: start;
+}
+
+.thumbnails img.active {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(46,125,50,0.12);
+  transform: scale(1.04);
+}
 
 /* Content */
-.content h2 { font-size:2.2rem; font-weight:700; color:var(--primary); margin-bottom:0.8rem; }
-.content p { margin:0.4rem 0; line-height:1.6; }
-.content .description { white-space:pre-wrap; background:#fdfdfd; padding:1.2rem; border-radius:20px; box-shadow: inset 0 0 10px rgba(0,0,0,0.04); max-height:260px; overflow-y:auto; font-size:1rem; color:#444; }
+.content h2 {
+  font-size: 2.1rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin: 0 0 0.8rem;
+  line-height: 1.2;
+}
+
+.content p {
+  margin: 0.35rem 0;
+  color: var(--text-dark);
+}
+
+.content .description {
+  white-space: pre-wrap;
+  background: linear-gradient(180deg, #ffffff 0%, #fbfdfb 100%);
+  padding: 1.1rem;
+  border-radius: 18px;
+  border: 1px solid rgba(0,0,0,0.04);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.4);
+  max-height: 280px;
+  overflow-y: auto;
+  font-size: 1rem;
+  color: #3d4a40;
+}
+
+.meta-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 1rem 0 1.2rem;
+}
+
+.meta-tags span {
+  background: var(--primary-soft);
+  color: var(--primary-dark);
+  padding: 0.55rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  border: 1px solid rgba(46,125,50,0.08);
+}
 
 /* Vendor */
-.vendor-info h3 { font-size:1.3rem; font-weight:700; margin-bottom:0.6rem; }
-.vendor-info p { margin:0.4rem 0; line-height:1.5; }
+.vendor-info h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin: 0 0 0.8rem;
+}
+
+.vendor-info p {
+  margin: 0.45rem 0;
+  color: var(--text-dark);
+}
+
+.vendor-info a {
+  color: var(--primary-dark);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.vendor-info a:hover {
+  text-decoration: underline;
+}
 
 /* Buttons */
-button { padding:0.8rem 1.2rem; background:var(--primary); color:#fff; border:none; border-radius:14px; font-weight:700; cursor:pointer; transition:0.3s; margin-top:0.7rem; font-size:1rem; }
-button:hover { background:var(--primary-dark); }
+button {
+  padding: 0.85rem 1.15rem;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.25s ease, box-shadow 0.25s ease;
+  margin-top: 0.75rem;
+  font-size: 1rem;
+  box-shadow: 0 10px 20px rgba(46,125,50,0.15);
+}
+
+button:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: translateY(0);
+}
 
 /* Footer */
-footer { background-color: var(--primary); color: var(--white); padding:2rem; margin-top:auto; box-shadow:0 8px 32px rgba(46,125,50,0.22); text-align:left; user-select:none; }
-footer > div { max-width:1200px; margin:0 auto; display:flex; flex-wrap:wrap; gap:2rem; }
-footer > div > div { flex:1; min-width:200px; display:flex; flex-direction:column; }
-footer h4 { margin-bottom:0.5rem; font-weight:700; }
-footer ul { list-style:none; padding:0; line-height:1.8; }
-footer ul li { margin-bottom:0.3rem; }
-footer ul li a { color: var(--white); text-decoration: underline; }
-footer ul li a:hover { color: var(--accent); }
-footer small { display:block; margin-top:2rem; text-align:center; opacity:0.85; }
+footer {
+  background: linear-gradient(180deg, #2e7d32 0%, #276a2b 100%);
+  color: var(--white);
+  padding: 2rem;
+  margin-top: auto;
+  box-shadow: 0 8px 32px rgba(46,125,50,0.22);
+  text-align: left;
+  user-select: none;
+}
+
+footer > div {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+footer > div > div {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+}
+
+footer h4 {
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+footer ul {
+  list-style: none;
+  padding: 0;
+  line-height: 1.8;
+  margin: 0;
+}
+
+footer ul li {
+  margin-bottom: 0.25rem;
+}
+
+footer ul li a {
+  color: var(--white);
+  text-decoration: underline;
+}
+
+footer ul li a:hover {
+  color: var(--accent);
+}
+
+footer small {
+  display: block;
+  margin-top: 2rem;
+  text-align: center;
+  opacity: 0.9;
+}
+
+/* Loading */
+.loading-box {
+  padding: 2rem;
+  text-align: center;
+  font-weight: 600;
+  color: var(--text-muted);
+}
 
 /* Responsive */
-@media(max-width:900px){ main { grid-template-columns:1fr; gap:1.8rem;    display: flex;            /* von Grid auf Flex umstellen */
-    flex-direction: column;   /* Boxen untereinander */
-    gap: 1.8rem;              /* Abstand zwischen Boxen */
-    padding: 0 1rem;          /* Abstand links und rechts */ } }
-@media(max-width:720px){
-  header {
-    flex-direction: row;          /* Logo links, Burger rechts */
-    justify-content: space-between;
-    align-items: center;          /* vertikal zentriert */
-    padding: 0.8rem 1.5rem; /* weniger Höhe, Logo und Burger bleiben gleich */
+@media (max-width: 1100px) {
+  main {
+    grid-template-columns: 1fr 1fr;
   }
+
+  .vendor-info {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 900px) {
+  main {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 0 1rem;
+  }
+}
+
+@media (max-width: 720px) {
+  header {
+    padding: 0.85rem 1.1rem;
+  }
+
   header h1 {
-    font-size: 1.8rem;            /* gleiche Größe wie Nachrichten-Seite */
-    margin: 0;
+    font-size: 1.55rem;
   }
 
   #nav-toggle {
     display: block;
-    font-size: 1.6rem;            /* gleiche Größe wie Nachrichten-Seite */
-    margin-left: auto;             /* ganz rechts */
+    margin-left: auto;
   }
 
   nav#nav-links {
-    display: none;                 /* Standard versteckt */
+    display: none;
     flex-direction: column;
     width: 100%;
-    margin-top: 0.5rem;
+    margin-top: 0.8rem;
   }
+
   nav#nav-links.show {
     display: flex;
   }
+
   nav#nav-links a {
-    margin: 0.4rem 0;
-    padding: 0.5rem 1rem;
+    margin: 0.35rem 0;
+    padding: 0.6rem 1rem;
     background: rgba(255,255,255,0.1);
-    border-radius: 6px;
+    border-radius: 10px;
   }
+
   .main-image {
-  width: 100%;
-  max-width: 100%;   /* passt sich immer dem Container an */
-  height: auto;      /* proportional skalieren */
-  object-fit: contain;
-  display: block;
-  margin: 0 auto;    /* zentriert das Bild horizontal */
-}
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
 
-  .gallery {
+  .gallery,
+  .content,
+  .vendor-info {
     width: 100%;
     max-width: 100%;
-    overflow: hidden;
+    box-sizing: border-box;
+    padding: 1.2rem;
   }
 
-  main {
-    width: 100%;
-    max-width: 100%;
-    overflow-x: hidden;
+  .content h2 {
+    font-size: 1.7rem;
   }
 
-
-.thumbnails {
-  display: flex;
-  gap: 0.4rem;       /* kleiner Abstand zwischen Bildern */
-  overflow-x: auto;   /* horizontal scrollen, wenn zu viele Thumbnails */
-  margin: 1rem 0 0 0;
-  padding-bottom: 0.5rem; /* verhindert Scrollbar-Überlappung */
-  max-width: 100%;    /* nie breiter als Container */
-  justify-content: flex-start; /* linksbündig */
-}
-
-.thumbnails img {
-  width: 70px;  /* kleinere Thumbnails auf Mobile */
-  height: 50px;
-  object-fit: cover;
-  border-radius: 10px;
-  cursor: pointer;
-}
-  .gallery, .content, .vendor-info {
-  width: 100%;       /* volle Breite des Containers */
-  max-width: 100%;   /* nicht breiter */
-  box-sizing: border-box; /* Padding wird eingerechnet */
-}
+  .thumbnails img {
+    width: 74px;
+    height: 54px;
   }
+}
+
+/* Extra smoothness */
+img {
+  -webkit-user-drag: none;
+  user-select: none;
+}
 </style>
 </head>
 <body>
@@ -207,7 +441,9 @@ footer small { display:block; margin-top:2rem; text-align:center; opacity:0.85; 
   <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
 </header>
 
-<main id="listing-details" aria-live="polite" aria-busy="true">Lade Inserat…</main>
+<main id="listing-details" aria-live="polite" aria-busy="true">
+  <div class="loading-box">Lade Inserat…</div>
+</main>
 
 <footer>
   <div>
@@ -239,8 +475,8 @@ footer small { display:block; margin-top:2rem; text-align:center; opacity:0.85; 
   </div>
   <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
 </footer>
+
 <script>
-/* ===== SUPABASE INIT ===== */
 if (!window.supabaseClient) {
   window.supabaseClient = window.supabase.createClient(
     'https://flnjalgqtkqycsaymmbd.supabase.co',
@@ -249,7 +485,6 @@ if (!window.supabaseClient) {
 }
 var supabase = window.supabaseClient;
 
-/* ===== GLOBALS ===== */
 let currentUser = null;
 let listingOwnerId = null;
 let isFavorite = false;
@@ -260,7 +495,6 @@ document.getElementById('nav-toggle').addEventListener('click', () => {
   document.getElementById('nav-toggle').setAttribute('aria-expanded', nav.classList.contains('show'));
 });
 
-// Kategorie-Mapping
 const categoryMap = {
   "anhaenger-transportmittel": "Anhänger & Transportmittel",
   "audio-dj-equipment": "Audio & DJ-Equipment",
@@ -293,7 +527,6 @@ const categoryMap = {
   "werkzeuge-maschinen": "Werkzeuge & Maschinen"
 };
 
-/* ===== NAVIGATION ===== */
 async function updateNav() {
   const { data: { session } } = await supabase.auth.getSession();
   const nav = document.getElementById('nav-links');
@@ -317,49 +550,82 @@ async function logout() {
   window.location.href = "login.html";
 }
 
-/* ===== LISTING FUNCTIONS ===== */
-function capitalize(str) { return str ? str.charAt(0).toUpperCase() + str.slice(1) : ''; }
-function formatDate(dateStr) { if (!dateStr) return 'Unbekannt'; const d = new Date(dateStr); return d.toLocaleDateString('de-DE', { year:'numeric', month:'long', day:'numeric' }); }
+function capitalize(str) {
+  return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
+}
+
+function formatDate(dateStr) {
+  if (!dateStr) return 'Unbekannt';
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('de-DE', { year: 'numeric', month: 'long', day: 'numeric' });
+}
 
 async function loadListing() {
   const params = new URLSearchParams(location.search);
   const listingId = params.get('id');
-  const { data: listing, error } = await supabase.from('listings').select('*').eq('id', listingId).single();
+
+  const { data: listing, error } = await supabase
+    .from('listings')
+    .select('*')
+    .eq('id', listingId)
+    .single();
+
   if (error || !listing) {
-    document.getElementById('listing-details').innerHTML = "<p>Fehler beim Laden des Inserats.</p>";
+    document.getElementById('listing-details').innerHTML = `
+      <div class="loading-box">
+        <p>Fehler beim Laden des Inserats.</p>
+      </div>
+    `;
     return;
   }
 
   listingOwnerId = listing.user_id;
-  const { data: profile } = await supabase.from('profiles').select('name,city,bio').eq('id', listing.user_id).single();
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('name,city,bio')
+    .eq('id', listing.user_id)
+    .single();
+
   const images = listing.image_urls || (listing.image_url ? [listing.image_url] : ['https://via.placeholder.com/600x400?text=Kein+Bild']);
-  const thumbs = images.map((url, i) => `<img src="${url}" class="${i===0?'active':''}" alt="Vorschaubild ${i+1}" onclick="switchImage('${url}',this)">`).join('');
-  
+  const thumbs = images.map((url, i) =>
+    `<img src="${url}" class="${i === 0 ? 'active' : ''}" alt="Vorschaubild ${i + 1}" onclick="switchImage('${url}', this)">`
+  ).join('');
+
+  const categoryText = categoryMap[listing.category] || capitalize(listing.category);
+
   document.getElementById('listing-details').innerHTML = `
     <div class="gallery">
-      <img src="${images[0]}" class="main-image" id="mainImage" alt="Bild des Mietobjekts"/>
-      ${images.length>1 ? `<div class="thumbnails">${thumbs}</div>` : ''}
+      <img src="${images[0]}" class="main-image" id="mainImage" alt="Bild des Mietobjekts">
+      ${images.length > 1 ? `<div class="thumbnails">${thumbs}</div>` : ''}
     </div>
+
     <div class="content">
       <h2>${listing.title}</h2>
-      <p><strong>Kategorie:</strong> ${categoryMap[listing.category] || capitalize(listing.category)}</p>
-      <p><strong>Preis pro Tag:</strong> ${listing.price_per_day} €</p>
-      <p><strong>Ort:</strong> ${listing.location||'–'}</p>
-      <p><strong>Online seit:</strong> ${formatDate(listing.created_at)}</p>
+
+      <div class="meta-tags">
+        <span>📦 ${categoryText}</span>
+        <span>💶 ${listing.price_per_day} € / Tag</span>
+        <span>📍 ${listing.location || '–'}</span>
+        <span>📅 Seit ${formatDate(listing.created_at)}</span>
+      </div>
+
       <p><strong>Beschreibung:</strong></p>
-      <p class="description">${listing.description||'Keine Beschreibung vorhanden.'}</p>
+      <p class="description">${listing.description || 'Keine Beschreibung vorhanden.'}</p>
+
       <button onclick="goToChat()">Nachricht an Vermieter</button>
-      ${currentUser?`<button id="add-to-favorites" onclick="toggleFavorite('${listing.id}')">Lade Favoritenstatus...</button>`:''}
+      ${currentUser ? `<button id="add-to-favorites" onclick="toggleFavorite('${listing.id}')">Lade Favoritenstatus...</button>` : ''}
     </div>
+
     <div class="vendor-info">
       <h3>Vermieter</h3>
-      <p><strong>Name:</strong> <a href="vermieter-profil.html?id=${listing.user_id}">${profile?.name||'–'}</a></p>
-      <p><strong>Ort:</strong> ${profile?.city||'–'}</p>
-      <p><strong>Über mich:</strong> ${profile?.bio||'–'}</p>
+      <p><strong>Name:</strong> <a href="vermieter-profil.html?id=${listing.user_id}">${profile?.name || '–'}</a></p>
+      <p><strong>Ort:</strong> ${profile?.city || '–'}</p>
+      <p><strong>Über mich:</strong> ${profile?.bio || '–'}</p>
     </div>
   `;
 
-  if(currentUser) await updateFavoriteButton(listing.id);
+  if (currentUser) await updateFavoriteButton(listing.id);
 }
 
 function switchImage(url, element) {
@@ -369,32 +635,58 @@ function switchImage(url, element) {
 }
 
 async function updateFavoriteButton(listingId) {
-  const { data } = await supabase.from('favorites').select('*').eq('user_id', currentUser.id).eq('listing_id', listingId).single();
+  const { data } = await supabase
+    .from('favorites')
+    .select('*')
+    .eq('user_id', currentUser.id)
+    .eq('listing_id', listingId)
+    .maybeSingle();
+
   isFavorite = !!data;
-  document.getElementById("add-to-favorites").textContent = isFavorite ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufügen";
+  const btn = document.getElementById("add-to-favorites");
+  if (btn) btn.textContent = isFavorite ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufügen";
 }
 
 async function toggleFavorite(listingId) {
-  if(!currentUser) return alert("Bitte einloggen.");
+  if (!currentUser) return alert("Bitte einloggen.");
+
   const btn = document.getElementById("add-to-favorites");
-  if(isFavorite){
-    const { error } = await supabase.from('favorites').delete().eq('user_id', currentUser.id).eq('listing_id', listingId);
-    if(!error){ isFavorite=false; btn.textContent="Zu Favoriten hinzufügen"; } else alert("Fehler beim Entfernen aus Favoriten.");
+
+  if (isFavorite) {
+    const { error } = await supabase
+      .from('favorites')
+      .delete()
+      .eq('user_id', currentUser.id)
+      .eq('listing_id', listingId);
+
+    if (!error) {
+      isFavorite = false;
+      btn.textContent = "Zu Favoriten hinzufügen";
+    } else {
+      alert("Fehler beim Entfernen aus Favoriten.");
+    }
   } else {
-    const { error } = await supabase.from('favorites').insert({ user_id: currentUser.id, listing_id: listingId });
-    if(!error){ isFavorite=true; btn.textContent="Aus Favoriten entfernen"; } else alert("Fehler beim Hinzufügen zu Favoriten.");
+    const { error } = await supabase
+      .from('favorites')
+      .insert({ user_id: currentUser.id, listing_id: listingId });
+
+    if (!error) {
+      isFavorite = true;
+      btn.textContent = "Aus Favoriten entfernen";
+    } else {
+      alert("Fehler beim Hinzufügen zu Favoriten.");
+    }
   }
 }
 
 function goToChat() {
-  if(!currentUser) return alert("Bitte einloggen, um Nachrichten zu senden.");
+  if (!currentUser) return alert("Bitte einloggen, um Nachrichten zu senden.");
   const params = new URLSearchParams(location.search);
   const listingId = params.get('id');
   const chatWith = listingOwnerId;
   window.location.href = `nachrichten.html?listing_id=${listingId}&with=${chatWith}`;
 }
 
-/* ===== INITIAL LOAD ===== */
 updateNav();
 loadListing();
 </script>
