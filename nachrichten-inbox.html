@@ -14,244 +14,420 @@
       --background: #f1f8e9;
       --white: #fff;
       --text-dark: #0f2e13;
+      --text-muted: #587156;
       --accent: #b9f6ca;
-      --radius: 18px;
+      --surface: rgba(255,255,255,0.86);
+      --border: rgba(46, 125, 50, 0.10);
+      --radius: 22px;
       --font-primary: 'Poppins', sans-serif;
+      --shadow-soft: 0 12px 32px rgba(46, 125, 50, 0.08);
+      --shadow-hover: 0 18px 42px rgba(46, 125, 50, 0.14);
     }
 
     *, *::before, *::after { box-sizing: border-box; }
+
     body {
       margin: 0;
       font-family: var(--font-primary);
       background: linear-gradient(to bottom, #e8f5e9 0%, #ffffff 100%);
       color: var(--text-dark);
-      scroll-behavior: smooth;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
       overflow-x: hidden;
     }
 
-    /* HEADER */
     header {
-      background-color: var(--primary);
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
       color: var(--white);
-      padding: 1.5rem 2rem;
+      padding: 1.25rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-weight: 700;
+      gap: 1rem;
       position: sticky;
       top: 0;
       z-index: 1000;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      box-shadow: 0 10px 24px rgba(0,0,0,0.12);
       flex-wrap: wrap;
     }
-    header h1 { font-size: 1.8rem; cursor: pointer; user-select: none; margin: 0; }
-    #nav-toggle { display: none; background: none; border: none; font-size: 1.8rem; color: var(--white); cursor: pointer; }
-    nav#main-nav { display: flex; flex-wrap: wrap; gap: 1rem; }
+
+    header h1 {
+      font-size: 1.85rem;
+      margin: 0;
+      cursor: pointer;
+      user-select: none;
+      letter-spacing: 0.2px;
+    }
+
+    #nav-toggle {
+      display: none;
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.16);
+      font-size: 1.45rem;
+      color: var(--white);
+      cursor: pointer;
+      border-radius: 12px;
+      width: 48px;
+      height: 48px;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    #nav-toggle:hover {
+      transform: translateY(-1px);
+      background: rgba(255,255,255,0.16);
+    }
+
+    nav#main-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
     nav#main-nav a {
       color: var(--white);
       text-decoration: none;
       font-weight: 600;
-      font-size: 1rem;
-      position: relative;
+      font-size: 0.98rem;
+      padding: 0.55rem 0.9rem;
+      border-radius: 999px;
+      transition: background 0.25s ease, transform 0.2s ease, color 0.2s ease;
+    }
+
+    nav#main-nav a:hover,
+    nav#main-nav a:focus {
+      background: rgba(255,255,255,0.12);
+      color: var(--accent);
+      outline: none;
+      transform: translateY(-1px);
+    }
+
+    main {
+      max-width: 1400px;
+      width: 100%;
+      margin: 2rem auto 4rem;
+      padding: 0 1rem;
+      flex: 1;
+    }
+
+    .page-head {
+      margin-bottom: 1.25rem;
+    }
+
+    h2 {
+      font-size: clamp(1.6rem, 2vw, 2.15rem);
+      margin: 0;
+      color: var(--primary-dark);
+    }
+
+    .subtitle {
+      margin: 0.45rem 0 0;
+      color: var(--text-muted);
+      font-size: 0.98rem;
+    }
+
+    #inbox {
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+      margin-top: 1.25rem;
+    }
+
+    .chat-item {
+      display: grid;
+      grid-template-columns: auto auto 1fr auto;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-soft);
+      cursor: pointer;
+      width: 100%;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+
+    .chat-item:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-hover);
+      border-color: rgba(46, 125, 50, 0.18);
+      background: rgba(255,255,255,0.95);
+    }
+
+    .chat-avatar {
+      width: 66px;
+      height: 66px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #dcedc8 0%, #c8e6c9 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: 700;
+      color: var(--primary-dark);
+      flex-shrink: 0;
+      overflow: hidden;
+      box-shadow: inset 0 0 0 2px rgba(255,255,255,0.65);
+    }
+
+    .chat-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .chat-image {
+      width: 110px;
+      height: 82px;
+      object-fit: cover;
+      border-radius: 14px;
+      flex-shrink: 0;
+      border: 1px solid rgba(46,125,50,0.08);
+    }
+
+    .chat-content {
+      min-width: 0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .chat-name {
+      font-weight: 700;
+      color: var(--primary-dark);
+      font-size: 1.06rem;
+      line-height: 1.2;
+    }
+
+    .chat-title {
+      font-weight: 600;
+      color: var(--primary);
+      font-size: 0.98rem;
+      line-height: 1.3;
+    }
+
+    .chat-preview {
+      font-size: 0.95rem;
+      color: #4f5f4d;
+      line-height: 1.45;
+      white-space: normal;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+
+    .chat-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.55rem;
+      margin-left: 0.5rem;
+    }
+
+    .chat-time {
+      font-size: 0.82rem;
+      color: #6f7f6d;
+      white-space: nowrap;
+      font-weight: 600;
+    }
+
+    .delete-chat-btn {
+      background: rgba(229,57,53,0.08);
+      border: 1px solid rgba(229,57,53,0.12);
+      color: #d32f2f;
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+      display: grid;
+      place-items: center;
+      padding: 0;
+      line-height: 1;
+    }
+
+    .delete-chat-btn:hover {
+      background: rgba(229,57,53,0.14);
+      color: #b71c1c;
+      transform: scale(1.05);
+    }
+
+    #pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+
+    #pagination button {
+      border: 1px solid rgba(46,125,50,0.16);
+      background: white;
+      color: var(--primary-dark);
+      padding: 0.7rem 1rem;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      box-shadow: 0 8px 18px rgba(46,125,50,0.06);
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    #pagination button:hover {
+      transform: translateY(-1px);
+      background: #f6fbf6;
+    }
+
+    #pagination span {
+      color: var(--text-muted);
+      font-weight: 600;
+      padding: 0 0.5rem;
+    }
+
+    footer {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 2rem 2rem 1rem;
+      border-radius: var(--radius);
+      background-color: var(--primary);
+      color: var(--white);
+      box-shadow: 0 8px 32px rgba(46, 125, 50, 0.22);
+      font-size: 0.92rem;
+      text-align: center;
+      margin-top: auto;
+    }
+
+    footer > div {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 2rem;
+      text-align: left;
+    }
+
+    footer > div > div {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    footer h4 {
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    footer ul {
+      list-style: none;
+      padding: 0;
+      line-height: 1.8;
+    }
+
+    footer ul li a {
+      color: var(--white);
+      text-decoration: underline;
       transition: color 0.3s ease;
     }
-    nav#main-nav a::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      bottom: -4px;
-      width: 0;
-      height: 2px;
-      background-color: var(--accent);
-      transition: width 0.3s ease;
+
+    footer ul li a:hover {
+      color: var(--accent);
     }
-    nav#main-nav a:hover::after,
-    nav#main-nav a:focus::after { width: 100%; }
-    nav#main-nav a:hover,
-    nav#main-nav a:focus { color: var(--accent); outline: none; }
 
-    /* MAIN */
-    main { max-width: 1200px; margin: 2rem auto 4rem; padding: 0 1rem; flex-grow: 1; }
-    h2 { font-size: 2rem; margin-bottom: 1.5rem; color: var(--primary); }
+    footer small {
+      display: block;
+      margin-top: 2rem;
+      text-align: center;
+      opacity: 0.85;
+    }
 
- /* CHAT LIST ITEMS */
-.chat-item {
-  display: flex;
-  align-items: center;
-  padding: 1rem;
-  border-bottom: 1px solid #ddd;
-  cursor: pointer;
-  width: 100%;
-  max-width: 100%;
-  overflow: hidden; /* verhindert Überlauf */
-}
-  .chat-item:hover { background: #f1f8e9; }
+    @media (max-width: 900px) {
+      .chat-item {
+        grid-template-columns: auto 1fr auto;
+        grid-template-areas:
+          "avatar content right"
+          "image image image";
+        align-items: start;
+      }
 
-  .chat-avatar { width: 60px; height: 60px; border-radius: 50%; background: #dcedc8; display: flex; justify-content: center; align-items: center; font-weight: 700; color: var(--primary-dark); margin-right: 1rem; flex-shrink: 0; overflow: hidden; }
-  .chat-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+      .chat-avatar { grid-area: avatar; }
+      .chat-content { grid-area: content; }
+      .chat-right { grid-area: right; }
+      .chat-image { grid-area: image; width: 100%; height: 180px; margin-top: 0.25rem; }
+    }
 
-  .chat-image { width: 100px; height: 80px; object-fit: cover; border-radius: 6px; margin-right: 1rem; flex-shrink: 0; }
-
-.chat-content {
-  flex: 1 1 0;
-  display: flex;
-  flex-direction: column;
-  min-width: 0; /* sehr wichtig für flex items */
-  overflow: hidden;
-  word-wrap: break-word; /* Zeilenumbruch für lange Wörter */
-}
-  .chat-name { font-weight: 600; color: var(--primary-dark); font-size: 1.1rem; }
-  .chat-title { font-weight: 500; color: var(--primary); font-size: 1rem; margin-top: 0.2rem; }
-.chat-preview {
-  font-size: 0.95rem;
-  color: #555;
-  margin-top: 0.2rem;
-  white-space: normal; /* vorher war nowrap */
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-  .chat-time { font-size: 0.85rem; color: #777; margin-left: 1rem; white-space: nowrap; flex-shrink: 0; }
-
-  /* Desktop spezifisch */
-  @media(min-width: 900px){
-    main { max-width: 1400px; }
-    .chat-item { padding: 1.25rem 1.5rem; }
-    .chat-avatar { width: 70px; height: 70px; }
-    .chat-image { width: 120px; height: 90px; }
-    .chat-name { font-size: 1.2rem; }
-    .chat-title { font-size: 1.05rem; }
-    .chat-preview { font-size: 1rem; }
-    .chat-time { font-size: 0.9rem; }
-  }
-
-    /* FOOTER */
-footer {
-  width: 100%;
-  box-sizing: border-box;
-  padding: 2rem 2rem 1rem;
-  border-radius: var(--radius);
-  background-color: var(--primary);
-  color: var(--white);
-  box-shadow: 0 8px 32px rgba(46, 125, 50, 0.22);
-  font-size: 0.92rem;
-  text-align: center;
-  margin-top: auto;
-}
-
-footer > div {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 2rem;
-  text-align: left;
-}
-
-footer > div > div {
-  flex: 1;
-  min-width: 200px;
-}
-
-footer h4 {
-  margin-bottom: 0.5rem;
-  font-weight: 700;
-  font-size: 1.1rem;
-}
-
-footer ul {
-  list-style: none;
-  padding: 0;
-  line-height: 1.8;
-}
-
-footer ul li a {
-  color: var(--white);
-  text-decoration: underline;
-  transition: color 0.3s ease;
-}
-
-footer ul li a:hover {
-  color: var(--accent);
-}
-
-footer small {
-  display: block;
-  margin-top: 2rem;
-  text-align: center;
-  opacity: 0.85;
-}
-
-    /* MOBILE */
     @media (max-width: 720px) {
-        header {
-    padding-left: 1rem;  /* minimaler Abstand links */
-    padding-right: 1rem; /* minimaler Abstand rechts */
-    width: 100%;         /* volle Breite */
-  }
       #nav-toggle { display: block; }
-      nav#main-nav { width: 100%; flex-direction: column; display: none; margin-top: 1rem; }
+
+      nav#main-nav {
+        width: 100%;
+        flex-direction: column;
+        display: none;
+        margin-top: 1rem;
+        align-items: stretch;
+      }
+
       nav#main-nav.show { display: flex; }
-      nav#main-nav a { margin: 0.4rem 0; padding: 0.5rem 1rem; background-color: rgba(255,255,255,0.1); border-radius: 6px; }
+
+      nav#main-nav a {
+        margin: 0.2rem 0;
+        padding: 0.75rem 1rem;
+        background-color: rgba(255,255,255,0.10);
+        border-radius: 12px;
+      }
+
+      header {
+        padding: 1rem;
+      }
+
+      main {
+        margin: 1.25rem auto 3rem;
+        padding: 0 0.75rem;
+      }
+
+      .chat-item {
+        grid-template-columns: auto 1fr;
+        grid-template-areas:
+          "avatar right"
+          "content content"
+          "image image";
+        gap: 0.8rem;
+      }
+
+      .chat-right {
+        grid-area: right;
+        align-items: flex-end;
+      }
+
+      .chat-content {
+        grid-area: content;
+      }
+
+      .chat-avatar {
+        width: 58px;
+        height: 58px;
+      }
+
+      .chat-image {
+        width: 100%;
+        height: 160px;
+      }
+
+      footer > div {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      footer > div > div {
+        width: 100%;
+      }
     }
-    /* Mobile Fix für horizontales Scrollen */
-@media (max-width: 720px) {
-  html, body {
-    max-width: 100vw;  /* maximale Breite auf Viewport begrenzen */
-    overflow-x: hidden; /* horizontales Scrollen verhindern */
-  }
-
-  .chat-item {
-    flex-wrap: wrap;        /* Inhalt darf umbrechen */
-    min-width: 0;           /* verhindert Flexbox Überlauf */
-  }
-
-  .chat-avatar, .chat-image {
-    max-width: 100%;        /* Bilder dürfen nicht größer als Container sein */
-    height: auto;           /* Höhe automatisch anpassen */
-  }
-
-  .chat-content {
-    min-width: 0;
-    overflow: hidden;
-    word-wrap: break-word;
-  }
-    footer > div {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  footer > div > div {
-    width: 100%;
-  }
-}
-.chat-right {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 4px;
-  margin-left: 10px;
-}
-
-/* kleiner Icon-Button statt großer Button */
-.delete-chat-btn {
-  background: transparent;
-  border: none;
-  color: #e53935;
-  font-size: 16px;
-  cursor: pointer;
-  padding: 2px 4px;
-  line-height: 1;
-  transition: 0.2s;
-}
-
-.delete-chat-btn:hover {
-  color: #b71c1c;
-  transform: scale(1.1);
-}
   </style>
 </head>
 <body>
@@ -270,9 +446,13 @@ footer small {
 </header>
 
 <main>
-  <h2>📨 Nachrichteneingang</h2>
+  <div class="page-head">
+    <h2>📨 Nachrichteneingang</h2>
+    <p class="subtitle">Deine aktiven Unterhaltungen auf einen Blick.</p>
+  </div>
+
   <div id="inbox">Lade Nachrichten...</div>
-  <div id="pagination" style="display:flex; justify-content:center; gap:10px; margin-top:20px;"></div>
+  <div id="pagination"></div>
 </main>
 
 <footer role="contentinfo">
@@ -305,8 +485,8 @@ footer small {
   </div>
   <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
 </footer>
+
 <script>
-  // Supabase v2 Client
   const sb = supabase.createClient(
     'https://flnjalgqtkqycsaymmbd.supabase.co',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
@@ -315,7 +495,6 @@ footer small {
   let currentPage = 1;
   const pageSize = 20;
 
-  // Mobile Menü
   document.getElementById('nav-toggle').addEventListener('click', () => {
     const nav = document.getElementById('main-nav');
     nav.classList.toggle('show');
@@ -335,15 +514,15 @@ footer small {
   function timeAgo(dateString) {
     const date = new Date(dateString);
     const diff = (Date.now() - date.getTime()) / 1000;
-    if(diff < 60) return "gerade eben";
-    if(diff < 3600) return `${Math.floor(diff/60)} Min.`;
-    if(diff < 86400) return `${Math.floor(diff/3600)} Std.`;
+    if (diff < 60) return "gerade eben";
+    if (diff < 3600) return `${Math.floor(diff/60)} Min.`;
+    if (diff < 86400) return `${Math.floor(diff/3600)} Std.`;
     return `${Math.floor(diff/86400)} Tg.`;
   }
 
   async function loadInboxList(page = 1) {
     const { data: { user } } = await sb.auth.getUser();
-    if(!user) return window.location.href = "login.html";
+    if (!user) return window.location.href = "login.html";
 
     const { data: messages } = await sb.from('messages')
       .select('*')
@@ -353,7 +532,7 @@ footer small {
     const inbox = document.getElementById('inbox');
     inbox.innerHTML = '';
 
-    if(!messages || messages.length === 0){
+    if (!messages || messages.length === 0) {
       inbox.innerHTML = "<p>Keine Nachrichten gefunden.</p>";
       document.getElementById('pagination').innerHTML = '';
       return;
@@ -363,18 +542,18 @@ footer small {
     messages.forEach(msg => {
       const otherId = msg.sender_id === user.id ? msg.receiver_id : msg.sender_id;
       const key = `${msg.listing_id}_${otherId}`;
-      if(!uniqueChats.has(key)) uniqueChats.set(key, msg);
+      if (!uniqueChats.has(key)) uniqueChats.set(key, msg);
     });
 
     const chatArray = Array.from(uniqueChats.values());
     const totalCount = chatArray.length;
-    const from = (page-1)*pageSize;
+    const from = (page - 1) * pageSize;
     const to = from + pageSize;
     const pagedChats = chatArray.slice(from, to);
 
-    for(const msg of pagedChats){
+    for (const msg of pagedChats) {
       const otherId = msg.sender_id === user.id ? msg.receiver_id : msg.sender_id;
-      const [{data: userData}, {data: listingData}] = await Promise.all([
+      const [{ data: userData }, { data: listingData }] = await Promise.all([
         sb.from('profiles').select('name, avatar_url').eq('id', otherId).single(),
         sb.from('listings').select('title, image_urls').eq('id', msg.listing_id).single()
       ]);
@@ -389,34 +568,28 @@ footer small {
       item.tabIndex = 0;
       item.onclick = () => window.location.href = `nachrichten.html?listing_id=${msg.listing_id}&with=${otherId}`;
 
-item.innerHTML = `
-  <div class="chat-avatar">${avatar ? `<img src="${avatar}" alt="${name}" />` : `<span>${name.charAt(0)}</span>`}</div>
+      item.innerHTML = `
+        <div class="chat-avatar">${avatar ? `<img src="${avatar}" alt="${name}" />` : `<span>${name.charAt(0)}</span>`}</div>
+        ${image ? `<img src="${image}" alt="${title}" class="chat-image">` : ''}
+        <div class="chat-content">
+          <div class="chat-name">${name}</div>
+          <div class="chat-title">${title}</div>
+          <div class="chat-preview">💬 ${msg.content.slice(0,80)}${msg.content.length > 80 ? '…' : ''}</div>
+        </div>
+        <div class="chat-right">
+          <div class="chat-time">${timeAgo(msg.created_at)}</div>
+          <button class="delete-chat-btn" onclick="deleteChat('${msg.listing_id}', '${otherId}', event)">✕</button>
+        </div>
+      `;
 
-  ${image ? `<img src="${image}" alt="${title}" class="chat-image">` : ''}
-
-  <div class="chat-content">
-    <div class="chat-name">${name}</div>
-    <div class="chat-title">${title}</div>
-    <div class="chat-preview">💬 ${msg.content.slice(0,80)}${msg.content.length>80?'…':''}</div>
-  </div>
-
-<div class="chat-right">
-  <div class="chat-time">${timeAgo(msg.created_at)}</div>
-
-  <button class="delete-chat-btn" onclick="deleteChat('${msg.listing_id}', '${otherId}', event)">
-    ✕
-  </button>
-</div>
-`;
       inbox.appendChild(item);
     }
 
-    // Pagination
     const pagination = document.getElementById('pagination');
     pagination.innerHTML = '';
-    const totalPages = Math.ceil(totalCount/pageSize);
+    const totalPages = Math.ceil(totalCount / pageSize);
 
-    if(page > 1){
+    if (page > 1) {
       const prevBtn = document.createElement('button');
       prevBtn.textContent = "← Zurück";
       prevBtn.onclick = () => { currentPage--; loadInboxList(currentPage); };
@@ -427,7 +600,7 @@ item.innerHTML = `
     pageIndicator.textContent = `Seite ${page} von ${totalPages}`;
     pagination.appendChild(pageIndicator);
 
-    if(page < totalPages){
+    if (page < totalPages) {
       const nextBtn = document.createElement('button');
       nextBtn.textContent = "Weiter →";
       nextBtn.onclick = () => { currentPage++; loadInboxList(currentPage); };
@@ -435,32 +608,33 @@ item.innerHTML = `
     }
   }
 
-  loadInboxList();
   async function deleteChat(listingId, otherId, event) {
-  event.stopPropagation();
+    event.stopPropagation();
 
-  const { data: { user } } = await sb.auth.getUser();
-  if (!user) return;
+    const { data: { user } } = await sb.auth.getUser();
+    if (!user) return;
 
-  const confirmDelete = confirm("Möchtest du diesen Chat wirklich löschen?");
-  if (!confirmDelete) return;
+    const confirmDelete = confirm("Möchtest du diesen Chat wirklich löschen?");
+    if (!confirmDelete) return;
 
-  const { error } = await sb
-    .from('messages')
-    .delete()
-    .or(
-      `and(sender_id.eq.${user.id},receiver_id.eq.${otherId},listing_id.eq.${listingId}),` +
-      `and(sender_id.eq.${otherId},receiver_id.eq.${user.id},listing_id.eq.${listingId})`
-    );
+    const { error } = await sb
+      .from('messages')
+      .delete()
+      .or(
+        `and(sender_id.eq.${user.id},receiver_id.eq.${otherId},listing_id.eq.${listingId}),` +
+        `and(sender_id.eq.${otherId},receiver_id.eq.${user.id},listing_id.eq.${listingId})`
+      );
 
-  if (error) {
-    console.error(error);
-    alert("Fehler beim Löschen");
-    return;
+    if (error) {
+      console.error(error);
+      alert("Fehler beim Löschen");
+      return;
+    }
+
+    loadInboxList(currentPage);
   }
 
-  loadInboxList(currentPage);
-}
+  loadInboxList();
 </script>
 
 </body>
