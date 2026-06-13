@@ -434,13 +434,16 @@ nav#nav-links {
         <option value="50">50 km</option>
         <option value="100">100 km</option>
         <option value="200">200 km</option>
-      </select>
-      <select id="sort-select">
-  <option value="newest">Neueste</option>
-  <option value="price_asc">Günstigste</option>
-  <option value="price_desc">Teuerste</option>
-  <option value="popular">Beliebteste</option>
-</select>
+        
+<div style="display:flex; align-items:center; gap:0.5rem; min-width:200px;">
+  <label for="sort-select" style="font-weight:600;">Sortieren:</label>
+  <select id="sort-select">
+    <option value="newest">Neueste</option>
+    <option value="price_asc">Günstigste</option>
+    <option value="price_desc">Teuerste</option>
+    <option value="popular">Beliebteste</option>
+  </select>
+</div>
       <button id="search-btn">Suchen</button>
     </div>
   </section>
@@ -647,27 +650,25 @@ document.getElementById('search-btn').addEventListener('click', () => {
   }
 
   // --- LOAD LISTINGS ---
-  async function loadListings(filters = {}, page = 1) {
-    let query = sb
-      .from('listings')
-      .select('*', { count: 'exact' })
-      .order('created_at', { ascending: false });
-if (filters.sort === "newest") {
-  query = query.order('created_at', { ascending: false });
-}
+async function loadListings(filters = {}, page = 1) {
+  let query = sb
+    .from('listings')
+    .select('*', { count: 'exact' });
 
-if (filters.sort === "price_asc") {
-  query = query.order('price_per_day', { ascending: true });
+  if (filters.sort === "price_asc") {
+    query = query.order('price_per_day', { ascending: true });
+  } else if (filters.sort === "price_desc") {
+    query = query.order('price_per_day', { ascending: false });
+  } else if (filters.sort === "popular") {
+    query = query.order('views', { ascending: false });
+  } else {
+    query = query.order('created_at', { ascending: false });
+  }
+if (filters.title) {
+  query = query.or(
+    `title.ilike.%${filters.title}%,description.ilike.%${filters.title}%`
+  );
 }
-
-if (filters.sort === "price_desc") {
-  query = query.order('price_per_day', { ascending: false });
-}
-
-if (filters.sort === "popular") {
-  query = query.order('views', { ascending: false });
-}
-    if (filters.title) query = query.ilike('title', `%${filters.title}%`);
     if (filters.category) query = query.eq('category', filters.category);
 
     const min = filters.minPrice ? parseFloat(filters.minPrice) : 0;
