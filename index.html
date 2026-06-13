@@ -34,7 +34,7 @@
       width: 100%;
       overflow-x: hidden;
       font-family: var(--font-primary);
-      background: linear-gradient(to bottom, #e8f5e9 0%, #ffffff 100%);
+      background: var(--background);
       color: var(--text-dark);
       scroll-behavior: smooth;
       display: flex;
@@ -115,8 +115,7 @@
       width: 100%;
       margin: 0;
       padding: 2rem 0 2.5rem;
-      background: linear-gradient(135deg, #ffffff 0%, #f1f8e9 100%);
-      border-radius: 0;
+      background: transparent;
       box-shadow: none;
       border-bottom: 1px solid rgba(46, 125, 50, 0.08);
     }
@@ -132,6 +131,14 @@
       font-weight: 700;
       margin: 0;
       color: var(--primary-dark);
+      text-align: left;
+    }
+
+    .hero-subtitle {
+      margin: 0.6rem 0 0;
+      color: var(--text-muted);
+      font-weight: 500;
+      max-width: 720px;
       text-align: left;
     }
 
@@ -225,6 +232,7 @@
 
     section {
       width: 100%;
+      background: transparent;
     }
 
     .section-inner {
@@ -485,14 +493,14 @@
   <header>
     <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
     <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
-    <nav id="nav-links" role="navigation" aria-label="Hauptnavigation">
-      <!-- Navigation Links werden via JS gesetzt -->
-    </nav>
+    <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
   </header>
 
   <section class="hero" aria-label="Suchbereich">
     <div class="hero-inner">
       <h2>Finde das perfekte Mietobjekt</h2>
+      <p class="hero-subtitle">Suche nach Kategorie, Ort oder Radius und entdecke passende Angebote in deiner Nähe.</p>
+
       <form class="search-form" onsubmit="event.preventDefault(); search();" role="search" aria-label="Suchformular">
         <div class="search-field">
           <label for="search-input">Suchbegriff</label>
@@ -610,7 +618,6 @@
   </footer>
 
   <script>
-    // 1️⃣ Supabase korrekt initialisieren (v2)
     const supabaseUrl = 'https://flnjalgqtkqycsaymmbd.supabase.co';
     const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q';
 
@@ -621,17 +628,13 @@
     let selectedAddressData = null;
 
     async function init() {
-      try {
-        const { data, error } = await sb.auth.getSession();
-        if (error) console.error('Auth Error:', error);
+      const { data, error } = await sb.auth.getSession();
+      if (error) console.error('Auth Error:', error);
 
-        userSession = data?.session || null;
-        updateNav();
-        await loadNewestOffers();
-        await loadPopularOffers();
-      } catch (err) {
-        console.error('Init Fehler:', err);
-      }
+      userSession = data?.session || null;
+      updateNav();
+      await loadNewestOffers();
+      await loadPopularOffers();
     }
 
     function updateNav() {
@@ -651,12 +654,8 @@
 
     async function logout(event) {
       event.preventDefault();
-      try {
-        await sb.auth.signOut();
-        window.location.href = "login.html";
-      } catch (err) {
-        console.error('Logout Fehler:', err);
-      }
+      await sb.auth.signOut();
+      window.location.href = "login.html";
     }
 
     async function loadOffers(orderBy, containerId) {
@@ -672,6 +671,7 @@
           .limit(5);
 
         if (error) throw error;
+
         if (!data || data.length === 0) {
           container.innerHTML = '<p>Keine Angebote gefunden.</p>';
           container.removeAttribute('aria-busy');
@@ -722,7 +722,7 @@
           };
         } else {
           favBtn.disabled = true;
-          favBtn.innerText = "Login erforderlich";
+          favBtn.innerText = 'Login erforderlich';
         }
 
         container.appendChild(card);
@@ -763,11 +763,13 @@
       const category = document.getElementById("category-select").value.trim();
       const location = document.getElementById("location-input").value.trim();
       const radius = document.getElementById("radius-select").value.trim();
+
       const params = new URLSearchParams();
       if (keyword) params.set("title", keyword);
       if (category) params.set("category", category);
       if (location) params.set("location", location);
       if (radius) params.set("radius", radius);
+
       window.location.href = `search_results.html?${params.toString()}`;
     }
 
@@ -799,14 +801,9 @@
           suggestionBox.innerHTML = '';
 
           results.forEach(r => {
-            const city =
-              r.address.city ||
-              r.address.town ||
-              r.address.village ||
-              r.address.municipality ||
-              r.display_name.split(',')[0];
-
-            const state = r.address.state || '';
+            const addr = r.address || {};
+            const city = addr.city || addr.town || addr.village || addr.municipality || r.display_name.split(',')[0];
+            const state = addr.state || '';
             const display = [city, state, "Deutschland"].filter(Boolean).join(', ');
 
             const div = document.createElement('div');
@@ -819,7 +816,7 @@
                 location: display,
                 lat: parseFloat(r.lat),
                 lon: parseFloat(r.lon),
-                postal_code: r.address.postcode || ''
+                postal_code: addr.postcode || ''
               };
               suggestionBox.innerHTML = '';
             };
@@ -831,7 +828,7 @@
             suggestionBox.innerHTML = '<div style="padding:0.5rem;">Kein Ort gefunden</div>';
           }
         } catch (err) {
-          console.error("Fehler bei Ortssuche:", err);
+          console.error('Fehler bei Ortssuche:', err);
         }
       }, 400);
     });
