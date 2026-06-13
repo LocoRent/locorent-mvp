@@ -109,78 +109,118 @@
     }
 
     .hero {
-      background-color: var(--white);
-      padding: 3rem 2rem;
-      border-radius: var(--radius);
-      box-shadow: 0 12px 30px rgba(46,125,50,0.1);
-      margin: 2rem;
-      text-align: center;
+      width: 100%;
+      margin: 0;
+      padding: 2rem 2rem 2.5rem;
+      background: linear-gradient(135deg, #ffffff 0%, #f1f8e9 100%);
+      border-radius: 0 0 28px 28px;
+      box-shadow: 0 10px 30px rgba(46, 125, 50, 0.08);
+      border-bottom: 1px solid rgba(46, 125, 50, 0.08);
+    }
+
+    .hero-inner {
+      max-width: 1600px;
+      margin: 0 auto;
     }
 
     .hero h2 {
-      font-size: 2rem;
+      font-size: clamp(1.6rem, 2vw, 2.4rem);
       font-weight: 700;
-      margin-bottom: 1rem;
+      margin: 0;
       color: var(--primary-dark);
+      text-align: left;
+    }
+
+    #current-category {
+      margin-top: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-align: left;
     }
 
     .search-row {
-      display: flex;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: 2fr 1.3fr 1fr 1fr 1.4fr 0.8fr 1fr 0.9fr;
       gap: 1rem;
-      justify-content: center;
-      max-width: 1400px;
-      margin: auto;
-      margin-bottom: 2rem;
+      align-items: end;
+      margin-top: 1.5rem;
+      width: 100%;
+    }
+
+    .search-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .search-field label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      padding-left: 0.1rem;
     }
 
     .search-row input,
     .search-row select,
     .search-row button {
-      padding: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 1rem;
-      flex: 1;
-      min-width: 200px;
+      width: 100%;
+      padding: 0.95rem 1rem;
+      border: 1px solid rgba(46, 125, 50, 0.18);
+      border-radius: 14px;
+      font-size: 0.98rem;
+      background: white;
+      box-shadow: 0 3px 10px rgba(46, 125, 50, 0.04);
+      outline: none;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
+    }
+
+    .search-row input:focus,
+    .search-row select:focus {
+      border-color: var(--primary-light);
+      box-shadow: 0 0 0 4px rgba(102, 187, 106, 0.16);
     }
 
     .search-row button {
-      background-color: var(--primary);
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
       color: var(--white);
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
       border: none;
-      border-radius: 8px;
-      transition: background-color 0.3s ease;
+      height: 100%;
+      min-height: 52px;
     }
 
     .search-row button:hover {
-      background-color: var(--primary-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 10px 20px rgba(46, 125, 50, 0.18);
+    }
+
+    .location-wrap {
+      position: relative;
     }
 
     #suggestions {
       position: absolute;
-      top: calc(100% + 5px);
+      top: calc(100% + 6px);
       left: 0;
       right: 0;
-      max-height: 140px;
+      max-height: 180px;
       overflow-y: auto;
       background: white;
-      z-index: 10;
-      border: 1px solid #ccc;
-      border-top: none;
-      border-radius: 0 0 8px 8px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      z-index: 20;
+      border: 1px solid rgba(46, 125, 50, 0.15);
+      border-radius: 12px;
+      box-shadow: 0 12px 25px rgba(0,0,0,0.08);
     }
 
     #suggestions div {
-      padding: 0.5rem;
+      padding: 0.75rem 1rem;
       cursor: pointer;
+      border-bottom: 1px solid #f0f0f0;
     }
 
     #suggestions div:hover {
-      background-color: #e0f2f1;
+      background-color: #e8f5e9;
     }
 
     .category-grid {
@@ -314,6 +354,12 @@
       opacity: 0.85;
     }
 
+    @media (max-width: 1200px) {
+      .search-row {
+        grid-template-columns: 1.6fr 1fr 1fr 1fr;
+      }
+    }
+
     @media (max-width: 720px) {
       #nav-toggle {
         display: block;
@@ -336,6 +382,22 @@
         background-color: rgba(255, 255, 255, 0.1);
         border-radius: 6px;
         display: block;
+      }
+
+      .hero {
+        padding: 1.25rem 0.75rem 1.5rem;
+        border-radius: 0 0 22px 22px;
+      }
+
+      .search-row {
+        grid-template-columns: 1fr;
+        gap: 0.85rem;
+        margin-top: 1.25rem;
+      }
+
+      .hero h2,
+      #current-category {
+        text-align: left;
       }
 
       .category-grid {
@@ -370,73 +432,92 @@
   </header>
 
   <section class="hero">
-    <h2>Suchergebnisse</h2>
-    <div id="current-category" style="margin-top: 1rem; font-weight: 600; color: var(--primary-dark);"></div>
+    <div class="hero-inner">
+      <h2>Suchergebnisse</h2>
+      <div id="current-category"></div>
 
-    <div class="search-row">
-      <input type="text" placeholder="Was suchst du?" id="search-input" />
+      <div class="search-row">
+        <div class="search-field">
+          <label for="search-input">Suchbegriff</label>
+          <input type="text" placeholder="Was suchst du?" id="search-input" />
+        </div>
 
-      <select id="category-select">
-        <option value="">Alle Kategorien</option>
-        <option value="anhaenger-transportmittel">Anhänger & Transportmittel</option>
-        <option value="audio-dj-equipment">Audio & DJ-Equipment</option>
-        <option value="auto-suv">Auto & SUV</option>
-        <option value="basteln-diy">Basteln & DIY</option>
-        <option value="beauty">Beauty</option>
-        <option value="boote-wassersport">Boote & Wassersport</option>
-        <option value="brettspiele-spielzeug">Brettspiele & Spielzeug</option>
-        <option value="camping-wandern">Camping & Wandern</option>
-        <option value="computer-laptops">Computer & Laptops</option>
-        <option value="drohnen-modellbau">Drohnen & Modellbau</option>
-        <option value="event-partyausstattung">Event- & Partyausstattung</option>
-        <option value="fahrrad-ebike">Fahrrad & E-Bike</option>
-        <option value="fitnessgeraete">Fitnessgeräte</option>
-        <option value="foto-film-kameraequipment">Foto-, Film- & Kameraequipment</option>
-        <option value="gaming-unterhaltung">Gaming & Unterhaltung</option>
-        <option value="garten-aussenbereich">Garten & Außenbereich</option>
-        <option value="kursraeume-seminarraum">Kursräume & Seminarraum</option>
-        <option value="medien-kultur">Medien & Kultur</option>
-        <option value="motorrad-roller">Motorrad & Roller</option>
-        <option value="musikinstrumente">Musikinstrumente</option>
-        <option value="mode-accessoires">Mode & Accessoires</option>
-        <option value="smartphones-tablets">Smartphones & Tablets</option>
-        <option value="sport">Sport</option>
-        <option value="tiere">Tiere</option>
-        <option value="werkzeuge-maschinen">Werkzeuge & Maschinen</option>
-        <option value="wohnmobil-camper">Wohnmobil & Camper</option>
-        <option value="sonstiges">Sonstiges</option>
-      </select>
+        <div class="search-field">
+          <label for="category-select">Kategorie</label>
+          <select id="category-select">
+            <option value="">Alle Kategorien</option>
+            <option value="anhaenger-transportmittel">Anhänger & Transportmittel</option>
+            <option value="audio-dj-equipment">Audio & DJ-Equipment</option>
+            <option value="auto-suv">Auto & SUV</option>
+            <option value="basteln-diy">Basteln & DIY</option>
+            <option value="beauty">Beauty</option>
+            <option value="boote-wassersport">Boote & Wassersport</option>
+            <option value="brettspiele-spielzeug">Brettspiele & Spielzeug</option>
+            <option value="camping-wandern">Camping & Wandern</option>
+            <option value="computer-laptops">Computer & Laptops</option>
+            <option value="drohnen-modellbau">Drohnen & Modellbau</option>
+            <option value="event-partyausstattung">Event- & Partyausstattung</option>
+            <option value="fahrrad-ebike">Fahrrad & E-Bike</option>
+            <option value="fitnessgeraete">Fitnessgeräte</option>
+            <option value="foto-film-kameraequipment">Foto-, Film- & Kameraequipment</option>
+            <option value="gaming-unterhaltung">Gaming & Unterhaltung</option>
+            <option value="garten-aussenbereich">Garten & Außenbereich</option>
+            <option value="kursraeume-seminarraum">Kursräume & Seminarraum</option>
+            <option value="medien-kultur">Medien & Kultur</option>
+            <option value="motorrad-roller">Motorrad & Roller</option>
+            <option value="musikinstrumente">Musikinstrumente</option>
+            <option value="mode-accessoires">Mode & Accessoires</option>
+            <option value="smartphones-tablets">Smartphones & Tablets</option>
+            <option value="sport">Sport</option>
+            <option value="tiere">Tiere</option>
+            <option value="werkzeuge-maschinen">Werkzeuge & Maschinen</option>
+            <option value="wohnmobil-camper">Wohnmobil & Camper</option>
+            <option value="sonstiges">Sonstiges</option>
+          </select>
+        </div>
 
-      <input type="number" id="min-price" placeholder="Min. Preis" min="0" />
-      <input type="number" id="max-price" placeholder="Max. Preis" min="0" />
+        <div class="search-field">
+          <label for="min-price">Min. Preis</label>
+          <input type="number" id="min-price" placeholder="0 €" min="0" />
+        </div>
 
-      <div style="position: relative; flex: 1; min-width: 200px;">
-        <input type="text" placeholder="Ort" id="location-input" autocomplete="off" />
-        <div id="suggestions"></div>
+        <div class="search-field">
+          <label for="max-price">Max. Preis</label>
+          <input type="number" id="max-price" placeholder="100 €" min="0" />
+        </div>
+
+        <div class="search-field location-wrap">
+          <label for="location-input">Ort</label>
+          <input type="text" placeholder="Ort" id="location-input" autocomplete="off" />
+          <div id="suggestions"></div>
+        </div>
+
+        <div class="search-field">
+          <label for="radius-select">Radius</label>
+          <select id="radius-select">
+            <option value="">Ganzer Ort</option>
+            <option value="5">5 km</option>
+            <option value="10">10 km</option>
+            <option value="20">20 km</option>
+            <option value="30">30 km</option>
+            <option value="50">50 km</option>
+            <option value="100">100 km</option>
+            <option value="200">200 km</option>
+          </select>
+        </div>
+
+        <div class="search-field">
+          <label for="sort-select">Sortieren</label>
+          <select id="sort-select">
+            <option value="newest">Neueste</option>
+            <option value="price_asc">Günstigste</option>
+            <option value="price_desc">Teuerste</option>
+            <option value="popular">Beliebteste</option>
+          </select>
+        </div>
+
+        <button id="search-btn">Suchen</button>
       </div>
-
-      <select id="radius-select">
-        <option value="">Ganzer Ort</option>
-        <option value="5">5 km</option>
-        <option value="10">10 km</option>
-        <option value="20">20 km</option>
-        <option value="30">30 km</option>
-        <option value="50">50 km</option>
-        <option value="100">100 km</option>
-        <option value="200">200 km</option>
-      </select>
-
-      <div style="display: flex; flex-direction: column; flex: 1; min-width: 200px;">
-        <label for="sort-select" style="font-weight: 600; margin-bottom: 0.35rem;">Sortieren</label>
-        <select id="sort-select">
-          <option value="newest">Neueste</option>
-          <option value="price_asc">Günstigste</option>
-          <option value="price_desc">Teuerste</option>
-          <option value="popular">Beliebteste</option>
-        </select>
-      </div>
-
-      <button id="search-btn">Suchen</button>
     </div>
   </section>
 
