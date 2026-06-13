@@ -435,6 +435,13 @@ nav#nav-links {
         <option value="100">100 km</option>
         <option value="200">200 km</option>
       </select>
+      
+      <select id="sort-select">
+    <option value="newest">🆕 Neueste zuerst</option>
+    <option value="popular">🔥 Beliebteste zuerst</option>
+    <option value="price_asc">💰 Günstigste zuerst</option>
+    <option value="price_desc">💎 Teuerste zuerst</option>
+</select>
       <button id="search-btn">Suchen</button>
     </div>
   </section>
@@ -501,6 +508,7 @@ nav#nav-links {
       maxPrice: params.get('maxPrice') || '',
       location: params.get('location') || '',
       radius: params.get('radius') || ''
+      sort: params.get('sort') || 'newest',
     };
 
     document.getElementById("search-input").value = filters.title;
@@ -509,6 +517,7 @@ nav#nav-links {
     document.getElementById("max-price").value = filters.maxPrice;
     document.getElementById("location-input").value = filters.location;
     document.getElementById("radius-select").value = filters.radius;
+  document.getElementById("sort-select").value = filters.sort;
 
     const currentCategoryDiv = document.getElementById("current-category");
     currentCategoryDiv.textContent = filters.category
@@ -587,7 +596,7 @@ const ort =
     const maxPrice = document.getElementById("max-price").value.trim();
     const location = document.getElementById("location-input").value.trim();
     const radius = document.getElementById("radius-select").value.trim();
-    const params = new URLSearchParams({ title, category, minPrice, maxPrice, location, radius });
+    const params = new URLSearchParams({ title, category, minPrice, maxPrice, location, radius, sort});
     window.location.href = `search_results.html?${params.toString()}`;
   });
 
@@ -630,21 +639,25 @@ const ort =
 
   // --- LOAD LISTINGS ---
   async function loadListings(filters = {}, page = 1) {
-    let query = sb
-      .from('listings')
-      .select('*', { count: 'exact' })
-      .order('created_at', { ascending: false });
+let query = sb
+  .from('listings')
+  .select('*', { count: 'exact' });
 
-    if (filters.title) query = query.ilike('title', `%${filters.title}%`);
-    if (filters.category) query = query.eq('category', filters.category);
+if(filters.sort === "newest"){
+  query = query.order('created_at', { ascending:false });
+}
 
-    const min = filters.minPrice ? parseFloat(filters.minPrice) : 0;
-    const max = filters.maxPrice ? parseFloat(filters.maxPrice) : null;
-    if (max !== null && !isNaN(max)) {
-      query = query.gte('price_per_day', min).lte('price_per_day', max);
-    } else {
-      query = query.gte('price_per_day', min);
-    }
+if(filters.sort === "popular"){
+  query = query.order('views', { ascending:false });
+}
+
+if(filters.sort === "price_asc"){
+  query = query.order('price_per_day', { ascending:true });
+}
+
+if(filters.sort === "price_desc"){
+  query = query.order('price_per_day', { ascending:false });
+}
 
     const { data, count, error } = await query;
     if (error) {
