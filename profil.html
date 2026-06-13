@@ -1,840 +1,887 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Mein Profil – Locorent</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/zxcvbn@4.4.2/dist/zxcvbn.js"></script>
-<style>
-  :root {
-    --primary: #2e7d32;
-    --primary-light: #66bb6a;
-    --primary-dark: #1b5e20;
-    --background: #f1f8e9;
-    --white: #fff;
-    --text-dark: #0f2e13;
-    --text-muted: #466843;
-    --accent: #b9f6ca;
-    --highlight: #a5d6a7;
-    --radius: 18px;
-    --shadow-light: rgba(46, 125, 50, 0.08);
-    --shadow-strong: rgba(46, 125, 50, 0.25);
-    --transition: 0.4s ease;
-    --font-primary: 'Poppins', sans-serif;
-    --max-width: 1100px;
-  }
-
-  *, *::before, *::after {
-    box-sizing: border-box;
-  }
-
-  body {
-    margin: 0;
-    font-family: var(--font-primary);
-    background: var(--background);
-    color: var(--text-dark);
-    scroll-behavior: smooth;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-
-  header {
-    background-color: var(--primary);
-    color: var(--white);
-    padding: 1.5rem 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: 700;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-  }
-
-  header h1 {
-    font-size: 1.8rem;
-    cursor: pointer;
-    user-select: none;
-    margin: 0;
-  }
-
-  nav#nav-links {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
-
-  nav#nav-links a {
-    color: var(--white);
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 1rem;
-    position: relative;
-    transition: border-bottom 0.3s ease;
-  }
-
-  nav#nav-links a:hover,
-  nav#nav-links a:focus {
-    border-bottom: 2px solid var(--accent);
-    outline: none;
-  }
-  #nav-toggle {
-  display: none; /* Nur auf mobile anzeigen */
-  background: none;
-  border: none;
-  font-size: 1.8rem;
-  color: var(--white);
-  cursor: pointer;
-}
-html, body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-
-main {
-  max-width: 100%;
-  margin: 4rem auto;
-  padding: 1rem;
-  display: flex;
-  gap: 1rem; /* statt 3rem */
-  flex-wrap: wrap;
-}
-#city-suggestions {
-  max-width: 100vw;
-  box-sizing: border-box;
-}
-
-
-  #profile-section, #reviews-section, #stats-section {
-    background: var(--white);
-    padding: 2.5rem 2rem;
-    border-radius: var(--radius);
-    box-shadow: 0 12px 30px var(--shadow-light);
-    display: flex;
-    flex-direction: column;
-  }
-
-  #profile-section {
-    flex: 1 1 400px;
-    gap: 1.5rem;
-  }
-
-  #profile-section label {
-    font-weight: 600;
-    margin-bottom: 0.4rem;
-  }
-
-  #profile-section input,
-  #profile-section textarea {
-    font-family: var(--font-primary);
-    font-size: 1rem;
-    padding: 0.75rem 1rem;
-    border: 1.8px solid #ddd;
-    border-radius: var(--radius);
-    transition: border-color var(--transition), box-shadow var(--transition);
-    color: var(--text-dark);
-  }
-
-  #profile-section input:focus,
-  #profile-section textarea:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 8px var(--primary);
-  }
-
-  #profile-section textarea {
-    resize: vertical;
-    min-height: 120px;
-  }
-
-  .input-group {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .btn {
-    background-color: var(--primary);
-    color: var(--white);
-    border: none;
-    border-radius: var(--radius);
-    padding: 0.9rem 1.8rem;
-    font-weight: 700;
-    font-size: 1.1rem;
-    cursor: pointer;
-    transition: background-color var(--transition), box-shadow var(--transition);
-    align-self: flex-start;
-    box-shadow: 0 3px 8px var(--shadow-light);
-  }
-
-  .btn:hover,
-  .btn:focus-visible {
-    background-color: var(--primary-dark);
-    box-shadow: 0 0 15px var(--primary-dark);
-    outline: none;
-  }
-
-  #pw-strength {
-    height: 6px;
-    border-radius: 6px;
-    background-color: #eee;
-    margin-top: 7px;
-    overflow: hidden;
-  }
-
-  #pw-strength > div {
-    height: 100%;
-    width: 0;
-    transition: width 0.4s ease;
-  }
-
-  #pw-strength.weak > div {
-    background-color: #d32f2f;
-    width: 25%;
-  }
-  #pw-strength.fair > div {
-    background-color: #fbc02d;
-    width: 50%;
-  }
-  #pw-strength.good > div {
-    background-color: #388e3c;
-    width: 75%;
-  }
-  #pw-strength.strong > div {
-    background-color: var(--primary);
-    width: 100%;
-  }
-
-  #pw-strength-text {
-    margin-top: 0.35rem;
-    font-size: 0.9rem;
-    color: #555;
-  }
-
-  #reviews-section {
-    flex: 1 1 500px;
-    gap: 1rem;
-  }
-
-  #reviews-section h2 {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: 700;
-    font-size: 1.8rem;
-    margin-bottom: 1rem;
-    color: var(--primary);
-  }
-
-  #reviews-section h2 a {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--primary);
-    text-decoration: underline;
-    cursor: pointer;
-    user-select: auto;
-  }
-
-  #reviews-section h2 a:hover,
-  #reviews-section h2 a:focus {
-    color: var(--primary-dark);
-    outline: none;
-  }
-
-  #reviews-list {
-    flex-grow: 1;
-  width: 100%;           /* Container anpassen */
-  max-width: 100%;       /* Nicht über den Rand hinaus */
-  overflow: hidden;      /* Keine Scrollbars horizontal */
-  box-sizing: border-box; 
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.2rem;
-  }
-
-  .review-item {
-      width: 100%;           /* Container anpassen */
-  max-width: 100%;       /* Nicht über den Rand hinaus */
-  overflow: hidden;      /* Keine Scrollbars horizontal */
-  box-sizing: border-box; 
-    background-color: var(--background);
-    border-radius: var(--radius);
-    padding: 1rem 1.5rem;
-    box-shadow: inset 0 0 10px rgba(0,0,0,0.06);
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    transition: box-shadow 0.3s ease, transform 0.25s ease;
-  }
-
-  .review-item:hover {
-    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-    transform: translateY(-3px);
-  }
-
-  .review-header {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  .review-avatar {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: #e0f5e9 center/cover no-repeat;
-    font-weight: 700;
-    font-size: 1.3rem;
-    color: var(--primary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.12);
-  }
-
-  .reviewer-name {
-    font-weight: 700;
-    font-size: 1.1rem;
-    color: var(--primary);
-  }
-
-  .review-date {
-    margin-left: auto;
-    font-size: 0.8rem;
-    color: #777;
-    font-style: italic;
-  }
-
-  .review-rating {
-    color: #fbc02d;
-    font-size: 1.4rem;
-    user-select: none;
-    margin-left: 1rem;
-  }
-
-.review-text {
-  border-left: 3px solid var(--primary);
-  padding-left: 0.8rem;
-  font-size: 0.95rem;
-  line-height: 1.4;
-
-  /* Wichtig für lange Texte */
-  word-wrap: break-word;   /* Zeilen umbrechen */
-  overflow-wrap: break-word; /* für ältere Browser */
-  white-space: normal;     /* nicht in einer Zeile halten */
-}
-
-  #stats-section {
-    flex: 1 1 250px;
-    gap: 1.5rem;
-  }
-
-  #stats-section h2 {
-    color: var(--primary);
-    font-weight: 700;
-    font-size: 1.8rem;
-    margin-bottom: 1rem;
-  }
-
-  .stat-item {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: var(--text-dark);
-    background: var(--background);
-    padding: 1rem 1.2rem;
-    border-radius: var(--radius);
-    box-shadow: inset 0 0 8px rgba(0,0,0,0.05);
-  }
-
-  footer {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 2rem 2rem 1rem;
-    border-radius: var(--radius);
-    background-color: var(--primary);
-    color: var(--white);
-    box-shadow: 0 8px 32px rgba(46, 125, 50, 0.22);
-    font-size: 0.92rem;
-    user-select: none;
-    text-align: center;
-    margin-top: auto;
-  }
-
-  footer > div {
-    max-width: var(--max-width);
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-around;
-    gap: 2rem;
-    text-align: left;
-    flex-wrap: wrap;
-  }
-
-  footer div > div {
-    flex: 1 1 200px;
-    min-width: 180px;
-  }
-
-  footer h4 {
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-  }
-
-  footer ul {
-    list-style: none;
-    padding-left: 0;
-    line-height: 1.7;
-  }
-
-  footer ul li a {
-    color: var(--white);
-    text-decoration: underline;
-    cursor: pointer;
-  }
-
-  footer ul li a:hover,
-  footer ul li a:focus-visible {
-    color: var(--highlight);
-    outline: none;
-  }
-
-  @media (max-width: 960px) {
-    main {
-      flex-direction: column;
-      margin: 2rem auto;
-      gap: 2rem;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mein Profil – Locorent</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root {
+      --primary: #2e7d32;
+      --primary-light: #66bb6a;
+      --primary-dark: #1b5e20;
+      --background: #f1f8e9;
+      --white: #fff;
+      --text-dark: #0f2e13;
+      --text-muted: #466843;
+      --accent: #b9f6ca;
+      --highlight: #a5d6a7;
+      --radius: 18px;
+      --shadow-light: rgba(46, 125, 50, 0.08);
+      --shadow-strong: rgba(46, 125, 50, 0.25);
+      --transition: 0.4s ease;
+      --font-primary: 'Poppins', sans-serif;
     }
-    #profile-section, #reviews-section, #stats-section {
-      flex: unset;
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font-primary);
+      background: linear-gradient(to bottom, #e8f5e9 0%, #ffffff 100%);
+      color: var(--text-dark);
+      scroll-behavior: smooth;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    header {
+      background-color: var(--primary);
+      color: var(--white);
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 700;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      flex-wrap: wrap;
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+      cursor: pointer;
+      user-select: none;
+      margin: 0;
+    }
+
+    #nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.8rem;
+      color: var(--white);
+      cursor: pointer;
+    }
+
+    nav#main-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    nav#main-nav a {
+      color: var(--white);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      position: relative;
+      transition: color 0.3s ease;
+    }
+
+    nav#main-nav a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -4px;
+      width: 0;
+      height: 2px;
+      background-color: var(--accent);
+      transition: width 0.3s ease;
+    }
+
+    nav#main-nav a:hover::after,
+    nav#main-nav a:focus::after {
       width: 100%;
     }
-}
-/* --- Mobile Ansicht: max-width 720px --- */
-@media (max-width: 720px) {
-  /* Body fix */
-  body, html {
-    overflow-x: hidden;
-    padding: 0;
-    margin: 0;
-  }
 
-  /* Header */
-  #nav-toggle {
-    display: block;
-  }
+    nav#main-nav a:hover,
+    nav#main-nav a:focus {
+      color: var(--accent);
+      outline: none;
+    }
 
-  nav#nav-links {
-    display: none;
-    flex-direction: column;
-    width: 100%;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background-color: var(--primary);
-    padding: 1rem 1rem;
-    border-radius: 0 0 var(--radius) var(--radius);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-    z-index: 999;
-    gap: 0.5rem;
-    transition: max-height 0.3s ease, opacity 0.3s ease;
-    max-height: 0;
-    opacity: 0;
-    overflow: hidden;
-  }
+    .profile-hero {
+      width: 100%;
+      padding: 2rem 0 1.5rem;
+      background: linear-gradient(135deg, #ffffff 0%, #f1f8e9 100%);
+      border-bottom: 1px solid rgba(46, 125, 50, 0.08);
+    }
 
-  nav#nav-links.show {
-    display: flex;
-    max-height: 500px;
-    opacity: 1;
-  }
+    .container {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      width: 100%;
+    }
 
-  nav#nav-links a {
-    margin: 0.4rem 0;
-    padding: 0.5rem 1rem;
-    background-color: rgba(255,255,255,0.1);
-    border-radius: 6px;
-    display: block;
-    color: var(--white);
-    font-weight: 600;
-    text-decoration: none;
-    transition: background 0.3s, transform 0.25s;
-  }
+    .profile-header {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1.25rem;
+      align-items: center;
+      background: rgba(255,255,255,0.8);
+      border: 1px solid rgba(46,125,50,0.08);
+      box-shadow: 0 12px 30px rgba(46, 125, 50, 0.08);
+      border-radius: 26px;
+      padding: 1.5rem;
+      backdrop-filter: blur(10px);
+    }
 
-  nav#nav-links a:hover,
-  nav#nav-links a:focus {
-    background-color: var(--primary-dark);
-    transform: translateX(5px);
-    outline: none;
-  }
+    .avatar {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #dcedc8 0%, #c8e6c9 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      font-weight: 700;
+      color: var(--primary-dark);
+      font-size: 1.6rem;
+      flex-shrink: 0;
+      box-shadow: inset 0 0 0 3px rgba(255,255,255,0.75);
+    }
 
-  /* Main */
-  main {
-    margin: 2rem 1rem;
-    padding: 0;
-    width: 100%;
-    max-width: 100%;
-    flex-direction: column;
-    gap: 2rem;
-    box-sizing: border-box;
-  }
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
 
-  #profile-section,
-  #reviews-section,
-  #stats-section {
-    width: 100%;
-    flex: unset;
-    margin: 0 auto;
-  }
+    .profile-info h2 {
+      margin: 0;
+      font-size: clamp(1.6rem, 2vw, 2.2rem);
+      color: var(--primary-dark);
+      line-height: 1.2;
+    }
 
-  /* Reviews */
-  #reviews-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    overflow: visible;
-    padding: 0;
-    margin: 0;
-  }
+    .profile-info p {
+      margin: 0.35rem 0 0;
+      color: var(--text-muted);
+    }
 
-  .review-item {
-    padding: 1rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    background: var(--white);
-    flex: 1 1 auto;
-  }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.9rem;
+      margin-top: 1rem;
+    }
 
-  .review-text {
-    border-left: 3px solid var(--primary);
-    padding-left: 0.8rem;
-    font-size: 0.95rem;
-    line-height: 1.4;
-  }
+    .stat {
+      background: rgba(255,255,255,0.88);
+      border: 1px solid rgba(46,125,50,0.08);
+      border-radius: 18px;
+      padding: 0.9rem 1rem;
+      box-shadow: 0 10px 24px rgba(46, 125, 50, 0.06);
+    }
 
-  .review-avatar {
-    width: 40px;
-    height: 40px;
-    font-size: 1.1rem;
-  }
+    .stat .value {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      line-height: 1;
+    }
 
-  .reviewer-name {
-    font-size: 1rem;
-  }
+    .stat .label {
+      margin-top: 0.3rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
 
-  .review-date {
-    font-size: 0.75rem;
-  }
+    main {
+      flex: 1;
+      width: 100%;
+      padding: 2rem 0 4rem;
+    }
 
-  /* Header & Footer Padding */
-  header, footer {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-}
+    .section {
+      margin-top: 1.5rem;
+    }
 
-</style>
+    .panel {
+      background: var(--white);
+      border-radius: 24px;
+      box-shadow: 0 12px 30px rgba(46,125,50,0.10);
+      border: 1px solid rgba(46,125,50,0.08);
+      padding: 1.5rem;
+    }
+
+    .panel h3 {
+      margin: 0 0 1rem;
+      color: var(--primary-dark);
+      font-size: 1.35rem;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    .form-group label {
+      font-weight: 600;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 0.95rem 1rem;
+      border-radius: 14px;
+      border: 1px solid rgba(46, 125, 50, 0.18);
+      background: #fff;
+      font-size: 1rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      border-color: var(--primary-light);
+      box-shadow: 0 0 0 4px rgba(102, 187, 106, 0.16);
+    }
+
+    .form-group textarea {
+      min-height: 160px;
+      resize: vertical;
+    }
+
+    .upload-box {
+      border: 2px dashed rgba(46,125,50,0.22);
+      border-radius: 18px;
+      background: linear-gradient(180deg, #fbfffb 0%, #f4fbf4 100%);
+      padding: 1.25rem;
+      text-align: center;
+    }
+
+    .upload-box input[type="file"] {
+      width: 100%;
+      border: none;
+      background: transparent;
+      padding: 0.25rem 0;
+    }
+
+    .upload-preview {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .upload-preview img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 14px;
+      border: 1px solid rgba(46,125,50,0.08);
+    }
+
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+      margin-top: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 14px;
+      padding: 0.9rem 1.25rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.25s ease, background-color 0.25s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: var(--white);
+      box-shadow: 0 10px 20px rgba(46,125,50,0.14);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 24px rgba(46,125,50,0.18);
+    }
+
+    .btn-secondary {
+      background: #f3f7f3;
+      color: var(--primary-dark);
+      border: 1px solid rgba(46,125,50,0.12);
+    }
+
+    .btn-secondary:hover {
+      transform: translateY(-1px);
+      background: #edf5ed;
+    }
+
+    .listings-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin: 2rem 0 1rem;
+      flex-wrap: wrap;
+    }
+
+    .listings-header h3 {
+      margin: 0;
+      font-size: 1.35rem;
+      color: var(--primary-dark);
+    }
+
+    .listing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .listing-card {
+      background: var(--white);
+      border: 1px solid rgba(46,125,50,0.08);
+      border-radius: 22px;
+      box-shadow: 0 12px 28px rgba(46,125,50,0.08);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .listing-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 18px 36px rgba(46,125,50,0.14);
+    }
+
+    .listing-card img {
+      width: 100%;
+      height: 190px;
+      object-fit: cover;
+      background: #eef6ee;
+    }
+
+    .listing-card-body {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      flex: 1;
+    }
+
+    .listing-card-body h4 {
+      margin: 0;
+      font-size: 1.05rem;
+      line-height: 1.35;
+      color: var(--text-dark);
+      height: 2.8em;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+
+    .listing-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+      color: var(--text-muted);
+      font-size: 0.92rem;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.3rem 0.65rem;
+      border-radius: 999px;
+      background: #e8f5e9;
+      color: var(--primary-dark);
+      font-weight: 600;
+      font-size: 0.82rem;
+    }
+
+    .listing-actions {
+      margin-top: auto;
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .listing-actions button,
+    .listing-actions a {
+      flex: 1;
+      min-width: 120px;
+      text-align: center;
+      text-decoration: none;
+      padding: 0.7rem 0.9rem;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      font-weight: 700;
+      transition: transform 0.2s ease, background-color 0.25s ease, color 0.25s ease;
+    }
+
+    .listing-actions .edit-btn {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .listing-actions .edit-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .listing-actions .delete-btn {
+      background: #fff1f1;
+      color: #c62828;
+      border: 1px solid rgba(198,40,40,0.10);
+    }
+
+    .listing-actions .delete-btn:hover {
+      background: #ffe9e9;
+      transform: translateY(-1px);
+    }
+
+    footer {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 2rem 2rem 1rem;
+      border-radius: var(--radius);
+      background-color: var(--primary);
+      color: var(--white);
+      box-shadow: 0 8px 32px rgba(46, 125, 50, 0.22);
+      font-size: 0.92rem;
+      user-select: none;
+      text-align: center;
+      margin-top: auto;
+    }
+
+    footer > div {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 2rem;
+      text-align: left;
+    }
+
+    footer > div > div {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    footer h4 {
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    footer ul {
+      list-style: none;
+      padding: 0;
+      line-height: 1.8;
+    }
+
+    footer ul li a {
+      color: var(--white);
+      text-decoration: underline;
+      transition: color 0.3s ease;
+    }
+
+    footer ul li a:hover {
+      color: var(--accent);
+    }
+
+    footer small {
+      display: block;
+      margin-top: 2rem;
+      text-align: center;
+      opacity: 0.85;
+    }
+
+    @media (max-width: 720px) {
+      #nav-toggle {
+        display: block;
+      }
+
+      nav#main-nav {
+        width: 100%;
+        flex-direction: column;
+        display: none;
+        margin-top: 1rem;
+      }
+
+      nav#main-nav.show {
+        display: flex;
+      }
+
+      nav#main-nav a {
+        margin: 0.4rem 0;
+        padding: 0.5rem 1rem;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+      }
+
+      .profile-header {
+        grid-template-columns: 1fr;
+        text-align: left;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      main {
+        padding: 1.25rem 0.75rem 3rem;
+      }
+
+      .panel {
+        padding: 1rem;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .actions {
+        justify-content: stretch;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .listing-grid {
+        grid-template-columns: 1fr;
+      }
+
+      footer > div {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      footer > div > div {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 <body>
-<header>
-  <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
-  <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
-  <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
-</header>
-
-<main role="main" aria-label="Mein Profil">
-  <section id="profile-section" aria-label="Profilinformationen">
-    <div class="input-group">
-      <label for="name">Name</label>
-      <input id="name" type="text" maxlength="20" autocomplete="name" placeholder="Dein Name" />
-    </div>
-    <div class="input-group">
-      <label for="email">E-Mail (nicht änderbar)</label>
-      <input id="email" type="email" disabled autocomplete="email" />
-    </div>
-    <div class="input-group" style="position:relative;">
-      <label for="city">Wohnort</label>
-      <input id="city" type="text" maxlength="50" autocomplete="address-level2" placeholder="Wohnort eingeben" aria-autocomplete="list" aria-controls="city-suggestions" aria-expanded="false" />
-      <div id="city-suggestions" role="listbox" aria-label="Wohnort Vorschläge" style="position:absolute; top:100%; left:0; right:0; background:white; border:1px solid #ccc; max-height: 180px; overflow-y:auto; z-index: 999;"></div>
-    </div>
-    <div class="input-group">
-      <label for="bio">Über mich</label>
-      <textarea id="bio" maxlength="150" placeholder="Zeig, wer du bist – mit wenigen Worten. Teil gern dein Instagram oder andere Kanäle für mehr Austausch!" rows="5"></textarea>
-    </div>
-
-    <div id="password-section" class="input-group">
-      <label for="password">Neues Passwort</label>
-      <input id="password" type="password" autocomplete="new-password" placeholder="Neues Passwort eingeben" aria-describedby="pw-strength-text" />
-      <div id="pw-strength" aria-hidden="true"><div></div></div>
-      <div id="pw-strength-text">Passwortstärke: <span id="strength-label">–</span></div>
-      <button class="btn" id="change-pw-btn" aria-live="polite" aria-label="Passwort ändern" onclick="changePassword()">Passwort ändern</button>
-    </div>
-
-    <button class="btn" id="save-btn" aria-label="Profil speichern" onclick="saveProfile()">Profil speichern</button>
-  </section>
-
-  <section id="reviews-section" aria-label="Bewertungen">
-    <h2>
-      Bewertungen
-      <a href="#" id="show-all-reviews" aria-label="Alle Bewertungen anzeigen">Alle anzeigen →</a>
-    </h2>
-    <div id="reviews-list" role="list" aria-live="polite">
-      ⏳ Lade Bewertungen…
-    </div>
-  </section>
-
-  <section id="stats-section" aria-label="Profil Statistiken">
-    <h2>Statistiken</h2>
-    <div class="stat-item" id="stat-inserate">Inserate: …</div>
-    <div class="stat-item" id="stat-bewertungen">Bewertungen: …</div>
-  </section>
-</main>
-
-<footer role="contentinfo">
-  <div>
-    <div>
-      <h4>Mieten &amp; Vermieten</h4>
-      <ul>
-        <li><a href="so-funktionierts.html">So funktioniert's</a></li>
-        <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
-        <li><a href="kategorien.html">Beliebte Kategorien</a></li>
-        <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
-        <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
-      </ul>
-    </div>
-    <div>
-      <h4>Wissenswertes</h4>
-      <ul>
-        <li><a href="agb.html">AGB & Impressum</a></li>
-        <li><a href="datenschutz.html">Datenschutz</a></li>
-      </ul>
-    </div>
-    <div>
-      <h4>Über uns</h4>
-      <ul>
-        <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
-        <li><a href="social-media.html">Folgen Sie uns</a></li>
-        <li><a href="mission.html">Unsere Mission</a></li>
-      </ul>
-    </div>
-  </div>
-  <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
-</footer>
-<script>
-  // Supabase v2 Client
-  const sb = supabase.createClient(
-    'https://flnjalgqtkqycsaymmbd.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-  );
-
-  let userSession = null;
-
-  async function init() {
-    try {
-      const { data, error } = await sb.auth.getSession();
-      if (error) console.error('Auth Fehler:', error);
-      userSession = data?.session || null;
-      updateNav();
-      if(userSession?.user) loadProfile();
-    } catch (err) {
-      console.error('Init Fehler:', err);
-    }
-  }
-
-  function updateNav() {
-    const nav = document.getElementById('nav-links');
-    nav.innerHTML = userSession?.user ? `
+  <header>
+    <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
+    <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="main-nav">☰</button>
+    <nav id="main-nav" role="navigation" aria-label="Hauptnavigation">
       <a href="index.html">Start</a>
-      <a href="profil.html" aria-current="page">Mein Profil</a>
+      <a href="profil.html">Mein Profil</a>
       <a href="nachrichten-inbox.html">📨 Nachrichten</a>
       <a href="favoriten.html">Meine Favoriten</a>
       <a href="inserate.html">Meine Inserate</a>
       <a href="#" onclick="logout(event)">Logout</a>
-    ` : `
-      <a href="index.html">Start</a>
-      <a href="login.html">Einloggen</a>
-    `;
-  }
+    </nav>
+  </header>
 
-  async function logout(event) {
-    event.preventDefault();
-    try {
+  <section class="profile-hero">
+    <div class="container">
+      <div class="profile-header">
+        <div class="avatar" id="avatar-box">U</div>
+        <div class="profile-info">
+          <h2>Mein Profil</h2>
+          <p id="profile-summary">Lade Profildaten...</p>
+
+          <div class="stats">
+            <div class="stat">
+              <div class="value" id="stat-listings">0</div>
+              <div class="label">Inserate</div>
+            </div>
+            <div class="stat">
+              <div class="value" id="stat-rating">–</div>
+              <div class="label">Bewertung</div>
+            </div>
+            <div class="stat">
+              <div class="value" id="stat-city">–</div>
+              <div class="label">Ort</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main>
+    <div class="container">
+      <section class="section panel">
+        <h3>Profil bearbeiten</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" placeholder="Dein Name" />
+          </div>
+
+          <div class="form-group">
+            <label for="city">Ort</label>
+            <input type="text" id="city" placeholder="Dein Ort" />
+          </div>
+
+          <div class="form-group full">
+            <label for="bio">Über mich</label>
+            <textarea id="bio" placeholder="Schreibe etwas über dich..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="email">E-Mail</label>
+            <input type="email" id="email" disabled />
+          </div>
+
+          <div class="form-group">
+            <label for="new-password">Neues Passwort</label>
+            <input type="password" id="new-password" placeholder="Optional" />
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-secondary" id="reload-profile-btn" type="button">Neu laden</button>
+          <button class="btn btn-primary" id="save-profile-btn" type="button">Änderungen speichern</button>
+        </div>
+      </section>
+
+      <div class="listings-header">
+        <h3>Meine Inserate</h3>
+      </div>
+
+      <section class="listing-grid" id="my-listings">
+        <p>Lade Inserate...</p>
+      </section>
+    </div>
+  </main>
+
+  <footer role="contentinfo">
+    <div>
+      <div>
+        <h4>Mieten &amp; Vermieten</h4>
+        <ul>
+          <li><a href="so-funktionierts.html">So funktioniert's</a></li>
+          <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
+          <li><a href="kategorien.html">Beliebte Kategorien</a></li>
+          <li><a href="vermieter-tipps.html">Tipps &amp; Tricks für Vermieter</a></li>
+          <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Wissenswertes</h4>
+        <ul>
+          <li><a href="agb.html">AGB &amp; Impressum</a></li>
+          <li><a href="datenschutz.html">Datenschutz</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Über uns</h4>
+        <ul>
+          <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
+          <li><a href="social-media.html">Folgen Sie uns</a></li>
+          <li><a href="mission.html">Unsere Mission</a></li>
+        </ul>
+      </div>
+    </div>
+    <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
+  </footer>
+
+  <script>
+    const sb = supabase.createClient(
+      'https://flnjalgqtkqycsaymmbd.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+    );
+
+    const navToggle = document.getElementById('nav-toggle');
+    const nav = document.getElementById('main-nav');
+    const avatarBox = document.getElementById('avatar-box');
+    const profileSummary = document.getElementById('profile-summary');
+    const statListings = document.getElementById('stat-listings');
+    const statRating = document.getElementById('stat-rating');
+    const statCity = document.getElementById('stat-city');
+
+    navToggle.addEventListener('click', () => {
+      nav.classList.toggle('show');
+      navToggle.setAttribute('aria-expanded', nav.classList.contains('show'));
+    });
+
+    async function logout(event) {
+      event.preventDefault();
       await sb.auth.signOut();
       window.location.href = "login.html";
-    } catch (err) {
-      console.error('Logout Fehler:', err);
-    }
-  }
-
-  // Mobile Menü Toggle
-  document.getElementById('nav-toggle').addEventListener('click', () => {
-    const nav = document.getElementById('nav-links');
-    nav.classList.toggle('show');
-    document.getElementById('nav-toggle').setAttribute('aria-expanded', nav.classList.contains('show'));
-  });
-
-  // --- Profil laden ---
-  async function loadProfile() {
-    const user = userSession.user;
-    if(!user) return;
-
-    document.getElementById('email').value = user.email;
-
-    // Profile aus DB
-    const { data: profile, error } = await sb
-      .from('profiles')
-      .select('name, city, bio')
-      .eq('id', user.id)
-      .single();
-
-    if(profile) {
-      document.getElementById('name').value = profile.name || '';
-      document.getElementById('city').value = profile.city || '';
-      document.getElementById('bio').value = profile.bio || '';
     }
 
-    loadReviews(user.id);
-    loadStats(user.id);
-  }
+    async function loadProfile() {
+      const { data: { user } } = await sb.auth.getUser();
+      if (!user) return window.location.href = "login.html";
 
-  // --- Reviews laden ---
-  async function loadReviews(userId) {
-    const container = document.getElementById('reviews-list');
-    container.innerHTML = '⏳ Lade Bewertungen…';
+      const { data: profile } = await sb.from('profiles').select('*').eq('id', user.id).single();
 
-    const { data: reviews } = await sb
-      .from('reviews')
-      .select('rating, comment, created_at, from_user:from_user_id(name, avatar_url)')
-      .eq('to_user_id', userId)
-      .order('created_at', { ascending: false })
-      .limit(5);
+      document.getElementById('name').value = profile?.name || '';
+      document.getElementById('city').value = profile?.city || '';
+      document.getElementById('bio').value = profile?.bio || '';
+      document.getElementById('email').value = user.email || '';
 
-    if(!reviews || reviews.length === 0) {
-      container.innerHTML = "<p>Keine Bewertungen vorhanden.</p>";
-      return;
+      const initial = (profile?.name || user.email || 'U').charAt(0).toUpperCase();
+      avatarBox.innerHTML = profile?.avatar_url
+        ? `<img src="${profile.avatar_url}" alt="Profilbild">`
+        : `<span>${initial}</span>`;
+
+      profileSummary.textContent = profile?.bio
+        ? profile.bio
+        : 'Noch keine Beschreibung hinterlegt.';
+
+      statCity.textContent = profile?.city || '–';
+
+      const { count } = await sb
+        .from('listings')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id);
+
+      statListings.textContent = count || 0;
+      statRating.textContent = profile?.rating ? `${profile.rating}/5` : '–';
     }
 
-    container.innerHTML = reviews.map(r => `
-      <div class="review-item" tabindex="0">
-        <div class="review-header">
-          <div class="review-avatar" style="background-image:url('${r.from_user?.avatar_url || ''}');">
-            ${!r.from_user?.avatar_url ? (r.from_user?.name ? r.from_user.name.split(' ').map(n => n[0]).join('').toUpperCase() : '') : ''}
+    async function loadListings() {
+      const { data: { user } } = await sb.auth.getUser();
+      const container = document.getElementById('my-listings');
+
+      if (!user) {
+        container.innerHTML = '<p>Bitte einloggen, um deine Inserate zu sehen.</p>';
+        return;
+      }
+
+      const { data, error } = await sb
+        .from('listings')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        container.innerHTML = '<p>Fehler beim Laden der Inserate.</p>';
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        container.innerHTML = '<p>Noch keine Inserate vorhanden.</p>';
+        return;
+      }
+
+      container.innerHTML = '';
+      data.forEach(item => {
+        const card = document.createElement('article');
+        card.className = 'listing-card';
+
+        const img = item.image_urls?.[0] || 'https://via.placeholder.com/600x400';
+        const categoryLabel = item.category || 'Sonstiges';
+
+        card.innerHTML = `
+          <img src="${img}" alt="${item.title || 'Inserat'}" />
+          <div class="listing-card-body">
+            <h4>${item.title || 'Kein Titel'}</h4>
+            <div class="listing-meta">
+              <span class="pill">${categoryLabel}</span>
+              <span>${item.location || ''}</span>
+            </div>
+            <div class="listing-meta">
+              <strong>${item.price_per_day || 'k. A.'} € / Tag</strong>
+            </div>
+            <div class="listing-actions">
+              <a class="edit-btn" href="bearbeiten.html?id=${item.id}">Bearbeiten</a>
+              <button class="delete-btn" onclick="deleteListing('${item.id}')">Löschen</button>
+            </div>
           </div>
-          <div class="reviewer-name">${r.from_user?.name || 'Unbekannt'}</div>
-          <div class="review-rating">${createStars(r.rating)}</div>
-        </div>
-        <p class="review-text">${r.comment || ''}</p>
-      </div>
-    `).join('');
-  }
+        `;
 
-  function createStars(rating) {
-    let full = Math.floor(rating);
-    let half = rating - full >= 0.5;
-    let empty = 5 - full - (half ? 1 : 0);
-    let out = '';
-    for(let i=0;i<full;i++) out+='<span style="color:#fbc02d;">★</span>';
-    if(half) out+='<span style="color:#fbc02d;">★</span>';
-    for(let i=0;i<empty;i++) out+='<span style="color:#ccc;">☆</span>';
-    return out;
-  }
-
-  // --- Statistiken ---
-  async function loadStats(userId) {
-    const { data: inserate } = await sb.from('listings').select('id').eq('user_id', userId);
-    const { data: bewertungen } = await sb.from('reviews').select('id').eq('to_user_id', userId);
-    document.getElementById('stat-inserate').textContent = `Inserate: ${inserate?.length || 0}`;
-    document.getElementById('stat-bewertungen').textContent = `Bewertungen: ${bewertungen?.length || 0}`;
-  }
-
-  // --- Passwortstärke ---
-  const pwInput = document.getElementById('password');
-  const pwStrengthBar = document.getElementById('pw-strength')?.querySelector('div');
-  const pwStrengthLabel = document.getElementById('strength-label');
-
-  if(pwInput) {
-    pwInput.addEventListener('input', ()=>{
-      const val = pwInput.value;
-      if(!val) { pwStrengthBar.style.width='0'; pwStrengthLabel.textContent='–'; return; }
-      const result = zxcvbn(val);
-      let scoreLabels = ['Schwach','Fair','Gut','Stark','Stark'];
-      pwStrengthLabel.textContent = scoreLabels[result.score] || '–';
-      let widths = ['25%','50%','75%','100%','100%'];
-      pwStrengthBar.style.width = widths[result.score] || '0';
-      let colors = ['#d32f2f','#fbc02d','#388e3c','#2e7d32','#2e7d32'];
-      pwStrengthBar.style.backgroundColor = colors[result.score] || '#eee';
-    });
-  }
-
-  // --- Passwort ändern ---
-  async function changePassword() {
-    const password = pwInput.value.trim();
-    if(!password){ alert('Bitte gib ein neues Passwort ein.'); return; }
-    const btn = document.getElementById('change-pw-btn');
-    btn.disabled = true;
-    try {
-      const { error } = await sb.auth.updateUser({ password });
-      if(error) throw error;
-      alert('Passwort erfolgreich geändert!');
-      pwInput.value=''; pwStrengthBar.style.width='0'; pwStrengthLabel.textContent='–';
-    } catch(err) {
-      alert('Fehler beim Ändern des Passworts: '+err.message);
-    } finally { btn.disabled=false; }
-  }
-
-  // --- City Autocomplete ---
-  const cityInput = document.getElementById('city');
-  const citySuggestions = document.getElementById('city-suggestions');
-  cityInput?.addEventListener('input', async e=>{
-    const value = e.target.value.trim();
-    if(value.length<2){ citySuggestions.innerHTML=''; cityInput.setAttribute('aria-expanded','false'); return; }
-    try {
-      const res = await fetch(`https://corsproxy.io/?https://nominatim.openstreetmap.org/search?format=json&accept-language=de&addressdetails=1&countrycodes=de&limit=8&q=${encodeURIComponent(value)}`);
-      const results = await res.json();
-      citySuggestions.innerHTML=''; cityInput.setAttribute('aria-expanded','true');
-      results.filter(r=>r.lat && r.lon && r.address).forEach(r=>{
-        const ort = r.address.city || r.address.town || r.address.village || r.address.hamlet || r.address.municipality || r.display_name.split(',')[0];
-        const bundesland = r.address.state || '';
-        const land = r.address.country || 'Deutschland';
-        const div = document.createElement('div');
-        div.textContent = [ort,bundesland,land].filter(Boolean).join(', ');
-        div.tabIndex=0; div.setAttribute('role','option');
-        div.onclick=()=>{ cityInput.value=div.textContent; citySuggestions.innerHTML=''; cityInput.setAttribute('aria-expanded','false'); };
-        div.onkeydown=e=>{ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); div.click(); } };
-        citySuggestions.appendChild(div);
+        container.appendChild(card);
       });
-      if(results.length===0) citySuggestions.innerHTML='<div style="padding:0.5rem;">Kein Ort gefunden</div>';
-    } catch(err){ console.error('Ortssuche Fehler:',err); }
-  });
+    }
 
-  // --- Profil speichern ---
-  async function saveProfile() {
-    if(!userSession?.user){ alert('Nicht eingeloggt!'); return; }
-    const userId = userSession.user.id;
-    const updates = {
-      id:userId,
-      name:document.getElementById('name').value.trim(),
-      city:document.getElementById('city').value.trim(),
-      bio:document.getElementById('bio').value.trim()
-    };
-    if(updates.name.length<2){ alert('Name mindestens 2 Zeichen'); return; }
-    if(updates.name.length>20){ alert('Name maximal 20 Zeichen'); return; }
-    if(updates.city.length<2){ alert('Bitte gib einen gültigen Wohnort ein'); return; }
-    if(updates.city.length>50){ alert('Wohnort maximal 50 Zeichen'); return; }
-    if(updates.bio.length>150){ alert('Bio maximal 150 Zeichen'); return; }
+    async function deleteListing(id) {
+      const ok = confirm('Möchtest du dieses Inserat wirklich löschen?');
+      if (!ok) return;
 
-    const btn = document.getElementById('save-btn'); btn.disabled=true;
-    try{
-      const { error } = await sb.from('profiles').upsert(updates);
-      if(error) throw error;
-      alert('Profil erfolgreich gespeichert!');
-    } catch(err){ alert('Fehler beim Speichern: '+err.message); } finally{ btn.disabled=false; }
-  }
+      const { error } = await sb.from('listings').delete().eq('id', id);
+      if (error) {
+        alert('Fehler beim Löschen.');
+        return;
+      }
 
-  init();
-</script>
+      await loadListings();
+      await loadProfile();
+    }
 
+    async function saveProfile() {
+      const { data: { user } } = await sb.auth.getUser();
+      if (!user) return window.location.href = "login.html";
+
+      const name = document.getElementById('name').value.trim();
+      const city = document.getElementById('city').value.trim();
+      const bio = document.getElementById('bio').value.trim();
+      const newPassword = document.getElementById('new-password').value.trim();
+
+      const { error } = await sb.from('profiles').upsert({
+        id: user.id,
+        name,
+        city,
+        bio
+      });
+
+      if (error) {
+        alert('Fehler beim Speichern des Profils.');
+        return;
+      }
+
+      if (newPassword) {
+        const { error: passError } = await sb.auth.updateUser({
+          password: newPassword
+        });
+
+        if (passError) {
+          alert('Profil gespeichert, aber Passwort konnte nicht geändert werden.');
+          return;
+        }
+      }
+
+      alert('Profil gespeichert!');
+      document.getElementById('new-password').value = '';
+      await loadProfile();
+    }
+
+    document.getElementById('save-profile-btn').addEventListener('click', saveProfile);
+    document.getElementById('reload-profile-btn').addEventListener('click', async () => {
+      await loadProfile();
+      await loadListings();
+    });
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      const { data: { user } } = await sb.auth.getUser();
+      if (!user) return window.location.href = "login.html";
+      await loadProfile();
+      await loadListings();
+    });
+  </script>
 </body>
 </html>
