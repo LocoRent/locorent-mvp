@@ -507,7 +507,7 @@ nav#nav-links {
       minPrice: params.get('minPrice') || '',
       maxPrice: params.get('maxPrice') || '',
       location: params.get('location') || '',
-      radius: params.get('radius') || ''
+      radius: params.get('radius') || '',
       sort: params.get('sort') || 'newest',
     };
 
@@ -589,16 +589,27 @@ const ort =
   });
 
   // --- SEARCH BUTTON ---
-  document.getElementById('search-btn').addEventListener('click', () => {
-    const title = document.getElementById("search-input").value.trim();
-    const category = document.getElementById("category-select").value.trim();
-    const minPrice = document.getElementById("min-price").value.trim();
-    const maxPrice = document.getElementById("max-price").value.trim();
-    const location = document.getElementById("location-input").value.trim();
-    const radius = document.getElementById("radius-select").value.trim();
-    const params = new URLSearchParams({ title, category, minPrice, maxPrice, location, radius, sort});
-    window.location.href = `search_results.html?${params.toString()}`;
+document.getElementById('search-btn').addEventListener('click', () => {
+  const title = document.getElementById("search-input").value.trim();
+  const category = document.getElementById("category-select").value.trim();
+  const minPrice = document.getElementById("min-price").value.trim();
+  const maxPrice = document.getElementById("max-price").value.trim();
+  const location = document.getElementById("location-input").value.trim();
+  const radius = document.getElementById("radius-select").value.trim();
+  const sort = document.getElementById("sort-select").value;
+
+  const params = new URLSearchParams({
+    title,
+    category,
+    minPrice,
+    maxPrice,
+    location,
+    radius,
+    sort
   });
+
+  window.location.href = `search_results.html?${params.toString()}`;
+});
 
   // --- FAVORITES ---
   async function checkIfFavorite(listingId) {
@@ -643,6 +654,21 @@ let query = sb
   .from('listings')
   .select('*', { count: 'exact' });
 
+    if (filters.title) {
+  query = query.ilike('title', `%${filters.title}%`);
+}
+
+if (filters.category) {
+  query = query.eq('category', filters.category);
+}
+
+if (filters.minPrice) {
+  query = query.gte('price_per_day', Number(filters.minPrice));
+}
+
+if (filters.maxPrice) {
+  query = query.lte('price_per_day', Number(filters.maxPrice));
+}
 if(filters.sort === "newest"){
   query = query.order('created_at', { ascending:false });
 }
@@ -778,6 +804,7 @@ if(filters.sort === "price_desc"){
       maxPrice: params.get('maxPrice') || '',
       location: params.get('location') || '',
       radius: params.get('radius') || ''
+      sort: params.get('sort') || 'newest'
     };
   }
 
