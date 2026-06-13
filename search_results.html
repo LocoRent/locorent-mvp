@@ -686,24 +686,14 @@
         .from('listings')
         .select('*', { count: 'exact' });
 
-      if (filters.title) {
-        query = query.ilike('title', `%${filters.title}%`);
-      }
-
-      if (filters.category) {
-        query = query.eq('category', filters.category);
-      }
+      if (filters.title) query = query.ilike('title', `%${filters.title}%`);
+      if (filters.category) query = query.eq('category', filters.category);
 
       const min = filters.minPrice ? parseFloat(filters.minPrice) : null;
       const max = filters.maxPrice ? parseFloat(filters.maxPrice) : null;
 
-      if (min !== null && !isNaN(min)) {
-        query = query.gte('price_per_day', min);
-      }
-
-      if (max !== null && !isNaN(max)) {
-        query = query.lte('price_per_day', max);
-      }
+      if (min !== null && !isNaN(min)) query = query.gte('price_per_day', min);
+      if (max !== null && !isNaN(max)) query = query.lte('price_per_day', max);
 
       switch (filters.sort) {
         case "price_asc":
