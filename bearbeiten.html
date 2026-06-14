@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Inserat erstellen – Locorent</title>
-  <meta name="description" content="Erstelle dein Inserat auf Locorent und vermiete Gegenstände einfach und nachhaltig." />
+  <title>Inserat bearbeiten – Locorent</title>
+  <meta name="description" content="Bearbeite dein Inserat auf Locorent." />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
@@ -134,73 +134,33 @@
       flex: 1;
     }
 
-    .creator-hero {
-      background: linear-gradient(135deg, rgba(255,255,255,0.96), rgba(243,251,243,0.95));
-      border: 1px solid rgba(46, 125, 50, 0.08);
-      border-radius: 28px;
-      box-shadow: 0 12px 30px var(--shadow-light);
-      padding: 2rem;
-      margin-bottom: 1.5rem;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .creator-hero::after {
-      content: "";
-      position: absolute;
-      right: -70px;
-      top: -70px;
-      width: 220px;
-      height: 220px;
-      border-radius: 50%;
-      background: rgba(46,125,50,0.08);
-      filter: blur(2px);
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: rgba(46, 125, 50, 0.08);
-      color: var(--primary-dark);
-      border: 1px solid rgba(46, 125, 50, 0.08);
-      border-radius: 999px;
-      padding: 0.45rem 0.85rem;
-      font-size: 0.92rem;
-      font-weight: 600;
-      margin-bottom: 1rem;
-    }
-
-    .creator-hero h2 {
-      margin: 0;
+    .page-title {
+      text-align: center;
       font-size: clamp(2rem, 4vw, 3rem);
       line-height: 1.15;
-      color: var(--text-dark);
+      color: var(--primary-dark);
+      margin: 0 0 0.5rem;
       letter-spacing: -0.02em;
     }
 
-    .creator-hero p {
-      margin: 1rem 0 0;
-      max-width: 760px;
+    .subtitle {
+      text-align: center;
       color: var(--text-muted);
+      margin: 0 0 2rem;
       font-size: 1.05rem;
-      line-height: 1.7;
+      line-height: 1.6;
     }
 
-    .form-shell {
-      display: grid;
-      gap: 1.25rem;
-    }
-
-    .form-card {
+    .form-section {
       background: rgba(255,255,255,0.96);
       border: 1px solid rgba(46, 125, 50, 0.08);
       border-radius: 24px;
       box-shadow: 0 10px 28px rgba(46, 125, 50, 0.06);
       padding: 1.4rem;
+      margin-bottom: 1.25rem;
     }
 
-    .form-card h3 {
+    .form-section h2 {
       margin: 0 0 1rem;
       font-size: 1.2rem;
       color: var(--primary-dark);
@@ -256,14 +216,13 @@
     }
 
     .hint {
-      margin: 0;
+      margin: -0.2rem 0 1rem;
       color: var(--text-muted);
       font-size: 0.92rem;
       line-height: 1.5;
     }
 
     .dropzone {
-      grid-column: 1 / -1;
       border: 2px dashed rgba(46, 125, 50, 0.22);
       border-radius: 20px;
       background: linear-gradient(180deg, #fbfdfb, #f6fbf6);
@@ -288,6 +247,11 @@
     .dropzone strong {
       font-size: 1.05rem;
       color: var(--primary-dark);
+    }
+
+    .dropzone.dragover {
+      border-color: var(--primary);
+      background: rgba(46, 125, 50, 0.07);
     }
 
     .preview-gallery {
@@ -318,6 +282,7 @@
       justify-content: flex-end;
       gap: 1rem;
       margin-top: 0.5rem;
+      margin-bottom: 2rem;
     }
 
     .btn {
@@ -439,11 +404,7 @@
         align-items: flex-start;
       }
 
-      .creator-hero {
-        padding: 1.4rem;
-      }
-
-      .form-card {
+      .form-section {
         padding: 1.15rem;
       }
 
@@ -465,26 +426,21 @@
   </header>
 
   <main role="main">
-    <section class="creator-hero">
-      <div class="badge">✨ Inserat erstellen</div>
-      <h2>Erstelle dein Inserat in wenigen Schritten</h2>
-      <p>
-        Trage die wichtigsten Informationen zu deinem Artikel ein, lade ein passendes Foto hoch und veröffentliche dein Angebot schnell und übersichtlich.
-      </p>
-    </section>
+    <h1 class="page-title">Inserat bearbeiten</h1>
+    <p class="subtitle">Ändere Titel, Preis, Standort, Beschreibung und Bilder deines Inserats.</p>
 
-    <form id="listing-form" class="form-shell">
-      <section class="form-card">
-        <h3>Basisdaten</h3>
+    <form id="edit-form">
+      <section class="form-section">
+        <h2>Basisdaten</h2>
         <div class="form-grid">
           <div class="field">
             <label for="title">Titel *</label>
-            <input type="text" id="title" name="title" maxlength="50" required />
+            <input type="text" id="title" maxlength="50" required />
           </div>
 
           <div class="field">
             <label for="category">Kategorie *</label>
-            <select id="category" name="category" required>
+            <select id="category" required>
               <option value="">Bitte wählen</option>
               <option value="Auto">Auto</option>
               <option value="Werkzeug">Werkzeug</option>
@@ -495,43 +451,37 @@
           </div>
 
           <div class="field">
-            <label for="price">Preis pro Tag (€) *</label>
-            <input type="number" id="price" name="price" min="0" max="999999" step="1" required />
+            <label for="price_per_day">Preis pro Tag (€) *</label>
+            <input type="number" id="price_per_day" min="0" step="1" required />
           </div>
 
           <div class="field">
             <label for="location">Ort / PLZ *</label>
-            <input type="text" id="location" name="location" maxlength="100" required />
+            <input type="text" id="location" maxlength="100" required />
           </div>
 
           <div class="field full-width">
             <label for="description">Beschreibung *</label>
-            <textarea id="description" name="description" maxlength="500" required></textarea>
+            <textarea id="description" maxlength="500" required></textarea>
             <p class="hint">Beschreibe den Artikel möglichst klar und ehrlich. Maximal 500 Zeichen.</p>
           </div>
         </div>
       </section>
 
-      <section class="form-card">
-        <h3>Bilder</h3>
-        <p class="hint">Lade ein aussagekräftiges Bild hoch. Idealerweise hell, scharf und ohne unnötigen Hintergrund.</p>
-        <div id="dropzone" class="dropzone" tabindex="0" aria-label="Bild hochladen">
+      <section class="form-section">
+        <h2>Bilder</h2>
+        <p class="hint">Maximal 1 Bild, maximal 2 MB.</p>
+        <div id="dropzone" class="dropzone" tabindex="0">
           <strong>Bild hier ablegen oder klicken</strong>
           <span>PNG, JPG oder WebP · max. 2 MB</span>
         </div>
+        <input type="file" id="image-input" accept="image/*" hidden />
         <div id="preview-gallery" class="preview-gallery" aria-live="polite" aria-atomic="true"></div>
-      </section>
-
-      <section class="form-card">
-        <h3>Hinweise</h3>
-        <p class="hint">
-          Achte darauf, dass Titel, Preis und Beschreibung vollständig sind. Je klarer dein Inserat, desto schneller bekommst du Anfragen.
-        </p>
       </section>
 
       <div class="form-actions">
         <button type="button" class="btn btn-secondary" onclick="location.href='inserate.html'">Abbrechen</button>
-        <button type="submit" class="btn btn-primary">Inserat speichern</button>
+        <button type="submit" class="btn btn-primary">Änderungen speichern</button>
       </div>
     </form>
   </main>
@@ -574,6 +524,8 @@
     );
 
     let userSession = null;
+    let listingId = null;
+    let currentImages = [];
 
     async function init() {
       try {
@@ -582,6 +534,17 @@
 
         userSession = data?.session || null;
         updateNav();
+
+        const params = new URLSearchParams(window.location.search);
+        listingId = params.get('id');
+
+        if (!listingId) {
+          alert('Keine Inserat-ID in der URL gefunden.');
+          return;
+        }
+
+        await loadListing();
+        setupEvents();
       } catch (err) {
         console.error('Init Fehler:', err);
       }
@@ -612,15 +575,127 @@
       }
     }
 
+    async function loadListing() {
+      const { data, error } = await sb
+        .from('listings')
+        .select('*')
+        .eq('id', listingId)
+        .single();
+
+      if (error) {
+        console.error('Fehler beim Laden des Inserats:', error);
+        alert('Inserat konnte nicht geladen werden.');
+        return;
+      }
+
+      document.getElementById('title').value = data.title || '';
+      document.getElementById('category').value = data.category || '';
+      document.getElementById('price_per_day').value = data.price_per_day ?? '';
+      document.getElementById('location').value = data.location || '';
+      document.getElementById('description').value = data.description || '';
+
+      currentImages = Array.isArray(data.image_urls) ? data.image_urls : [];
+      renderPreviewGallery();
+    }
+
+    function setupEvents() {
+      document.getElementById('edit-form').addEventListener('submit', saveChanges);
+
+      const dropzone = document.getElementById('dropzone');
+      const imageInput = document.getElementById('image-input');
+
+      dropzone.addEventListener('click', () => imageInput.click());
+
+      dropzone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropzone.classList.add('dragover');
+      });
+
+      dropzone.addEventListener('dragleave', () => {
+        dropzone.classList.remove('dragover');
+      });
+
+      dropzone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropzone.classList.remove('dragover');
+        handleFiles(e.dataTransfer.files);
+      });
+
+      imageInput.addEventListener('change', (e) => {
+        handleFiles(e.target.files);
+      });
+    }
+
+    function handleFiles(files) {
+      if (!files || !files.length) return;
+
+      const file = files[0];
+
+      if (file.size > 2 * 1024 * 1024) {
+        alert('Das Bild ist zu groß. Bitte maximal 2 MB.');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        currentImages = [reader.result];
+        renderPreviewGallery();
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function renderPreviewGallery() {
+      const gallery = document.getElementById('preview-gallery');
+      gallery.innerHTML = '';
+
+      currentImages.forEach((src) => {
+        const item = document.createElement('div');
+        item.className = 'preview-item';
+        item.innerHTML = `<img src="${src}" alt="Vorschau Bild">`;
+        gallery.appendChild(item);
+      });
+    }
+
+    async function saveChanges(event) {
+      event.preventDefault();
+
+      const title = document.getElementById('title').value.trim();
+      const category = document.getElementById('category').value;
+      const pricePerDay = parseFloat(document.getElementById('price_per_day').value);
+      const location = document.getElementById('location').value.trim();
+      const description = document.getElementById('description').value.trim();
+
+      if (!title || !category || Number.isNaN(pricePerDay) || !location || !description) {
+        alert('Bitte fülle alle Pflichtfelder aus.');
+        return;
+      }
+
+      const { error } = await sb
+        .from('listings')
+        .update({
+          title,
+          category,
+          price_per_day: pricePerDay,
+          location,
+          description,
+          image_urls: currentImages
+        })
+        .eq('id', listingId);
+
+      if (error) {
+        console.error('Fehler beim Speichern:', error);
+        alert('Änderungen konnten nicht gespeichert werden.');
+        return;
+      }
+
+      alert('Inserat erfolgreich aktualisiert.');
+      window.location.href = 'inserate.html';
+    }
+
     document.getElementById('nav-toggle').addEventListener('click', () => {
       const nav = document.getElementById('nav-links');
       nav.classList.toggle('show');
       document.getElementById('nav-toggle').setAttribute('aria-expanded', nav.classList.contains('show'));
-    });
-
-    document.getElementById('listing-form').addEventListener('submit', (e) => {
-      e.preventDefault();
-      alert('Hier kannst du später deine Speicherlogik einbauen.');
     });
 
     init();
