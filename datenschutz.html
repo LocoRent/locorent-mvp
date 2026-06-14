@@ -6,6 +6,7 @@
   <title>Datenschutzerklärung – Locorent</title>
   <meta name="description" content="Datenschutzerklärung von Locorent." />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --primary: #2e7d32;
@@ -93,7 +94,6 @@
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
-      min-width: 0;
     }
 
     nav#nav-links a {
@@ -509,13 +509,56 @@
   </footer>
 
   <script>
-    const navToggle = document.getElementById('nav-toggle');
-    const navLinks = document.getElementById('nav-links');
+    const sb = supabase.createClient(
+      'https://flnjalgqtkqycsaymmbd.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+    );
 
-    navToggle.addEventListener('click', () => {
-      navLinks.classList.toggle('show');
-      navToggle.setAttribute('aria-expanded', navLinks.classList.contains('show'));
+    let userSession = null;
+
+    async function init() {
+      try {
+        const { data, error } = await sb.auth.getSession();
+        if (error) console.error('Auth Fehler:', error);
+        userSession = data?.session || null;
+        updateNav();
+      } catch (err) {
+        console.error('Init Fehler:', err);
+      }
+    }
+
+    function updateNav() {
+      const nav = document.getElementById('nav-links');
+      nav.innerHTML = userSession?.user ? `
+        <a href="index.html">Start</a>
+        <a href="profil.html">Mein Profil</a>
+        <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+        <a href="favoriten.html">Meine Favoriten</a>
+        <a href="inserate.html">Meine Inserate</a>
+        <a href="#" onclick="logout(event)">Logout</a>
+      ` : `
+        <a href="index.html">Start</a>
+        <a href="login.html">Einloggen</a>
+      `;
+    }
+
+    async function logout(event) {
+      event.preventDefault();
+      try {
+        await sb.auth.signOut();
+        window.location.href = "login.html";
+      } catch (err) {
+        console.error('Logout Fehler:', err);
+      }
+    }
+
+    document.getElementById('nav-toggle').addEventListener('click', () => {
+      const nav = document.getElementById('nav-links');
+      nav.classList.toggle('show');
+      document.getElementById('nav-toggle').setAttribute('aria-expanded', nav.classList.contains('show'));
     });
+
+    init();
   </script>
 </body>
 </html>
