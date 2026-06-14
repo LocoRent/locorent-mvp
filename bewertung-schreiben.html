@@ -478,13 +478,11 @@
     );
 
     let userSession = null;
-    let selectedRating = 0;
 
     async function init() {
       try {
         const { data, error } = await sb.auth.getSession();
         if (error) console.error('Auth Fehler:', error);
-
         userSession = data?.session || null;
         updateNav();
         setupStars();
@@ -534,13 +532,10 @@
       const ratingInput = document.getElementById('rating');
 
       const setRating = (value) => {
-        selectedRating = value;
         ratingInput.value = value;
-
         stars.forEach(star => {
           const starValue = Number(star.dataset.value);
-          const selected = starValue <= value;
-          star.classList.toggle('selected', selected);
+          star.classList.toggle('selected', starValue <= value);
           star.setAttribute('aria-checked', String(starValue === value));
           star.tabIndex = starValue === value ? 0 : -1;
         });
@@ -549,10 +544,9 @@
       stars.forEach(star => {
         star.addEventListener('click', () => setRating(Number(star.dataset.value)));
         star.addEventListener('keydown', (e) => {
-          const current = Number(star.dataset.value);
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
-            setRating(current);
+            setRating(Number(star.dataset.value));
           }
         });
       });
@@ -570,22 +564,51 @@
       document.getElementById('review-form').addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const comment = document.getElementById('comment').value.trim();
-        const rating = Number(document.getElementById('rating').value);
         const message = document.getElementById('message');
+        const params = new URLSearchParams(window.location.search);
+        const toUser = params.get('id');
+        const rating = Number(document.getElementById('rating').value);
+        const comment = document.getElementById('comment').value.trim();
 
-        if (!rating || !comment) {
+        if (!userSession?.user || !toUser) {
           message.className = 'message error';
-          message.textContent = 'Bitte eine Sternebewertung und einen Kommentar eingeben.';
+          message.textContent = 'Bitte einloggen oder den Link prüfen.';
           return;
         }
 
-        message.className = 'message';
-        message.textContent = '';
+        if (!rating || rating < 1 || rating > 5) {
+          message.className = 'message error';
+          message.textContent = 'Bitte eine Bewertung zwischen 1 und 5 Sternen abgeben.';
+          return;
+        }
+
+        if (!comment) {
+          message.className = 'message error';
+          message.textContent = 'Bitte einen Kommentar eingeben.';
+          return;
+        }
+
+        const { error } = await sb.from('reviews').insert({
+          to_user_id: toUser,
+          from_user_id: userSession.user.id,
+          rating,
+          comment,
+          created_at: new Date().toISOString()
+        });
+
+        if (error) {
+          console.error('Fehler beim Speichern:', error);
+          message.className = 'message error';
+          message.textContent = 'Fehler beim Speichern.';
+          return;
+        }
 
         message.className = 'message success';
-        message.textContent = 'Bewertung gespeichert.';
+        message.textContent = '✅ Bewertung gespeichert! Weiterleitung...';
 
+        setTimeout(() => {
+          window.location.href = `vermieter-profil.html?id=${toUser}`;
+        }, 1200);
       });
     }
 
