@@ -57,7 +57,6 @@
       border-radius: 10px;
     }
 
-    /* HEADER UNVERÄNDERT */
     header {
       background-color: var(--primary);
       color: var(--white);
@@ -70,7 +69,8 @@
       top: 0;
       z-index: 1000;
       box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
+      gap: 1rem;
     }
 
     header h1 {
@@ -78,6 +78,8 @@
       cursor: pointer;
       user-select: none;
       margin: 0;
+      flex: 0 0 auto;
+      white-space: nowrap;
     }
 
     #nav-toggle {
@@ -87,6 +89,7 @@
       font-size: 1.8rem;
       color: var(--white);
       cursor: pointer;
+      flex: 0 0 auto;
     }
 
     nav#nav-links {
@@ -94,6 +97,8 @@
       flex-wrap: wrap;
       gap: 1rem;
       min-width: 0;
+      justify-content: flex-end;
+      flex: 1 1 auto;
     }
 
     nav#nav-links a {
@@ -104,6 +109,7 @@
       position: relative;
       transition: color 0.3s ease;
       overflow-wrap: anywhere;
+      white-space: nowrap;
     }
 
     nav#nav-links a::after {
@@ -128,7 +134,6 @@
       outline: none;
     }
 
-    /* MAIN */
     main {
       width: 100%;
       max-width: 1100px;
@@ -241,7 +246,6 @@
       color: var(--primary-dark);
     }
 
-    /* FOOTER UNVERÄNDERT */
     footer {
       width: 100%;
       box-sizing: border-box;
@@ -304,8 +308,14 @@
     }
 
     @media (max-width: 720px) {
+      header {
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
       #nav-toggle {
         display: block;
+        margin-left: auto;
       }
 
       nav#nav-links {
@@ -313,6 +323,7 @@
         flex-direction: column;
         display: none;
         margin-top: 1rem;
+        justify-content: flex-start;
       }
 
       nav#nav-links.show {
@@ -325,6 +336,7 @@
         background-color: rgba(255, 255, 255, 0.1);
         border-radius: 6px;
         display: block;
+        white-space: normal;
       }
 
       footer > div {
@@ -338,6 +350,10 @@
       .privacy-card,
       .note-box {
         padding: 1.15rem;
+      }
+
+      header h1 {
+        font-size: 1.6rem;
       }
     }
   </style>
