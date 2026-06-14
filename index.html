@@ -25,13 +25,11 @@
       --font-primary: 'Poppins', sans-serif;
     }
 
-    *,
-    *::before,
-    *::after {
+    *, *::before, *::after {
       box-sizing: border-box;
     }
 
-    html, body {
+    body {
       margin: 0;
       width: 100%;
       overflow-x: hidden;
@@ -44,20 +42,6 @@
       scroll-behavior: smooth;
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-      overflow-wrap: anywhere;
-    }
-
-    a:focus-visible,
-    button:focus-visible {
-      outline: 3px solid rgba(185, 246, 202, 0.95);
-      outline-offset: 3px;
-      border-radius: 10px;
-    }
-
-    /* HEADER UNVERÄNDERT */
     header {
       background-color: var(--primary);
       color: var(--white);
@@ -127,7 +111,6 @@
       outline: none;
     }
 
-    /* HERO */
     .hero {
       width: 100%;
       margin: 0;
@@ -138,9 +121,9 @@
 
     .hero-inner,
     .section-inner {
-      max-width: 1320px;
+      max-width: 1600px;
       margin: 0 auto;
-      padding: 0 1rem;
+      padding: 0 2rem;
     }
 
     .hero h2 {
@@ -245,84 +228,66 @@
       background-color: #e8f5e9;
     }
 
-    /* MAIN / KÄSTCHEN-DESIGN WIE FAVORITEN */
-    main {
+    section {
       width: 100%;
-      max-width: 1320px;
-      margin: 2rem auto 4rem;
-      padding: 0 1rem 3rem;
-      flex: 1;
-      min-width: 0;
+      background: transparent;
+      margin-top: 2rem;
     }
 
-    .section-box {
-      background: rgba(255,255,255,0.96);
-      border: 1px solid rgba(46, 125, 50, 0.08);
-      border-radius: 24px;
-      box-shadow: 0 12px 30px rgba(46, 125, 50, 0.08);
-      padding: 1.25rem;
-      margin-top: 1.25rem;
-    }
-
-    .section-box h2 {
-      margin: 0 0 1rem;
+    section h2 {
       font-size: 1.6rem;
       color: var(--primary-dark);
+      margin: 0 0 1rem;
     }
 
     .category-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 1rem;
-      align-items: stretch;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-top: 1rem;
     }
 
     .result-card {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      background: var(--white);
-      border-radius: 22px;
-      box-shadow: 0 8px 24px rgba(46, 125, 50, 0.08);
+      background-color: var(--white);
+      border-radius: 20px;
       padding: 1rem;
-      cursor: pointer;
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      box-shadow: 0 12px 30px rgba(46,125,50,0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
       height: 100%;
-      border: 1px solid rgba(46, 125, 50, 0.08);
-      min-width: 0;
     }
 
     .result-card:hover,
     .result-card:focus-within {
       transform: translateY(-3px);
-      box-shadow: 0 16px 34px rgba(46, 125, 50, 0.14);
+      box-shadow: 0 20px 48px rgba(46,125,50,0.15);
       outline: none;
     }
 
     .result-card img {
       width: 100%;
-      height: 190px;
+      height: 180px;
       object-fit: cover;
-      border-radius: 16px;
+      border-radius: 14px;
       margin-bottom: 1rem;
-      background: #eef6ee;
     }
 
     .result-card h3 {
       font-size: 1.05rem;
-      line-height: 1.4;
+      line-height: 1.4em;
       margin: 0.5rem 0;
-      color: var(--text-dark);
+      height: 4.2em;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
     }
 
     .result-card .info {
-      margin-top: 0.25rem;
-      color: var(--text-muted);
       flex-grow: 1;
-    }
-
-    .result-card .info p {
-      margin: 0.25rem 0;
     }
 
     .result-card .buttons {
@@ -334,33 +299,21 @@
 
     .result-card button {
       margin-top: 0.25rem;
-      padding: 0.75rem;
+      padding: 0.6rem;
       width: 100%;
       background-color: var(--primary);
       color: var(--white);
       border: none;
-      border-radius: 12px;
+      border-radius: 8px;
       cursor: pointer;
       font-weight: 700;
-      transition: background-color 0.3s ease, transform 0.2s ease;
+      transition: background-color 0.3s ease;
     }
 
     .result-card button:hover,
     .result-card button:focus {
-      background-color: var(--primary-dark);
-      transform: translateY(-1px);
+      background-color: var(--accent);
       outline: none;
-    }
-
-    .result-card .fav-btn {
-      background: rgba(46, 125, 50, 0.08);
-      color: var(--primary-dark);
-    }
-
-    .result-card .fav-btn:hover,
-    .result-card .fav-btn:focus {
-      background: rgba(46, 125, 50, 0.12);
-      color: var(--primary-dark);
     }
 
     .more-link {
@@ -401,24 +354,6 @@
       transform: translateX(5px);
     }
 
-    .empty-state {
-      background: rgba(255,255,255,0.96);
-      border: 1px dashed rgba(46, 125, 50, 0.18);
-      border-radius: 22px;
-      padding: 2rem 1.4rem;
-      text-align: center;
-      color: var(--text-muted);
-      grid-column: 1 / -1;
-    }
-
-    .empty-state strong {
-      display: block;
-      color: var(--primary-dark);
-      margin-bottom: 0.4rem;
-      font-size: 1.05rem;
-    }
-
-    /* FOOTER */
     footer {
       width: 100%;
       box-sizing: border-box;
@@ -523,8 +458,12 @@
       }
 
       .category-grid {
-        grid-template-columns: 1fr;
-        gap: 0.85rem;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.75rem;
+      }
+
+      .result-card {
+        width: 100%;
       }
 
       footer > div {
@@ -610,27 +549,25 @@
     </div>
   </section>
 
-  <main>
-    <section class="section-box" aria-label="Neueste Angebote">
-      <div class="section-inner">
-        <h2>Neueste Angebote</h2>
-        <div id="newest-offers" class="category-grid" aria-live="polite" aria-busy="true"><p>⏳ Lade Angebote…</p></div>
-        <div class="more-link">
-          <a href="angebote_neueste.html" class="btn-more">MEHR <span>→</span></a>
-        </div>
+  <section aria-label="Neueste Angebote">
+    <div class="section-inner">
+      <h2>Neueste Angebote</h2>
+      <div id="newest-offers" class="category-grid" aria-live="polite" aria-busy="true"><p>⏳ Lade Angebote…</p></div>
+      <div class="more-link">
+        <a href="angebote_neueste.html" class="btn-more">MEHR <span>→</span></a>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="section-box" aria-label="Beliebte Angebote">
-      <div class="section-inner">
-        <h2>Beliebte Angebote</h2>
-        <div id="popular-offers" class="category-grid" aria-live="polite" aria-busy="true"><p>⏳ Lade Angebote…</p></div>
-        <div class="more-link">
-          <a href="angebote_beliebte.html" class="btn-more">MEHR <span>→</span></a>
-        </div>
+  <section aria-label="Beliebte Angebote">
+    <div class="section-inner">
+      <h2>Beliebte Angebote</h2>
+      <div id="popular-offers" class="category-grid" aria-live="polite" aria-busy="true"><p>⏳ Lade Angebote…</p></div>
+      <div class="more-link">
+        <a href="angebote_beliebte.html" class="btn-more">MEHR <span>→</span></a>
       </div>
-    </section>
-  </main>
+    </div>
+  </section>
 
   <footer role="contentinfo">
     <div>
