@@ -156,9 +156,54 @@
       color: var(--primary-dark);
       font-weight: 700;
       font-size: 2.4rem;
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
       text-align: center;
       user-select: none;
+    }
+
+    .faq-intro {
+      text-align: center;
+      max-width: 750px;
+      margin: 0 auto 1.5rem;
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      line-height: 1.7;
+    }
+
+    .support-box {
+      background: linear-gradient(135deg, #f9fff8, #ffffff);
+      border-left: 5px solid var(--primary);
+      padding: 1rem 1.25rem;
+      border-radius: 12px;
+      margin: 0 auto 2rem;
+      box-shadow: 0 4px 12px var(--shadow-light);
+    }
+
+    .support-box p {
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    .faq-search-wrapper {
+      max-width: 700px;
+      margin: 0 auto 2rem;
+    }
+
+    .faq-search {
+      width: 100%;
+      padding: 0.95rem 1rem;
+      border: 1px solid #c8e6c9;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-family: var(--font-primary);
+      outline: none;
+      box-shadow: 0 3px 10px rgba(46, 125, 50, 0.05);
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .faq-search:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(102, 187, 106, 0.18);
     }
 
     .accordion {
@@ -170,6 +215,13 @@
 
     .accordion-item + .accordion-item {
       border-top: 1px solid #ddd;
+    }
+
+    .accordion-item {
+      margin-bottom: 1rem;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px var(--shadow-light);
     }
 
     .accordion-header {
@@ -206,6 +258,11 @@
       transform: rotate(-180deg);
     }
 
+    .accordion-header:focus-visible {
+      outline: 3px solid var(--primary-light);
+      outline-offset: 2px;
+    }
+
     .accordion-content {
       max-height: 0;
       overflow: hidden;
@@ -221,7 +278,7 @@
     }
 
     .accordion-content[aria-hidden="false"] {
-      max-height: 500px;
+      max-height: 1000px;
       padding-bottom: 1rem;
     }
 
@@ -298,70 +355,99 @@
 </header>
 
 <main>
-  <h2>Hilfe & FAQ</h2>
-  <div class="accordion">
-    <!-- FAQ 1–10 -->
-    <div class="accordion-item">
-      <button class="accordion-header" aria-expanded="false" aria-controls="faq1" id="faq1-header">Wie registriere ich mich bei Locorent?</button>
-      <div id="faq1" class="accordion-content" role="region" aria-labelledby="faq1-header" aria-hidden="true">
-        <p>Die Registrierung ist einfach: Klicke auf „Registrieren“ oben rechts, gib deine Daten ein und bestätige deine E-Mail-Adresse. Danach kannst du sofort loslegen.</p>
+  <section aria-labelledby="faq-title">
+    <h2 id="faq-title">Hilfe & FAQ</h2>
+
+    <p class="faq-intro">
+      Hier findest du Antworten auf die häufigsten Fragen rund um Registrierung, Mieten, Rückgabe und Support.
+    </p>
+
+    <div class="support-box">
+      <p><strong>Antwort nicht gefunden?</strong> Kontaktiere unser Support-Team über das Kontaktformular oder per E-Mail.</p>
+    </div>
+
+    <div class="faq-search-wrapper">
+      <input
+        type="search"
+        id="faq-search"
+        class="faq-search"
+        placeholder="FAQ durchsuchen ..."
+        aria-label="FAQ durchsuchen"
+      />
+    </div>
+
+    <div class="accordion" id="faq-accordion">
+      <div class="accordion-item">
+        <button class="accordion-header" aria-expanded="false" aria-controls="faq1" id="faq1-header">Wie registriere ich mich bei Locorent?</button>
+        <div id="faq1" class="accordion-content" role="region" aria-labelledby="faq1-header" aria-hidden="true">
+          <p>Die Registrierung ist einfach: Klicke auf „Registrieren“ oben rechts, gib deine Daten ein und bestätige deine E-Mail-Adresse. Danach kannst du sofort loslegen.</p>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-header" aria-expanded="false" aria-controls="faq2" id="faq2-header">Wie kann ich einen Artikel mieten?</button>
+        <div id="faq2" class="accordion-content" role="region" aria-labelledby="faq2-header" aria-hidden="true">
+          <p>Suche deinen Wunschartikel oder stöbere durch die Kategorien. Um einen Artikel zu mieten, sende eine Mietanfrage direkt über unsere Chatfunktion und kläre alle Details unkompliziert mit dem Vermieter.</p>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-header" aria-expanded="false" aria-controls="faq3" id="faq3-header">Was muss ich bei der Abholung und Rückgabe beachten?</button>
+        <div id="faq3" class="accordion-content" role="region" aria-labelledby="faq3-header" aria-hidden="true">
+          <p>Die Abholung und Rückgabe erfolgt direkt zwischen dir und dem Vermieter. Klärt die Uhrzeiten und den Zustand des Artikels vorab, um Missverständnisse zu vermeiden.</p>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-header" aria-expanded="false" aria-controls="faq4" id="faq4-header">Wie funktioniert die Kommunikation mit dem Vermieter?</button>
+        <div id="faq4" class="accordion-content" role="region" aria-labelledby="faq4-header" aria-hidden="true">
+          <p>Alle Anfragen und Absprachen erfolgen bequem über unsere integrierte Chatfunktion. So bleibt die Kommunikation übersichtlich und nachvollziehbar.</p>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-header" aria-expanded="false" aria-controls="faq5" id="faq5-header">Wie kontaktiere ich den Support?</button>
+        <div id="faq5" class="accordion-content" role="region" aria-labelledby="faq5-header" aria-hidden="true">
+          <p>Du kannst uns jederzeit über das Kontaktformular auf unserer Website oder per E-Mail erreichen. Wir helfen dir gerne weiter.</p>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-header" aria-expanded="false" aria-controls="faq6" id="faq6-header">Wie sicher sind meine Daten bei Locorent?</button>
+        <div id="faq6" class="accordion-content" role="region" aria-labelledby="faq6-header" aria-hidden="true">
+          <p>Der Schutz deiner Daten hat für uns höchste Priorität. Wir nutzen moderne Verschlüsselungstechnologien und halten uns an strenge Datenschutzrichtlinien.</p>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-header" aria-expanded="false" aria-controls="faq7" id="faq7-header">Welche Vorteile bietet Locorent gegenüber dem Kauf?</button>
+        <div id="faq7" class="accordion-content" role="region" aria-labelledby="faq7-header" aria-hidden="true">
+          <p>Locorent ermöglicht dir, Dinge flexibel zu nutzen ohne langfristige Bindung. So sparst du Geld, schonst Ressourcen und kannst Artikel vor einem eventuellen Kauf ausprobieren.</p>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-header" aria-expanded="false" aria-controls="faq8" id="faq8-header">Was kann ich tun, wenn es ein Problem mit einem Vermieter gibt?</button>
+        <div id="faq8" class="accordion-content" role="region" aria-labelledby="faq8-header" aria-hidden="true">
+          <p>Kontaktiere bitte unseren Support über das Kontaktformular oder per E-Mail. Wir kümmern uns schnellstmöglich um dein Anliegen und vermitteln bei Bedarf zwischen den Parteien.</p>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-header" aria-expanded="false" aria-controls="faq9" id="faq9-header">Gibt es eine Community-Richtlinie?</button>
+        <div id="faq9" class="accordion-content" role="region" aria-labelledby="faq9-header" aria-hidden="true">
+          <p>Ja, unsere Community-Richtlinie sorgt für respektvolles und faires Miteinander. Verstöße können zu Sperrungen führen. Details findest du in unseren Nutzungsbedingungen.</p>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-header" aria-expanded="false" aria-controls="faq10" id="faq10-header">Wie kann ich meinen Account löschen?</button>
+        <div id="faq10" class="accordion-content" role="region" aria-labelledby="faq10-header" aria-hidden="true">
+          <p>Du kannst deinen Account jederzeit über die Profileinstellungen löschen. Falls du Hilfe benötigst, wende dich bitte an unseren Support.</p>
+        </div>
       </div>
     </div>
-    <div class="accordion-item">
-      <button class="accordion-header" aria-expanded="false" aria-controls="faq2" id="faq2-header">Wie kann ich einen Artikel mieten?</button>
-      <div id="faq2" class="accordion-content" role="region" aria-labelledby="faq2-header" aria-hidden="true">
-        <p>Suche deinen Wunschartikel oder stöbere durch die Kategorien. Um einen Artikel zu mieten, sende eine Mietanfrage direkt über unsere Chatfunktion und kläre alle Details unkompliziert mit dem Vermieter.</p>
-      </div>
-    </div>
-    <div class="accordion-item">
-      <button class="accordion-header" aria-expanded="false" aria-controls="faq3" id="faq3-header">Was muss ich bei der Abholung und Rückgabe beachten?</button>
-      <div id="faq3" class="accordion-content" role="region" aria-labelledby="faq3-header" aria-hidden="true">
-        <p>Die Abholung und Rückgabe erfolgt direkt zwischen dir und dem Vermieter. Klärt die Uhrzeiten und den Zustand des Artikels vorab, um Missverständnisse zu vermeiden.</p>
-      </div>
-    </div>
-    <div class="accordion-item">
-      <button class="accordion-header" aria-expanded="false" aria-controls="faq4" id="faq4-header">Wie funktioniert die Kommunikation mit dem Vermieter?</button>
-      <div id="faq4" class="accordion-content" role="region" aria-labelledby="faq4-header" aria-hidden="true">
-        <p>Alle Anfragen und Absprachen erfolgen bequem über unsere integrierte Chatfunktion. So bleibt die Kommunikation übersichtlich und nachvollziehbar.</p>
-      </div>
-    </div>
-    <div class="accordion-item">
-      <button class="accordion-header" aria-expanded="false" aria-controls="faq5" id="faq5-header">Wie kontaktiere ich den Support?</button>
-      <div id="faq5" class="accordion-content" role="region" aria-labelledby="faq5-header" aria-hidden="true">
-        <p>Du kannst uns jederzeit über das Kontaktformular auf unserer Website oder per E-Mail erreichen. Wir helfen dir gerne weiter.</p>
-      </div>
-    </div>
-    <div class="accordion-item">
-      <button class="accordion-header" aria-expanded="false" aria-controls="faq6" id="faq6-header">Wie sicher sind meine Daten bei Locorent?</button>
-      <div id="faq6" class="accordion-content" role="region" aria-labelledby="faq6-header" aria-hidden="true">
-        <p>Der Schutz deiner Daten hat für uns höchste Priorität. Wir nutzen moderne Verschlüsselungstechnologien und halten uns an strenge Datenschutzrichtlinien.</p>
-      </div>
-    </div>
-    <div class="accordion-item">
-      <button class="accordion-header" aria-expanded="false" aria-controls="faq7" id="faq7-header">Welche Vorteile bietet Locorent gegenüber dem Kauf?</button>
-      <div id="faq7" class="accordion-content" role="region" aria-labelledby="faq7-header" aria-hidden="true">
-        <p>Locorent ermöglicht dir, Dinge flexibel zu nutzen ohne langfristige Bindung. So sparst du Geld, schonst Ressourcen und kannst Artikel vor einem eventuellen Kauf ausprobieren.</p>
-      </div>
-    </div>
-    <div class="accordion-item">
-      <button class="accordion-header" aria-expanded="false" aria-controls="faq8" id="faq8-header">Was kann ich tun, wenn es ein Problem mit einem Vermieter gibt?</button>
-      <div id="faq8" class="accordion-content" role="region" aria-labelledby="faq8-header" aria-hidden="true">
-        <p>Kontaktiere bitte unseren Support über das Kontaktformular oder per E-Mail. Wir kümmern uns schnellstmöglich um dein Anliegen und vermitteln bei Bedarf zwischen den Parteien.</p>
-      </div>
-    </div>
-    <div class="accordion-item">
-      <button class="accordion-header" aria-expanded="false" aria-controls="faq9" id="faq9-header">Gibt es eine Community-Richtlinie?</button>
-      <div id="faq9" class="accordion-content" role="region" aria-labelledby="faq9-header" aria-hidden="true">
-        <p>Ja, unsere Community-Richtlinie sorgt für respektvolles und faires Miteinander. Verstöße können zu Sperrungen führen. Details findest du in unseren Nutzungsbedingungen.</p>
-      </div>
-    </div>
-    <div class="accordion-item">
-      <button class="accordion-header" aria-expanded="false" aria-controls="faq10" id="faq10-header">Wie kann ich meinen Account löschen?</button>
-      <div id="faq10" class="accordion-content" role="region" aria-labelledby="faq10-header" aria-hidden="true">
-        <p>Du kannst deinen Account jederzeit über die Profileinstellungen löschen. Falls du Hilfe benötigst, wende dich bitte an unseren Support.</p>
-      </div>
-    </div>
-  </div>
+  </section>
 </main>
 
 <footer role="contentinfo">
@@ -395,6 +481,7 @@
   </div>
   <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
 </footer>
+
 <script>
 /* ===== SUPABASE INIT ===== */
 if (!window.supabaseClient) {
@@ -456,10 +543,30 @@ function initAccordion() {
   });
 }
 
+/* ===== FAQ SEARCH ===== */
+function initFaqSearch() {
+  const searchInput = document.getElementById('faq-search');
+  const items = document.querySelectorAll('.accordion-item');
+
+  if (!searchInput) return;
+
+  searchInput.addEventListener('input', () => {
+    const query = searchInput.value.toLowerCase().trim();
+
+    items.forEach(item => {
+      const header = item.querySelector('.accordion-header');
+      const content = item.querySelector('.accordion-content');
+      const text = `${header.textContent} ${content.textContent}`.toLowerCase();
+      item.style.display = text.includes(query) ? '' : 'none';
+    });
+  });
+}
+
 /* ===== INITIAL LOAD ===== */
 (async function initPage() {
   await updateNav();
   initAccordion();
+  initFaqSearch();
 })();
 </script>
 </body>
