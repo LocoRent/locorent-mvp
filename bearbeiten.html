@@ -3,15 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Inserat bearbeiten – Locorent</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
+  <title>Inserat erstellen – Locorent</title>
+  <meta name="description" content="Erstelle dein Inserat auf Locorent und vermiete Gegenstände einfach und nachhaltig." />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --primary: #2e7d32;
       --primary-light: #66bb6a;
       --primary-dark: #1b5e20;
-      --background: #f1f8e9;
+      --background: linear-gradient(to bottom, #e8f5e9 0%, #ffffff 100%);
       --white: #fff;
       --text-dark: #0f2e13;
       --text-muted: #466843;
@@ -20,22 +21,44 @@
       --radius: 18px;
       --shadow-light: rgba(46, 125, 50, 0.08);
       --shadow-strong: rgba(46, 125, 50, 0.25);
-      --transition: 0.4s ease;
+      --transition: 0.35s ease;
       --font-primary: 'Poppins', sans-serif;
     }
+
     *, *::before, *::after {
       box-sizing: border-box;
+      max-width: 100%;
+      word-wrap: break-word;
     }
-    body {
+
+    html, body {
       margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100vh;
       font-family: var(--font-primary);
       background: var(--background);
       color: var(--text-dark);
-      min-height: 100vh;
+      scroll-behavior: smooth;
       display: flex;
       flex-direction: column;
-      overflow-x: hidden;
     }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    a:focus-visible,
+    button:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible,
+    select:focus-visible {
+      outline: 3px solid rgba(165, 214, 167, 0.95);
+      outline-offset: 3px;
+      border-radius: 10px;
+    }
+
     header {
       background-color: var(--primary);
       color: var(--white);
@@ -47,15 +70,16 @@
       position: sticky;
       top: 0;
       z-index: 1000;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
       flex-wrap: wrap;
     }
+
     header h1 {
       font-size: 1.8rem;
       cursor: pointer;
       user-select: none;
       margin: 0;
     }
+
     #nav-toggle {
       display: none;
       background: none;
@@ -64,11 +88,13 @@
       color: var(--white);
       cursor: pointer;
     }
+
     nav#nav-links {
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
     }
+
     nav#nav-links a {
       color: var(--white);
       text-decoration: none;
@@ -77,6 +103,7 @@
       position: relative;
       transition: color 0.3s ease;
     }
+
     nav#nav-links a::after {
       content: '';
       position: absolute;
@@ -87,160 +114,258 @@
       background-color: var(--accent);
       transition: width 0.3s ease;
     }
+
     nav#nav-links a:hover::after,
     nav#nav-links a:focus::after {
       width: 100%;
     }
+
     nav#nav-links a:hover,
     nav#nav-links a:focus {
       color: var(--accent);
       outline: none;
     }
+
     main {
-      max-width: 960px;
-      width: 95%;
-      margin: 2.5rem auto 4rem;
-      padding: 2rem 2.5rem;
-      background: var(--white);
-      border-radius: var(--radius);
-      box-shadow: 0 12px 30px var(--shadow-light);
-      flex-grow: 1;
-    }
-    label {
-      display: block;
-      margin-top: 1rem;
-      font-weight: 700;
-      color: var(--primary-dark);
-    }
-    input, textarea, select {
       width: 100%;
-      padding: 0.7rem 1rem;
-      border: 1.5px solid #ccc;
-      border-radius: 10px;
-      margin-top: 0.5rem;
-      font-size: 1rem;
-      font-family: var(--font-primary);
-      transition: border-color 0.3s ease;
+      max-width: 1180px;
+      margin: 2rem auto 4rem;
+      padding: 0 1rem;
+      flex: 1;
     }
-    input:focus, textarea:focus, select:focus {
-      border-color: var(--primary);
-      outline: none;
-      box-shadow: 0 0 6px var(--accent);
-    }
-    textarea {
-      resize: vertical;
-      min-height: 130px;
-    }
-    .dropzone {
-      margin-top: 1rem;
-      padding: 1.3rem;
-      border: 2.5px dashed var(--primary);
-      text-align: center;
-      border-radius: 14px;
-      cursor: pointer;
-      background: #fafafa;
-      color: var(--primary-dark);
-      font-weight: 600;
-      transition: background-color 0.3s ease;
-      user-select: none;
-    }
-    .dropzone:hover, .dropzone:focus {
-      background-color: var(--accent);
-      outline: none;
-      color: var(--primary-dark);
-    }
-    .preview-gallery {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1.3rem;
-      margin-top: 1.3rem;
-    }
-    .preview-box {
+
+    .creator-hero {
+      background: linear-gradient(135deg, rgba(255,255,255,0.96), rgba(243,251,243,0.95));
+      border: 1px solid rgba(46, 125, 50, 0.08);
+      border-radius: 28px;
+      box-shadow: 0 12px 30px var(--shadow-light);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
       position: relative;
-      flex: 0 0 130px;
-      height: 110px;
-      border-radius: 12px;
       overflow: hidden;
-      box-shadow: 0 0 8px rgba(0,0,0,0.1);
     }
-    .preview-box img {
+
+    .creator-hero::after {
+      content: "";
+      position: absolute;
+      right: -70px;
+      top: -70px;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: rgba(46,125,50,0.08);
+      filter: blur(2px);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(46, 125, 50, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(46, 125, 50, 0.08);
+      border-radius: 999px;
+      padding: 0.45rem 0.85rem;
+      font-size: 0.92rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .creator-hero h2 {
+      margin: 0;
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 1.15;
+      color: var(--text-dark);
+      letter-spacing: -0.02em;
+    }
+
+    .creator-hero p {
+      margin: 1rem 0 0;
+      max-width: 760px;
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      line-height: 1.7;
+    }
+
+    .form-shell {
+      display: grid;
+      gap: 1.25rem;
+    }
+
+    .form-card {
+      background: rgba(255,255,255,0.96);
+      border: 1px solid rgba(46, 125, 50, 0.08);
+      border-radius: 24px;
+      box-shadow: 0 10px 28px rgba(46, 125, 50, 0.06);
+      padding: 1.4rem;
+    }
+
+    .form-card h3 {
+      margin: 0 0 1rem;
+      font-size: 1.2rem;
+      color: var(--primary-dark);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+
+    .field label {
+      font-weight: 600;
+      color: var(--text-dark);
+      font-size: 0.96rem;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      border: 1px solid rgba(46, 125, 50, 0.15);
+      border-radius: 14px;
+      padding: 0.9rem 1rem;
+      font-family: var(--font-primary);
+      font-size: 1rem;
+      background: #fff;
+      color: var(--text-dark);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    }
+
+    .field textarea {
+      resize: vertical;
+      min-height: 140px;
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color: var(--primary-light);
+      box-shadow: 0 0 0 4px rgba(102, 187, 106, 0.14);
+      outline: none;
+    }
+
+    .full-width {
+      grid-column: 1 / -1;
+    }
+
+    .hint {
+      margin: 0;
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      line-height: 1.5;
+    }
+
+    .dropzone {
+      grid-column: 1 / -1;
+      border: 2px dashed rgba(46, 125, 50, 0.22);
+      border-radius: 20px;
+      background: linear-gradient(180deg, #fbfdfb, #f6fbf6);
+      padding: 1.4rem;
+      min-height: 180px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 0.6rem;
+      transition: 0.25s ease;
+      cursor: pointer;
+    }
+
+    .dropzone:hover {
+      border-color: var(--primary-light);
+      background: #f3fbf3;
+      transform: translateY(-1px);
+    }
+
+    .dropzone strong {
+      font-size: 1.05rem;
+      color: var(--primary-dark);
+    }
+
+    .preview-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 0.8rem;
+      margin-top: 1rem;
+    }
+
+    .preview-item {
+      border-radius: 16px;
+      overflow: hidden;
+      aspect-ratio: 1 / 1;
+      background: #eef6ee;
+      border: 1px solid rgba(46, 125, 50, 0.1);
+      position: relative;
+    }
+
+    .preview-item img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      border-radius: 12px;
+      display: block;
     }
-    .remove-btn {
-      position: absolute;
-      top: 6px;
-      right: 6px;
-      background: #c62828;
-      color: white;
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    .btn {
       border: none;
-      border-radius: 50%;
-      width: 26px;
-      height: 26px;
-      font-weight: bold;
-      cursor: pointer;
-      font-size: 1.1rem;
-      line-height: 26px;
-      text-align: center;
-      transition: background-color 0.3s ease;
-      user-select: none;
-    }
-    .remove-btn:hover,
-    .remove-btn:focus {
-      background-color: #b71c1c;
-      outline: none;
-    }
-    .loader {
-      width: 26px;
-      height: 26px;
-      border: 3.5px solid #c8e6c9;
-      border-top-color: var(--primary);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      margin: auto;
-    }
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-    button.save-btn {
-      margin-top: 2rem;
-      padding: 0.9rem 1.8rem;
-      background-color: var(--primary);
-      color: var(--white);
-      border: none;
-      border-radius: 12px;
+      border-radius: 14px;
+      padding: 0.95rem 1.35rem;
       font-weight: 700;
       cursor: pointer;
-      font-size: 1.1rem;
-      transition: background-color 0.3s ease;
-      width: 100%;
-      user-select: none;
+      transition: transform 0.2s ease, box-shadow 0.25s ease, background 0.25s ease;
+      font-family: var(--font-primary);
+      font-size: 1rem;
     }
-    button.save-btn:hover,
-    button.save-btn:focus {
-      background-color: var(--primary-dark);
-      outline: none;
+
+    .btn:hover {
+      transform: translateY(-1px);
     }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 10px 20px rgba(46, 125, 50, 0.16);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: rgba(46, 125, 50, 0.08);
+      color: var(--primary-dark);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(46, 125, 50, 0.12);
+    }
+
     footer {
-      width: 100vw;
+      width: 100%;
       box-sizing: border-box;
       padding: 2rem 2rem 1rem;
       border-radius: var(--radius);
       background-color: var(--primary);
       color: var(--white);
-      box-shadow: 0 8px 32px rgba(46, 125, 50, 0.22);
       font-size: 0.92rem;
-      user-select: none;
       text-align: center;
-      position: relative;
-      left: 50%;
-      right: 50%;
-      margin-left: -50vw;
-      margin-right: -50vw;
       margin-top: auto;
     }
+
     footer > div {
       max-width: 1200px;
       margin: 0 auto;
@@ -250,71 +375,87 @@
       gap: 2rem;
       text-align: left;
     }
-    footer > div > div {
-      flex: 1;
-      min-width: 200px;
-    }
+
     footer h4 {
       margin-bottom: 0.5rem;
       font-weight: 700;
       font-size: 1.1rem;
     }
+
     footer ul {
       list-style: none;
       padding: 0;
       line-height: 1.8;
     }
+
     footer ul li a {
       color: var(--white);
       text-decoration: underline;
       transition: color 0.3s ease;
     }
-    footer ul li a:hover,
-    footer ul li a:focus {
+
+    footer ul li a:hover {
       color: var(--accent);
-      outline: none;
     }
+
     footer small {
       display: block;
       margin-top: 2rem;
       text-align: center;
       opacity: 0.85;
     }
+
+    @media (max-width: 820px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
     @media (max-width: 720px) {
       #nav-toggle {
         display: block;
       }
+
       nav#nav-links {
         width: 100%;
         flex-direction: column;
         display: none;
         margin-top: 1rem;
       }
+
       nav#nav-links.show {
         display: flex;
       }
+
       nav#nav-links a {
         margin: 0.4rem 0;
         padding: 0.5rem 1rem;
         background-color: rgba(255, 255, 255, 0.1);
         border-radius: 6px;
-        display: block;
       }
+
       footer > div {
         flex-direction: column;
         align-items: flex-start;
       }
-      footer > div > div {
-        width: 100%;
+
+      .creator-hero {
+        padding: 1.4rem;
       }
-      main {
-        padding: 1.5rem 1rem;
-        margin: 1.5rem auto 3rem;
-        width: 95%;
+
+      .form-card {
+        padding: 1.15rem;
+      }
+
+      .form-actions {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
       }
     }
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.1/dist/browser-image-compression.min.js"></script>
 </head>
 <body>
   <header>
@@ -324,58 +465,75 @@
   </header>
 
   <main role="main">
-    <label for="title">Titel</label>
-    <input type="text" id="title" required maxlength="50" />
+    <section class="creator-hero">
+      <div class="badge">✨ Inserat erstellen</div>
+      <h2>Erstelle dein Inserat in wenigen Schritten</h2>
+      <p>
+        Trage die wichtigsten Informationen zu deinem Artikel ein, lade ein passendes Foto hoch und veröffentliche dein Angebot schnell und übersichtlich.
+      </p>
+    </section>
 
-    <label for="category">Kategorie</label>
-    <select id="category" required>
-  <option value="">Bitte wählen</option>
-<option value="anhaenger-transportmittel">Anhänger & Transportmittel</option>
-<option value="audio-dj-equipment">Audio & DJ-Equipment</option>
-<option value="auto-suv">Auto & SUV</option>
-<option value="basteln-diy">Basteln & DIY</option>
-<option value="beauty">Beauty</option>
-<option value="boote-wassersport">Boote & Wassersport</option>
-<option value="brettspiele-spielzeug">Brettspiele & Spielzeug</option>
-<option value="camping-wandern">Camping & Wandern</option>
-<option value="computer-laptops">Computer & Laptops</option>
-<option value="drohnen-modellbau">Drohnen & Modellbau</option>
-<option value="event-partyausstattung">Event- & Partyausstattung</option>
-<option value="fahrrad-ebike">Fahrrad & E-Bike</option>
-<option value="fitnessgeraete">Fitnessgeräte</option>
-<option value="foto-film-kameraequipment">Foto-, Film- & Kameraequipment</option>
-<option value="gaming-unterhaltung">Gaming & Unterhaltung</option>
-<option value="garten-aussenbereich">Garten & Außenbereich</option>
-<option value="kursraeume-seminarraum">Kursräume & Seminarraum</option>
-<option value="medien-kultur">Medien & Kultur</option>
-<option value="motorrad-roller">Motorrad & Roller</option>
-<option value="musikinstrumente">Musikinstrumente</option>
-<option value="mode-accessoires">Mode & Accessoires</option>
-<option value="smartphones-tablets">Smartphones & Tablets</option>
-<option value="sport">Sport</option>
-<option value="tiere">Tiere</option>
-<option value="werkzeuge-maschinen">Werkzeuge & Maschinen</option>
-<option value="wohnmobil-camper">Wohnmobil & Camper</option>
-<option value="sonstiges">Sonstiges</option>
-</select>
- </div>
-    <label for="price">Preis pro Tag (€)</label>
-    <input type="number" id="price" required min="0" max="999999" />
+    <form id="listing-form" class="form-shell">
+      <section class="form-card">
+        <h3>Basisdaten</h3>
+        <div class="form-grid">
+          <div class="field">
+            <label for="title">Titel *</label>
+            <input type="text" id="title" name="title" maxlength="50" required />
+          </div>
 
-    <label for="location">Ort (PLZ oder Stadt)</label>
-    <div style="position: relative;">
-      <input type="text" id="location" required autocomplete="off" />
-      <div id="suggestions" role="listbox" aria-label="Ort Vorschläge"></div>
-    </div>
+          <div class="field">
+            <label for="category">Kategorie *</label>
+            <select id="category" name="category" required>
+              <option value="">Bitte wählen</option>
+              <option value="Auto">Auto</option>
+              <option value="Werkzeug">Werkzeug</option>
+              <option value="Freizeit">Freizeit</option>
+              <option value="Elektronik">Elektronik</option>
+              <option value="Sonstiges">Sonstiges</option>
+            </select>
+          </div>
 
-    <label for="desc">Beschreibung</label>
-    <textarea id="desc" rows="4" maxlength="500"></textarea>
+          <div class="field">
+            <label for="price">Preis pro Tag (€) *</label>
+            <input type="number" id="price" name="price" min="0" max="999999" step="1" required />
+          </div>
 
-    <label>Bilder</label>
-    <div id="dropzone" class="dropzone" tabindex="0">Bilder hier ablegen oder klicken (max. 1 Bild, max. 2MB)</div>
-    <div id="preview-gallery" class="preview-gallery" aria-live="polite" aria-atomic="true"></div>
+          <div class="field">
+            <label for="location">Ort / PLZ *</label>
+            <input type="text" id="location" name="location" maxlength="100" required />
+          </div>
 
-    <button class="save-btn" onclick="saveChanges()">Speichern</button>
+          <div class="field full-width">
+            <label for="description">Beschreibung *</label>
+            <textarea id="description" name="description" maxlength="500" required></textarea>
+            <p class="hint">Beschreibe den Artikel möglichst klar und ehrlich. Maximal 500 Zeichen.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="form-card">
+        <h3>Bilder</h3>
+        <p class="hint">Lade ein aussagekräftiges Bild hoch. Idealerweise hell, scharf und ohne unnötigen Hintergrund.</p>
+        <div id="dropzone" class="dropzone" tabindex="0" aria-label="Bild hochladen">
+          <strong>Bild hier ablegen oder klicken</strong>
+          <span>PNG, JPG oder WebP · max. 2 MB</span>
+        </div>
+        <div id="preview-gallery" class="preview-gallery" aria-live="polite" aria-atomic="true"></div>
+      </section>
+
+      <section class="form-card">
+        <h3>Hinweise</h3>
+        <p class="hint">
+          Achte darauf, dass Titel, Preis und Beschreibung vollständig sind. Je klarer dein Inserat, desto schneller bekommst du Anfragen.
+        </p>
+      </section>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" onclick="location.href='inserate.html'">Abbrechen</button>
+        <button type="submit" class="btn btn-primary">Inserat speichern</button>
+      </div>
+    </form>
   </main>
 
   <footer role="contentinfo">
@@ -386,14 +544,14 @@
           <li><a href="so-funktionierts.html">So funktioniert's</a></li>
           <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
           <li><a href="kategorien.html">Beliebte Kategorien</a></li>
-          <li><a href="vermieter-tipps.html">Tipps &amp; Tricks für Vermieter</a></li>
+          <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
           <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
         </ul>
       </div>
       <div>
         <h4>Wissenswertes</h4>
         <ul>
-          <li><a href="agb.html">AGB &amp; Impressum</a></li>
+          <li><a href="agb.html">AGB & Impressum</a></li>
           <li><a href="datenschutz.html">Datenschutz</a></li>
         </ul>
       </div>
@@ -408,251 +566,64 @@
     </div>
     <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
   </footer>
-<script>
-const sb = supabase.createClient(
-  'https://flnjalgqtkqycsaymmbd.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-);
 
-const listingId = new URLSearchParams(location.search).get("id");
-let imageUrls = [];
-let newImageFiles = [];
-let deletedImageUrls = [];
-let existingImageUrls = [];
-let selectedAddressData = null;
+  <script>
+    const sb = supabase.createClient(
+      'https://flnjalgqtkqycsaymmbd.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+    );
 
-async function loadData() {
-  try {
-    const { data, error } = await sb.from('listings').select('*').eq('id', listingId).maybeSingle();
-    if (error) throw error;
-    if (!data) return alert("Inserat nicht gefunden.");
+    let userSession = null;
 
-    document.getElementById('title').value = data.title || '';
-    document.getElementById('category').value = data.category || '';
-    document.getElementById('price').value = data.price_per_day || '';
-    document.getElementById('desc').value = data.description || '';
-    document.getElementById('location').value = data.location || '';
+    async function init() {
+      try {
+        const { data, error } = await sb.auth.getSession();
+        if (error) console.error('Auth Fehler:', error);
 
-    imageUrls = data.image_urls || [];
-    existingImageUrls = [...imageUrls];
-
-    selectedAddressData = {
-      postal_code: data.postal_code || '',
-      city: data.city || '',
-      location: data.location || '',
-      lat: data.latitude || null,
-      lon: data.longitude || null
-    };
-
-    renderGallery();
-  } catch (err) {
-    console.error("Fehler beim Laden:", err);
-    alert("Fehler beim Laden der Daten.");
-  }
-}
-
-function renderGallery() {
-  const gallery = document.getElementById('preview-gallery');
-  gallery.innerHTML = '';
-  imageUrls.forEach((url, index) => {
-    const box = document.createElement('div');
-    box.className = 'preview-box';
-    box.innerHTML = `<img src="${url}" alt="Bild ${index + 1}" />
-      <button class="remove-btn" aria-label="Bild entfernen" onclick="removeImage(${index})">×</button>`;
-    gallery.appendChild(box);
-  });
-}
-
-function removeImage(index) {
-  const removed = imageUrls.splice(index, 1)[0];
-  if (existingImageUrls.includes(removed)) {
-    deletedImageUrls.push(removed);
-    existingImageUrls = existingImageUrls.filter(url => url !== removed);
-  } else {
-    newImageFiles.splice(index - existingImageUrls.length, 1);
-  }
-  renderGallery();
-}
-
-document.getElementById('dropzone').addEventListener('click', () => {
-  if (imageUrls.length >= 1) return alert("Maximal 1 Bild erlaubt.");
-  const input = document.createElement('input');
-  input.type = 'file';
-  input.accept = 'image/*';
-  input.onchange = () => handleFiles(input.files);
-  input.click();
-});
-
-async function handleFiles(files) {
-  for (let file of files) {
-    if (imageUrls.length + newImageFiles.length >= 1) break;
-    if (!file.type.startsWith("image/")) continue;
-
-    newImageFiles.push(file);
-
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      imageUrls.push(e.target.result);
-      renderGallery();
-    };
-    reader.readAsDataURL(file);
-  }
-}
-
-let debounceTimer;
-
-const locationInput = document.getElementById('location');
-const suggestionBox = document.getElementById('suggestions');
-
-locationInput.addEventListener('input', () => {
-  clearTimeout(debounceTimer);
-
-  const value = locationInput.value.trim();
-  if (value.length < 2) {
-    suggestionBox.innerHTML = '';
-    return;
-  }
-
-  debounceTimer = setTimeout(async () => {
-    try {
-      const res = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&countrycodes=de&limit=5&q=${encodeURIComponent(value)}`,
-        {
-          headers: {
-            "User-Agent": "Locorent-App"
-          }
-        }
-      );
-
-      const results = await res.json();
-      suggestionBox.innerHTML = '';
-
-      results.forEach(r => {
-        const city =
-          r.address.city ||
-          r.address.town ||
-          r.address.village ||
-          r.address.municipality ||
-          r.display_name.split(',')[0];
-
-        const state = r.address.state || '';
-        const display = [city, state, "Deutschland"].filter(Boolean).join(', ');
-
-        const div = document.createElement('div');
-        div.textContent = display;
-        div.tabIndex = 0;
-        div.role = "option";
-
-        div.onclick = () => {
-          locationInput.value = display;
-
-          selectedAddressData = {
-            city: city,
-            location: display,
-            lat: parseFloat(r.lat),
-            lon: parseFloat(r.lon),
-            postal_code: r.address.postcode || ''
-          };
-
-          suggestionBox.innerHTML = '';
-        };
-
-        suggestionBox.appendChild(div);
-      });
-
-      if (results.length === 0) {
-        suggestionBox.innerHTML = '<div style="padding:0.5rem;">Kein Ort gefunden</div>';
+        userSession = data?.session || null;
+        updateNav();
+      } catch (err) {
+        console.error('Init Fehler:', err);
       }
-
-    } catch (err) {
-      console.error("Fehler bei Ortssuche:", err);
     }
-  }, 400);
-});
 
-async function saveChanges() {
-  const title = document.getElementById('title').value.trim();
-  const category = document.getElementById('category').value;
-  const price = parseFloat(document.getElementById('price').value);
-  const description = document.getElementById('desc').value.trim();
-  const location = document.getElementById('location').value.trim();
-
-  if (!title || !category || !price || !location) return alert("Alle Pflichtfelder ausfüllen.");
-  if (!selectedAddressData) return alert("Bitte Ort aus Vorschlagsliste wählen.");
-
-  const finalImageUrls = [...existingImageUrls];
-
-  for (let file of newImageFiles) {
-    const compressed = await imageCompression(file, { maxSizeMB: 0.5, maxWidthOrHeight: 800, useWebWorker: true });
-    if (compressed.size > 2*1024*1024) { alert("Bild zu groß (max. 2 MB)"); continue; }
-
-    const path = `listing-images/${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
-    const { error: uploadError } = await sb.storage.from('listing-images').upload(path, compressed);
-    if (uploadError) { alert("Fehler beim Upload: " + uploadError.message); continue; }
-
-    const { data } = sb.storage.from('listing-images').getPublicUrl(path);
-    finalImageUrls.push(data.publicUrl);
-  }
-
-  if (deletedImageUrls.length > 0) {
-    const deletePaths = deletedImageUrls.map(url => {
-      try { return new URL(url).pathname.replace(/^\/storage\/v1\/object\/public\/listing-images\//, ''); } catch { return null; }
-    }).filter(Boolean);
-    if (deletePaths.length > 0) {
-      const { error: delError } = await sb.storage.from('listing-images').remove(deletePaths);
-      if (delError) console.warn("Fehler beim Löschen:", delError.message);
+    function updateNav() {
+      const nav = document.getElementById('nav-links');
+      nav.innerHTML = userSession?.user ? `
+        <a href="index.html">Start</a>
+        <a href="profil.html">Mein Profil</a>
+        <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+        <a href="favoriten.html">Meine Favoriten</a>
+        <a href="inserate.html">Meine Inserate</a>
+        <a href="#" onclick="logout(event)">Logout</a>
+      ` : `
+        <a href="index.html">Start</a>
+        <a href="login.html">Einloggen</a>
+      `;
     }
-  }
 
-  const { postal_code, city, lat, lon } = selectedAddressData;
-  const updates = { title, category, price_per_day: price, description, location, postal_code, city, latitude: lat, longitude: lon, image_urls: finalImageUrls };
+    async function logout(event) {
+      event.preventDefault();
+      try {
+        await sb.auth.signOut();
+        window.location.href = "login.html";
+      } catch (err) {
+        console.error('Logout Fehler:', err);
+      }
+    }
 
-  const { error } = await sb.from('listings').update(updates).eq('id', listingId);
-  if (error) alert("Fehler beim Speichern: " + error.message);
-  else { alert("Änderungen gespeichert!"); window.location.href="inserate.html"; }
-}
+    document.getElementById('nav-toggle').addEventListener('click', () => {
+      const nav = document.getElementById('nav-links');
+      nav.classList.toggle('show');
+      document.getElementById('nav-toggle').setAttribute('aria-expanded', nav.classList.contains('show'));
+    });
 
-async function init() {
-  try {
-    const { data: { session } } = await sb.auth.getSession();
-    if (!session?.user) { alert("Nicht eingeloggt – du wirst weitergeleitet."); window.location.href="login.html"; return; }
+    document.getElementById('listing-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('Hier kannst du später deine Speicherlogik einbauen.');
+    });
 
-    updateNav(session);
-    loadData();
-  } catch (err) {
-    console.error("Fehler beim Initialisieren:", err);
-  }
-}
-
-function updateNav(session) {
-  const nav = document.getElementById('nav-links');
-  nav.innerHTML = session?.user ? `
-    <a href="index.html">Start</a>
-    <a href="profil.html">Mein Profil</a>
-    <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-    <a href="favoriten.html">Meine Favoriten</a>
-    <a href="inserate.html">Meine Inserate</a>
-    <a href="#" onclick="logout(event)">Logout</a>
-  ` : `
-    <a href="index.html">Start</a>
-    <a href="login.html">Einloggen</a>
-  `;
-}
-
-async function logout(event) {
-  event.preventDefault();
-  await sb.auth.signOut();
-  window.location.href = "login.html";
-}
-
-document.getElementById('nav-toggle').addEventListener('click', () => {
-  const nav = document.getElementById('nav-links');
-  nav.classList.toggle('show');
-  document.getElementById('nav-toggle').setAttribute('aria-expanded', nav.classList.contains('show'));
-});
-
-init();
-</script>
-
+    init();
+  </script>
 </body>
 </html>
