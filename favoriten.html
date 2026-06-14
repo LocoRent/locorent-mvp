@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Meine Favoriten – Locorent</title>
+  <meta name="description" content="Gespeicherte Favoriten auf Locorent verwalten." />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
@@ -26,21 +27,38 @@
 
     *, *::before, *::after {
       box-sizing: border-box;
+      max-width: 100%;
+      word-wrap: break-word;
     }
 
     html, body {
       margin: 0;
       padding: 0;
       width: 100%;
-      overflow-x: hidden;
-      font-family: var(--font-primary);
-      background: var(--background);
-      color: var(--text-dark);
       min-height: 100vh;
+      font-family: var(--font-primary);
+      background: linear-gradient(to bottom, #e8f5e9 0%, #ffffff 100%);
+      color: var(--text-dark);
+      scroll-behavior: smooth;
       display: flex;
       flex-direction: column;
+      overflow-x: hidden;
     }
 
+    a {
+      color: inherit;
+      text-decoration: none;
+      overflow-wrap: anywhere;
+    }
+
+    a:focus-visible,
+    button:focus-visible {
+      outline: 3px solid rgba(185, 246, 202, 0.95);
+      outline-offset: 3px;
+      border-radius: 10px;
+    }
+
+    /* HEADER UNVERÄNDERT */
     header {
       background-color: var(--primary);
       color: var(--white);
@@ -76,6 +94,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
+      min-width: 0;
     }
 
     nav#nav-links a {
@@ -108,116 +127,224 @@
       color: var(--accent);
       outline: none;
     }
+
+    /* MAIN */
     main {
-      width: 100vw;
-      margin: 2rem 0 4rem;
-      padding: 0;
-      flex-grow: 1;
+      width: 100%;
+      max-width: 1320px;
+      margin: 2rem auto 4rem;
+      padding: 0 1rem 3rem;
+      flex: 1;
+      min-width: 0;
     }
 
-    h2 {
-      font-size: 2rem;
+    .favorites-hero {
+      background: rgba(255,255,255,0.96);
+      border: 1px solid rgba(46, 125, 50, 0.08);
+      border-radius: 24px;
+      box-shadow: 0 12px 30px rgba(46, 125, 50, 0.08);
+      padding: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 1.25rem;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: rgba(46, 125, 50, 0.08);
+      color: var(--primary-dark);
+      padding: 0.45rem 0.8rem;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 0.92rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .favorites-hero h2 {
+      margin: 0;
+      color: var(--primary-dark);
+      font-size: clamp(2rem, 4vw, 2.6rem);
+      line-height: 1.15;
+    }
+
+    .favorites-hero p {
+      margin: 0.7rem 0 0;
+      color: var(--text-muted);
+      max-width: 760px;
+    }
+
+    .favorites-stat {
+      background: linear-gradient(135deg, rgba(46,125,50,0.08), rgba(185,246,202,0.2));
+      color: var(--primary-dark);
       font-weight: 700;
-      color: var(--primary);
-      margin-bottom: 1.5rem;
-      margin-left: 1rem;
-      margin-top: 0;
+      border-radius: 18px;
+      padding: 0.9rem 1.1rem;
+      white-space: nowrap;
     }
 
-.category-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
-  gap: 2rem;
-  margin: 2rem;
-  padding: 0 2rem;
-  box-sizing: border-box;
-}
+    .favorites-panel {
+      background: rgba(255,255,255,0.92);
+      border: 1px solid rgba(46, 125, 50, 0.08);
+      border-radius: 24px;
+      box-shadow: 0 10px 24px rgba(46, 125, 50, 0.06);
+      padding: 1.2rem;
+    }
 
-.result-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between; /* sorgt dafür, dass Buttons unten bleiben */
-  background: var(--white);
-  border-radius: var(--radius);
-  box-shadow: 0 2px 8px var(--shadow-light);
-  padding: 1rem;
-  cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  height: 100%; /* gleiche Höhe innerhalb des Grid */
-}
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+      align-items: stretch;
+    }
+
+    .result-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: var(--white);
+      border-radius: 22px;
+      box-shadow: 0 8px 24px rgba(46, 125, 50, 0.08);
+      padding: 1rem;
+      cursor: pointer;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      height: 100%;
+      border: 1px solid rgba(46, 125, 50, 0.08);
+      min-width: 0;
+    }
 
     .result-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 6px 20px var(--shadow-strong);
+      transform: translateY(-3px);
+      box-shadow: 0 16px 34px rgba(46, 125, 50, 0.14);
     }
 
     .result-card img {
       width: 100%;
-      height: 180px;
+      height: 190px;
       object-fit: cover;
-      border-radius: 12px;
+      border-radius: 16px;
       margin-bottom: 1rem;
+      background: #eef6ee;
     }
 
-.result-card h3 {
-  font-size: 1.05rem;
-  line-height: 1.4em;
-  margin: 0.5rem 0;
-  height: 4.2em;          /* max. 3 Zeilen für Titel */
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-}
-.result-card .info {
-  flex-grow: 1; /* sorgt dafür, dass Kategorie & Preis unter Titel fixiert sind */
-}
-    .result-card p {
-      margin: 0.3rem 0;
+    .result-card h3 {
+      font-size: 1.05rem;
+      line-height: 1.4;
+      margin: 0.5rem 0;
+      color: var(--text-dark);
+    }
+
+    .result-card .info {
+      margin-top: 0.25rem;
       color: var(--text-muted);
-      font-size: 1rem;
     }
 
-.btn-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  margin-top: 1rem; /* immer unten */
-}
+    .result-card .info p {
+      margin: 0.25rem 0;
+    }
 
-    .result-card button {
-      padding: 0.6rem;
-      background: var(--primary);
-      color: var(--white);
+    .result-card .btn-group {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      margin-top: 0.9rem;
+    }
+
+    .result-card .btn-group button {
+      flex: 1 1 120px;
       border: none;
-      border-radius: 8px;
+      border-radius: 14px;
+      padding: 0.75rem 0.9rem;
+      font-weight: 700;
       cursor: pointer;
-      font-weight: 600;
-      transition: background-color 0.3s ease;
-      width: 100%;
+      transition: transform 0.2s ease, background 0.25s ease, color 0.25s ease;
     }
 
-    .result-card button:hover {
+    .result-card .btn-group .primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .result-card .btn-group .primary:hover {
       background: var(--primary-dark);
+      transform: translateY(-1px);
     }
 
+    .result-card .btn-group .secondary {
+      background: rgba(46, 125, 50, 0.08);
+      color: var(--primary-dark);
+    }
+
+    .result-card .btn-group .secondary:hover {
+      background: rgba(46, 125, 50, 0.12);
+      transform: translateY(-1px);
+    }
+
+    .empty-state {
+      grid-column: 1 / -1;
+      background: rgba(255,255,255,0.96);
+      border: 1px dashed rgba(46, 125, 50, 0.18);
+      border-radius: 22px;
+      padding: 2rem 1.4rem;
+      text-align: center;
+      color: var(--text-muted);
+    }
+
+    .empty-state strong {
+      display: block;
+      color: var(--primary-dark);
+      margin-bottom: 0.4rem;
+      font-size: 1.05rem;
+    }
+
+    .pagination {
+      grid-column: 1 / -1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 20px;
+      padding: 1rem;
+      background: rgba(255,255,255,0.96);
+      border-radius: 18px;
+      border: 1px solid rgba(46, 125, 50, 0.08);
+      flex-wrap: wrap;
+    }
+
+    .pagination button {
+      border: none;
+      border-radius: 999px;
+      padding: 0.7rem 1rem;
+      font-weight: 700;
+      background: rgba(46,125,50,0.08);
+      color: var(--primary-dark);
+      cursor: pointer;
+      transition: background 0.25s ease, transform 0.2s ease;
+    }
+
+    .pagination button:hover {
+      background: rgba(46,125,50,0.12);
+      transform: translateY(-1px);
+    }
+
+    /* FOOTER UNVERÄNDERT */
     footer {
-      background-color: var(--primary);
-      color: var(--white);
+      width: 100%;
+      box-sizing: border-box;
       padding: 2rem 2rem 1rem;
       border-radius: var(--radius);
-      margin-top: auto;
+      background-color: var(--primary);
+      color: var(--white);
       box-shadow: 0 8px 32px rgba(46, 125, 50, 0.22);
       font-size: 0.92rem;
-      width: 100vw;
-      position: relative;
-      left: 50%;
-      right: 50%;
-      margin-left: -50vw;
-      margin-right: -50vw;
       user-select: none;
       text-align: center;
+      margin-top: auto;
+      overflow-x: hidden;
     }
 
     footer > div {
@@ -254,7 +381,7 @@
     }
 
     footer ul li a:hover {
-      color: var(--highlight);
+      color: var(--accent);
     }
 
     footer small {
@@ -263,269 +390,321 @@
       text-align: center;
       opacity: 0.85;
     }
-  @media (max-width: 720px) {
-  /* Mobile: Navigation */
-  #nav-toggle { display: block; }
-  nav#nav-links {
-    width: 100%;
-    flex-direction: column;
-    display: none;
-    margin-top: 1rem;
-  }
-  nav#nav-links.show { display: flex; }
-  nav#nav-links a {
-    margin: 0.4rem 0;
-    padding: 0.5rem 1rem;
-    background-color: rgba(255,255,255,0.1);
-    border-radius: 6px;
-    display: block;
-    color: var(--white);
-  }
 
-  /* Grid auf 2 Spalten */
-  .category-grid {
-    grid-template-columns: repeat(2, 1fr); /* genau 2 Spalten */
-    gap: 1rem;
-    margin: 1rem auto;
-    padding: 0 1rem;
-  }
-}
-  /* Result-Card Mobile-Anpassungen */
-  .result-card img { height: 140px; }
-  .result-card h3 { font-size: 1rem; }
-  .result-card p { font-size: 0.85rem; }
-  .result-card button { font-size: 0.85rem; padding: 0.4rem; }
+    @media (max-width: 720px) {
+      #nav-toggle {
+        display: block;
+      }
 
-  /* Kategorie & Preis immer untereinander */
-  .result-card .info {
-    display: block !important;  /* block erzwingt neue Zeilen */
-    width: 100% !important;
-    flex-grow: 0 !important;     /* Flex-Effekte entfernen */
-  }
+      nav#nav-links {
+        width: 100%;
+        flex-direction: column;
+        display: none;
+        margin-top: 1rem;
+      }
 
-  .result-card .info p {
-    display: block !important;  /* Jede Zeile untereinander */
-    width: 100% !important;
-    margin: 0.25rem 0;
-    white-space: normal !important;
-  }
-}
+      nav#nav-links.show {
+        display: flex;
+      }
+
+      nav#nav-links a {
+        margin: 0.4rem 0;
+        padding: 0.5rem 1rem;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+        display: block;
+      }
+
+      main {
+        padding: 0 0.75rem 3rem;
+      }
+
+      .favorites-hero,
+      .favorites-panel {
+        padding: 1rem;
+      }
+
+      .favorites-stat {
+        width: 100%;
+        text-align: center;
+      }
+
+      .result-card img {
+        height: 170px;
+      }
+
+      footer > div {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      footer > div > div {
+        width: 100%;
+      }
+    }
   </style>
 </head>
 <body>
-<header>
-  <h1 tabindex="0" onclick="location.href='index.html'">Locorent</h1>
-  <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
-  <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
-</header>
+  <header>
+    <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
+    <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
+    <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
+  </header>
 
-<main>
-  <h2>Meine Favoriten</h2>
-  <div id="favorites-list" class="category-grid">Lade Favoriten…</div>
-</main>
+  <main>
+    <section class="favorites-hero">
+      <div>
+        <p class="eyebrow">⭐ Gespeicherte Inserate</p>
+        <h2>Meine Favoriten</h2>
+        <p>Hier findest du alle Inserate, die du gespeichert hast. Öffne Details oder entferne Einträge direkt aus deiner Liste.</p>
+      </div>
+      <div class="favorites-stat" id="favorites-count">0 Favoriten</div>
+    </section>
 
-<footer>
-  <div>
+    <section class="favorites-panel">
+      <div id="favorites-list" class="category-grid">
+        <div class="empty-state">
+          <strong>Lade Favoriten…</strong>
+          Bitte einen Moment, die gespeicherten Inserate werden geladen.
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer role="contentinfo">
     <div>
-      <h4>Mieten &amp; Vermieten</h4>
-      <ul>
-        <li><a href="so-funktionierts.html">So funktioniert's</a></li>
-        <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
-        <li><a href="kategorien.html">Beliebte Kategorien</a></li>
-        <li><a href="vermieter-tipps.html">Tipps &amp; Tricks für Vermieter</a></li>
-        <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
-      </ul>
+      <div>
+        <h4>Mieten &amp; Vermieten</h4>
+        <ul>
+          <li><a href="so-funktionierts.html">So funktioniert's</a></li>
+          <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
+          <li><a href="kategorien.html">Beliebte Kategorien</a></li>
+          <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
+          <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Wissenswertes</h4>
+        <ul>
+          <li><a href="agb.html">AGB & Impressum</a></li>
+          <li><a href="datenschutz.html">Datenschutz</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Über uns</h4>
+        <ul>
+          <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
+          <li><a href="social-media.html">Folgen Sie uns</a></li>
+          <li><a href="mission.html">Unsere Mission</a></li>
+        </ul>
+      </div>
     </div>
-    <div>
-      <h4>Wissenswertes</h4>
-      <ul>
-        <li><a href="agb.html">AGB &amp; Impressum</a></li>
-        <li><a href="datenschutz.html">Datenschutz</a></li>
-      </ul>
-    </div>
-    <div>
-      <h4>Über uns</h4>
-      <ul>
-        <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
-        <li><a href="social-media.html">Folgen Sie uns</a></li>
-        <li><a href="mission.html">Unsere Mission</a></li>
-      </ul>
-    </div>
-  </div>
-  <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
-</footer>
-<script>
-/* ===== SUPABASE INIT ===== */
-if (!window.supabaseClient) {
-  window.supabaseClient = window.supabase.createClient(
-    'https://flnjalgqtkqycsaymmbd.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-  );
-}
-var supabase = window.supabaseClient;
+    <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
+  </footer>
 
-/* ===== NAVIGATION ===== */
-async function updateNav() {
-  try {
-    const { data: { session } } = await supabase.auth.getSession();
-    const nav = document.getElementById("nav-links");
-    nav.innerHTML = session?.user ? `
-      <a href="index.html">Start</a>
-      <a href="profil.html">Mein Profil</a>
-      <a href="nachrichten-inbox.html">Nachrichten</a>
-      <a href="favoriten.html">Meine Favoriten</a>
-      <a href="inserate.html">Meine Inserate</a>
-      <a href="#" onclick="logout(event)">Logout</a>
-    ` : `
-      <a href="index.html">Start</a>
-      <a href="login.html">Einloggen</a>
-    `;
-  } catch (err) {
-    console.error("Fehler beim Laden der Navigation:", err);
-  }
-}
-
-/* ===== LOGOUT ===== */
-async function logout(event) {
-  event.preventDefault();
-  try {
-    await supabase.auth.signOut();
-    window.location.href = "login.html";
-  } catch (err) {
-    console.error("Fehler beim Logout:", err);
-  }
-}
-
-/* ===== MOBILE NAV TOGGLE ===== */
-document.getElementById("nav-toggle").addEventListener("click", () => {
-  const nav = document.getElementById("nav-links");
-  nav.classList.toggle("show");
-  document.getElementById("nav-toggle").setAttribute("aria-expanded", nav.classList.contains("show"));
-});
-
-/* ===== FAVORITEN HANDLING ===== */
-let currentPage = 1;
-const pageSize = 24;
-
-async function loadFavorites(page = 1) {
-  try {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      window.location.href = "login.html";
-      return;
-    }
-
-    const { data: favorites, error } = await supabase
-      .from('favorites')
-      .select('listing_id', { count: 'exact' })
-      .eq('user_id', user.id);
-
-    if (error || !favorites.length) {
-      document.getElementById('favorites-list').innerHTML = "<p>Du hast noch keine Favoriten.</p>";
-      return;
-    }
-
-    const totalCount = favorites.length;
-    const from = (page - 1) * pageSize;
-    const to = from + pageSize;
-
-    const pagedFavorites = favorites.slice(from, to);
-
-    const favoriteListings = await Promise.all(
-      pagedFavorites.map(async (favorite) => {
-        const { data } = await supabase
-          .from('listings')
-          .select('*')
-          .eq('id', favorite.listing_id)
-          .single();
-        return data;
-      })
+  <script>
+    const sb = supabase.createClient(
+      'https://flnjalgqtkqycsaymmbd.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
     );
 
-    renderFavorites(favoriteListings, totalCount, page);
-  } catch (err) {
-    console.error("Fehler beim Laden der Favoriten:", err);
-  }
-}
+    let userSession = null;
+    let currentPage = 1;
+    const itemsPerPage = 12;
+    let favoriteItems = [];
 
-function renderFavorites(listings, totalCount, page) {
-  const container = document.getElementById("favorites-list");
-  container.innerHTML = "";
+    async function init() {
+      try {
+        const { data, error } = await sb.auth.getSession();
+        if (error) console.error('Auth Fehler:', error);
+        userSession = data?.session || null;
+        updateNav();
+        loadFavorites();
+      } catch (err) {
+        console.error('Init Fehler:', err);
+      }
+    }
 
-  if (!listings.length) {
-    container.innerHTML = "<p>Keine Favoriten auf dieser Seite.</p>";
-    return;
-  }
+    function updateNav() {
+      const nav = document.getElementById('nav-links');
+      nav.innerHTML = userSession?.user ? `
+        <a href="index.html">Start</a>
+        <a href="profil.html">Mein Profil</a>
+        <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+        <a href="favoriten.html">Meine Favoriten</a>
+        <a href="inserate.html">Meine Inserate</a>
+        <a href="#" onclick="logout(event)">Logout</a>
+      ` : `
+        <a href="index.html">Start</a>
+        <a href="login.html">Einloggen</a>
+      `;
+    }
 
-  listings.forEach(listing => {
-    const card = document.createElement("div");
-    card.className = "result-card";
-    card.innerHTML = `
-      <img src="${listing.image_urls?.[0] || 'https://via.placeholder.com/400x220'}" alt="${listing.title}" />
-      <h3>${listing.title}</h3>
-      <div class="info">
-        <p><strong>Kategorie:</strong> ${capitalize(listing.category) || 'Unbekannt'}</p>
-        <p><strong>Preis pro Tag:</strong> ${listing.price_per_day || 'k. A.'} €</p>
-      </div>
-      <div class="btn-group">
-        <button onclick="window.location.href='mietobjekt.html?id=${listing.id}'">Details ansehen</button>
-        <button onclick="removeFromFavorites('${listing.id}', event)">Favorit entfernen</button>
-      </div>
-    `;
-    container.appendChild(card);
-  });
+    async function logout(event) {
+      event.preventDefault();
+      try {
+        await sb.auth.signOut();
+        window.location.href = "login.html";
+      } catch (err) {
+        console.error('Logout Fehler:', err);
+      }
+    }
 
-  // Pagination
-  const pagination = document.createElement("div");
-  pagination.style.cssText = "grid-column:1/-1; display:flex; justify-content:center; gap:10px; margin-top:20px;";
-  const totalPages = Math.ceil(totalCount / pageSize);
+    document.getElementById('nav-toggle').addEventListener('click', () => {
+      const nav = document.getElementById('nav-links');
+      nav.classList.toggle('show');
+      document.getElementById('nav-toggle').setAttribute('aria-expanded', nav.classList.contains('show'));
+    });
 
-  if (page > 1) {
-    const prevBtn = document.createElement("button");
-    prevBtn.textContent = "← Zurück";
-    prevBtn.onclick = () => { currentPage--; loadFavorites(currentPage); };
-    pagination.appendChild(prevBtn);
-  }
+    async function loadFavorites() {
+      const list = document.getElementById('favorites-list');
+      const count = document.getElementById('favorites-count');
 
-  pagination.appendChild(document.createTextNode(`Seite ${page} von ${totalPages}`));
+      if (!userSession?.user) {
+        list.innerHTML = `
+          <div class="empty-state">
+            <strong>Bitte einloggen</strong>
+            Du musst eingeloggt sein, um deine Favoriten zu sehen.
+          </div>
+        `;
+        count.textContent = '0 Favoriten';
+        return;
+      }
 
-  if (page < totalPages) {
-    const nextBtn = document.createElement("button");
-    nextBtn.textContent = "Weiter →";
-    nextBtn.onclick = () => { currentPage++; loadFavorites(currentPage); };
-    pagination.appendChild(nextBtn);
-  }
+      const { data, error } = await sb
+        .from('favorites')
+        .select(`
+          id,
+          listing_id,
+          listings:listing_id (
+            id,
+            title,
+            location,
+            price_per_day,
+            category,
+            image_urls
+          )
+        `)
+        .eq('user_id', userSession.user.id)
+        .order('created_at', { ascending: false });
 
-  container.appendChild(pagination);
-}
+      if (error) {
+        console.error('Fehler beim Laden der Favoriten:', error);
+        list.innerHTML = `
+          <div class="empty-state">
+            <strong>Fehler beim Laden</strong>
+            Die Favoriten konnten nicht geladen werden.
+          </div>
+        `;
+        count.textContent = '0 Favoriten';
+        return;
+      }
 
-async function removeFromFavorites(listingId, event) {
-  event.preventDefault();
-  event.stopPropagation();
-  try {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
+      favoriteItems = data || [];
+      count.textContent = `${favoriteItems.length} Favorit${favoriteItems.length === 1 ? '' : 'en'}`;
+      renderFavorites();
+    }
 
-    await supabase
-      .from('favorites')
-      .delete()
-      .eq('user_id', user.id)
-      .eq('listing_id', listingId);
+    function renderFavorites() {
+      const list = document.getElementById('favorites-list');
+      const total = favoriteItems.length;
+      const start = (currentPage - 1) * itemsPerPage;
+      const end = start + itemsPerPage;
+      const pageItems = favoriteItems.slice(start, end);
 
-    setTimeout(() => loadFavorites(currentPage), 300);
-  } catch (err) {
-    console.error("Fehler beim Entfernen des Favoriten:", err);
-  }
-}
+      if (!total) {
+        list.innerHTML = `
+          <div class="empty-state">
+            <strong>Noch keine Favoriten gespeichert</strong>
+            Speichere interessante Inserate mit dem Herzsymbol, damit du sie später schnell wiederfindest.
+          </div>
+        `;
+        return;
+      }
 
-function capitalize(str) {
-  return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
-}
+      list.innerHTML = '';
 
-/* ===== INITIAL LOAD ===== */
-updateNav();
-loadFavorites();
-</script>
+      pageItems.forEach((item) => {
+        const listing = item.listings;
+        if (!listing) return;
 
+        const card = document.createElement('article');
+        card.className = 'result-card';
+
+        const img = (listing.image_urls && listing.image_urls[0]) ? listing.image_urls[0] : 'https://via.placeholder.com/600x400?text=Locorent';
+        card.innerHTML = `
+          <img src="${img}" alt="${listing.title || 'Inserat'}" />
+          <h3>${listing.title || 'Kein Titel'}</h3>
+          <div class="info">
+            <p><strong>${listing.price_per_day || 'k. A.'} € / Tag</strong></p>
+            <p>${listing.location || ''}</p>
+            <p>${listing.category || ''}</p>
+          </div>
+          <div class="btn-group">
+            <button class="primary" onclick="location.href='anzeige.html?id=${listing.id}'">Details</button>
+            <button class="secondary" onclick="removeFavorite('${item.id}')">Entfernen</button>
+          </div>
+        `;
+
+        list.appendChild(card);
+      });
+
+      renderPagination();
+    }
+
+    function renderPagination() {
+      const list = document.getElementById('favorites-list');
+      const totalPages = Math.max(1, Math.ceil(favoriteItems.length / itemsPerPage));
+      if (totalPages <= 1) return;
+
+      const pagination = document.createElement('div');
+      pagination.className = 'pagination';
+
+      const prev = document.createElement('button');
+      prev.textContent = '← Zurück';
+      prev.disabled = currentPage === 1;
+      prev.onclick = () => {
+        if (currentPage > 1) {
+          currentPage--;
+          renderFavorites();
+        }
+      };
+
+      const next = document.createElement('button');
+      next.textContent = 'Weiter →';
+      next.disabled = currentPage === totalPages;
+      next.onclick = () => {
+        if (currentPage < totalPages) {
+          currentPage++;
+          renderFavorites();
+        }
+      };
+
+      const pageInfo = document.createElement('span');
+      pageInfo.textContent = `Seite ${currentPage} von ${totalPages}`;
+      pageInfo.style.fontWeight = '700';
+      pageInfo.style.color = 'var(--primary-dark)';
+
+      pagination.appendChild(prev);
+      pagination.appendChild(pageInfo);
+      pagination.appendChild(next);
+      list.appendChild(pagination);
+    }
+
+    async function removeFavorite(favoriteId) {
+      const ok = confirm('Möchtest du diesen Favoriten wirklich entfernen?');
+      if (!ok) return;
+
+      const { error } = await sb.from('favorites').delete().eq('id', favoriteId);
+      if (error) {
+        alert('Fehler beim Entfernen.');
+        return;
+      }
+
+      await loadFavorites();
+    }
+
+    init();
+  </script>
 </body>
 </html>
