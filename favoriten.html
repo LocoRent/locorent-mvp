@@ -94,7 +94,6 @@
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
-      min-width: 0;
     }
 
     nav#nav-links a {
@@ -511,7 +510,6 @@
     let userSession = null;
     let currentPage = 1;
     const itemsPerPage = 12;
-    let favoriteItems = [];
 
     async function init() {
       try {
@@ -571,25 +569,14 @@
         return;
       }
 
-      const { data, error } = await sb
+      const { data: favorites, error: favError } = await sb
         .from('favorites')
-        .select(`
-          id,
-          listing_id,
-          listings:listing_id (
-            id,
-            title,
-            location,
-            price_per_day,
-            category,
-            image_urls
-          )
-        `)
+        .select('listing_id, created_at')
         .eq('user_id', userSession.user.id)
         .order('created_at', { ascending: false });
 
-      if (error) {
-        console.error('Fehler beim Laden der Favoriten:', error);
+      if (favError) {
+        console.error('Fehler beim Laden der Favoriten:', favError);
         list.innerHTML = `
           <div class="empty-state">
             <strong>Fehler beim Laden</strong>
@@ -600,38 +587,44 @@
         return;
       }
 
-      favoriteItems = data || [];
-      count.textContent = `${favoriteItems.length} Favorit${favoriteItems.length === 1 ? '' : 'en'}`;
-      renderFavorites();
-    }
-
-    function renderFavorites() {
-      const list = document.getElementById('favorites-list');
-      const total = favoriteItems.length;
-      const start = (currentPage - 1) * itemsPerPage;
-      const end = start + itemsPerPage;
-      const pageItems = favoriteItems.slice(start, end);
-
-      if (!total) {
+      if (!favorites || favorites.length === 0) {
         list.innerHTML = `
           <div class="empty-state">
             <strong>Noch keine Favoriten gespeichert</strong>
             Speichere interessante Inserate mit dem Herzsymbol, damit du sie später schnell wiederfindest.
           </div>
         `;
+        count.textContent = '0 Favoriten';
         return;
       }
 
+      const start = (currentPage - 1) * itemsPerPage;
+      const end = start + itemsPerPage;
+      const pagedFavorites = favorites.slice(start, end);
+
+      const favoriteListings = await Promise.all(
+        pagedFavorites.map(async (favorite) => {
+          const { data } = await sb
+            .from('listings')
+            .select('*')
+            .eq('id', favorite.listing_id)
+            .single();
+          return { favorite, listing: data };
+        })
+      );
+
+      count.textContent = `${favorites.length} Favorit${favorites.length === 1 ? '' : 'en'}`;
+
       list.innerHTML = '';
 
-      pageItems.forEach((item) => {
-        const listing = item.listings;
+      favoriteListings.forEach(({ favorite, listing }) => {
         if (!listing) return;
 
         const card = document.createElement('article');
         card.className = 'result-card';
 
         const img = (listing.image_urls && listing.image_urls[0]) ? listing.image_urls[0] : 'https://via.placeholder.com/600x400?text=Locorent';
+
         card.innerHTML = `
           <img src="${img}" alt="${listing.title || 'Inserat'}" />
           <h3>${listing.title || 'Kein Titel'}</h3>
@@ -642,19 +635,19 @@
           </div>
           <div class="btn-group">
             <button class="primary" onclick="location.href='anzeige.html?id=${listing.id}'">Details</button>
-            <button class="secondary" onclick="removeFavorite('${item.id}')">Entfernen</button>
+            <button class="secondary" onclick="removeFavorite('${favorite.listing_id}')">Entfernen</button>
           </div>
         `;
 
         list.appendChild(card);
       });
 
-      renderPagination();
+      renderPagination(favorites.length);
     }
 
-    function renderPagination() {
+    function renderPagination(totalItems) {
       const list = document.getElementById('favorites-list');
-      const totalPages = Math.max(1, Math.ceil(favoriteItems.length / itemsPerPage));
+      const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage));
       if (totalPages <= 1) return;
 
       const pagination = document.createElement('div');
@@ -666,7 +659,7 @@
       prev.onclick = () => {
         if (currentPage > 1) {
           currentPage--;
-          renderFavorites();
+          loadFavorites();
         }
       };
 
@@ -676,7 +669,7 @@
       next.onclick = () => {
         if (currentPage < totalPages) {
           currentPage++;
-          renderFavorites();
+          loadFavorites();
         }
       };
 
@@ -691,17 +684,18 @@
       list.appendChild(pagination);
     }
 
-    async function removeFavorite(favoriteId) {
+    async function removeFavorite(listingId) {
       const ok = confirm('Möchtest du diesen Favoriten wirklich entfernen?');
       if (!ok) return;
 
-      const { error } = await sb.from('favorites').delete().eq('id', favoriteId);
+      const { error } = await sb.from('favorites').delete().eq('user_id', userSession.user.id).eq('listing_id', listingId);
       if (error) {
         alert('Fehler beim Entfernen.');
         return;
       }
 
-      await loadFavorites();
+      currentPage = 1;
+      loadFavorites();
     }
 
     init();
