@@ -115,12 +115,39 @@
 
   main {
     max-width: var(--max-width);
-    width: 100%;
+    width: calc(100% - 2rem);
     margin: 2rem auto 4rem;
-    background: var(--white);
-    border-radius: var(--radius);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    padding: 3rem 2rem 4rem;
+    background:
+      radial-gradient(circle at top left, rgba(185, 246, 202, 0.35), transparent 28%),
+      linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,255,255,0.95));
+    border-radius: 28px;
+    box-shadow: 0 18px 50px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+    border: 1px solid rgba(46, 125, 50, 0.08);
+    position: relative;
+    overflow: hidden;
+  }
+
+  main::before {
+    content: "";
+    position: absolute;
+    top: -120px;
+    right: -120px;
+    width: 280px;
+    height: 280px;
+    background: radial-gradient(circle, rgba(102,187,106,0.18), transparent 70%);
+    pointer-events: none;
+  }
+
+  main::after {
+    content: "";
+    position: absolute;
+    bottom: -120px;
+    left: -120px;
+    width: 260px;
+    height: 260px;
+    background: radial-gradient(circle, rgba(169, 214, 167, 0.18), transparent 70%);
+    pointer-events: none;
   }
 
   /* Profil Header */
@@ -128,8 +155,15 @@
     display: flex;
     gap: 2rem;
     align-items: center;
-    margin-bottom: 3rem;
+    margin-bottom: 2.5rem;
     flex-wrap: wrap;
+    padding: 1.5rem;
+    background: rgba(46, 125, 50, 0.04);
+    border-radius: 24px;
+    border: 1px solid rgba(46, 125, 50, 0.08);
+    box-shadow: 0 10px 30px rgba(46, 125, 50, 0.06);
+    position: relative;
+    z-index: 1;
   }
 
   #profile-photo {
@@ -138,7 +172,7 @@
     height: 140px;
     border-radius: 50%;
     background: var(--accent) center/cover no-repeat;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.12);
     font-weight: 700;
     font-size: 3rem;
     color: var(--primary-dark);
@@ -146,11 +180,19 @@
     align-items: center;
     justify-content: center;
     user-select: none;
+    border: 4px solid rgba(255,255,255,0.9);
+  }
+
+  #profile-info {
+    flex: 1;
+    min-width: 240px;
   }
 
   #profile-info p {
-    font-size: 1.15rem;
-    margin: 0.2rem 0;
+    font-size: 1.08rem;
+    margin: 0.35rem 0;
+    line-height: 1.6;
+    color: var(--text-dark);
   }
 
   #profile-info p strong {
@@ -160,13 +202,17 @@
 
   /* Rating Display */
   #rating-summary {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 0.75rem;
-    font-size: 1.4rem;
+    font-size: 1.15rem;
     font-weight: 700;
     color: var(--primary-dark);
-    margin-top: 0.4rem;
+    margin-top: 1rem;
+    padding: 0.8rem 1rem;
+    border-radius: 999px;
+    background: rgba(185, 246, 202, 0.22);
+    border: 1px solid rgba(46, 125, 50, 0.08);
     user-select: none;
   }
 
@@ -176,33 +222,43 @@
   }
 
   .star {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     color: var(--star-color);
     filter: drop-shadow(0 1px 1px rgba(0,0,0,0.1));
     transition: transform 0.2s ease;
   }
 
   .star.empty {
-    color: #ccc;
+    color: #d8d8d8;
     filter: none;
   }
 
-  /* Bewertungen Section */
+  /* Reviews Section */
   #reviews-section {
     display: flex;
     flex-direction: column;
-    margin-bottom: 3rem;
+    margin-bottom: 2.5rem;
     position: relative;
+    z-index: 1;
   }
 
   #reviews-section h2 {
     color: var(--primary);
     font-weight: 700;
-    font-size: 2.2rem;
+    font-size: 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  #reviews-section h2 > span {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
   }
 
   #all-reviews-link {
@@ -213,70 +269,125 @@
     cursor: pointer;
   }
 
-.review-btn {
-  position: static; /* nicht mehr absolut */
-  padding: 0.5rem 1rem;
-  font-size: 0.95rem;
-  font-weight: 700;
-  background-color: var(--primary); /* grün wie Header */
-  color: var(--white); /* Text weiß */
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
+  .review-btn {
+    position: static;
+    padding: 0.7rem 1.1rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: var(--white);
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+    box-shadow: 0 10px 20px rgba(46, 125, 50, 0.18);
+  }
 
-.review-btn:hover {
-  background-color: var(--primary-dark); /* dunkler beim Hover */
-}
+  .review-btn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.03);
+    box-shadow: 0 14px 26px rgba(46, 125, 50, 0.24);
+  }
 
+  #reviews-list {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .review-item {
+    background: rgba(255,255,255,0.92);
+    border: 1px solid rgba(46, 125, 50, 0.08);
+    border-radius: 18px;
+    padding: 1.1rem 1.2rem;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .review-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.09);
+  }
+
+  .review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.4rem;
+    flex-wrap: wrap;
+  }
+
+  .reviewer-name {
+    font-weight: 700;
+    color: var(--primary-dark);
+    font-size: 1.05rem;
+  }
+
+  .review-rating .star {
+    font-size: 1.15rem;
+  }
+
+  .review-date {
+    display: block;
+    font-size: 0.92rem;
+    color: var(--text-muted);
+  }
 
   /* Listings Section */
   #listings-section h2 {
     color: var(--primary);
     font-weight: 700;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
     font-size: 2rem;
+    position: relative;
+    z-index: 1;
   }
 
   .listing-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill,minmax(280px,1fr));
-    gap: 2rem;
+    gap: 1.5rem;
+    position: relative;
+    z-index: 1;
   }
 
   .listing-card {
-    background-color: var(--white);
-    padding: 1.2rem 1.5rem 1.6rem;
-    border-radius: 14px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    background: rgba(255,255,255,0.95);
+    padding: 1.15rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.08);
     display: flex;
     flex-direction: column;
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    border: 1px solid rgba(46, 125, 50, 0.08);
+    overflow: hidden;
   }
 
   .listing-card:hover {
-    box-shadow: 0 14px 40px rgba(0,0,0,0.18);
-    transform: translateY(-5px);
+    box-shadow: 0 16px 38px rgba(0,0,0,0.13);
+    transform: translateY(-6px);
   }
 
   .listing-card img {
     width: 100%;
     height: 190px;
     object-fit: cover;
-    border-radius: 12px;
+    border-radius: 14px;
     margin-bottom: 1rem;
   }
 
   .listing-card h3 {
-    font-size: 1.4rem;
-    margin-bottom: 0.5rem;
+    font-size: 1.25rem;
+    margin-bottom: 0.55rem;
     color: var(--primary-dark);
+    line-height: 1.25;
   }
 
   .listing-card p {
     margin: 0.25rem 0;
     font-weight: 600;
+    color: var(--text-dark);
+    line-height: 1.5;
   }
 
   .listing-card p.category {
@@ -286,19 +397,22 @@
 
   .listing-card button {
     margin-top: auto;
-    padding: 0.9rem 1.5rem;
-    background-color: var(--primary);
+    padding: 0.9rem 1.2rem;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
     color: var(--white);
     border: none;
     border-radius: 14px;
     cursor: pointer;
     font-weight: 700;
-    font-size: 1.1rem;
-    transition: background-color var(--transition);
+    font-size: 1rem;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+    box-shadow: 0 10px 20px rgba(46, 125, 50, 0.18);
   }
 
   .listing-card button:hover {
-    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+    filter: brightness(1.03);
+    box-shadow: 0 14px 26px rgba(46, 125, 50, 0.24);
   }
 
   /* Footer */
@@ -355,20 +469,22 @@
     opacity: 0.85;
   }
 
-  /* Mobile Anpassungen */
   @media (max-width: 720px) {
     #nav-toggle {
       display: block;
     }
+
     nav#nav-links {
       width: 100%;
       flex-direction: column;
       display: none;
       margin-top: 1rem;
     }
+
     nav#nav-links.show {
       display: flex;
     }
+
     nav#nav-links a {
       margin: 0.4rem 0;
       padding: 0.5rem 1rem;
@@ -378,30 +494,38 @@
     }
 
     main {
-      padding: 2rem 1rem 3rem;
-      margin: 1rem 0 3rem;
+      width: calc(100% - 1rem);
+      padding: 1.4rem 1rem 2rem;
+      margin: 1rem auto 3rem;
+      border-radius: 22px;
     }
 
-    #reviews-section h2 {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.5rem;
+    #profile-section {
+      padding: 1.2rem;
+      gap: 1.2rem;
     }
 
-    .review-btn {
-      position: static;
-      align-self: flex-start;
-      margin-top: 0.5rem;
+    #profile-photo {
+      width: 110px;
+      height: 110px;
+      font-size: 2.3rem;
     }
 
-    /* Footer auf mobile untereinander */
+    #reviews-section h2,
+    #listings-section h2 {
+      font-size: 1.6rem;
+    }
+
+    .listing-grid {
+      grid-template-columns: 1fr;
+    }
+
     footer > div {
       flex-direction: column;
       gap: 1rem;
     }
   }
 </style>
-
 </head>
 <body>
   <header>
@@ -409,249 +533,240 @@
     <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
     <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
   </header>
-<main>
-  <section id="profile-section" aria-label="Profilinformationen des Vermieters">
-    <div id="profile-photo" aria-hidden="true"></div>
-    <div id="profile-info" role="region" aria-live="polite">
-      Lade Profil...
-    </div>
-  </section>
 
-  <section id="reviews-section" aria-label="Bewertungen des Vermieters">
-<h2>
-  Bewertungen
-  <span style="display: flex; align-items: center; gap: 0.5rem;">
-    <a href="#" id="all-reviews-link" aria-label="Alle Bewertungen anzeigen">Alle anzeigen →</a>
-    <button class="review-btn" id="review-btn" title="Bewertung abgeben">Bewertung abgeben</button>
-  </span>
-</h2>
-    <div id="reviews-list" role="list" aria-live="polite">
-      ⏳ Lade Bewertungen…
-    </div>
-    <div id="review-button-container"></div>
-  </section>
-
-  <section id="listings-section" aria-label="Inserate des Vermieters">
-    <h2>Inserate dieses Vermieters</h2>
-    <div id="listing-grid" class="listing-grid" role="list">
-      <p>⏳ Lade Inserate…</p>
-    </div>
-  </section>
-</main>
-
-<footer role="contentinfo">
-  <div>
-    <section aria-labelledby="footer-rent-title">
-      <h4 id="footer-rent-title">Mieten &amp; Vermieten</h4>
-      <ul>
-        <li><a href="so-funktionierts.html">So funktioniert's</a></li>
-        <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
-        <li><a href="kategorien.html">Beliebte Kategorien</a></li>
-        <li><a href="vermieter-tipps.html">Tipps &amp; Tricks für Vermieter</a></li>
-        <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
-      </ul>
-    </section>
-    <section aria-labelledby="footer-info-title">
-      <h4 id="footer-info-title">Wissenswertes</h4>
-      <ul>
-        <li><a href="agb.html">AGB &amp; Impressum</a></li>
-        <li><a href="datenschutz.html">Datenschutz</a></li>
-      </ul>
-    </section>
-    <section aria-labelledby="footer-about-title">
-      <h4 id="footer-about-title">Über uns</h4>
-      <ul>
-        <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
-        <li><a href="social-media.html">Folgen Sie uns</a></li>
-      </ul>
-    </section>
-  </div>
-  <div class="copyright" aria-label="Copyright">
-    © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
-  </div>
-</footer>
-<script>
-/* ===== SUPABASE INIT ===== */
-if (!window.supabaseClient) {
-  window.supabaseClient = window.supabase.createClient(
-    'https://flnjalgqtkqycsaymmbd.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-  );
-}
-var supabase = window.supabaseClient;
-
-/* ===== NAVIGATION ===== */
-document.getElementById('nav-toggle').addEventListener('click', () => {
-  const nav = document.getElementById('nav-links');
-  nav.classList.toggle('show');
-  document.getElementById('nav-toggle').setAttribute('aria-expanded', nav.classList.contains('show'));
-});
-
-async function updateNav() {
-  const { data: { session } } = await supabase.auth.getSession();
-  const nav = document.getElementById("nav-links");
-  nav.innerHTML = session?.user ? `
-    <a href="index.html">Start</a>
-    <a href="profil.html">Mein Profil</a>
-    <a href="nachrichten-inbox.html">📨 Nachrichten</a>
-    <a href="favoriten.html">Meine Favoriten</a>
-    <a href="inserate.html">Meine Inserate</a>
-    <a href="#" onclick="logout(event)">Logout</a>
-  ` : `
-    <a href="index.html">Start</a>
-    <a href="login.html">Einloggen</a>
-  `;
-}
-
-async function logout(event) {
-  event.preventDefault();
-  await supabase.auth.signOut();
-  window.location.href = "login.html";
-}
-
-/* ===== HILFSFUNKTIONEN ===== */
-function getInitials(name) {
-  if (!name) return '';
-  const parts = name.trim().split(' ');
-  if (parts.length === 1) return parts[0][0].toUpperCase();
-  return (parts[0][0] + parts[1][0]).toUpperCase();
-}
-
-function createStarIcons(rating) {
-  let fullStars = Math.floor(rating);
-  let halfStar = rating - fullStars >= 0.5;
-  let emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
-  let starsHtml = '';
-  for (let i = 0; i < fullStars; i++) starsHtml += '<span class="star" aria-hidden="true">&#9733;</span>';
-  if (halfStar) starsHtml += '<span class="star" aria-hidden="true">&#9733;</span>'; // Halbstern vereinfacht
-  for (let i = 0; i < emptyStars; i++) starsHtml += '<span class="star empty" aria-hidden="true">&#9734;</span>';
-  return starsHtml;
-}
-
-/* ===== VERMieter PROFIL LADEN ===== */
-async function loadVermieterProfil() {
-  const params = new URLSearchParams(location.search);
-  const userId = params.get("id");
-  if (!userId) {
-    document.getElementById("profile-info").innerText = "Keine Vermieter-ID übergeben.";
-    return;
-  }
-
-  const { data: { session } } = await supabase.auth.getSession();
-  const currentUser = session?.user;
-
-  // Bewertungslink
-  document.getElementById("all-reviews-link").href = `bewertungen.html?id=${userId}`;
-
-  // Profil laden
-  const { data: profile, error: profileError } = await supabase
-    .from("profiles")
-    .select("name, city, bio, avatar_url")
-    .eq("id", userId)
-    .single();
-
-  const profilePhoto = document.getElementById("profile-photo");
-  if (profile?.avatar_url) {
-    profilePhoto.style.backgroundImage = `url(${profile.avatar_url})`;
-    profilePhoto.textContent = '';
-  } else {
-    profilePhoto.style.backgroundImage = 'none';
-    profilePhoto.textContent = getInitials(profile?.name);
-  }
-
-  document.getElementById("profile-info").innerHTML = profileError || !profile ? `
-    <p>Profil nicht gefunden.</p>
-  ` : `
-    <p><strong>Name:</strong> ${profile.name || 'Unbekannt'}</p>
-    <p><strong>Ort:</strong> ${profile.city || '–'}</p>
-    <p><strong>Über mich:</strong> ${profile.bio || '–'}</p>
-  `;
-
-  // Bewertungen laden (nur 2)
-  const { data: reviews, error: reviewError } = await supabase
-    .from("reviews")
-    .select("rating, comment, from_user_id, created_at, from_user:from_user_id(name, avatar_url)")
-    .eq("to_user_id", userId)
-    .order("created_at", { ascending: false })
-    .limit(2);
-
-  const reviewList = document.getElementById("reviews-list");
-  if (reviewError || !Array.isArray(reviews) || reviews.length === 0) {
-    reviewList.innerHTML = "<p>Noch keine Bewertungen.</p>";
-  } else {
-    const { data: allReviewsData } = await supabase
-      .from("reviews")
-      .select("rating")
-      .eq("to_user_id", userId);
-
-    const allRatings = allReviewsData || [];
-    const average = allRatings.length > 0 ? (allRatings.reduce((sum, r) => sum + r.rating, 0) / allRatings.length).toFixed(1) : "–";
-
-    const summary = `
-      <div id="rating-summary" aria-label="Durchschnittliche Bewertung: ${average} von 5 Sternen">
-        <div class="stars" aria-hidden="true">${createStarIcons(average)}</div>
-        <span>${average} / 5 aus ${allRatings.length} Bewertungen</span>
+  <main>
+    <section id="profile-section" aria-label="Profilinformationen des Vermieters">
+      <div id="profile-photo" aria-hidden="true"></div>
+      <div id="profile-info" role="region" aria-live="polite">
+        Lade Profil...
       </div>
+    </section>
+
+    <section id="reviews-section" aria-label="Bewertungen des Vermieters">
+      <h2>
+        Bewertungen
+        <span>
+          <a href="#" id="all-reviews-link" aria-label="Alle Bewertungen anzeigen">Alle anzeigen →</a>
+          <button class="review-btn" id="review-btn" title="Bewertung abgeben">Bewertung abgeben</button>
+        </span>
+      </h2>
+      <div id="reviews-list" role="list" aria-live="polite">
+        ⏳ Lade Bewertungen…
+      </div>
+      <div id="review-button-container"></div>
+    </section>
+
+    <section id="listings-section" aria-label="Inserate des Vermieters">
+      <h2>Inserate dieses Vermieters</h2>
+      <div id="listing-grid" class="listing-grid" role="list">
+        <p>⏳ Lade Inserate…</p>
+      </div>
+    </section>
+  </main>
+
+  <footer role="contentinfo">
+    <div>
+      <section aria-labelledby="footer-rent-title">
+        <h4 id="footer-rent-title">Mieten &amp; Vermieten</h4>
+        <ul>
+          <li><a href="so-funktionierts.html">So funktioniert's</a></li>
+          <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
+          <li><a href="kategorien.html">Beliebte Kategorien</a></li>
+          <li><a href="vermieter-tipps.html">Tipps &amp; Tricks für Vermieter</a></li>
+          <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
+        </ul>
+      </section>
+      <section aria-labelledby="footer-info-title">
+        <h4 id="footer-info-title">Wissenswertes</h4>
+        <ul>
+          <li><a href="agb.html">AGB &amp; Impressum</a></li>
+          <li><a href="datenschutz.html">Datenschutz</a></li>
+        </ul>
+      </section>
+      <section aria-labelledby="footer-about-title">
+        <h4 id="footer-about-title">Über uns</h4>
+        <ul>
+          <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
+          <li><a href="social-media.html">Folgen Sie uns</a></li>
+        </ul>
+      </section>
+    </div>
+    <div class="copyright" aria-label="Copyright">
+      © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
+    </div>
+  </footer>
+
+  <script>
+  if (!window.supabaseClient) {
+    window.supabaseClient = window.supabase.createClient(
+      'https://flnjalgqtkqycsaymmbd.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+    );
+  }
+  var supabase = window.supabaseClient;
+
+  document.getElementById('nav-toggle').addEventListener('click', () => {
+    const nav = document.getElementById('nav-links');
+    nav.classList.toggle('show');
+    document.getElementById('nav-toggle').setAttribute('aria-expanded', nav.classList.contains('show'));
+  });
+
+  async function updateNav() {
+    const { data: { session } } = await supabase.auth.getSession();
+    const nav = document.getElementById("nav-links");
+    nav.innerHTML = session?.user ? `
+      <a href="index.html">Start</a>
+      <a href="profil.html">Mein Profil</a>
+      <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+      <a href="favoriten.html">Meine Favoriten</a>
+      <a href="inserate.html">Meine Inserate</a>
+      <a href="#" onclick="logout(event)">Logout</a>
+    ` : `
+      <a href="index.html">Start</a>
+      <a href="login.html">Einloggen</a>
+    `;
+  }
+
+  async function logout(event) {
+    event.preventDefault();
+    await supabase.auth.signOut();
+    window.location.href = "login.html";
+  }
+
+  function getInitials(name) {
+    if (!name) return '';
+    const parts = name.trim().split(' ');
+    if (parts.length === 1) return parts[0][0].toUpperCase();
+    return (parts[0][0] + parts[1][0]).toUpperCase();
+  }
+
+  function createStarIcons(rating) {
+    let fullStars = Math.floor(rating);
+    let halfStar = rating - fullStars >= 0.5;
+    let emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+    let starsHtml = '';
+    for (let i = 0; i < fullStars; i++) starsHtml += '<span class="star" aria-hidden="true">&#9733;</span>';
+    if (halfStar) starsHtml += '<span class="star" aria-hidden="true">&#9733;</span>';
+    for (let i = 0; i < emptyStars; i++) starsHtml += '<span class="star empty" aria-hidden="true">&#9734;</span>';
+    return starsHtml;
+  }
+
+  async function loadVermieterProfil() {
+    const params = new URLSearchParams(location.search);
+    const userId = params.get("id");
+    if (!userId) {
+      document.getElementById("profile-info").innerText = "Keine Vermieter-ID übergeben.";
+      return;
+    }
+
+    const { data: { session } } = await supabase.auth.getSession();
+    const currentUser = session?.user;
+
+    document.getElementById("all-reviews-link").href = `bewertungen.html?id=${userId}`;
+
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles")
+      .select("name, city, bio, avatar_url")
+      .eq("id", userId)
+      .single();
+
+    const profilePhoto = document.getElementById("profile-photo");
+    if (profile?.avatar_url) {
+      profilePhoto.style.backgroundImage = `url(${profile.avatar_url})`;
+      profilePhoto.textContent = '';
+    } else {
+      profilePhoto.style.backgroundImage = 'none';
+      profilePhoto.textContent = getInitials(profile?.name);
+    }
+
+    document.getElementById("profile-info").innerHTML = profileError || !profile ? `
+      <p>Profil nicht gefunden.</p>
+    ` : `
+      <p><strong>Name:</strong> ${profile.name || 'Unbekannt'}</p>
+      <p><strong>Ort:</strong> ${profile.city || '–'}</p>
+      <p><strong>Über mich:</strong> ${profile.bio || '–'}</p>
     `;
 
-    const list = reviews.map(r => `
-      <article class="review-item" tabindex="0" aria-label="Bewertung ${r.rating} von 5 Sternen von ${r.from_user?.name || 'Unbekannt'}">
-        <div class="review-header">
-          <div class="reviewer-name">${r.from_user?.name || 'Unbekannt'}</div>
-          <div class="review-rating" aria-label="Bewertung: ${r.rating} von 5 Sternen">${createStarIcons(r.rating)}</div>
-        </div>
-        <time class="review-date" datetime="${new Date(r.created_at).toISOString()}">Verfasst am ${new Date(r.created_at).toLocaleDateString()}</time>
-      </article>
-    `).join('');
-    reviewList.innerHTML = summary + list;
-  }
-
-  // Bewertungsbutton prüfen
-  let hasReviewed = false;
-  if (currentUser) {
-    const { data: existingReview } = await supabase
+    const { data: reviews, error: reviewError } = await supabase
       .from("reviews")
-      .select("id")
+      .select("rating, comment, from_user_id, created_at, from_user:from_user_id(name, avatar_url)")
       .eq("to_user_id", userId)
-      .eq("from_user_id", currentUser.id)
-      .single();
-    hasReviewed = !!existingReview;
+      .order("created_at", { ascending: false })
+      .limit(2);
+
+    const reviewList = document.getElementById("reviews-list");
+    if (reviewError || !Array.isArray(reviews) || reviews.length === 0) {
+      reviewList.innerHTML = "<p>Noch keine Bewertungen.</p>";
+    } else {
+      const { data: allReviewsData } = await supabase
+        .from("reviews")
+        .select("rating")
+        .eq("to_user_id", userId);
+
+      const allRatings = allReviewsData || [];
+      const average = allRatings.length > 0 ? (allRatings.reduce((sum, r) => sum + r.rating, 0) / allRatings.length).toFixed(1) : "–";
+
+      const summary = `
+        <div id="rating-summary" aria-label="Durchschnittliche Bewertung: ${average} von 5 Sternen">
+          <div class="stars" aria-hidden="true">${createStarIcons(average)}</div>
+          <span>${average} / 5 aus ${allRatings.length} Bewertungen</span>
+        </div>
+      `;
+
+      const list = reviews.map(r => `
+        <article class="review-item" tabindex="0" aria-label="Bewertung ${r.rating} von 5 Sternen von ${r.from_user?.name || 'Unbekannt'}">
+          <div class="review-header">
+            <div class="reviewer-name">${r.from_user?.name || 'Unbekannt'}</div>
+            <div class="review-rating" aria-label="Bewertung: ${r.rating} von 5 Sternen">${createStarIcons(r.rating)}</div>
+          </div>
+          <time class="review-date" datetime="${new Date(r.created_at).toISOString()}">Verfasst am ${new Date(r.created_at).toLocaleDateString()}</time>
+        </article>
+      `).join('');
+      reviewList.innerHTML = summary + list;
+    }
+
+    let hasReviewed = false;
+    if (currentUser) {
+      const { data: existingReview } = await supabase
+        .from("reviews")
+        .select("id")
+        .eq("to_user_id", userId)
+        .eq("from_user_id", currentUser.id)
+        .single();
+      hasReviewed = !!existingReview;
+    }
+
+    const reviewBtn = document.getElementById("review-btn");
+    if (currentUser && currentUser.id !== userId && !hasReviewed) {
+      reviewBtn.style.display = "inline-block";
+      reviewBtn.onclick = () => location.href = `bewertung-schreiben.html?id=${userId}`;
+    } else {
+      reviewBtn.style.display = "none";
+    }
+
+    const { data: listings, error: listingError } = await supabase
+      .from("listings")
+      .select("*")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false });
+
+    const container = document.getElementById("listing-grid");
+    if (listingError || !Array.isArray(listings) || listings.length === 0) {
+      container.innerHTML = "<p>Keine Inserate gefunden.</p>";
+    } else {
+      container.innerHTML = listings.map(item => `
+        <article class="listing-card" tabindex="0" aria-label="Inserat: ${item.title}, Kategorie: ${item.category}, Preis: ${item.price_per_day} Euro pro Tag">
+          <img src="${item.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" alt="${item.title}" />
+          <h3>${item.title}</h3>
+          <p><strong>Preis:</strong> ${item.price_per_day} € / Tag</p>
+          <button aria-label="Details zu ${item.title}" onclick="location.href='mietobjekt.html?id=${item.id}'">Details</button>
+        </article>
+      `).join('');
+    }
   }
 
-  const reviewBtn = document.getElementById("review-btn");
-  if (currentUser && currentUser.id !== userId && !hasReviewed) {
-    reviewBtn.style.display = "inline-block";
-    reviewBtn.onclick = () => location.href = `bewertung-schreiben.html?id=${userId}`;
-  } else {
-    reviewBtn.style.display = "none";
-  }
-
-  // Inserate laden
-  const { data: listings, error: listingError } = await supabase
-    .from("listings")
-    .select("*")
-    .eq("user_id", userId)
-    .order("created_at", { ascending: false });
-
-  const container = document.getElementById("listing-grid");
-  if (listingError || !Array.isArray(listings) || listings.length === 0) {
-    container.innerHTML = "<p>Keine Inserate gefunden.</p>";
-  } else {
-    container.innerHTML = listings.map(item => `
-      <article class="listing-card" tabindex="0" aria-label="Inserat: ${item.title}, Kategorie: ${item.category}, Preis: ${item.price_per_day} Euro pro Tag">
-        <img src="${item.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" alt="${item.title}" />
-        <h3>${item.title}</h3>
-        <p><strong>Preis:</strong> ${item.price_per_day} € / Tag</p>
-        <button aria-label="Details zu ${item.title}" onclick="location.href='mietobjekt.html?id=${item.id}'">Details</button>
-      </article>
-    `).join('');
-  }
-}
-
-/* ===== INITIAL LOAD ===== */
-updateNav();
-loadVermieterProfil();
-</script>
-
+  updateNav();
+  loadVermieterProfil();
+  </script>
 </body>
 </html>
