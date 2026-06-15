@@ -4,7 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Suchergebnisse – Locorent</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <meta name="description" content="Finde passende Mietobjekte bei Locorent." />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
@@ -24,20 +25,19 @@
       --font-primary: 'Poppins', sans-serif;
     }
 
-    *, *::before, *::after {
-      box-sizing: border-box;
-    }
+    *, *::before, *::after { box-sizing: border-box; }
 
     body {
       margin: 0;
+      width: 100%;
+      overflow-x: hidden;
       font-family: var(--font-primary);
       background: linear-gradient(to bottom, #e8f5e9 0%, #ffffff 100%);
       color: var(--text-dark);
-      scroll-behavior: smooth;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
-      overflow-x: hidden;
+      scroll-behavior: smooth;
     }
 
     header {
@@ -53,6 +53,7 @@
       z-index: 1000;
       box-shadow: 0 10px 20px rgba(0,0,0,0.1);
       flex-wrap: wrap;
+      width: 100%;
     }
 
     header h1 {
@@ -111,16 +112,15 @@
     .hero {
       width: 100%;
       margin: 0;
-      padding: 2rem 2rem 2.5rem;
+      padding: 2rem 0 2.5rem;
       background: linear-gradient(135deg, #ffffff 0%, #f1f8e9 100%);
-      border-radius: 0 0 28px 28px;
-      box-shadow: 0 10px 30px rgba(46, 125, 50, 0.08);
       border-bottom: 1px solid rgba(46, 125, 50, 0.08);
     }
 
     .hero-inner {
       max-width: 1600px;
       margin: 0 auto;
+      padding: 0 2rem;
     }
 
     .hero h2 {
@@ -132,10 +132,11 @@
     }
 
     #current-category {
-      margin-top: 0.75rem;
-      font-weight: 600;
+      margin-top: 0.6rem;
       color: var(--text-muted);
+      font-weight: 500;
       text-align: left;
+      max-width: 720px;
     }
 
     .search-row {
@@ -186,11 +187,11 @@
       font-weight: 700;
       cursor: pointer;
       border: none;
-      height: 100%;
       min-height: 52px;
     }
 
-    .search-row button:hover {
+    .search-row button:hover,
+    .search-row button:focus {
       transform: translateY(-1px);
       box-shadow: 0 10px 20px rgba(46, 125, 50, 0.18);
     }
@@ -259,7 +260,15 @@
       display: block;
     }
 
-    .result-card h3 {
+    .result-card-body {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      flex: 1;
+    }
+
+    .result-card-body h3 {
       margin: 0;
       font-size: 1.05rem;
       line-height: 1.35;
@@ -271,10 +280,11 @@
       -webkit-box-orient: vertical;
     }
 
-    .result-card .info {
+    .result-meta {
       display: flex;
-      flex-direction: column;
-      gap: 0.35rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
       color: var(--text-muted);
       font-size: 0.92rem;
     }
@@ -286,7 +296,7 @@
       gap: 0.6rem;
     }
 
-    .result-card .buttons button {
+    .result-card button {
       width: 100%;
       padding: 0.75rem 0.9rem;
       border: none;
@@ -297,35 +307,77 @@
       font-size: 0.95rem;
     }
 
-    .result-card .buttons button:first-child {
+    .result-card .details-btn {
       background: var(--primary);
       color: var(--white);
     }
 
-    .result-card .buttons button:first-child:hover,
-    .result-card .buttons button:first-child:focus {
+    .result-card .details-btn:hover,
+    .result-card .details-btn:focus {
       background: var(--primary-dark);
       transform: translateY(-1px);
       outline: none;
     }
 
-    .fav-btn {
+    .result-card .fav-btn {
       background: var(--primary);
       color: var(--white);
+      border: none;
     }
 
-    .fav-btn:hover,
-    .fav-btn:focus {
+    .result-card .fav-btn:hover,
+    .result-card .fav-btn:focus {
       background: var(--primary-dark);
       transform: translateY(-1px);
       outline: none;
     }
 
-    .fav-btn:disabled {
+    .result-card .fav-btn:disabled {
       cursor: not-allowed;
       opacity: 0.7;
       background: #f3f3f3;
       color: #777;
+      border-color: #e1e1e1;
+    }
+
+    .more-link {
+      max-width: 1600px;
+      margin: 0.5rem auto 0;
+      padding: 0 2rem;
+      text-align: right;
+    }
+
+    .btn-more {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25em;
+      font-weight: 700;
+      color: var(--primary);
+      text-decoration: none;
+      border: 2px solid var(--primary);
+      padding: 0.25em 0.75em;
+      border-radius: 24px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      font-size: 0.9rem;
+      user-select: none;
+    }
+
+    .btn-more span {
+      display: inline-block;
+      font-size: 1.2rem;
+      transition: transform 0.3s ease;
+    }
+
+    .btn-more:hover,
+    .btn-more:focus {
+      background-color: var(--primary);
+      color: var(--white);
+      text-decoration: none;
+      outline: none;
+    }
+
+    .btn-more:hover span {
+      transform: translateX(5px);
     }
 
     footer {
@@ -417,8 +469,11 @@
       }
 
       .hero {
-        padding: 1.25rem 0.75rem 1.5rem;
-        border-radius: 0 0 22px 22px;
+        padding: 1.25rem 0 1.5rem;
+      }
+
+      .hero-inner {
+        padding: 0 0.75rem;
       }
 
       .search-row {
@@ -427,22 +482,18 @@
         margin-top: 1.25rem;
       }
 
-      .hero h2,
-      #current-category {
-        text-align: left;
-      }
-
       .category-grid {
         grid-template-columns: 1fr;
         gap: 0.85rem;
         padding: 0 0.75rem;
-        margin: 2rem 0;
-        max-width: 100%;
-        overflow: hidden;
       }
 
       .result-card {
         width: 100%;
+      }
+
+      .more-link {
+        padding: 0 0.75rem;
       }
 
       footer > div {
@@ -557,40 +608,41 @@
     <p>⏳ Lade Ergebnisse…</p>
   </div>
 
-  <footer style="background-color: #2e7d32; color: white; padding: 2rem;">
-    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2rem;">
-      <div style="flex: 1; min-width: 200px;">
-        <h4 style="margin-bottom: 0.5rem;">Mieten & Vermieten</h4>
-        <ul style="list-style: none; padding: 0; line-height: 1.8;">
-          <li><a href="so-funktionierts.html" style="color: white; text-decoration: underline;">So funktioniert's</a></li>
-          <li><a href="vermieter-werden.html" style="color: white; text-decoration: underline;">Werde zum Vermieter</a></li>
-          <li><a href="kategorien.html" style="color: white; text-decoration: underline;">Beliebte Kategorien</a></li>
-          <li><a href="vermieter-tipps.html" style="color: white; text-decoration: underline;">Tipps & Tricks für Vermieter</a></li>
-          <li><a href="hilfe-faq.html" style="color: white; text-decoration: underline;">Hilfe und FAQ</a></li>
+  <div class="more-link">
+    <a href="index.html" class="btn-more">ZURÜCK <span>←</span></a>
+  </div>
+
+  <footer role="contentinfo">
+    <div>
+      <div>
+        <h4>Mieten &amp; Vermieten</h4>
+        <ul>
+          <li><a href="so-funktionierts.html">So funktioniert's</a></li>
+          <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
+          <li><a href="kategorien.html">Beliebte Kategorien</a></li>
+          <li><a href="vermieter-tipps.html">Tipps &amp; Tricks für Vermieter</a></li>
+          <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
         </ul>
       </div>
-      <div style="flex: 1; min-width: 200px;">
-        <h4 style="margin-bottom: 0.5rem;">Wissenswertes</h4>
-        <ul style="list-style: none; padding: 0; line-height: 1.8;">
-          <li><a href="agb.html" style="color: white; text-decoration: underline;">AGB & Impressum</a></li>
-          <li><a href="datenschutz.html" style="color: white; text-decoration: underline;">Datenschutz</a></li>
+      <div>
+        <h4>Wissenswertes</h4>
+        <ul>
+          <li><a href="agb.html">AGB &amp; Impressum</a></li>
+          <li><a href="datenschutz.html">Datenschutz</a></li>
         </ul>
       </div>
-      <div style="flex: 1; min-width: 200px;">
-        <h4 style="margin-bottom: 0.5rem;">Über uns</h4>
-        <ul style="list-style: none; padding: 0; line-height: 1.8;">
-          <li><a href="kontakt.html" style="color: white; text-decoration: underline;">Kontaktieren Sie uns</a></li>
-          <li><a href="social-media.html" style="color: white; text-decoration: underline;">Folgen Sie uns</a></li>
-          <li><a href="mission.html" style="color: white; text-decoration: underline;">Unsere Mission</a></li>
+      <div>
+        <h4>Über uns</h4>
+        <ul>
+          <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
+          <li><a href="social-media.html">Folgen Sie uns</a></li>
+          <li><a href="mission.html">Unsere Mission</a></li>
         </ul>
       </div>
     </div>
-    <div style="margin-top: 2rem; text-align: center; font-size: 0.9rem;">
-      © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
-    </div>
+    <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     const sb = supabase.createClient(
       'https://flnjalgqtkqycsaymmbd.supabase.co',
@@ -792,24 +844,14 @@
         .from('listings')
         .select('*', { count: 'exact' });
 
-      if (filters.title) {
-        query = query.ilike('title', `%${filters.title}%`);
-      }
-
-      if (filters.category) {
-        query = query.eq('category', filters.category);
-      }
+      if (filters.title) query = query.ilike('title', `%${filters.title}%`);
+      if (filters.category) query = query.eq('category', filters.category);
 
       const min = filters.minPrice ? parseFloat(filters.minPrice) : null;
       const max = filters.maxPrice ? parseFloat(filters.maxPrice) : null;
 
-      if (min !== null && !isNaN(min)) {
-        query = query.gte('price_per_day', min);
-      }
-
-      if (max !== null && !isNaN(max)) {
-        query = query.lte('price_per_day', max);
-      }
+      if (min !== null && !isNaN(min)) query = query.gte('price_per_day', min);
+      if (max !== null && !isNaN(max)) query = query.lte('price_per_day', max);
 
       switch (filters.sort) {
         case "price_asc":
@@ -918,27 +960,35 @@
         const isFavorite = await checkIfFavorite(item.id);
 
         card.innerHTML = `
-          <img src="${item.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" alt="${item.title}" />
+          <img src="${item.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" alt="${item.title || 'Bild'}" />
           <div class="result-card-body">
             <h3>${item.title || 'Kein Titel'}</h3>
-            <div class="info">
-              <p><strong>Preis pro Tag:</strong> ${item.price_per_day || 'k. A.'} €</p>
+            <div class="result-meta">
+              <span>${item.location || ''}</span>
+            </div>
+            <div class="result-meta">
+              <strong>${item.price_per_day || 'k. A.'} € / Tag</strong>
             </div>
             <div class="buttons">
-              <button onclick="window.location.href='mietobjekt.html?id=${item.id}'">Details ansehen</button>
-              <button class="fav-btn">${isFavorite ? "Favorit entfernen" : "Zu Favoriten"}</button>
+              <button class="details-btn" onclick="window.location.href='mietobjekt.html?id=${item.id}'">Details ansehen</button>
+              <button class="fav-btn">${isFavorite ? 'Bereits Favorit' : 'Zu Favoriten'}</button>
             </div>
           </div>
         `;
 
         const favBtn = card.querySelector(".fav-btn");
         if (userSession?.user) {
-          favBtn.addEventListener("click", async (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            const toggled = await toggleFavorite(item.id);
-            favBtn.innerText = toggled ? "Favorit entfernen" : "Zu Favoriten";
-          });
+          if (isFavorite) {
+            favBtn.disabled = true;
+          } else {
+            favBtn.addEventListener("click", async (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              const toggled = await toggleFavorite(item.id);
+              favBtn.innerText = toggled ? "Bereits Favorit" : "Zu Favoriten";
+              if (toggled) favBtn.disabled = true;
+            });
+          }
         } else {
           favBtn.disabled = true;
           favBtn.innerText = "Login erforderlich";
