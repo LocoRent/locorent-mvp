@@ -400,12 +400,6 @@
         padding: 0 0.75rem;
       }
 
-      form.search-form {
-        grid-template-columns: 1fr;
-        gap: 0.85rem;
-        margin-top: 1.25rem;
-      }
-
       .category-grid {
         grid-template-columns: 1fr;
         gap: 0.85rem;
@@ -518,6 +512,66 @@
       window.location.href = "login.html";
     }
 
+    async function checkIfFavorite(listingId) {
+      if (!userSession?.user) return false;
+
+      const { data, error } = await sb
+        .from('favorites')
+        .select('*')
+        .eq('user_id', userSession.user.id)
+        .eq('listing_id', listingId)
+        .maybeSingle();
+
+      if (error) {
+        console.error('Fehler beim Prüfen des Favoritenstatus:', error);
+        return false;
+      }
+
+      return !!data;
+    }
+
+    async function toggleFavorite(listingId) {
+      if (!userSession?.user) return false;
+
+      const { data, error: fetchError } = await sb
+        .from('favorites')
+        .select('*')
+        .eq('user_id', userSession.user.id)
+        .eq('listing_id', listingId)
+        .maybeSingle();
+
+      if (fetchError) {
+        console.error('Fehler beim Prüfen des Favoritenstatus:', fetchError);
+        return false;
+      }
+
+      if (data) {
+        const { error: deleteError } = await sb
+          .from('favorites')
+          .delete()
+          .eq('user_id', userSession.user.id)
+          .eq('listing_id', listingId);
+
+        if (deleteError) {
+          console.error('Fehler beim Entfernen aus Favoriten:', deleteError);
+          return true;
+        }
+
+        return false;
+      } else {
+        const { error: insertError } = await sb
+          .from('favorites')
+          .insert({ user_id: userSession.user.id, listing_id: listingId });
+
+        if (insertError) {
+          console.error('Fehler beim Hinzufügen zu Favoriten:', insertError);
+          return false;
+        }
+
+        return true;
+      }
+    }
+
     async function loadPopularOffers() {
       const container = document.getElementById('offers-grid');
       container.setAttribute('aria-busy', 'true');
@@ -539,11 +593,13 @@
         }
 
         container.innerHTML = '';
+
         for (const item of data) {
           const card = document.createElement('div');
           card.className = 'result-card';
 
           const imgUrl = item.image_urls?.[0] || 'https://via.placeholder.com/400x200';
+          const isFav = userSession?.user ? await checkIfFavorite(item.id) : false;
 
           card.innerHTML = `
             <img src="${imgUrl}" alt="${item.title || 'Bild'}" />
@@ -557,9 +613,27 @@
               </div>
               <div class="buttons">
                 <button class="details-btn" onclick="window.location.href='mietobjekt.html?id=${item.id}'">Details ansehen</button>
+                <button class="fav-btn">${userSession?.user ? (isFav ? 'Bereits Favorit' : 'Zu Favoriten') : 'Login erforderlich'}</button>
               </div>
             </div>
           `;
+
+          const favBtn = card.querySelector('.fav-btn');
+
+          if (userSession?.user) {
+            if (isFav) {
+              favBtn.disabled = true;
+            } else {
+              favBtn.onclick = async (e) => {
+                e.preventDefault();
+                const nowFav = await toggleFavorite(item.id);
+                favBtn.innerText = nowFav ? 'Bereits Favorit' : 'Zu Favoriten';
+                if (nowFav) favBtn.disabled = true;
+              };
+            }
+          } else {
+            favBtn.disabled = true;
+          }
 
           container.appendChild(card);
         }
