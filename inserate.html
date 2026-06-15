@@ -41,7 +41,6 @@
       min-height: 100vh;
     }
 
-    /* Header unverändert lassen */
     header {
       background-color: var(--primary);
       color: var(--white);
@@ -898,12 +897,61 @@
       const ok = confirm('Möchtest du dieses Inserat wirklich löschen?');
       if (!ok) return;
 
-      const { error } = await sb.from('listings').delete().eq('id', id);
-      if (error) {
+      try {
+        const { data: listing, error: fetchError } = await sb
+          .from('listings')
+          .select('image_urls')
+          .eq('id', id)
+          .maybeSingle();
+
+        if (fetchError) {
+          console.error(fetchError);
+          alert('Fehler beim Laden der Inseratsdaten.');
+          return;
+        }
+
+        const imageUrls = listing?.image_urls || [];
+        if (Array.isArray(imageUrls) && imageUrls.length > 0) {
+          const paths = imageUrls
+            .map(url => {
+              try {
+                const u = new URL(url);
+                const parts = u.pathname.split('/');
+                const idx = parts.indexOf('listing-images');
+                if (idx !== -1 && idx + 1 < parts.length) {
+                  return parts.slice(idx + 1).join('/');
+                }
+                return null;
+              } catch {
+                return null;
+              }
+            })
+            .filter(Boolean);
+
+          if (paths.length > 0) {
+            const { error: storageError } = await sb.storage
+              .from('listing-images')
+              .remove(paths);
+
+            if (storageError) {
+              console.error('Fehler beim Löschen der Bilder aus Storage:', storageError);
+            }
+          }
+        }
+
+        const { error: deleteError } = await sb.from('listings').delete().eq('id', id);
+
+        if (deleteError) {
+          console.error(deleteError);
+          alert('Fehler beim Löschen des Inserats.');
+          return;
+        }
+
+        loadMyListings();
+      } catch (err) {
+        console.error(err);
         alert('Fehler beim Löschen.');
-        return;
       }
-      loadMyListings();
     }
 
     (async () => {
