@@ -4,7 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Suchergebnisse – Locorent</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <meta name="description" content="Finde passende Mietobjekte bei Locorent." />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
@@ -24,20 +25,19 @@
       --font-primary: 'Poppins', sans-serif;
     }
 
-    *, *::before, *::after {
-      box-sizing: border-box;
-    }
+    *, *::before, *::after { box-sizing: border-box; }
 
     body {
       margin: 0;
+      width: 100%;
+      overflow-x: hidden;
       font-family: var(--font-primary);
       background: linear-gradient(to bottom, #e8f5e9 0%, #ffffff 100%);
       color: var(--text-dark);
-      scroll-behavior: smooth;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
-      overflow-x: hidden;
+      scroll-behavior: smooth;
     }
 
     header {
@@ -53,6 +53,7 @@
       z-index: 1000;
       box-shadow: 0 10px 20px rgba(0,0,0,0.1);
       flex-wrap: wrap;
+      width: 100%;
     }
 
     header h1 {
@@ -111,16 +112,15 @@
     .hero {
       width: 100%;
       margin: 0;
-      padding: 2rem 2rem 2.5rem;
+      padding: 2rem 0 2.5rem;
       background: linear-gradient(135deg, #ffffff 0%, #f1f8e9 100%);
-      border-radius: 0 0 28px 28px;
-      box-shadow: 0 10px 30px rgba(46, 125, 50, 0.08);
       border-bottom: 1px solid rgba(46, 125, 50, 0.08);
     }
 
     .hero-inner {
       max-width: 1600px;
       margin: 0 auto;
+      padding: 0 2rem;
     }
 
     .hero h2 {
@@ -132,10 +132,11 @@
     }
 
     #current-category {
-      margin-top: 0.75rem;
-      font-weight: 600;
+      margin-top: 0.6rem;
       color: var(--text-muted);
+      font-weight: 500;
       text-align: left;
+      max-width: 720px;
     }
 
     .search-row {
@@ -225,24 +226,12 @@
 
     .category-grid {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 1.25rem;
       margin: 2rem auto;
       padding: 0 2rem;
       max-width: 1600px;
       box-sizing: border-box;
-    }
-
-    @media (max-width: 1400px) {
-      .category-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 1100px) {
-      .category-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
     }
 
     .result-card {
@@ -447,6 +436,12 @@
       margin-top: 2rem;
       text-align: center;
       opacity: 0.85;
+    }
+
+    @media (max-width: 1200px) {
+      .search-row {
+        grid-template-columns: 1.6fr 1fr 1fr 1fr;
+      }
     }
 
     @media (max-width: 720px) {
