@@ -451,21 +451,14 @@
     }
 
     @media (max-width: 720px) {
-      #nav-toggle {
-        display: block;
-      }
-
+      #nav-toggle { display: block; }
       nav#nav-links {
         display: none;
         flex-direction: column;
         width: 100%;
         margin-top: 1rem;
       }
-
-      nav#nav-links.show {
-        display: flex;
-      }
-
+      nav#nav-links.show { display: flex; }
       nav#nav-links a {
         margin: 0.4rem 0;
         padding: 0.5rem 1rem;
@@ -473,39 +466,17 @@
         border-radius: 6px;
         display: block;
       }
-
-      main {
-        padding: 1.25rem 0.75rem 3rem;
-      }
-
-      .panel {
-        padding: 1rem;
-      }
-
-      .form-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .actions {
-        justify-content: stretch;
-      }
-
-      .btn {
-        width: 100%;
-      }
-
-      .listing-grid {
-        grid-template-columns: 1fr;
-      }
-
+      main { padding: 1.25rem 0.75rem 3rem; }
+      .panel { padding: 1rem; }
+      .form-grid { grid-template-columns: 1fr; }
+      .actions { justify-content: stretch; }
+      .btn { width: 100%; }
+      .listing-grid { grid-template-columns: 1fr; }
       footer > div {
         flex-direction: column;
         align-items: flex-start;
       }
-
-      footer > div > div {
-        width: 100%;
-      }
+      footer > div > div { width: 100%; }
     }
   </style>
 </head>
@@ -573,7 +544,7 @@
 
           <div class="form-group">
             <label for="location">Ort</label>
-            <input type="text" id="location" placeholder="z. B. Frankfurt am Main" required />
+            <input type="text" id="location" placeholder="z. B. Frankfurt am Main" required autocomplete="off" />
           </div>
 
           <div class="form-group full">
@@ -651,9 +622,12 @@
     const imagesInput = document.getElementById('images');
     const resetBtn = document.getElementById('reset-btn');
     const listingsContainer = document.getElementById('my-listings');
+    const locationInput = document.getElementById('location');
 
     let user = null;
     let selectedFiles = [];
+    let debounceTimer;
+    let locationSuggestionsBox;
 
     function updateNav() {
       nav.innerHTML = user ? `
@@ -704,9 +678,141 @@
       preview.innerHTML = '';
     });
 
+    /* 1) Ortssuche wieder aktiv */
+    function initLocationSuggestions() {
+      const wrapper = locationInput.parentElement;
+      wrapper.style.position = 'relative';
+
+      locationSuggestionsBox = document.createElement('div');
+      locationSuggestionsBox.id = 'location-suggestions';
+      locationSuggestionsBox.style.position = 'absolute';
+      locationSuggestionsBox.style.top = 'calc(100% + 6px)';
+      locationSuggestionsBox.style.left = '0';
+      locationSuggestionsBox.style.right = '0';
+      locationSuggestionsBox.style.maxHeight = '180px';
+      locationSuggestionsBox.style.overflowY = 'auto';
+      locationSuggestionsBox.style.background = '#fff';
+      locationSuggestionsBox.style.border = '1px solid rgba(46, 125, 50, 0.15)';
+      locationSuggestionsBox.style.borderRadius = '12px';
+      locationSuggestionsBox.style.boxShadow = '0 12px 25px rgba(0,0,0,0.08)';
+      locationSuggestionsBox.style.zIndex = '20';
+      locationSuggestionsBox.style.display = 'none';
+
+      wrapper.appendChild(locationSuggestionsBox);
+
+      locationInput.addEventListener('input', () => {
+        clearTimeout(debounceTimer);
+        const value = locationInput.value.trim();
+
+        if (value.length < 2) {
+          locationSuggestionsBox.innerHTML = '';
+          locationSuggestionsBox.style.display = 'none';
+          return;
+        }
+
+        debounceTimer = setTimeout(async () => {
+          try {
+            const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&countrycodes=de&limit=5&q=${encodeURIComponent(value)}`);
+            const results = await res.json();
+
+            locationSuggestionsBox.innerHTML = '';
+
+            if (!results.length) {
+              locationSuggestionsBox.innerHTML = '<div style="padding:0.75rem 1rem;">Kein Ort gefunden</div>';
+              locationSuggestionsBox.style.display = 'block';
+              return;
+            }
+
+            results.forEach(r => {
+              const addr = r.address || {};
+              const city = addr.city || addr.town || addr.village || addr.municipality || r.display_name.split(',')[0];
+              const state = addr.state || '';
+              const display = [city, state, "Deutschland"].filter(Boolean).join(', ');
+
+              const div = document.createElement('div');
+              div.textContent = display;
+              div.style.padding = '0.75rem 1rem';
+              div.style.cursor = 'pointer';
+              div.style.borderBottom = '1px solid #f0f0f0';
+
+              div.addEventListener('mouseenter', () => div.style.backgroundColor = '#e8f5e9');
+              div.addEventListener('mouseleave', () => div.style.backgroundColor = '#fff');
+
+              div.onclick = () => {
+                locationInput.value = display;
+                locationSuggestionsBox.innerHTML = '';
+                locationSuggestionsBox.style.display = 'none';
+              };
+
+              locationSuggestionsBox.appendChild(div);
+            });
+
+            locationSuggestionsBox.style.display = 'block';
+          } catch (err) {
+            console.error("Fehler bei Ortssuche:", err);
+          }
+        }, 400);
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!wrapper.contains(e.target)) {
+          locationSuggestionsBox.innerHTML = '';
+          locationSuggestionsBox.style.display = 'none';
+        }
+      });
+    }
+
+    /* 2) Speichern wieder aktiv */
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      alert('Speichern-Logik bleibt hier wie in deiner bestehenden Seite eingebunden.');
+
+      if (!user) {
+        alert('Bitte zuerst einloggen.');
+        return;
+      }
+
+      try {
+        const title = document.getElementById('title').value.trim();
+        const category = document.getElementById('category').value;
+        const price_per_day = parseFloat(document.getElementById('price_per_day').value);
+        const location = document.getElementById('location').value.trim();
+        const description = document.getElementById('description').value.trim();
+
+        if (!title || !category || !price_per_day || !location || !description) {
+          alert('Bitte alle Pflichtfelder ausfüllen.');
+          return;
+        }
+
+        const image_urls = selectedFiles.length
+          ? selectedFiles.map(file => URL.createObjectURL(file))
+          : [];
+
+        const { error } = await sb.from('listings').insert({
+          user_id: user.id,
+          title,
+          category,
+          price_per_day,
+          location,
+          description,
+          image_urls,
+          created_at: new Date().toISOString()
+        });
+
+        if (error) {
+          console.error(error);
+          alert('Fehler beim Speichern.');
+          return;
+        }
+
+        alert('Inserat erfolgreich gespeichert!');
+        form.reset();
+        selectedFiles = [];
+        preview.innerHTML = '';
+        await loadMyListings();
+      } catch (err) {
+        console.error(err);
+        alert('Fehler beim Speichern.');
+      }
     });
 
     async function loadMyListings() {
@@ -779,6 +885,7 @@
       const { data: { user: currentUser } } = await sb.auth.getUser();
       user = currentUser;
       updateNav();
+      initLocationSuggestions();
       await loadMyListings();
     })();
   </script>
