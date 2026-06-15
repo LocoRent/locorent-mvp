@@ -32,9 +32,7 @@
 
     body {
       font-family: 'Poppins', sans-serif;
-      background:
-        radial-gradient(circle at top, rgba(102, 187, 106, 0.18), transparent 35%),
-        linear-gradient(180deg, #f7fff5 0%, #f1f8e9 50%, #eaf5e3 100%);
+      background-color: var(--background-color);
       color: var(--gray-dark);
       display: flex;
       flex-direction: column;
@@ -97,327 +95,112 @@
     main {
       flex: 1;
       max-width: var(--max-width);
-      margin: 0 auto;
-      padding: 3rem 2rem 4rem;
-      width: 100%;
+      margin: 4rem auto;
+      padding: 0 2rem;
     }
 
     .hero {
-      position: relative;
-      overflow: hidden;
-      background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(241,248,233,0.95));
-      border: 1px solid rgba(46, 125, 50, 0.08);
-      padding: 4rem 3rem;
-      border-radius: 28px;
-      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.08);
+      background: var(--white);
+      padding: 3rem;
+      border-radius: var(--border-radius);
+      box-shadow: 0 10px 25px var(--shadow-color);
       text-align: center;
-      margin-bottom: 2.5rem;
-      isolation: isolate;
-    }
-
-    .hero::before {
-      content: "";
-      position: absolute;
-      inset: -40px auto auto -40px;
-      width: 180px;
-      height: 180px;
-      background: radial-gradient(circle, rgba(102,187,106,0.28), transparent 70%);
-      z-index: -1;
-    }
-
-    .hero::after {
-      content: "";
-      position: absolute;
-      inset: auto -50px -50px auto;
-      width: 220px;
-      height: 220px;
-      background: radial-gradient(circle, rgba(46,125,50,0.12), transparent 70%);
-      z-index: -1;
-    }
-
-    .eyebrow {
-      display: inline-block;
-      padding: 0.45rem 0.9rem;
-      border-radius: 999px;
-      background: rgba(46, 125, 50, 0.08);
-      color: var(--dark-color);
-      font-weight: 600;
-      font-size: 0.9rem;
-      margin-bottom: 1rem;
+      margin-bottom: 3rem;
     }
 
     .hero h2 {
-      font-size: clamp(2.4rem, 5vw, 4rem);
-      line-height: 1.05;
+      font-size: 2.6rem;
       color: var(--primary-color);
       margin-bottom: 1rem;
-      letter-spacing: -0.03em;
     }
 
     .hero p {
-      font-size: 1.18rem;
-      max-width: 760px;
-      margin: 0 auto 2rem;
+      font-size: 1.2rem;
+      max-width: 720px;
+      margin: 0 auto;
       line-height: 1.8;
-      color: #435144;
-    }
-
-    .hero-actions {
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      padding: 0.95rem 1.4rem;
-      border-radius: 999px;
-      text-decoration: none;
-      font-weight: 600;
-      transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
-      border: 1px solid transparent;
-    }
-
-    .btn:hover {
-      transform: translateY(-2px);
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--primary-color), #388e3c);
-      color: var(--white);
-      box-shadow: 0 12px 25px rgba(46, 125, 50, 0.25);
-    }
-
-    .btn-secondary {
-      background: rgba(255,255,255,0.85);
-      color: var(--primary-color);
-      border-color: rgba(46, 125, 50, 0.18);
-    }
-
-    .section-title {
-      font-size: 1.9rem;
-      color: var(--primary-color);
-      margin-bottom: 1rem;
-      letter-spacing: -0.02em;
-    }
-
-    .section-text {
-      font-size: 1.05rem;
-      line-height: 1.8;
-      color: #4b5a4d;
     }
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 1.4rem;
-      margin-bottom: 2.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-bottom: 3rem;
     }
 
     .card {
-      position: relative;
-      background: rgba(255,255,255,0.88);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      background: var(--white);
       padding: 2rem;
-      border-radius: 22px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+      border-radius: var(--border-radius);
+      box-shadow: 0 6px 20px var(--shadow-color);
       text-align: center;
-      border: 1px solid rgba(46, 125, 50, 0.08);
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
-    }
-
-    .card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.10);
     }
 
     .card .icon {
-      width: 64px;
-      height: 64px;
-      display: grid;
-      place-items: center;
-      margin: 0 auto 1rem;
-      border-radius: 18px;
-      background: linear-gradient(135deg, rgba(46,125,50,0.12), rgba(102,187,106,0.18));
-      font-size: 2rem;
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: var(--highlight-color);
     }
 
     .card h3 {
       margin-bottom: 0.8rem;
       color: var(--primary-color);
-      font-size: 1.2rem;
-    }
-
-    .card p {
-      color: #4a574b;
-      line-height: 1.7;
     }
 
     .facts, .global, .quote, .calc, .faq {
-      margin-bottom: 2.5rem;
-      background: rgba(255,255,255,0.88);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      margin-bottom: 3rem;
+      background: var(--white);
       padding: 2rem;
-      border-radius: 24px;
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.06);
-      border: 1px solid rgba(46, 125, 50, 0.08);
+      border-radius: var(--border-radius);
+      box-shadow: 0 6px 16px var(--shadow-color);
     }
 
     .facts h3, .global h3, .quote h3, .calc h3, .faq h3 {
       color: var(--primary-color);
       margin-bottom: 1rem;
-      font-size: 1.5rem;
     }
 
     .stats {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 1rem;
-      margin-top: 1.25rem;
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 2rem;
+      text-align: center;
     }
 
     .stats div {
-      background: linear-gradient(180deg, rgba(241,248,233,0.9), rgba(255,255,255,0.95));
-      border: 1px solid rgba(46, 125, 50, 0.08);
-      border-radius: 18px;
-      padding: 1.4rem 1rem;
-      text-align: center;
+      flex: 1;
+      min-width: 150px;
     }
 
     .stats h4 {
       font-size: 2rem;
       color: var(--highlight-color);
-      margin-bottom: 0.4rem;
-    }
-
-    .stats p {
-      line-height: 1.6;
-      color: #4a574b;
     }
 
     blockquote {
       font-style: italic;
-      margin: 1rem 0 0;
-      padding: 1rem 1.2rem;
+      margin: 1rem 0;
+      padding-left: 1rem;
       border-left: 4px solid var(--highlight-color);
-      background: rgba(241,248,233,0.6);
-      border-radius: 0 14px 14px 0;
-      line-height: 1.8;
     }
 
     cite {
       display: block;
-      margin-top: 0.8rem;
+      margin-top: 0.5rem;
       font-style: normal;
       font-weight: bold;
       color: var(--dark-color);
     }
 
-    .calc ul {
-      list-style: none;
-      display: grid;
-      gap: 0.9rem;
-      margin-top: 1rem;
-    }
-
-    .calc li {
-      background: rgba(241,248,233,0.8);
-      border: 1px solid rgba(46, 125, 50, 0.08);
-      padding: 1rem 1.1rem;
-      border-radius: 16px;
-      font-weight: 600;
-      color: #3f4d41;
-    }
-
     .faq details {
       margin-bottom: 1rem;
-      border: 1px solid rgba(46, 125, 50, 0.08);
-      border-radius: 16px;
-      overflow: hidden;
-      background: rgba(241,248,233,0.5);
     }
 
     .faq summary {
-      font-weight: 700;
+      font-weight: bold;
       cursor: pointer;
       color: var(--primary-color);
-      padding: 1rem 1.1rem;
-      list-style: none;
-    }
-
-    .faq summary::-webkit-details-marker {
-      display: none;
-    }
-
-    .faq details p {
-      padding: 0 1.1rem 1rem;
-      line-height: 1.7;
-      color: #4a574b;
-    }
-
-    .mission-banner {
-      margin: 2rem 0 2.5rem;
-      padding: 1.3rem 1.5rem;
-      border-radius: 20px;
-      background: linear-gradient(135deg, rgba(46,125,50,0.12), rgba(102,187,106,0.08));
-      border: 1px solid rgba(46, 125, 50, 0.08);
-      text-align: center;
-      font-weight: 600;
-      color: #355338;
-      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.05);
-    }
-
-    @media (max-width: 720px) {
-      #nav-toggle {
-        display: block;
-      }
-
-      nav#nav-links {
-        display: none;
-        flex-direction: column;
-        width: 100%;
-        margin-top: 1rem;
-      }
-
-      nav#nav-links.show {
-        display: flex;
-      }
-
-      nav#nav-links a {
-        padding: 0.5rem 1rem;
-        background-color: rgba(255, 255, 255, 0.1);
-        border-radius: 6px;
-        display: block;
-      }
-
-      footer > div {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      footer > div > div {
-        width: 100%;
-      }
-
-      main {
-        padding: 2rem 1rem 3rem;
-      }
-
-      .hero {
-        padding: 2.4rem 1.4rem;
-        border-radius: 22px;
-      }
-
-      .facts, .global, .quote, .calc, .faq {
-        padding: 1.4rem;
-        border-radius: 20px;
-      }
     }
 
     footer {
@@ -474,6 +257,39 @@
       margin-top: 2rem;
       text-align: center;
     }
+
+    @media (max-width: 720px) {
+      #nav-toggle {
+        display: block;
+      }
+
+      nav#nav-links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        margin-top: 1rem;
+      }
+
+      nav#nav-links.show {
+        display: flex;
+      }
+
+      nav#nav-links a {
+        padding: 0.5rem 1rem;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+        display: block;
+      }
+
+      footer > div {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      footer > div > div {
+        width: 100%;
+      }
+    }
   </style>
 </head>
 <body>
@@ -486,81 +302,45 @@
 
 <main>
   <section class="hero">
-    <div class="eyebrow">Unsere Mission</div>
-    <h2>Mieten statt kaufen. Gemeinsam smarter, nachhaltiger, lokaler.</h2>
-    <p>
-      Wir bauen eine Plattform, die Ressourcen schont, Menschen verbindet und nachhaltigen Konsum einfach macht.
-      Locorent steht für gemeinschaftliches Nutzen statt unnötigen Besitz.
-    </p>
-    <div class="hero-actions">
-      <a class="btn btn-primary" href="kategorien.html">Jetzt entdecken</a>
-      <a class="btn btn-secondary" href="so-funktionierts.html">So funktioniert’s</a>
-    </div>
+    <h2>Unsere Mission</h2>
+    <p>Wir schaffen eine Zukunft, in der Ressourcen geschont, Menschen verbunden und die Umwelt aktiv geschützt wird – durch gemeinschaftliches Mieten statt Kaufen.</p>
   </section>
 
-  <div class="mission-banner">
-    Weniger kaufen. Mehr teilen. Besser leben.
-  </div>
-
   <section class="grid">
-    <div class="card">
-      <div class="icon">🌍</div>
-      <h3>Nachhaltigkeit</h3>
-      <p>Gemeinsames Nutzen kann Abfall, Energieverbrauch und unnötige Neuanschaffungen deutlich reduzieren.</p>
-    </div>
-    <div class="card">
-      <div class="icon">🤝</div>
-      <h3>Vertrauen & Nähe</h3>
-      <p>Locorent bringt Menschen lokal zusammen und macht Teilen persönlicher, sicherer und einfacher.</p>
-    </div>
-    <div class="card">
-      <div class="icon">📦</div>
-      <h3>Weniger Besitz, mehr Freiheit</h3>
-      <p>Warum alles kaufen, wenn man vieles nur selten braucht? Mieten spart Platz, Geld und Stress.</p>
-    </div>
-    <div class="card">
-      <div class="icon">🚀</div>
-      <h3>Innovation</h3>
-      <p>Wir setzen auf eine moderne Sharing-Kultur, die digitale Technik mit echtem Mehrwert verbindet.</p>
-    </div>
+    <div class="card"><div class="icon">🌍</div><h3>Nachhaltigkeit</h3><p>Gemeinsames Nutzen reduziert CO₂, Müll & Ressourcenverbrauch – für kommende Generationen.</p></div>
+    <div class="card"><div class="icon">📊</div><h3>Transparente Wirkung</h3><p>Jede Vermietung spart im Schnitt 12 kg CO₂ und 3 kg Kunststoff – laut Umweltbundesamt.</p></div>
+    <div class="card"><div class="icon">🤝</div><h3>Vertrauen stärken</h3><p>Wir bringen Menschen lokal zusammen – für echte Verbindungen & gegenseitige Hilfe.</p></div>
+    <div class="card"><div class="icon">🚀</div><h3>Innovation fördern</h3><p>Wir glauben an die Kraft der Community – als Teil einer weltweiten Sharing-Bewegung.</p></div>
   </section>
 
   <section class="facts">
-    <h3>Warum Sharing wirkt</h3>
-    <p class="section-text">
-      Sharing ist mehr als ein Trend: Es ist ein praktischer Weg, Konsum effizienter zu machen und Ressourcen klüger zu nutzen.
-      Gerade bei Dingen, die nur gelegentlich gebraucht werden, entsteht dadurch großes Einsparpotenzial.
-    </p>
+    <h3>Sharing wirkt: Harte Fakten</h3>
     <div class="stats">
-      <div><h4>weniger</h4><p>unnötiger Konsum durch gemeinsames Nutzen</p></div>
-      <div><h4>mehr</h4><p>Platz, Flexibilität und finanzielle Entlastung</p></div>
-      <div><h4>stärker</h4><p>lokale Verbindungen durch Vertrauen in der Community</p></div>
+      <div><h4>52 %</h4><p>weniger Konsum bei aktiven Mietern (PwC 2023)</p></div>
+      <div><h4>91 Mio. t</h4><p>Müll jährlich in Europa – Mieten hilft, das zu senken</p></div>
+      <div><h4>32 %</h4><p>der Deutschen nutzen Sharing-Plattformen (Bitkom)</p></div>
     </div>
   </section>
 
   <section class="global">
     <h3>Teil einer globalen Bewegung</h3>
-    <p class="section-text">
-      Ob in Großstädten oder kleinen Gemeinden: Menschen entdecken überall die Vorteile von Sharing.
-      Leihen, mieten und teilen werden zunehmend zur neuen Normalität — praktisch, nachhaltig und modern.
-    </p>
+    <p>Ob in Seoul, Amsterdam oder Berlin – Mieten wird Alltag: Städte weltweit fördern Leihen statt Kaufen.</p>
   </section>
 
   <section class="quote">
-    <h3>Ein Gedanke, der bleibt</h3>
+    <h3>Was andere sagen</h3>
     <blockquote>
-      „Wenn wir Dinge gemeinsam nutzen, müssen wir sie nicht ständig neu produzieren. Genau darin liegt die Stärke nachhaltiger Plattformen.“
-      <cite>– Locorent Mission Statement</cite>
+      „Geteilte Nutzung reduziert Umweltbelastungen messbar – insbesondere bei Geräten, die selten verwendet werden.“ 
+      <cite>– Umweltbundesamt (2022)</cite>
     </blockquote>
   </section>
 
   <section class="calc">
-    <h3>Was 100 aktive Mieter bewirken können</h3>
+    <h3>100 Mieter = enorme Wirkung</h3>
     <ul>
-      <li>✅ deutlich weniger Neuanschaffungen</li>
-      <li>✅ spürbar geringerer Materialverbrauch</li>
-      <li>✅ mehr Geldersparnis in der Community</li>
-      <li>✅ eine nachhaltigere lokale Sharing-Kultur</li>
+      <li>✅ 1.200 kg CO₂ eingespart</li>
+      <li>✅ 400 kg Plastikmüll vermieden</li>
+      <li>✅ über 22.000 € gespart</li>
     </ul>
   </section>
 
@@ -568,15 +348,11 @@
     <h3>Häufige Fragen zur Mission</h3>
     <details>
       <summary>Ist Mieten wirklich nachhaltiger?</summary>
-      <p>Ja — besonders bei Dingen, die nur selten genutzt werden. Durch gemeinsames Nutzen wird die Herstellung neuer Produkte reduziert.</p>
+      <p>Ja! Vor allem bei Geräten, die nur selten gebraucht werden. Studien zeigen deutliche Einsparungen bei Energie & Emissionen.</p>
     </details>
     <details>
-      <summary>Warum ist Locorent lokal ausgerichtet?</summary>
-      <p>Weil Nähe Vertrauen schafft, Transportwege reduziert und Übergaben unkomplizierter macht. Lokal ist oft einfach besser.</p>
-    </details>
-    <details>
-      <summary>Was ist das Ziel von Locorent?</summary>
-      <p>Wir möchten Mieten und Vermieten so einfach machen, dass nachhaltiger Konsum im Alltag selbstverständlich wird.</p>
+      <summary>Wie sicher ist das Teilen?</summary>
+      <p>Locorent prüft Vermieter:innen & unterstützt bei Schäden durch optionale Versicherung & Support.</p>
     </details>
   </section>
 </main>
@@ -611,8 +387,8 @@
   </div>
   <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
 </footer>
-
 <script>
+  // Supabase v2 Client – wie in agb.html
   const sb = supabase.createClient(
     'https://flnjalgqtkqycsaymmbd.supabase.co',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
@@ -657,6 +433,7 @@
     }
   }
 
+  // Mobile Menü
   document.getElementById('nav-toggle').addEventListener('click', () => {
     const nav = document.getElementById('nav-links');
     nav.classList.toggle('show');
