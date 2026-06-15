@@ -225,75 +225,107 @@
 
     .category-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 2rem;
-      margin: 2rem;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
+      margin: 2rem auto;
       padding: 0 2rem;
+      max-width: 1600px;
       box-sizing: border-box;
     }
 
     .result-card {
+      background: var(--white);
+      border: 1px solid rgba(46,125,50,0.08);
+      border-radius: 22px;
+      box-shadow: 0 12px 28px rgba(46,125,50,0.08);
+      overflow: hidden;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      background-color: var(--white);
-      border-radius: 10px;
-      padding: 1.5rem;
-      box-shadow: 0 2px 8px rgba(46, 125, 50, 0.1);
-      transition: transform 0.3s ease;
-      height: 100%;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
     }
 
-    .result-card:hover {
+    .result-card:hover,
+    .result-card:focus-within {
       transform: translateY(-3px);
-      box-shadow: 0 4px 16px rgba(46, 125, 50, 0.18);
+      box-shadow: 0 18px 36px rgba(46,125,50,0.14);
+      outline: none;
     }
 
     .result-card img {
       width: 100%;
-      height: 200px;
+      height: 190px;
       object-fit: cover;
-      border-radius: 8px;
-      margin-bottom: 1rem;
+      background: #eef6ee;
+      display: block;
     }
 
     .result-card h3 {
+      margin: 0;
       font-size: 1.05rem;
-      line-height: 1.4em;
-      margin: 0.5rem 0;
-      height: 4.2em;
+      line-height: 1.35;
+      color: var(--text-dark);
+      height: 2.8em;
       overflow: hidden;
-      text-overflow: ellipsis;
       display: -webkit-box;
-      -webkit-line-clamp: 3;
+      -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
     }
 
     .result-card .info {
-      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      color: var(--text-muted);
+      font-size: 0.92rem;
     }
 
     .result-card .buttons {
+      margin-top: auto;
       display: flex;
       flex-direction: column;
       gap: 0.6rem;
-      margin-top: 1rem;
     }
 
     .result-card .buttons button {
-      padding: 0.6rem;
       width: 100%;
-      background-color: var(--primary);
-      color: white;
+      padding: 0.75rem 0.9rem;
       border: none;
-      border-radius: 8px;
+      border-radius: 12px;
       cursor: pointer;
-      font-weight: 600;
-      transition: background-color 0.3s ease;
+      font-weight: 700;
+      transition: transform 0.2s ease, background-color 0.25s ease, color 0.25s ease;
+      font-size: 0.95rem;
     }
 
-    .result-card .buttons button:hover {
-      background-color: var(--primary-dark);
+    .result-card .buttons button:first-child {
+      background: var(--primary);
+      color: var(--white);
+    }
+
+    .result-card .buttons button:first-child:hover,
+    .result-card .buttons button:first-child:focus {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+      outline: none;
+    }
+
+    .fav-btn {
+      background: var(--primary);
+      color: var(--white);
+    }
+
+    .fav-btn:hover,
+    .fav-btn:focus {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+      outline: none;
+    }
+
+    .fav-btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.7;
+      background: #f3f3f3;
+      color: #777;
     }
 
     footer {
@@ -401,8 +433,8 @@
       }
 
       .category-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 0.75rem;
+        grid-template-columns: 1fr;
+        gap: 0.85rem;
         padding: 0 0.75rem;
         margin: 2rem 0;
         max-width: 100%;
@@ -887,13 +919,15 @@
 
         card.innerHTML = `
           <img src="${item.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" alt="${item.title}" />
-          <h3>${item.title}</h3>
-          <div class="info">
-            <p><strong>Preis pro Tag:</strong> ${item.price_per_day || 'k. A.'} €</p>
-          </div>
-          <div class="buttons">
-            <button onclick="window.location.href='mietobjekt.html?id=${item.id}'">Details ansehen</button>
-            <button class="fav-btn">${isFavorite ? "Favorit entfernen" : "Zu Favoriten"}</button>
+          <div class="result-card-body">
+            <h3>${item.title || 'Kein Titel'}</h3>
+            <div class="info">
+              <p><strong>Preis pro Tag:</strong> ${item.price_per_day || 'k. A.'} €</p>
+            </div>
+            <div class="buttons">
+              <button onclick="window.location.href='mietobjekt.html?id=${item.id}'">Details ansehen</button>
+              <button class="fav-btn">${isFavorite ? "Favorit entfernen" : "Zu Favoriten"}</button>
+            </div>
           </div>
         `;
 
