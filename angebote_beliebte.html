@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Beliebte Angebote – Locorent</title>
+  <title>Locorent – Beliebteste Angebote</title>
+  <meta name="description" content="Entdecke die beliebtesten Mietangebote bei Locorent." />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
@@ -23,266 +24,234 @@
       --transition: 0.4s ease;
       --font-primary: 'Poppins', sans-serif;
     }
+
     *, *::before, *::after {
       box-sizing: border-box;
     }
+
     body {
       margin: 0;
+      width: 100%;
+      overflow-x: hidden;
       font-family: var(--font-primary);
       background: linear-gradient(to bottom, #e8f5e9 0%, #ffffff 100%);
       color: var(--text-dark);
-      scroll-behavior: smooth;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
-      overflow-x: hidden;
+      scroll-behavior: smooth;
     }
-    header {
-      background-color: var(--primary);
-      color: var(--white);
-      padding: 1.5rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-weight: 700;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-      flex-wrap: wrap;
-    }
-    header h1 {
-      font-size: 1.8rem;
-      cursor: pointer;
-      user-select: none;
-      margin: 0;
-    }
-    #nav-toggle {
-      display: none;
-      background: none;
-      border: none;
-      font-size: 1.8rem;
-      color: var(--white);
-      cursor: pointer;
-    }
-    nav#nav-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-    nav#nav-links a {
-      color: var(--white);
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 1rem;
-      position: relative;
-      transition: color 0.3s ease;
-    }
-    nav#nav-links a::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      bottom: -4px;
-      width: 0;
-      height: 2px;
-      background-color: var(--accent);
-      transition: width 0.3s ease;
-    }
-    nav#nav-links a:hover::after,
-    nav#nav-links a:focus::after {
+
+    .hero {
       width: 100%;
+      margin: 0;
+      padding: 2rem 0 2.5rem;
+      background: linear-gradient(135deg, #ffffff 0%, #f1f8e9 100%);
+      border-bottom: 1px solid rgba(46, 125, 50, 0.08);
     }
-    nav#nav-links a:hover,
-    nav#nav-links a:focus {
-      color: var(--accent);
-      outline: none;
+
+    .hero-inner,
+    .section-inner {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 0 2rem;
     }
-    main {
-      width: 100vw;
-      margin: 2rem 0 4rem;
-      padding: 0;
-      flex-grow: 1;
-    }
-    h2 {
-      font-size: 2rem;
+
+    .hero h2 {
+      font-size: clamp(1.6rem, 2vw, 2.4rem);
       font-weight: 700;
-      color: var(--primary);
-      margin-bottom: 1.5rem;
-      margin-left: 1rem;
-      margin-top: 0;
+      margin: 0;
+      color: var(--primary-dark);
+      text-align: left;
     }
+
+    .hero-subtitle {
+      margin: 0.6rem 0 0;
+      color: var(--text-muted);
+      font-weight: 500;
+      max-width: 720px;
+      text-align: left;
+    }
+
+    section {
+      width: 100%;
+      background: transparent;
+      margin-top: 2rem;
+    }
+
+    section h2 {
+      font-size: 1.6rem;
+      color: var(--primary-dark);
+      margin: 0 0 1rem;
+    }
+
     .category-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* größere min-width für breitere Karten */
-      gap: 2rem;
-      padding: 0 1rem 0 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
+      margin-top: 1rem;
     }
-    @media (max-width: 1024px) {
-      .category-grid {
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        padding: 0 1rem;
-      }
-    }
-    @media (max-width: 720px) {
-      #nav-toggle {
-        display: block;
-      }
-      nav#nav-links {
-        width: 100%;
-        flex-direction: column;
-        display: none;
-        margin-top: 1rem;
-      }
-      nav#nav-links.show {
-        display: flex;
-      }
-      nav#nav-links a {
-        margin: 0.4rem 0;
-        padding: 0.5rem 1rem;
-        background-color: rgba(255, 255, 255, 0.1);
-        border-radius: 6px;
-        display: block;
-      }
-      .category-grid {
-        grid-template-columns: 1fr;
-        padding: 0 1rem;
-      }
-      footer > div {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      footer > div > div {
-        width: 100%;
-      }
-    }
+
     .result-card {
-      background-color: var(--white);
-      border-radius: var(--radius);
-      padding: 1.25rem; /* etwas mehr padding für bessere Optik */
-      box-shadow: 0 12px 30px var(--shadow-light);
-      transition: transform 0.3s ease;
+      background: var(--white);
+      border: 1px solid rgba(46,125,50,0.08);
+      border-radius: 22px;
+      box-shadow: 0 12px 28px rgba(46,125,50,0.08);
+      overflow: hidden;
       display: flex;
       flex-direction: column;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
     }
+
     .result-card:hover,
     .result-card:focus-within {
       transform: translateY(-3px);
-      box-shadow: 0 20px 48px var(--shadow-strong);
+      box-shadow: 0 18px 36px rgba(46,125,50,0.14);
       outline: none;
     }
+
     .result-card img {
       width: 100%;
-      height: 180px; /* größer für bessere Bildwirkung */
+      height: 190px;
       object-fit: cover;
-      border-radius: 12px;
-      margin-bottom: 1.2rem;
-      flex-shrink: 0;
+      background: #eef6ee;
     }
-    .result-card h3 {
-      margin-bottom: 0.6rem;
-      font-size: 1.35rem;
-      color: var(--primary-dark);
-      flex-grow: 1;
+
+    .result-card-body {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      flex: 1;
     }
-    .result-card p {
-      margin-bottom: 0.5rem;
-      font-size: 1.1rem; /* etwas größer für besseren Zeilenfluss */
-      color: var(--text-muted);
-      white-space: nowrap; /* verhindert Zeilenumbruch z.B. bei Preis */
+
+    .result-card-body h3 {
+      margin: 0;
+      font-size: 1.05rem;
+      line-height: 1.35;
+      color: var(--text-dark);
+      height: 2.8em;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
     }
-    .result-card button {
-      margin-top: 0.7rem;
-      padding: 0.85rem;
-      background-color: var(--primary);
-      color: var(--white);
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      font-weight: 700;
-      transition: background-color 0.3s ease;
-      width: 100%;
-      font-size: 1rem;
-    }
-    .result-card button:hover,
-    .result-card button:focus {
-      background-color: var(--accent);
-      outline: none;
-    }
-    .fav-btn {
-      margin-top: 0.7rem;
-      padding: 0.85rem;
-      background-color: var(--accent);
-      color: var(--primary-dark);
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      font-weight: 700;
-      transition: background-color 0.3s ease, color 0.3s ease;
-      width: 100%;
-      font-size: 1rem;
-    }
-    .fav-btn:hover,
-    .fav-btn:focus {
-      background-color: #8bc34a;
-      color: var(--white);
-      outline: none;
-    }
-    footer {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 2rem 2rem 1rem;
-      border-radius: var(--radius);
-      background-color: var(--primary);
-      color: var(--white);
-      box-shadow: 0 8px 32px rgba(46, 125, 50, 0.22);
-      font-size: 0.92rem;
-      user-select: none;
-      text-align: center;
-      margin-top: auto;
-      position: relative;
-      left: 50%;
-      right: 50%;
-      margin-left: -50vw;
-      margin-right: -50vw;
-    }
-    footer > div {
-      max-width: 1200px;
-      margin: 0 auto;
+
+    .result-meta {
       display: flex;
       flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 2rem;
-      text-align: left;
+      gap: 0.5rem;
+      align-items: center;
+      color: var(--text-muted);
+      font-size: 0.92rem;
     }
-    footer > div > div {
-      flex: 1;
-      min-width: 200px;
+
+    .result-card .buttons {
+      margin-top: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
     }
-    footer h4 {
-      margin-bottom: 0.5rem;
+
+    .result-card button {
+      width: 100%;
+      padding: 0.75rem 0.9rem;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
       font-weight: 700;
-      font-size: 1.1rem;
+      transition: transform 0.2s ease, background-color 0.25s ease, color 0.25s ease;
     }
-    footer ul {
-      list-style: none;
-      padding: 0;
-      line-height: 1.8;
-    }
-    footer ul li a {
+
+    .result-card .details-btn {
+      background: var(--primary);
       color: var(--white);
-      text-decoration: underline;
-      transition: color 0.3s ease;
     }
-    footer ul li a:hover,
-    footer ul li a:focus {
-      color: var(--accent);
+
+    .result-card .details-btn:hover,
+    .result-card .details-btn:focus {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
       outline: none;
     }
-    footer small {
-      display: block;
-      margin-top: 2rem;
-      text-align: center;
-      opacity: 0.85;
+
+    .result-card .fav-btn {
+      background: var(--primary);
+      color: var(--white);
+      border: none;
+    }
+
+    .result-card .fav-btn:hover,
+    .result-card .fav-btn:focus {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+      outline: none;
+    }
+
+    .result-card .fav-btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.7;
+      background: #f3f3f3;
+      color: #777;
+      border-color: #e1e1e1;
+    }
+
+    .more-link {
+      text-align: right;
+      margin-top: 0.5rem;
+    }
+
+    .btn-more {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25em;
+      font-weight: 700;
+      color: var(--primary);
+      text-decoration: none;
+      border: 2px solid var(--primary);
+      padding: 0.25em 0.75em;
+      border-radius: 24px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      font-size: 0.9rem;
+      user-select: none;
+    }
+
+    .btn-more span {
+      display: inline-block;
+      font-size: 1.2rem;
+      transition: transform 0.3s ease;
+    }
+
+    .btn-more:hover,
+    .btn-more:focus {
+      background-color: var(--primary);
+      color: var(--white);
+      text-decoration: none;
+      outline: none;
+    }
+
+    .btn-more:hover span {
+      transform: translateX(5px);
+    }
+
+    @media (max-width: 720px) {
+      .hero {
+        padding: 1.25rem 0 1.5rem;
+      }
+
+      .hero-inner,
+      .section-inner {
+        padding: 0 0.75rem;
+      }
+
+      .category-grid {
+        grid-template-columns: 1fr;
+        gap: 0.85rem;
+      }
+
+      .result-card {
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -293,12 +262,23 @@
     <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
   </header>
 
-  <main role="main">
-    <h2>Beliebte Angebote</h2>
-    <div id="popular-offers" class="category-grid" aria-live="polite" aria-busy="true">
-      <p>⏳ Lade Angebote…</p>
+  <section class="hero" aria-label="Beliebteste Angebote">
+    <div class="hero-inner">
+      <h2>Beliebteste Angebote</h2>
+      <p class="hero-subtitle">Hier findest du die am häufigsten angesehenen und beliebtesten Inserate auf Locorent.</p>
     </div>
-  </main>
+  </section>
+
+  <section aria-label="Angebotsliste">
+    <div class="section-inner">
+      <div id="offers-grid" class="category-grid" aria-live="polite" aria-busy="true">
+        <p>⏳ Lade Angebote…</p>
+      </div>
+      <div class="more-link">
+        <a href="index.html" class="btn-more">ZURÜCK <span>←</span></a>
+      </div>
+    </div>
+  </section>
 
   <footer role="contentinfo">
     <div>
@@ -330,154 +310,104 @@
     </div>
     <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
   </footer>
-<script>
-  // Supabase v2 Client
-  const sb = supabase.createClient(
-    'https://flnjalgqtkqycsaymmbd.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-  );
 
-  let userSession = null;
+  <script>
+    const sb = supabase.createClient(
+      'https://flnjalgqtkqycsaymmbd.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+    );
 
-  async function init() {
-    try {
-      const { data, error } = await sb.auth.getSession();
-      if (error) console.error('Auth Fehler:', error);
-      userSession = data?.session || null;
+    let userSession = null;
 
+    async function init() {
+      const { data: { session } } = await sb.auth.getSession();
+      userSession = session;
       updateNav();
       await loadPopularOffers();
-    } catch (err) {
-      console.error('Init Fehler:', err);
     }
-  }
 
-  function updateNav() {
-    const nav = document.getElementById('nav-links');
-    nav.innerHTML = userSession?.user ? `
-      <a href="index.html">Start</a>
-      <a href="profil.html">Mein Profil</a>
-      <a href="nachrichten-inbox.html">Nachrichten</a>
-      <a href="favoriten.html">Meine Favoriten</a>
-      <a href="inserate.html">Meine Inserate</a>
-      <a href="#" onclick="logout(event)">Logout</a>
-    ` : `
-      <a href="index.html">Start</a>
-      <a href="login.html">Einloggen</a>
-    `;
-  }
+    function updateNav() {
+      const nav = document.getElementById('nav-links');
+      nav.innerHTML = userSession?.user ? `
+        <a href="index.html">Start</a>
+        <a href="profil.html">Mein Profil</a>
+        <a href="nachrichten-inbox.html">Nachrichten</a>
+        <a href="favoriten.html">Meine Favoriten</a>
+        <a href="inserate.html">Meine Inserate</a>
+        <a href="#" onclick="logout(event)">Logout</a>
+      ` : `
+        <a href="index.html">Start</a>
+        <a href="login.html">Einloggen</a>
+      `;
+    }
 
-  async function logout(event) {
-    event.preventDefault();
-    try {
+    async function logout(event) {
+      event.preventDefault();
       await sb.auth.signOut();
       window.location.href = "login.html";
-    } catch (err) {
-      console.error('Logout Fehler:', err);
     }
-  }
 
-  async function loadPopularOffers() {
-    const container = document.getElementById('popular-offers');
-    container.setAttribute('aria-busy', 'true');
-    container.innerHTML = '<p>⏳ Lade Angebote…</p>';
+    async function loadPopularOffers() {
+      const container = document.getElementById('offers-grid');
+      container.setAttribute('aria-busy', 'true');
+      container.innerHTML = '<p>⏳ Lade Angebote…</p>';
 
-    try {
-      const { data, error } = await sb
-        .from('listings')
-        .select('*')
-        .order('views', { ascending: false })
-        .limit(20);
+      try {
+        const { data, error } = await sb
+          .from('listings')
+          .select('*')
+          .order('views', { ascending: false })
+          .limit(20);
 
-      if (error) throw error;
+        if (error) throw error;
 
-      if (!data || data.length === 0) {
-        container.innerHTML = '<p>Keine Angebote gefunden.</p>';
-        return;
-      }
-
-      container.removeAttribute('aria-busy');
-      container.innerHTML = '';
-
-      for (const item of data) {
-        const card = document.createElement('div');
-        card.className = 'result-card';
-
-        const isFav = userSession?.user ? await checkIfFavorite(item.id) : false;
-
-        card.innerHTML = `
-          <img src="${item.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" alt="${item.title}" />
-          <h3>${item.title}</h3>
-          <p><strong>Kategorie:</strong> ${capitalize(item.category) || 'Unbekannt'}</p>
-          <p><strong>Preis pro Tag:</strong> ${item.price_per_day ?? 'k. A.'} €</p>
-          <button onclick="window.location.href='mietobjekt.html?id=${item.id}'">Details ansehen</button>
-          <button class="fav-btn">${isFav ? 'Favorit entfernen' : 'Zu Favoriten'}</button>
-        `;
-
-        const favBtn = card.querySelector('.fav-btn');
-        if (userSession?.user) {
-          favBtn.onclick = async (e) => {
-            e.preventDefault();
-            const nowFav = await toggleFavorite(item.id);
-            favBtn.innerText = nowFav ? 'Favorit entfernen' : 'Zu Favoriten';
-          };
-        } else {
-          favBtn.disabled = true;
-          favBtn.innerText = "Login erforderlich";
+        if (!data || data.length === 0) {
+          container.innerHTML = '<p>Keine Angebote gefunden.</p>';
+          container.removeAttribute('aria-busy');
+          return;
         }
 
-        container.appendChild(card);
+        container.innerHTML = '';
+        for (const item of data) {
+          const card = document.createElement('div');
+          card.className = 'result-card';
+
+          const imgUrl = item.image_urls?.[0] || 'https://via.placeholder.com/400x200';
+
+          card.innerHTML = `
+            <img src="${imgUrl}" alt="${item.title || 'Bild'}" />
+            <div class="result-card-body">
+              <h3>${item.title || 'Kein Titel'}</h3>
+              <div class="result-meta">
+                <span>${item.location || ''}</span>
+              </div>
+              <div class="result-meta">
+                <strong>${item.price_per_day || 'k. A.'} € / Tag</strong>
+              </div>
+              <div class="buttons">
+                <button class="details-btn" onclick="window.location.href='mietobjekt.html?id=${item.id}'">Details ansehen</button>
+              </div>
+            </div>
+          `;
+
+          container.appendChild(card);
+        }
+
+        container.removeAttribute('aria-busy');
+      } catch (err) {
+        console.error('Fehler beim Laden der beliebtesten Angebote:', err);
+        container.innerHTML = '<p>Fehler beim Laden der Angebote.</p>';
+        container.removeAttribute('aria-busy');
       }
-    } catch (err) {
-      container.innerHTML = '<p>Fehler beim Laden der beliebten Angebote.</p>';
-      console.error('Fehler bei loadPopularOffers:', err);
     }
-  }
 
-  async function checkIfFavorite(listingId) {
-    if (!userSession?.user) return false;
-    const { data, error } = await sb
-      .from('favorites')
-      .select('*')
-      .eq('user_id', userSession.user.id)
-      .eq('listing_id', listingId)
-      .maybeSingle();
-    if (error) console.error('checkIfFavorite Fehler:', error);
-    return !!data;
-  }
+    document.getElementById('nav-toggle').addEventListener('click', () => {
+      const nav = document.getElementById('nav-links');
+      nav.classList.toggle('show');
+      document.getElementById('nav-toggle').setAttribute('aria-expanded', nav.classList.contains('show'));
+    });
 
-  async function toggleFavorite(listingId) {
-    if (!userSession?.user) return false;
-    const { data, error } = await sb
-      .from('favorites')
-      .select('*')
-      .eq('user_id', userSession.user.id)
-      .eq('listing_id', listingId)
-      .maybeSingle();
-    if (error) console.error('toggleFavorite Fehler (select):', error);
-
-    if (data) {
-      await sb.from('favorites').delete().eq('id', data.id);
-      return false;
-    } else {
-      await sb.from('favorites').insert({ user_id: userSession.user.id, listing_id: listingId });
-      return true;
-    }
-  }
-
-  function capitalize(str) {
-    return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
-  }
-
-  // Mobile Menü
-  document.getElementById('nav-toggle').addEventListener('click', () => {
-    const nav = document.getElementById('nav-links');
-    nav.classList.toggle('show');
-    document.getElementById('nav-toggle').setAttribute('aria-expanded', nav.classList.contains('show'));
-  });
-
-  init();
-</script>
-
+    init();
+  </script>
 </body>
 </html>
