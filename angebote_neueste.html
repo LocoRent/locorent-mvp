@@ -122,7 +122,15 @@
       font-size: clamp(1.6rem, 2vw, 2.4rem);
       font-weight: 700;
       color: var(--primary-dark);
+      margin: 0 0 0.6rem;
+      text-align: left;
+    }
+
+    .hero-subtitle {
       margin: 0 0 1.25rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      max-width: 720px;
       text-align: left;
     }
 
@@ -237,56 +245,42 @@
       border-color: #e1e1e1;
     }
 
-    @media (max-width: 720px) {
-      #nav-toggle {
-        display: block;
-      }
+    .more-link {
+      text-align: right;
+      margin-top: 1rem;
+    }
 
-      nav#nav-links {
-        display: none;
-        flex-direction: column;
-        width: 100%;
-        margin-top: 1rem;
-      }
+    .btn-more {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25em;
+      font-weight: 700;
+      color: var(--primary);
+      text-decoration: none;
+      border: 2px solid var(--primary);
+      padding: 0.25em 0.75em;
+      border-radius: 24px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      font-size: 0.9rem;
+      user-select: none;
+    }
 
-      nav#nav-links.show {
-        display: flex;
-      }
+    .btn-more span {
+      display: inline-block;
+      font-size: 1.2rem;
+      transition: transform 0.3s ease;
+    }
 
-      nav#nav-links a {
-        margin: 0.4rem 0;
-        padding: 0.5rem 1rem;
-        background-color: rgba(255, 255, 255, 0.1);
-        border-radius: 6px;
-        display: block;
-      }
+    .btn-more:hover,
+    .btn-more:focus {
+      background-color: var(--primary);
+      color: var(--white);
+      text-decoration: none;
+      outline: none;
+    }
 
-      main {
-        margin: 1.25rem auto 3rem;
-        padding: 0 0.75rem;
-      }
-
-      .category-grid {
-        grid-template-columns: 1fr;
-        gap: 0.85rem;
-      }
-
-      .result-card {
-        width: 100%;
-      }
-
-      .result-card img {
-        height: 180px;
-      }
-
-      footer > div {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      footer > div > div {
-        width: 100%;
-      }
+    .btn-more:hover span {
+      transform: translateX(5px);
     }
 
     footer {
@@ -353,6 +347,58 @@
       text-align: center;
       opacity: 0.85;
     }
+
+    @media (max-width: 720px) {
+      #nav-toggle {
+        display: block;
+      }
+
+      nav#nav-links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        margin-top: 1rem;
+      }
+
+      nav#nav-links.show {
+        display: flex;
+      }
+
+      nav#nav-links a {
+        margin: 0.4rem 0;
+        padding: 0.5rem 1rem;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+        display: block;
+      }
+
+      main {
+        margin: 1.25rem auto 3rem;
+        padding: 0 0.75rem;
+      }
+
+      .category-grid {
+        grid-template-columns: 1fr;
+        gap: 0.85rem;
+      }
+
+      .result-card {
+        width: 100%;
+      }
+
+      .result-card img {
+        height: 180px;
+      }
+
+      footer > div {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      footer > div > div {
+        width: 100%;
+      }
+    }
   </style>
 </head>
 <body>
@@ -364,8 +410,12 @@
 
   <main role="main">
     <h2>Neueste Angebote</h2>
+    <p class="hero-subtitle">Hier findest du die frisch eingestellten Inserate auf Locorent.</p>
     <div id="newest-offers" class="category-grid" aria-live="polite" aria-busy="true">
       <p>⏳ Lade Angebote…</p>
+    </div>
+    <div class="more-link">
+      <a href="index.html" class="btn-more">ZURÜCK <span>←</span></a>
     </div>
   </main>
 
@@ -400,161 +450,160 @@
     <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
   </footer>
 
-<script>
-  const sb = supabase.createClient(
-    'https://flnjalgqtkqycsaymmbd.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
-  );
+  <script>
+    const sb = supabase.createClient(
+      'https://flnjalgqtkqycsaymmbd.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
+    );
 
-  let userSession = null;
+    let userSession = null;
 
-  async function init() {
-    try {
-      const { data, error } = await sb.auth.getSession();
-      if (error) console.error('Auth Fehler:', error);
-      userSession = data?.session || null;
+    async function init() {
+      try {
+        const { data, error } = await sb.auth.getSession();
+        if (error) console.error('Auth Fehler:', error);
+        userSession = data?.session || null;
 
-      updateNav();
-      await loadNewestOffers();
-    } catch (err) {
-      console.error('Init Fehler:', err);
-    }
-  }
-
-  function updateNav() {
-    const nav = document.getElementById('nav-links');
-    nav.innerHTML = userSession?.user ? `
-      <a href="index.html">Start</a>
-      <a href="profil.html">Mein Profil</a>
-      <a href="nachrichten-inbox.html">Nachrichten</a>
-      <a href="favoriten.html">Meine Favoriten</a>
-      <a href="inserate.html">Meine Inserate</a>
-      <a href="#" onclick="logout(event)">Logout</a>
-    ` : `
-      <a href="index.html">Start</a>
-      <a href="login.html">Einloggen</a>
-    `;
-  }
-
-  async function logout(event) {
-    event.preventDefault();
-    try {
-      await sb.auth.signOut();
-      window.location.href = "login.html";
-    } catch (err) {
-      console.error('Logout Fehler:', err);
-    }
-  }
-
-  async function loadNewestOffers() {
-    const container = document.getElementById('newest-offers');
-    container.setAttribute('aria-busy', 'true');
-    container.innerHTML = '<p>⏳ Lade Angebote…</p>';
-
-    try {
-      const { data, error } = await sb
-        .from('listings')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(20);
-
-      if (error) throw error;
-
-      if (!data || data.length === 0) {
-        container.innerHTML = '<p>Keine Angebote gefunden.</p>';
-        return;
+        updateNav();
+        await loadNewestOffers();
+      } catch (err) {
+        console.error('Init Fehler:', err);
       }
+    }
 
-      container.removeAttribute('aria-busy');
-      container.innerHTML = '';
+    function updateNav() {
+      const nav = document.getElementById('nav-links');
+      nav.innerHTML = userSession?.user ? `
+        <a href="index.html">Start</a>
+        <a href="profil.html">Mein Profil</a>
+        <a href="nachrichten-inbox.html">Nachrichten</a>
+        <a href="favoriten.html">Meine Favoriten</a>
+        <a href="inserate.html">Meine Inserate</a>
+        <a href="#" onclick="logout(event)">Logout</a>
+      ` : `
+        <a href="index.html">Start</a>
+        <a href="login.html">Einloggen</a>
+      `;
+    }
 
-      for (const item of data) {
-        const card = document.createElement('div');
-        card.className = 'result-card';
+    async function logout(event) {
+      event.preventDefault();
+      try {
+        await sb.auth.signOut();
+        window.location.href = "login.html";
+      } catch (err) {
+        console.error('Logout Fehler:', err);
+      }
+    }
 
-        const isFav = userSession?.user ? await checkIfFavorite(item.id) : false;
+    async function loadNewestOffers() {
+      const container = document.getElementById('newest-offers');
+      container.setAttribute('aria-busy', 'true');
+      container.innerHTML = '<p>⏳ Lade Angebote…</p>';
 
-        card.innerHTML = `
-          <img src="${item.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" alt="${item.title}" />
-          <div class="result-card-body">
-            <h3>${item.title}</h3>
-            <div class="result-meta">
-              <span>${item.location || ''}</span>
-            </div>
-            <div class="result-meta">
-              <strong>${item.price_per_day ?? 'k. A.'} € / Tag</strong>
-            </div>
-            <div class="buttons">
-              <button class="details-btn" onclick="window.location.href='mietobjekt.html?id=${item.id}'">Details ansehen</button>
-              <button class="fav-btn">${isFav ? 'Bereits Favorit' : 'Zu Favoriten'}</button>
-            </div>
-          </div>
-        `;
+      try {
+        const { data, error } = await sb
+          .from('listings')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .limit(20);
 
-        const favBtn = card.querySelector('.fav-btn');
-        if (userSession?.user) {
-          if (isFav) {
-            favBtn.disabled = true;
-          } else {
-            favBtn.onclick = async (e) => {
-              e.preventDefault();
-              const nowFav = await toggleFavorite(item.id);
-              favBtn.innerText = nowFav ? 'Bereits Favorit' : 'Zu Favoriten';
-              if (nowFav) favBtn.disabled = true;
-            };
-          }
-        } else {
-          favBtn.disabled = true;
-          favBtn.innerText = "Login erforderlich";
+        if (error) throw error;
+
+        if (!data || data.length === 0) {
+          container.innerHTML = '<p>Keine Angebote gefunden.</p>';
+          return;
         }
 
-        container.appendChild(card);
+        container.removeAttribute('aria-busy');
+        container.innerHTML = '';
+
+        for (const item of data) {
+          const card = document.createElement('div');
+          card.className = 'result-card';
+
+          const isFav = userSession?.user ? await checkIfFavorite(item.id) : false;
+
+          card.innerHTML = `
+            <img src="${item.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" alt="${item.title}" />
+            <div class="result-card-body">
+              <h3>${item.title}</h3>
+              <div class="result-meta">
+                <span>${item.location || ''}</span>
+              </div>
+              <div class="result-meta">
+                <strong>${item.price_per_day ?? 'k. A.'} € / Tag</strong>
+              </div>
+              <div class="buttons">
+                <button class="details-btn" onclick="window.location.href='mietobjekt.html?id=${item.id}'">Details ansehen</button>
+                <button class="fav-btn">${isFav ? 'Bereits Favorit' : 'Zu Favoriten'}</button>
+              </div>
+            </div>
+          `;
+
+          const favBtn = card.querySelector('.fav-btn');
+          if (userSession?.user) {
+            if (isFav) {
+              favBtn.disabled = true;
+            } else {
+              favBtn.onclick = async (e) => {
+                e.preventDefault();
+                const nowFav = await toggleFavorite(item.id);
+                favBtn.innerText = nowFav ? 'Bereits Favorit' : 'Zu Favoriten';
+                if (nowFav) favBtn.disabled = true;
+              };
+            }
+          } else {
+            favBtn.disabled = true;
+            favBtn.innerText = "Login erforderlich";
+          }
+
+          container.appendChild(card);
+        }
+      } catch (err) {
+        container.innerHTML = '<p>Fehler beim Laden der neuesten Angebote.</p>';
+        console.error('Fehler bei loadNewestOffers:', err);
       }
-    } catch (err) {
-      container.innerHTML = '<p>Fehler beim Laden der neuesten Angebote.</p>';
-      console.error('Fehler bei loadNewestOffers:', err);
     }
-  }
 
-  async function checkIfFavorite(listingId) {
-    if (!userSession?.user) return false;
-    const { data, error } = await sb
-      .from('favorites')
-      .select('*')
-      .eq('user_id', userSession.user.id)
-      .eq('listing_id', listingId)
-      .maybeSingle();
-    if (error) console.error('checkIfFavorite Fehler:', error);
-    return !!data;
-  }
-
-  async function toggleFavorite(listingId) {
-    if (!userSession?.user) return false;
-    const { data, error } = await sb
-      .from('favorites')
-      .select('*')
-      .eq('user_id', userSession.user.id)
-      .eq('listing_id', listingId)
-      .maybeSingle();
-    if (error) console.error('toggleFavorite Fehler (select):', error);
-
-    if (data) {
-      await sb.from('favorites').delete().eq('id', data.id);
-      return false;
-    } else {
-      await sb.from('favorites').insert({ user_id: userSession.user.id, listing_id: listingId });
-      return true;
+    async function checkIfFavorite(listingId) {
+      if (!userSession?.user) return false;
+      const { data, error } = await sb
+        .from('favorites')
+        .select('*')
+        .eq('user_id', userSession.user.id)
+        .eq('listing_id', listingId)
+        .maybeSingle();
+      if (error) console.error('checkIfFavorite Fehler:', error);
+      return !!data;
     }
-  }
 
-  document.getElementById('nav-toggle').addEventListener('click', () => {
-    const nav = document.getElementById('nav-links');
-    nav.classList.toggle('show');
-    document.getElementById('nav-toggle').setAttribute('aria-expanded', nav.classList.contains('show'));
-  });
+    async function toggleFavorite(listingId) {
+      if (!userSession?.user) return false;
+      const { data, error } = await sb
+        .from('favorites')
+        .select('*')
+        .eq('user_id', userSession.user.id)
+        .eq('listing_id', listingId)
+        .maybeSingle();
+      if (error) console.error('toggleFavorite Fehler (select):', error);
 
-  init();
-</script>
+      if (data) {
+        await sb.from('favorites').delete().eq('id', data.id);
+        return false;
+      } else {
+        await sb.from('favorites').insert({ user_id: userSession.user.id, listing_id: listingId });
+        return true;
+      }
+    }
 
+    document.getElementById('nav-toggle').addEventListener('click', () => {
+      const nav = document.getElementById('nav-links');
+      nav.classList.toggle('show');
+      document.getElementById('nav-toggle').setAttribute('aria-expanded', nav.classList.contains('show'));
+    });
+
+    init();
+  </script>
 </body>
 </html>
