@@ -44,10 +44,7 @@
       flex-direction: column;
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
+    a { color: inherit; text-decoration: none; }
 
     a:focus-visible,
     button:focus-visible,
@@ -211,9 +208,7 @@
       outline: none;
     }
 
-    .full-width {
-      grid-column: 1 / -1;
-    }
+    .full-width { grid-column: 1 / -1; }
 
     .hint {
       margin: -0.2rem 0 1rem;
@@ -277,6 +272,24 @@
       display: block;
     }
 
+    .remove-image-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 28px;
+      height: 28px;
+      border: none;
+      border-radius: 999px;
+      background: rgba(198, 40, 40, 0.92);
+      color: #fff;
+      cursor: pointer;
+      font-weight: 700;
+      line-height: 1;
+      display: grid;
+      place-items: center;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+    }
+
     .form-actions {
       display: flex;
       justify-content: flex-end;
@@ -296,9 +309,7 @@
       font-size: 1rem;
     }
 
-    .btn:hover {
-      transform: translateY(-1px);
-    }
+    .btn:hover { transform: translateY(-1px); }
 
     .btn-primary {
       background: var(--primary);
@@ -306,18 +317,14 @@
       box-shadow: 0 10px 20px rgba(46, 125, 50, 0.16);
     }
 
-    .btn-primary:hover {
-      background: var(--primary-dark);
-    }
+    .btn-primary:hover { background: var(--primary-dark); }
 
     .btn-secondary {
       background: rgba(46, 125, 50, 0.08);
       color: var(--primary-dark);
     }
 
-    .btn-secondary:hover {
-      background: rgba(46, 125, 50, 0.12);
-    }
+    .btn-secondary:hover { background: rgba(46, 125, 50, 0.12); }
 
     footer {
       width: 100%;
@@ -359,9 +366,7 @@
       transition: color 0.3s ease;
     }
 
-    footer ul li a:hover {
-      color: var(--accent);
-    }
+    footer ul li a:hover { color: var(--accent); }
 
     footer small {
       display: block;
@@ -371,15 +376,11 @@
     }
 
     @media (max-width: 820px) {
-      .form-grid {
-        grid-template-columns: 1fr;
-      }
+      .form-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 720px) {
-      #nav-toggle {
-        display: block;
-      }
+      #nav-toggle { display: block; }
 
       nav#nav-links {
         width: 100%;
@@ -388,9 +389,7 @@
         margin-top: 1rem;
       }
 
-      nav#nav-links.show {
-        display: flex;
-      }
+      nav#nav-links.show { display: flex; }
 
       nav#nav-links a {
         margin: 0.4rem 0;
@@ -404,17 +403,13 @@
         align-items: flex-start;
       }
 
-      .form-section {
-        padding: 1.15rem;
-      }
+      .form-section { padding: 1.15rem; }
 
       .form-actions {
         flex-direction: column;
       }
 
-      .btn {
-        width: 100%;
-      }
+      .btn { width: 100%; }
     }
   </style>
 </head>
@@ -548,6 +543,9 @@
     let userSession = null;
     let listingId = null;
     let currentImages = [];
+    let currentImagePaths = [];
+    let newlySelectedFile = null;
+    let debounceTimer;
 
     async function init() {
       try {
@@ -567,6 +565,7 @@
 
         await loadListing();
         setupEvents();
+        initLocationSuggestions();
       } catch (err) {
         console.error('Init Fehler:', err);
       }
@@ -616,7 +615,8 @@
       document.getElementById('location').value = data.location || '';
       document.getElementById('description').value = data.description || '';
 
-      currentImages = Array.isArray(data.image_urls) ? data.image_urls : [];
+      currentImages = Array.isArray(data.image_urls) ? [...data.image_urls] : [];
+      currentImagePaths = Array.isArray(data.image_paths) ? [...data.image_paths] : [];
       renderPreviewGallery();
     }
 
@@ -658,6 +658,8 @@
         return;
       }
 
+      newlySelectedFile = file;
+
       const reader = new FileReader();
       reader.onload = () => {
         currentImages = [reader.result];
@@ -670,12 +672,59 @@
       const gallery = document.getElementById('preview-gallery');
       gallery.innerHTML = '';
 
-      currentImages.forEach((src) => {
+      currentImages.forEach((src, index) => {
         const item = document.createElement('div');
         item.className = 'preview-item';
-        item.innerHTML = `<img src="${src}" alt="Vorschau Bild">`;
+        item.innerHTML = `
+          <img src="${src}" alt="Vorschau Bild">
+          <button type="button" class="remove-image-btn" aria-label="Bild entfernen">×</button>
+        `;
+
+        item.querySelector('.remove-image-btn').onclick = () => {
+          currentImages.splice(index, 1);
+          if (currentImagePaths[index]) {
+            currentImagePaths.splice(index, 1);
+          }
+          newlySelectedFile = null;
+          renderPreviewGallery();
+        };
+
         gallery.appendChild(item);
       });
+    }
+
+    function getStoragePathFromUrl(url) {
+      try {
+        const u = new URL(url);
+        const parts = u.pathname.split('/');
+        const idx = parts.indexOf('listing-images');
+        if (idx !== -1 && idx + 1 < parts.length) {
+          return parts.slice(idx + 1).join('/');
+        }
+        return null;
+      } catch {
+        return null;
+      }
+    }
+
+    async function uploadImage(file) {
+      const safeName = file.name.replace(/\s+/g, '-');
+      const filePath = `${userSession.user.id}/${Date.now()}-${safeName}`;
+
+      const { error: uploadError } = await sb.storage
+        .from('listing-images')
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: false
+        });
+
+      if (uploadError) {
+        console.error('Upload-Fehler:', uploadError);
+        return null;
+      }
+
+      const { data } = sb.storage.from('listing-images').getPublicUrl(filePath);
+      return { url: data.publicUrl, path: filePath };
     }
 
     async function saveChanges(event) {
@@ -692,26 +741,133 @@
         return;
       }
 
-      const { error } = await sb
-        .from('listings')
-        .update({
-          title,
-          category,
-          price_per_day: pricePerDay,
-          location,
-          description,
-          image_urls: currentImages
-        })
-        .eq('id', listingId);
+      try {
+        let finalImageUrls = [...currentImages.filter(src => typeof src === 'string' && src.startsWith('http'))];
+        let finalImagePaths = [...currentImagePaths];
 
-      if (error) {
-        console.error('Fehler beim Speichern:', error);
-        alert('Änderungen konnten nicht gespeichert werden.');
-        return;
+        if (newlySelectedFile) {
+          const uploaded = await uploadImage(newlySelectedFile);
+          if (uploaded) {
+            finalImageUrls = [uploaded.url];
+            finalImagePaths = [uploaded.path];
+          }
+        }
+
+        // Entfernte alte Bilder aus Storage löschen
+        const oldImageUrls = (await sb.from('listings').select('image_urls').eq('id', listingId).single()).data?.image_urls || [];
+        const removedUrls = oldImageUrls.filter(oldUrl => !finalImageUrls.includes(oldUrl));
+        const removedPaths = removedUrls.map(getStoragePathFromUrl).filter(Boolean);
+
+        if (removedPaths.length > 0) {
+          const { error: removeError } = await sb.storage.from('listing-images').remove(removedPaths);
+          if (removeError) console.error('Fehler beim Löschen alter Bilder:', removeError);
+        }
+
+        const { error } = await sb
+          .from('listings')
+          .update({
+            title,
+            category,
+            price_per_day: pricePerDay,
+            location,
+            description,
+            image_urls: finalImageUrls,
+            image_paths: finalImagePaths
+          })
+          .eq('id', listingId);
+
+        if (error) {
+          console.error('Fehler beim Speichern:', error);
+          alert('Änderungen konnten nicht gespeichert werden.');
+          return;
+        }
+
+        alert('Inserat erfolgreich aktualisiert.');
+        window.location.href = 'inserate.html';
+      } catch (err) {
+        console.error(err);
+        alert('Fehler beim Speichern.');
       }
+    }
 
-      alert('Inserat erfolgreich aktualisiert.');
-      window.location.href = 'inserate.html';
+    function initLocationSuggestions() {
+      const wrapper = document.getElementById('location').parentElement;
+      const input = document.getElementById('location');
+
+      wrapper.style.position = 'relative';
+
+      const box = document.createElement('div');
+      box.id = 'location-suggestions';
+      box.style.position = 'absolute';
+      box.style.top = 'calc(100% + 6px)';
+      box.style.left = '0';
+      box.style.right = '0';
+      box.style.maxHeight = '180px';
+      box.style.overflowY = 'auto';
+      box.style.background = '#fff';
+      box.style.border = '1px solid rgba(46, 125, 50, 0.15)';
+      box.style.borderRadius = '12px';
+      box.style.boxShadow = '0 12px 25px rgba(0,0,0,0.08)';
+      box.style.zIndex = '20';
+      box.style.display = 'none';
+      wrapper.appendChild(box);
+
+      input.addEventListener('input', () => {
+        clearTimeout(debounceTimer);
+        const value = input.value.trim();
+
+        if (value.length < 2) {
+          box.innerHTML = '';
+          box.style.display = 'none';
+          return;
+        }
+
+        debounceTimer = setTimeout(async () => {
+          try {
+            const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&countrycodes=de&limit=5&q=${encodeURIComponent(value)}`);
+            const results = await res.json();
+            box.innerHTML = '';
+
+            if (!results.length) {
+              box.innerHTML = '<div style="padding:0.75rem 1rem;">Kein Ort gefunden</div>';
+              box.style.display = 'block';
+              return;
+            }
+
+            results.forEach(r => {
+              const addr = r.address || {};
+              const city = addr.city || addr.town || addr.village || addr.municipality || r.display_name.split(',')[0];
+              const state = addr.state || '';
+              const display = [city, state, 'Deutschland'].filter(Boolean).join(', ');
+
+              const div = document.createElement('div');
+              div.textContent = display;
+              div.style.padding = '0.75rem 1rem';
+              div.style.cursor = 'pointer';
+              div.style.borderBottom = '1px solid #f0f0f0';
+              div.onmouseenter = () => div.style.backgroundColor = '#e8f5e9';
+              div.onmouseleave = () => div.style.backgroundColor = '#fff';
+              div.onclick = () => {
+                input.value = display;
+                box.innerHTML = '';
+                box.style.display = 'none';
+              };
+              box.appendChild(div);
+            });
+
+            box.style.display = 'block';
+          } catch (err) {
+            console.error('Fehler bei Ortssuche:', err);
+          }
+        }, 400);
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!wrapper.contains(e.target)) {
+          box.innerHTML = '';
+          box.style.display = 'none';
+        }
+      });
     }
 
     document.getElementById('nav-toggle').addEventListener('click', () => {
