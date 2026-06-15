@@ -331,14 +331,14 @@
     }
 
     .result-card .fav-btn {
-      background: #fff1f1;
-      color: #c62828;
-      border: 1px solid rgba(198,40,40,0.10);
+      background: var(--primary);
+      color: var(--white);
+      border: none;
     }
 
     .result-card .fav-btn:hover,
     .result-card .fav-btn:focus {
-      background: #ffe9e9;
+      background: var(--primary-dark);
       transform: translateY(-1px);
       outline: none;
     }
@@ -762,18 +762,41 @@
 
     async function toggleFavorite(listingId) {
       if (!userSession?.user) return false;
-      const { data } = await sb
+
+      const { data, error: fetchError } = await sb
         .from('favorites')
         .select('*')
         .eq('user_id', userSession.user.id)
         .eq('listing_id', listingId)
         .maybeSingle();
 
+      if (fetchError) {
+        console.error('Fehler beim Prüfen des Favoritenstatus:', fetchError);
+        return false;
+      }
+
       if (data) {
-        await sb.from('favorites').delete().eq('id', data.id);
+        const { error: deleteError } = await sb
+          .from('favorites')
+          .delete()
+          .eq('id', data.id);
+
+        if (deleteError) {
+          console.error('Fehler beim Entfernen aus Favoriten:', deleteError);
+          return true;
+        }
+
         return false;
       } else {
-        await sb.from('favorites').insert({ user_id: userSession.user.id, listing_id: listingId });
+        const { error: insertError } = await sb
+          .from('favorites')
+          .insert({ user_id: userSession.user.id, listing_id: listingId });
+
+        if (insertError) {
+          console.error('Fehler beim Hinzufügen zu Favoriten:', insertError);
+          return false;
+        }
+
         return true;
       }
     }
