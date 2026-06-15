@@ -497,7 +497,7 @@
       </section>
 
       <div class="form-actions">
-        <button type="button" class="btn btn-secondary" onclick="location.href='inserate.html'">Abbrechen</button>
+        <button type="button" class="btn btn-secondary" onclick="window.location.href='inserate.html'">Abbrechen</button>
         <button type="submit" class="btn btn-primary">Änderungen speichern</button>
       </div>
     </form>
@@ -753,8 +753,13 @@
           }
         }
 
-        // Entfernte alte Bilder aus Storage löschen
-        const oldImageUrls = (await sb.from('listings').select('image_urls').eq('id', listingId).single()).data?.image_urls || [];
+        const { data: existingListing } = await sb
+          .from('listings')
+          .select('image_urls')
+          .eq('id', listingId)
+          .single();
+
+        const oldImageUrls = existingListing?.image_urls || [];
         const removedUrls = oldImageUrls.filter(oldUrl => !finalImageUrls.includes(oldUrl));
         const removedPaths = removedUrls.map(getStoragePathFromUrl).filter(Boolean);
 
