@@ -109,7 +109,7 @@
       overflow: hidden;
       background:
         linear-gradient(135deg, rgba(27, 94, 32, 0.88), rgba(46, 125, 50, 0.82)),
-        url('https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+        url('https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
       border-radius: 28px;
       padding: 4.5rem 2rem 3rem;
       color: var(--white);
@@ -817,19 +817,19 @@
 <footer role="contentinfo">
   <div>
     <div>
-      <h4>Mieten & Vermieten</h4>
+      <h4>Mieten &amp; Vermieten</h4>
       <ul>
         <li><a href="so-funktionierts.html">So funktioniert's</a></li>
         <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
         <li><a href="kategorien.html">Beliebte Kategorien</a></li>
-        <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
+        <li><a href="vermieter-tipps.html">Tipps &amp; Tricks für Vermieter</a></li>
         <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
       </ul>
     </div>
     <div>
       <h4>Wissenswertes</h4>
       <ul>
-        <li><a href="agb.html">AGB & Impressum</a></li>
+        <li><a href="agb.html">AGB &amp; Impressum</a></li>
         <li><a href="datenschutz.html">Datenschutz</a></li>
       </ul>
     </div>
@@ -916,7 +916,6 @@
         card.innerHTML = `
           <img src="${img}" alt="${item.title}" />
           <div class="gallery-item-body">
-            <span class="pill">${item.category || 'Sonstiges'}</span>
             <h3>${item.title || 'Kein Titel'}</h3>
             <p>${item.location || 'Unbekannter Ort'} · ${item.price_per_day || 'k. A.'} € / Tag</p>
             <a class="gallery-link" href="mietobjekt.html?id=${item.id}">Zum Inserat</a>
