@@ -728,18 +728,22 @@
             </div>
             <div class="buttons">
               <button class="details-btn" onclick="window.location.href='mietobjekt.html?id=${item.id}'">Details ansehen</button>
-              <button class="fav-btn">${isFav ? 'Favorit entfernen' : 'Zu Favoriten'}</button>
+              <button class="fav-btn">${isFav ? 'Bereits Favorit' : 'Zu Favoriten'}</button>
             </div>
           </div>
         `;
 
         const favBtn = card.querySelector('.fav-btn');
         if (userSession?.user) {
-          favBtn.onclick = async (e) => {
-            e.preventDefault();
-            const nowFav = await toggleFavorite(item.id);
-            favBtn.innerText = nowFav ? 'Favorit entfernen' : 'Zu Favoriten';
-          };
+          if (!isFav) {
+            favBtn.onclick = async (e) => {
+              e.preventDefault();
+              const nowFav = await toggleFavorite(item.id);
+              favBtn.innerText = nowFav ? 'Bereits Favorit' : 'Zu Favoriten';
+            };
+          } else {
+            favBtn.disabled = true;
+          }
         } else {
           favBtn.disabled = true;
           favBtn.innerText = "Login erforderlich";
@@ -779,7 +783,8 @@
         const { error: deleteError } = await sb
           .from('favorites')
           .delete()
-          .eq('id', data.id);
+          .eq('user_id', userSession.user.id)
+          .eq('listing_id', listingId);
 
         if (deleteError) {
           console.error('Fehler beim Entfernen aus Favoriten:', deleteError);
