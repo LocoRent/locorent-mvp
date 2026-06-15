@@ -301,17 +301,6 @@
       font-size: 0.92rem;
     }
 
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      padding: 0.3rem 0.65rem;
-      border-radius: 999px;
-      background: #e8f5e9;
-      color: var(--primary-dark);
-      font-weight: 600;
-      font-size: 0.82rem;
-    }
-
     .result-card .buttons {
       margin-top: auto;
       display: flex;
@@ -732,8 +721,7 @@
           <div class="result-card-body">
             <h3>${item.title || 'Kein Titel'}</h3>
             <div class="result-meta">
-              <span class="pill">${item.location || 'Unbekannter Ort'}</span>
-              <span class="pill">${item.category || 'Sonstiges'}</span>
+              <span>${item.location || ''}</span>
             </div>
             <div class="result-meta">
               <strong>${item.price_per_day || 'k. A.'} € / Tag</strong>
@@ -857,4 +845,3 @@
   </script>
 </body>
 </html>
-
