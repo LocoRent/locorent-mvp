@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Inserate verwalten – Locorent</title>
+  <title>Locorent – Nachhaltig mieten in Deutschland</title>
+  <meta name="description" content="Finde und vermiete nachhaltige Mietobjekte in deiner Nähe bei Locorent." />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
@@ -24,9 +25,7 @@
       --font-primary: 'Poppins', sans-serif;
     }
 
-    *, *::before, *::after {
-      box-sizing: border-box;
-    }
+    *, *::before, *::after { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -35,13 +34,12 @@
       font-family: var(--font-primary);
       background: linear-gradient(to bottom, #e8f5e9 0%, #ffffff 100%);
       color: var(--text-dark);
-      scroll-behavior: smooth;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
+      scroll-behavior: smooth;
     }
 
-    /* Header unverändert lassen */
     header {
       background-color: var(--primary);
       color: var(--white);
@@ -55,6 +53,7 @@
       z-index: 1000;
       box-shadow: 0 10px 20px rgba(0,0,0,0.1);
       flex-wrap: wrap;
+      width: 100%;
     }
 
     header h1 {
@@ -100,9 +99,7 @@
     }
 
     nav#nav-links a:hover::after,
-    nav#nav-links a:focus::after {
-      width: 100%;
-    }
+    nav#nav-links a:focus::after { width: 100%; }
 
     nav#nav-links a:hover,
     nav#nav-links a:focus {
@@ -110,184 +107,139 @@
       outline: none;
     }
 
-    main {
-      max-width: 1600px;
+    .hero {
       width: 100%;
-      margin: 0 auto;
-      padding: 2rem 2rem 4rem;
-      flex: 1;
-    }
-
-    .page-top {
-      margin-bottom: 1.5rem;
-    }
-
-    .page-top h2 {
       margin: 0;
+      padding: 2rem 0 2.5rem;
+      background: linear-gradient(135deg, #ffffff 0%, #f1f8e9 100%);
+      border-bottom: 1px solid rgba(46, 125, 50, 0.08);
+    }
+
+    .hero-inner,
+    .section-inner {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    .hero h2 {
       font-size: clamp(1.6rem, 2vw, 2.4rem);
+      font-weight: 700;
+      margin: 0;
       color: var(--primary-dark);
+      text-align: left;
     }
 
-    .page-top p {
-      margin: 0.5rem 0 0;
+    .hero-subtitle {
+      margin: 0.6rem 0 0;
       color: var(--text-muted);
-      max-width: 800px;
+      font-weight: 500;
+      max-width: 720px;
+      text-align: left;
     }
 
-    .panel {
-      background: var(--white);
-      border-radius: 24px;
-      box-shadow: 0 12px 30px rgba(46,125,50,0.10);
-      border: 1px solid rgba(46,125,50,0.08);
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-    }
-
-    .form-grid {
+    form.search-form {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: 2fr 1.25fr 1.5fr 0.9fr 0.9fr;
       gap: 1rem;
+      align-items: end;
+      margin-top: 1.5rem;
+      width: 100%;
+      position: relative;
     }
 
-    .form-group {
+    .search-field {
       display: flex;
       flex-direction: column;
       gap: 0.35rem;
     }
 
-    .form-group.full {
-      grid-column: 1 / -1;
-    }
-
-    .form-group label {
+    .search-field label {
+      font-size: 0.9rem;
       font-weight: 600;
       color: var(--text-muted);
-      font-size: 0.95rem;
+      padding-left: 0.1rem;
     }
 
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
+    form.search-form input,
+    form.search-form select,
+    form.search-form button {
       width: 100%;
       padding: 0.95rem 1rem;
-      border-radius: 14px;
       border: 1px solid rgba(46, 125, 50, 0.18);
-      background: #fff;
-      font-size: 1rem;
-      font-family: inherit;
+      border-radius: 14px;
+      font-size: 0.98rem;
+      background: white;
+      box-shadow: 0 3px 10px rgba(46, 125, 50, 0.04);
       outline: none;
       transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
     }
 
-    .form-group input:focus,
-    .form-group select:focus,
-    .form-group textarea:focus {
+    form.search-form input:focus,
+    form.search-form select:focus {
       border-color: var(--primary-light);
       box-shadow: 0 0 0 4px rgba(102, 187, 106, 0.16);
     }
 
-    .form-group textarea {
-      min-height: 160px;
-      resize: vertical;
-    }
-
-    .upload-box {
-      border: 2px dashed rgba(46,125,50,0.25);
-      border-radius: 18px;
-      background: linear-gradient(180deg, #fbfffb 0%, #f4fbf4 100%);
-      padding: 1.25rem;
-      text-align: center;
-      transition: border-color 0.25s ease, background 0.25s ease;
-    }
-
-    .upload-box:hover {
-      border-color: var(--primary-light);
-      background: #f0faf0;
-    }
-
-    .upload-box input[type="file"] {
-      width: 100%;
-      border: none;
-      background: transparent;
-      padding: 0.25rem 0;
-    }
-
-    .upload-preview {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-      gap: 0.75rem;
-      margin-top: 1rem;
-    }
-
-    .upload-preview img {
-      width: 100%;
-      height: 120px;
-      object-fit: cover;
-      border-radius: 14px;
-      border: 1px solid rgba(46,125,50,0.08);
-    }
-
-    .actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 0.75rem;
-      margin-top: 1.25rem;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      border: none;
-      border-radius: 14px;
-      padding: 0.9rem 1.25rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.25s ease, background-color 0.25s ease;
-    }
-
-    .btn-primary {
+    form.search-form button {
       background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
       color: var(--white);
-      box-shadow: 0 10px 20px rgba(46,125,50,0.14);
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      min-height: 52px;
     }
 
-    .btn-primary:hover {
+    form.search-form button:hover,
+    form.search-form button:focus {
       transform: translateY(-1px);
-      box-shadow: 0 14px 24px rgba(46,125,50,0.18);
+      box-shadow: 0 10px 20px rgba(46, 125, 50, 0.18);
     }
 
-    .btn-secondary {
-      background: #f3f7f3;
+    .location-wrap { position: relative; }
+
+    #suggestions {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      right: 0;
+      max-height: 180px;
+      overflow-y: auto;
+      background: white;
+      z-index: 20;
+      border: 1px solid rgba(46, 125, 50, 0.15);
+      border-radius: 12px;
+      box-shadow: 0 12px 25px rgba(0,0,0,0.08);
+    }
+
+    #suggestions div {
+      padding: 0.75rem 1rem;
+      cursor: pointer;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    #suggestions div:hover { background-color: #e8f5e9; }
+
+    section {
+      width: 100%;
+      background: transparent;
+      margin-top: 2rem;
+    }
+
+    section h2 {
+      font-size: 1.6rem;
       color: var(--primary-dark);
-      border: 1px solid rgba(46,125,50,0.12);
+      margin: 0 0 1rem;
     }
 
-    .btn-secondary:hover {
-      transform: translateY(-1px);
-      background: #edf5ed;
-    }
-
-    .listings-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 1rem;
-      margin: 2rem 0 1rem;
-      flex-wrap: wrap;
-    }
-
-    .listings-header h3 {
-      margin: 0;
-      font-size: 1.35rem;
-      color: var(--primary-dark);
-    }
-
-    .listing-grid {
+    .category-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 1.25rem;
+      margin-top: 1rem;
     }
 
-    .listing-card {
+    .result-card {
       background: var(--white);
       border: 1px solid rgba(46,125,50,0.08);
       border-radius: 22px;
@@ -298,19 +250,21 @@
       transition: transform 0.25s ease, box-shadow 0.25s ease;
     }
 
-    .listing-card:hover {
+    .result-card:hover,
+    .result-card:focus-within {
       transform: translateY(-3px);
       box-shadow: 0 18px 36px rgba(46,125,50,0.14);
+      outline: none;
     }
 
-    .listing-card img {
+    .result-card img {
       width: 100%;
       height: 190px;
       object-fit: cover;
       background: #eef6ee;
     }
 
-    .listing-card-body {
+    .result-card-body {
       padding: 1rem;
       display: flex;
       flex-direction: column;
@@ -318,7 +272,7 @@
       flex: 1;
     }
 
-    .listing-card-body h4 {
+    .result-card-body h3 {
       margin: 0;
       font-size: 1.05rem;
       line-height: 1.35;
@@ -330,7 +284,7 @@
       -webkit-box-orient: vertical;
     }
 
-    .listing-meta {
+    .result-meta {
       display: flex;
       flex-wrap: wrap;
       gap: 0.5rem;
@@ -339,58 +293,91 @@
       font-size: 0.92rem;
     }
 
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      padding: 0.3rem 0.65rem;
-      border-radius: 999px;
-      background: #e8f5e9;
-      color: var(--primary-dark);
-      font-weight: 600;
-      font-size: 0.82rem;
-    }
-
-    .listing-actions {
+    .result-card .buttons {
       margin-top: auto;
       display: flex;
+      flex-direction: column;
       gap: 0.6rem;
-      flex-wrap: wrap;
     }
 
-    .listing-actions button,
-    .listing-actions a {
-      flex: 1;
-      min-width: 120px;
-      text-align: center;
-      text-decoration: none;
-      padding: 0.7rem 0.9rem;
-      border-radius: 12px;
+    .result-card button {
+      width: 100%;
+      padding: 0.75rem 0.9rem;
       border: none;
+      border-radius: 12px;
       cursor: pointer;
       font-weight: 700;
       transition: transform 0.2s ease, background-color 0.25s ease, color 0.25s ease;
     }
 
-    .listing-actions .edit-btn {
+    .result-card .details-btn {
       background: var(--primary);
-      color: #fff;
+      color: var(--white);
     }
 
-    .listing-actions .edit-btn:hover {
+    .result-card .details-btn:hover,
+    .result-card .details-btn:focus {
       background: var(--primary-dark);
       transform: translateY(-1px);
+      outline: none;
     }
 
-    .listing-actions .delete-btn {
-      background: #fff1f1;
-      color: #c62828;
-      border: 1px solid rgba(198,40,40,0.10);
+    .result-card .fav-btn {
+      background: var(--primary);
+      color: var(--white);
+      border: none;
     }
 
-    .listing-actions .delete-btn:hover {
-      background: #ffe9e9;
+    .result-card .fav-btn:hover,
+    .result-card .fav-btn:focus {
+      background: var(--primary-dark);
       transform: translateY(-1px);
+      outline: none;
     }
+
+    .result-card .fav-btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.7;
+      background: #f3f3f3;
+      color: #777;
+      border-color: #e1e1e1;
+    }
+
+    .more-link {
+      text-align: right;
+      margin-top: 0.5rem;
+    }
+
+    .btn-more {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25em;
+      font-weight: 700;
+      color: var(--primary);
+      text-decoration: none;
+      border: 2px solid var(--primary);
+      padding: 0.25em 0.75em;
+      border-radius: 24px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      font-size: 0.9rem;
+      user-select: none;
+    }
+
+    .btn-more span {
+      display: inline-block;
+      font-size: 1.2rem;
+      transition: transform 0.3s ease;
+    }
+
+    .btn-more:hover,
+    .btn-more:focus {
+      background-color: var(--primary);
+      color: var(--white);
+      text-decoration: none;
+      outline: none;
+    }
+
+    .btn-more:hover span { transform: translateX(5px); }
 
     footer {
       width: 100%;
@@ -403,7 +390,7 @@
       font-size: 0.92rem;
       user-select: none;
       text-align: center;
-      margin-top: auto;
+      margin-top: 2rem;
     }
 
     footer > div {
@@ -439,9 +426,7 @@
       transition: color 0.3s ease;
     }
 
-    footer ul li a:hover {
-      color: var(--accent);
-    }
+    footer ul li a:hover { color: var(--accent); }
 
     footer small {
       display: block;
@@ -450,10 +435,12 @@
       opacity: 0.85;
     }
 
+    @media (max-width: 1200px) {
+      form.search-form { grid-template-columns: 1.6fr 1fr 1fr 1fr; }
+    }
+
     @media (max-width: 720px) {
-      #nav-toggle {
-        display: block;
-      }
+      #nav-toggle { display: block; }
 
       nav#nav-links {
         display: none;
@@ -462,9 +449,7 @@
         margin-top: 1rem;
       }
 
-      nav#nav-links.show {
-        display: flex;
-      }
+      nav#nav-links.show { display: flex; }
 
       nav#nav-links a {
         margin: 0.4rem 0;
@@ -474,38 +459,30 @@
         display: block;
       }
 
-      main {
-        padding: 1.25rem 0.75rem 3rem;
-      }
+      .hero { padding: 1.25rem 0 1.5rem; }
 
-      .panel {
-        padding: 1rem;
-      }
+      .hero-inner,
+      .section-inner { padding: 0 0.75rem; }
 
-      .form-grid {
+      form.search-form {
         grid-template-columns: 1fr;
+        gap: 0.85rem;
+        margin-top: 1.25rem;
       }
 
-      .actions {
-        justify-content: stretch;
-      }
-
-      .btn {
-        width: 100%;
-      }
-
-      .listing-grid {
+      .category-grid {
         grid-template-columns: 1fr;
+        gap: 0.85rem;
       }
+
+      .result-card { width: 100%; }
 
       footer > div {
         flex-direction: column;
         align-items: flex-start;
       }
 
-      footer > div > div {
-        width: 100%;
-      }
+      footer > div > div { width: 100%; }
     }
   </style>
 </head>
@@ -513,99 +490,93 @@
   <header>
     <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
     <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
-    <nav id="nav-links" role="navigation" aria-label="Hauptnavigation">
-      <!-- Navigation Links werden via JS gesetzt -->
-    </nav>
+    <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
   </header>
 
-  <main>
-    <div class="page-top">
-      <h2>Inserate verwalten</h2>
-      <p>Hier kannst du deine Inserate anlegen, bearbeiten und löschen. Alles schön ordentlich — fast wie eine gut sortierte Werkzeugkiste, nur ohne Schrauben im falschen Fach.</p>
-    </div>
-
-    <section class="panel" aria-label="Inserat erstellen">
-      <form id="listing-form">
-        <div class="form-grid">
-          <div class="form-group full">
-            <label for="title">Titel</label>
-            <input type="text" id="title" placeholder="z. B. Bohrmaschine Bosch Professional" required />
-          </div>
-
-          <div class="form-group">
-            <label for="category">Kategorie</label>
-            <select id="category" required>
-              <option value="">Bitte wählen</option>
-              <option value="anhaenger-transportmittel">Anhänger & Transportmittel</option>
-              <option value="audio-dj-equipment">Audio & DJ-Equipment</option>
-              <option value="auto-suv">Auto & SUV</option>
-              <option value="basteln-diy">Basteln & DIY</option>
-              <option value="beauty">Beauty</option>
-              <option value="boote-wassersport">Boote & Wassersport</option>
-              <option value="brettspiele-spielzeug">Brettspiele & Spielzeug</option>
-              <option value="camping-wandern">Camping & Wandern</option>
-              <option value="computer-laptops">Computer & Laptops</option>
-              <option value="drohnen-modellbau">Drohnen & Modellbau</option>
-              <option value="event-partyausstattung">Event- & Partyausstattung</option>
-              <option value="fahrrad-ebike">Fahrrad & E-Bike</option>
-              <option value="fitnessgeraete">Fitnessgeräte</option>
-              <option value="foto-film-kameraequipment">Foto-, Film- & Kameraequipment</option>
-              <option value="gaming-unterhaltung">Gaming & Unterhaltung</option>
-              <option value="garten-aussenbereich">Garten & Außenbereich</option>
-              <option value="kursraeume-seminarraum">Kursräume & Seminarraum</option>
-              <option value="medien-kultur">Medien & Kultur</option>
-              <option value="motorrad-roller">Motorrad & Roller</option>
-              <option value="musikinstrumente">Musikinstrumente</option>
-              <option value="mode-accessoires">Mode & Accessoires</option>
-              <option value="smartphones-tablets">Smartphones & Tablets</option>
-              <option value="sport">Sport</option>
-              <option value="tiere">Tiere</option>
-              <option value="werkzeuge-maschinen">Werkzeuge & Maschinen</option>
-              <option value="wohnmobil-camper">Wohnmobil & Camper</option>
-              <option value="sonstiges">Sonstiges</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="price_per_day">Preis pro Tag (€)</label>
-            <input type="number" id="price_per_day" min="0" step="0.5" placeholder="z. B. 15" required />
-          </div>
-
-          <div class="form-group">
-            <label for="location">Ort</label>
-            <input type="text" id="location" placeholder="z. B. Frankfurt am Main" required />
-          </div>
-
-          <div class="form-group full">
-            <label for="description">Beschreibung</label>
-            <textarea id="description" placeholder="Beschreibe dein Inserat möglichst genau..." required></textarea>
-          </div>
-
-          <div class="form-group full">
-            <label>Bilder hochladen</label>
-            <div class="upload-box">
-              <input type="file" id="images" accept="image/*" multiple />
-              <p style="margin:0.75rem 0 0; color: var(--text-muted);">Wähle ein oder mehrere Bilder aus. Vorschau erscheint unten.</p>
-              <div id="preview" class="upload-preview"></div>
-            </div>
-          </div>
+  <section class="hero" aria-label="Suchbereich">
+    <div class="hero-inner">
+      <h2>Finde das perfekte Mietobjekt</h2>
+      <p class="hero-subtitle">Suche nach Kategorie, Ort oder Radius und entdecke passende Angebote in deiner Nähe.</p>
+      <form class="search-form" onsubmit="event.preventDefault(); search();" role="search" aria-label="Suchformular">
+        <div class="search-field">
+          <label for="search-input">Suchbegriff</label>
+          <input type="text" placeholder="Was suchst du?" id="search-input" aria-label="Suchbegriff eingeben" />
         </div>
-
-        <div class="actions">
-          <button type="button" class="btn btn-secondary" id="reset-btn">Zurücksetzen</button>
-          <button type="submit" class="btn btn-primary">Inserat speichern</button>
+        <div class="search-field">
+          <label for="category-select">Kategorie</label>
+          <select id="category-select" aria-label="Kategorie auswählen">
+            <option value="">Alle Kategorien</option>
+            <option value="anhaenger-transportmittel">Anhänger & Transportmittel</option>
+            <option value="audio-dj-equipment">Audio & DJ-Equipment</option>
+            <option value="auto-suv">Auto & SUV</option>
+            <option value="basteln-diy">Basteln & DIY</option>
+            <option value="beauty">Beauty</option>
+            <option value="boote-wassersport">Boote & Wassersport</option>
+            <option value="brettspiele-spielzeug">Brettspiele & Spielzeug</option>
+            <option value="camping-wandern">Camping & Wandern</option>
+            <option value="computer-laptops">Computer & Laptops</option>
+            <option value="drohnen-modellbau">Drohnen & Modellbau</option>
+            <option value="event-partyausstattung">Event- & Partyausstattung</option>
+            <option value="fahrrad-ebike">Fahrrad & E-Bike</option>
+            <option value="fitnessgeraete">Fitnessgeräte</option>
+            <option value="foto-film-kameraequipment">Foto-, Film- & Kameraequipment</option>
+            <option value="gaming-unterhaltung">Gaming & Unterhaltung</option>
+            <option value="garten-aussenbereich">Garten & Außenbereich</option>
+            <option value="kursraeume-seminarraum">Kursräume & Seminarraum</option>
+            <option value="medien-kultur">Medien & Kultur</option>
+            <option value="motorrad-roller">Motorrad & Roller</option>
+            <option value="musikinstrumente">Musikinstrumente</option>
+            <option value="mode-accessoires">Mode & Accessoires</option>
+            <option value="smartphones-tablets">Smartphones & Tablets</option>
+            <option value="sport">Sport</option>
+            <option value="tiere">Tiere</option>
+            <option value="werkzeuge-maschinen">Werkzeuge & Maschinen</option>
+            <option value="wohnmobil-camper">Wohnmobil & Camper</option>
+            <option value="sonstiges">Sonstiges</option>
+          </select>
         </div>
+        <div class="search-field location-wrap">
+          <label for="location-input">Ort</label>
+          <input type="text" placeholder="Ort" id="location-input" autocomplete="off" aria-label="Ort eingeben" />
+          <div id="suggestions" role="listbox" aria-label="Ortsvorschläge"></div>
+        </div>
+        <div class="search-field">
+          <label for="radius-select">Radius</label>
+          <select id="radius-select" aria-label="Suchradius auswählen">
+            <option value="">Ganzer Ort</option>
+            <option value="5">5 km</option>
+            <option value="10">10 km</option>
+            <option value="20">20 km</option>
+            <option value="30">30 km</option>
+            <option value="50">50 km</option>
+            <option value="100">100 km</option>
+            <option value="200">200 km</option>
+          </select>
+        </div>
+        <button type="submit">Suchen</button>
       </form>
-    </section>
-
-    <div class="listings-header">
-      <h3>Deine Inserate</h3>
     </div>
+  </section>
 
-    <section class="listing-grid" id="my-listings">
-      <p>Lade Inserate...</p>
-    </section>
-  </main>
+  <section aria-label="Neueste Angebote">
+    <div class="section-inner">
+      <h2>Neueste Angebote</h2>
+      <div id="newest-offers" class="category-grid" aria-live="polite" aria-busy="true"><p>⏳ Lade Angebote…</p></div>
+      <div class="more-link">
+        <a href="angebote_neueste.html" class="btn-more">MEHR <span>→</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section aria-label="Beliebte Angebote">
+    <div class="section-inner">
+      <h2>Beliebte Angebote</h2>
+      <div id="popular-offers" class="category-grid" aria-live="polite" aria-busy="true"><p>⏳ Lade Angebote…</p></div>
+      <div class="more-link">
+        <a href="angebote_beliebte.html" class="btn-more">MEHR <span>→</span></a>
+      </div>
+    </div>
+  </section>
 
   <footer role="contentinfo">
     <div>
@@ -644,19 +615,21 @@
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
     );
 
-    const nav = document.getElementById('nav-links');
-    const navToggle = document.getElementById('nav-toggle');
-    const form = document.getElementById('listing-form');
-    const preview = document.getElementById('preview');
-    const imagesInput = document.getElementById('images');
-    const resetBtn = document.getElementById('reset-btn');
-    const listingsContainer = document.getElementById('my-listings');
+    let userSession = null;
+    let debounceTimer;
+    let selectedAddressData = null;
 
-    let user = null;
-    let selectedFiles = [];
+    async function init() {
+      const { data: { session } } = await sb.auth.getSession();
+      userSession = session;
+      updateNav();
+      await loadNewestOffers();
+      await loadPopularOffers();
+    }
 
     function updateNav() {
-      nav.innerHTML = user ? `
+      const nav = document.getElementById('nav-links');
+      nav.innerHTML = userSession?.user ? `
         <a href="index.html">Start</a>
         <a href="profil.html">Mein Profil</a>
         <a href="nachrichten-inbox.html">Nachrichten</a>
@@ -675,112 +648,181 @@
       window.location.href = "login.html";
     }
 
-    navToggle.addEventListener('click', () => {
-      nav.classList.toggle('show');
-      navToggle.setAttribute('aria-expanded', nav.classList.contains('show'));
-    });
+    async function loadOffers(orderBy, containerId) {
+      const container = document.getElementById(containerId);
+      container.setAttribute('aria-busy', 'true');
+      container.innerHTML = '<p>⏳ Lade Angebote…</p>';
 
-    imagesInput.addEventListener('change', (e) => {
-      selectedFiles = Array.from(e.target.files || []);
-      renderPreview();
-    });
-
-    function renderPreview() {
-      preview.innerHTML = '';
-      selectedFiles.forEach(file => {
-        const reader = new FileReader();
-        reader.onload = (ev) => {
-          const img = document.createElement('img');
-          img.src = ev.target.result;
-          preview.appendChild(img);
-        };
-        reader.readAsDataURL(file);
-      });
+      try {
+        const { data, error } = await sb.from('listings').select('*').order(orderBy, { ascending: false }).limit(5);
+        if (error) throw error;
+        if (!data || data.length === 0) {
+          container.innerHTML = '<p>Keine Angebote gefunden.</p>';
+          container.removeAttribute('aria-busy');
+          return;
+        }
+        container.removeAttribute('aria-busy');
+        await renderOffers(data, containerId);
+      } catch (err) {
+        console.error('Fehler beim Laden von Angeboten:', err);
+        container.innerHTML = '<p>Fehler beim Laden der Angebote.</p>';
+        container.removeAttribute('aria-busy');
+      }
     }
 
-    resetBtn.addEventListener('click', () => {
-      form.reset();
-      selectedFiles = [];
-      preview.innerHTML = '';
-    });
+    async function loadNewestOffers() { await loadOffers('created_at', 'newest-offers'); }
+    async function loadPopularOffers() { await loadOffers('views', 'popular-offers'); }
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      alert('Speichern-Logik bleibt hier wie in deiner bestehenden Seite eingebunden.');
-    });
+    async function renderOffers(items, containerId) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
 
-    async function loadMyListings() {
-      listingsContainer.innerHTML = '<p>Lade Inserate...</p>';
-      const { data: { user: currentUser } } = await sb.auth.getUser();
-      user = currentUser;
-      updateNav();
+      for (const item of items) {
+        const card = document.createElement('div');
+        card.className = 'result-card';
 
-      if (!user) {
-        listingsContainer.innerHTML = '<p>Bitte einloggen, um deine Inserate zu sehen.</p>';
-        return;
-      }
-
-      const { data, error } = await sb
-        .from('listings')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        console.error(error);
-        listingsContainer.innerHTML = '<p>Fehler beim Laden der Inserate.</p>';
-        return;
-      }
-
-      if (!data || data.length === 0) {
-        listingsContainer.innerHTML = '<p>Noch keine Inserate vorhanden.</p>';
-        return;
-      }
-
-      listingsContainer.innerHTML = '';
-      data.forEach(item => {
-        const card = document.createElement('article');
-        card.className = 'listing-card';
+        const isFav = userSession?.user ? await checkIfFavorite(item.id) : false;
+        const imgUrl = item.image_urls?.[0] || 'https://via.placeholder.com/400x200';
 
         card.innerHTML = `
-          <img src="${item.image_urls?.[0] || 'https://via.placeholder.com/600x400'}" alt="${item.title || 'Inserat'}" />
-          <div class="listing-card-body">
-            <h4>${item.title || 'Kein Titel'}</h4>
-            <div class="listing-meta">
+          <img src="${imgUrl}" alt="${item.title || 'Bild'}" />
+          <div class="result-card-body">
+            <h3>${item.title || 'Kein Titel'}</h3>
+            <div class="result-meta">
               <span>${item.location || ''}</span>
             </div>
-            <div class="listing-meta">
+            <div class="result-meta">
               <strong>${item.price_per_day || 'k. A.'} € / Tag</strong>
             </div>
-            <div class="listing-actions">
-              <a class="edit-btn" href="bearbeiten.html?id=${item.id}">Bearbeiten</a>
-              <button class="delete-btn" onclick="deleteListing('${item.id}')">Löschen</button>
+            <div class="buttons">
+              <button class="details-btn" onclick="window.location.href='mietobjekt.html?id=${item.id}'">Details ansehen</button>
+              <button class="fav-btn">${isFav ? 'Bereits Favorit' : 'Zu Favoriten'}</button>
             </div>
           </div>
         `;
 
-        listingsContainer.appendChild(card);
-      });
+        const favBtn = card.querySelector('.fav-btn');
+        if (userSession?.user) {
+          if (!isFav) {
+            favBtn.onclick = async (e) => {
+              e.preventDefault();
+              const nowFav = await toggleFavorite(item.id);
+              favBtn.innerText = nowFav ? 'Bereits Favorit' : 'Zu Favoriten';
+            };
+          } else {
+            favBtn.disabled = true;
+          }
+        } else {
+          favBtn.disabled = true;
+          favBtn.innerText = "Login erforderlich";
+        }
+
+        container.appendChild(card);
+      }
     }
 
-    async function deleteListing(id) {
-      const ok = confirm('Möchtest du dieses Inserat wirklich löschen?');
-      if (!ok) return;
+    async function checkIfFavorite(listingId) {
+      if (!userSession?.user) return false;
+      const { data } = await sb.from('favorites').select('*').eq('user_id', userSession.user.id).eq('listing_id', listingId).maybeSingle();
+      return !!data;
+    }
 
-      const { error } = await sb.from('listings').delete().eq('id', id);
-      if (error) {
-        alert('Fehler beim Löschen.');
+    async function toggleFavorite(listingId) {
+      if (!userSession?.user) return false;
+      const { data, error: fetchError } = await sb.from('favorites').select('*').eq('user_id', userSession.user.id).eq('listing_id', listingId).maybeSingle();
+      if (fetchError) {
+        console.error('Fehler beim Prüfen des Favoritenstatus:', fetchError);
+        return false;
+      }
+      if (data) {
+        const { error: deleteError } = await sb.from('favorites').delete().eq('user_id', userSession.user.id).eq('listing_id', listingId);
+        if (deleteError) {
+          console.error('Fehler beim Entfernen aus Favoriten:', deleteError);
+          return true;
+        }
+        return false;
+      } else {
+        const { error: insertError } = await sb.from('favorites').insert({ user_id: userSession.user.id, listing_id: listingId });
+        if (insertError) {
+          console.error('Fehler beim Hinzufügen zu Favoriten:', insertError);
+          return false;
+        }
+        return true;
+      }
+    }
+
+    function search() {
+      const keyword = document.getElementById("search-input").value.trim();
+      const category = document.getElementById("category-select").value.trim();
+      const location = document.getElementById("location-input").value.trim();
+      const radius = document.getElementById("radius-select").value.trim();
+      const params = new URLSearchParams({ keyword, category, location, radius });
+      window.location.href = `search_results.html?${params.toString()}`;
+    }
+
+    document.getElementById('nav-toggle').addEventListener('click', () => {
+      const nav = document.getElementById('nav-links');
+      nav.classList.toggle('show');
+      document.getElementById('nav-toggle').setAttribute('aria-expanded', nav.classList.contains('show'));
+    });
+
+    /* Ortssuche */
+    const locationInput = document.getElementById('location-input');
+    const suggestionBox = document.getElementById('suggestions');
+
+    locationInput.addEventListener('input', () => {
+      clearTimeout(debounceTimer);
+      const value = locationInput.value.trim();
+      if (value.length < 2) {
+        suggestionBox.innerHTML = '';
         return;
       }
-      loadMyListings();
-    }
 
-    (async () => {
-      const { data: { user: currentUser } } = await sb.auth.getUser();
-      user = currentUser;
-      updateNav();
-      await loadMyListings();
-    })();
+      debounceTimer = setTimeout(async () => {
+        try {
+          const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&countrycodes=de&limit=5&q=${encodeURIComponent(value)}`);
+          const results = await res.json();
+          suggestionBox.innerHTML = '';
+
+          results.forEach(r => {
+            const addr = r.address || {};
+            const city = addr.city || addr.town || addr.village || addr.municipality || r.display_name.split(',')[0];
+            const state = addr.state || '';
+            const display = [city, state, "Deutschland"].filter(Boolean).join(', ');
+
+            const div = document.createElement('div');
+            div.textContent = display;
+            div.onclick = () => {
+              locationInput.value = display;
+              selectedAddressData = {
+                city: city,
+                location: display,
+                lat: parseFloat(r.lat),
+                lon: parseFloat(r.lon),
+                postal_code: addr.postcode || ''
+              };
+              suggestionBox.innerHTML = '';
+            };
+            suggestionBox.appendChild(div);
+          });
+
+          if (results.length === 0) {
+            suggestionBox.innerHTML = '<div style="padding:0.5rem;">Kein Ort gefunden</div>';
+          }
+        } catch (err) {
+          console.error("Fehler bei Ortssuche:", err);
+        }
+      }, 400);
+    });
+
+    /* 2. Änderung: echtes Speichern statt Alert */
+    const form = document.querySelector('.search-form');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      alert('Das ist die Suchleiste. Für das Inserat-Speichern ist hier kein Formular vorhanden.');
+    });
+
+    init();
   </script>
 </body>
 </html>
