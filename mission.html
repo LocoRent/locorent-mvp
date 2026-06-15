@@ -256,8 +256,7 @@
       position: relative;
       padding: 1.6rem 1.5rem;
       border-radius: 24px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.82), rgba(245,251,239,0.96));
+      background: linear-gradient(180deg, rgba(255,255,255,0.82), rgba(245,251,239,0.96));
       border: 1px solid rgba(46, 125, 50, 0.10);
       box-shadow: 0 12px 28px rgba(0,0,0,0.05);
       transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
@@ -461,32 +460,6 @@
       line-height: 1.6;
     }
 
-    .scroll-top {
-      position: fixed;
-      right: 18px;
-      bottom: 18px;
-      width: 48px;
-      height: 48px;
-      border: none;
-      border-radius: 999px;
-      background: linear-gradient(135deg, #1b5e20, #2e7d32);
-      color: white;
-      font-size: 1.15rem;
-      box-shadow: 0 14px 28px rgba(46,125,50,0.25);
-      cursor: pointer;
-      opacity: 0;
-      transform: translateY(10px);
-      pointer-events: none;
-      transition: opacity 0.25s ease, transform 0.25s ease;
-      z-index: 1200;
-    }
-
-    .scroll-top.show {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: auto;
-    }
-
     @media (max-width: 900px) {
       .mini-metrics {
         grid-template-columns: 1fr;
@@ -533,6 +506,14 @@
 
       .cta-strip {
         padding: 1.1rem 1rem;
+      }
+
+      .hero-actions {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
       }
     }
   </style>
@@ -794,8 +775,6 @@
   <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
 </footer>
 
-<button class="scroll-top" id="scrollTop" aria-label="Nach oben">↑</button>
-
 <script>
   const sb = supabase.createClient(
     'https://flnjalgqtkqycsaymmbd.supabase.co',
@@ -845,17 +824,6 @@
     nav.classList.toggle('show');
     document.getElementById('nav-toggle').setAttribute('aria-expanded', nav.classList.contains('show'));
   });
-
-  const scrollTop = document.getElementById('scrollTop');
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 500) {
-      scrollTop.classList.add('show');
-    } else {
-      scrollTop.classList.remove('show');
-    }
-  });
-
-  scrollTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
   init();
 </script>
