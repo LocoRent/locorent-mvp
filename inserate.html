@@ -678,7 +678,6 @@
       preview.innerHTML = '';
     });
 
-    /* 1) Ortssuche wieder aktiv */
     function initLocationSuggestions() {
       const wrapper = locationInput.parentElement;
       wrapper.style.position = 'relative';
@@ -762,7 +761,35 @@
       });
     }
 
-    /* 2) Speichern wieder aktiv */
+    async function uploadImages(files) {
+      const urls = [];
+
+      for (const file of files) {
+        const safeName = file.name.replace(/\s+/g, '-');
+        const filePath = `${user.id}/${Date.now()}-${safeName}`;
+
+        const { error: uploadError } = await sb.storage
+          .from('listing-images')
+          .upload(filePath, file, {
+            cacheControl: '3600',
+            upsert: false
+          });
+
+        if (uploadError) {
+          console.error('Upload-Fehler:', uploadError);
+          continue;
+        }
+
+        const { data } = sb.storage
+          .from('listing-images')
+          .getPublicUrl(filePath);
+
+        urls.push(data.publicUrl);
+      }
+
+      return urls;
+    }
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
@@ -783,9 +810,7 @@
           return;
         }
 
-        const image_urls = selectedFiles.length
-          ? selectedFiles.map(file => URL.createObjectURL(file))
-          : [];
+        const image_urls = await uploadImages(selectedFiles);
 
         const { error } = await sb.from('listings').insert({
           user_id: user.id,
