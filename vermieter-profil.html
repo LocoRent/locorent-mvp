@@ -26,7 +26,13 @@
     --star-color: #fbc02d;
   }
 
-  *, *::before, *::after { box-sizing: border-box; }
+  *, *::before, *::after {
+    box-sizing: border-box;
+    max-width: 100%;
+    word-wrap: break-word;
+    margin: 0;
+    padding: 0;
+  }
 
   html, body {
     width: 100%;
@@ -37,7 +43,10 @@
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    margin: 0;
+  }
+
+  body {
+    overflow-x: hidden;
   }
 
   header {
@@ -53,6 +62,7 @@
     z-index: 1000;
     box-shadow: 0 10px 20px rgba(0,0,0,0.1);
     flex-wrap: wrap;
+    width: 100%;
   }
 
   header h1 {
@@ -98,7 +108,9 @@
   }
 
   nav#nav-links a:hover::after,
-  nav#nav-links a:focus::after { width: 100%; }
+  nav#nav-links a:focus::after {
+    width: 100%;
+  }
 
   nav#nav-links a:hover,
   nav#nav-links a:focus {
@@ -333,14 +345,6 @@
     align-items: center;
     color: var(--text-muted);
     font-size: 0.92rem;
-  }
-
-  .result-meta span {
-    background: #edf7ee;
-    color: var(--primary-dark);
-    padding: 0.45rem 0.7rem;
-    border-radius: 999px;
-    border: 1px solid rgba(46,125,50,0.08);
   }
 
   .result-card .buttons {
@@ -612,12 +616,6 @@
       return html;
     }
 
-    function formatJoinDate(dateStr) {
-      if (!dateStr) return 'Unbekannt';
-      const d = new Date(dateStr);
-      return d.toLocaleDateString('de-DE', { year: 'numeric', month: 'long', day: 'numeric' });
-    }
-
     async function loadFavorites() {
       if (!userSession?.user) return;
       const { data } = await sb
@@ -662,9 +660,9 @@
 
       const { data: profile, error: profileError } = await sb
         .from("profiles")
-        .select("name, city, bio, avatar_url, created_at")
+        .select("name, city, bio, avatar_url")
         .eq("id", userId)
-        .maybeSingle();
+        .single();
 
       const profilePhoto = document.getElementById("profile-photo");
       if (profile?.avatar_url) {
@@ -681,7 +679,6 @@
         <p><strong>Name:</strong> ${profile.name || 'Unbekannt'}</p>
         <p><strong>Ort:</strong> ${profile.city || '–'}</p>
         <p><strong>Über mich:</strong> ${profile.bio || '–'}</p>
-        <p><strong>Beigetreten am:</strong> ${formatJoinDate(profile.created_at)}</p>
       `;
 
       const { data: reviews, error: reviewError } = await sb
