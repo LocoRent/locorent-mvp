@@ -152,6 +152,7 @@
       display: flex;
       flex-direction: column;
       gap: 0.35rem;
+      position: relative;
     }
 
     .form-group.full {
@@ -497,9 +498,7 @@
   <header>
     <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
     <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
-    <nav id="nav-links" role="navigation" aria-label="Hauptnavigation">
-      <!-- Navigation Links werden via JS gesetzt -->
-    </nav>
+    <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
   </header>
 
   <main>
@@ -558,15 +557,15 @@
               <label for="price_per_day">Preis pro Tag (€)</label>
               <span class="char-limit" id="price-limit">max. 6 Zeichen</span>
             </div>
-            <input type="number" id="price_per_day" min="0" step="0.5" maxlength="6" placeholder="z. B. 15" required />
+            <input type="number" id="price_per_day" min="0" step="0.5" placeholder="z. B. 15" required />
           </div>
 
           <div class="form-group">
             <div class="label-row">
               <label for="location">Ort</label>
-              <span class="char-limit" id="location-limit">0/60 Zeichen</span>
+              <span class="char-limit" id="location-limit">0/80 Zeichen</span>
             </div>
-            <input type="text" id="location" maxlength="60" placeholder="z. B. Frankfurt am Main" required autocomplete="off" />
+            <input type="text" id="location" maxlength="80" placeholder="z. B. Frankfurt am Main" required autocomplete="off" />
           </div>
 
           <div class="form-group full">
@@ -659,8 +658,7 @@
 
     const TITLE_MAX = 80;
     const DESCRIPTION_MAX = 500;
-    const LOCATION_MAX = 60;
-    const PRICE_MAX = 999999;
+    const LOCATION_MAX = 80;
 
     let user = null;
     let selectedFiles = [];
@@ -734,6 +732,12 @@
     titleInput.addEventListener('input', updateCharCounters);
     descriptionInput.addEventListener('input', updateCharCounters);
     locationInput.addEventListener('input', updateCharCounters);
+
+    priceInput.addEventListener('input', () => {
+      let value = priceInput.value.replace(/[^\d]/g, '');
+      if (value.length > 6) value = value.slice(0, 6);
+      priceInput.value = value;
+    });
 
     imagesInput.addEventListener('change', (e) => {
       selectedFiles = Array.from(e.target.files || []);
@@ -880,12 +884,18 @@
 
       const title = titleInput.value.trim();
       const category = document.getElementById('category').value;
-      const price_per_day = parseFloat(priceInput.value);
+      const priceValue = priceInput.value.slice(0, 6);
+      const price_per_day = parseFloat(priceValue);
       const location = locationInput.value.trim();
       const description = descriptionInput.value.trim();
 
       if (!title || !category || !price_per_day || !location || !description) {
         alert('Bitte alle Pflichtfelder ausfüllen.');
+        return;
+      }
+
+      if (!/^\d{1,6}$/.test(priceValue)) {
+        alert('Der Preis pro Tag darf maximal 6 Ziffern haben.');
         return;
       }
 
