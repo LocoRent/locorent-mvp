@@ -27,6 +27,7 @@
 
     *, *::before, *::after {
       box-sizing: border-box;
+      max-width: 100%;
       word-wrap: break-word;
     }
 
@@ -71,12 +72,11 @@
       flex-wrap: wrap;
     }
 
-    header .logo {
+    header h1 {
       font-size: 1.8rem;
       cursor: pointer;
       user-select: none;
       margin: 0;
-      font-weight: 700;
     }
 
     #nav-toggle {
@@ -135,17 +135,11 @@
       gap: 1.25rem;
     }
 
-    .reviews-hero,
-    .reviews-toolbar,
-    .review-item,
-    .empty-state {
+    .reviews-hero {
       background: rgba(255,255,255,0.96);
       border: 1px solid rgba(46, 125, 50, 0.08);
       border-radius: 24px;
       box-shadow: 0 12px 30px rgba(46, 125, 50, 0.08);
-    }
-
-    .reviews-hero {
       padding: 1.5rem;
     }
 
@@ -179,6 +173,10 @@
     }
 
     .reviews-toolbar {
+      background: rgba(255,255,255,0.96);
+      border: 1px solid rgba(46, 125, 50, 0.08);
+      border-radius: 20px;
+      box-shadow: 0 10px 24px rgba(46, 125, 50, 0.06);
       padding: 1rem 1.2rem;
       display: flex;
       justify-content: space-between;
@@ -226,6 +224,10 @@
     }
 
     .review-item {
+      background: rgba(255,255,255,0.98);
+      border: 1px solid rgba(46, 125, 50, 0.08);
+      border-radius: 22px;
+      box-shadow: 0 10px 24px rgba(46, 125, 50, 0.06);
       padding: 1.25rem;
       display: flex;
       gap: 1rem;
@@ -281,7 +283,9 @@
     }
 
     .empty-state {
+      background: rgba(255,255,255,0.98);
       border: 1px dashed rgba(46, 125, 50, 0.18);
+      border-radius: 22px;
       padding: 2rem 1.4rem;
       text-align: center;
       color: var(--text-muted);
@@ -405,7 +409,7 @@
 </head>
 <body>
   <header>
-    <a class="logo" href="index.html" aria-label="Locorent Startseite">Locorent</a>
+    <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
     <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
     <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
   </header>
@@ -481,7 +485,6 @@
 
     let userSession = null;
     let reviewsData = [];
-    let reviewerCache = {};
 
     async function init() {
       const { data } = await sb.auth.getSession();
@@ -496,7 +499,7 @@
       const nav = document.getElementById('nav-links');
       nav.innerHTML = userSession?.user ? `
         <a href="index.html">Start</a>
-        <a href="profil.html?user_id=${userSession.user.id}">Mein Profil</a>
+        <a href="profil.html">Mein Profil</a>
         <a href="nachrichten-inbox.html">📨 Nachrichten</a>
         <a href="favoriten.html">Meine Favoriten</a>
         <a href="inserate.html">Meine Inserate</a>
@@ -521,56 +524,30 @@
       });
     }
 
-    function getInitials(name) {
-      if (!name) return '?';
-      return name
-        .trim()
-        .split(/\s+/)
-        .slice(0, 2)
-        .map(part => part[0]?.toUpperCase() || '')
-        .join('');
-    }
-
-    function escapeHtml(str) {
-      return String(str || '')
-        .replaceAll('&', '&amp;')
-        .replaceAll('<', '&lt;')
-        .replaceAll('>', '&gt;')
-        .replaceAll('"', '&quot;')
-        .replaceAll("'", '&#039;');
-    }
-
-    function getStars(rating) {
-      const r = Math.max(0, Math.min(5, Math.round(Number(rating) || 0)));
-      return '★'.repeat(r) + '☆'.repeat(5 - r);
-    }
-
     async function loadReviewerNames(reviewRows) {
       const userIds = [...new Set(reviewRows.map(r => r.from_user_id).filter(Boolean))];
-      const missingIds = userIds.filter(id => !reviewerCache[id]);
-
-      if (!missingIds.length) return reviewerCache;
+      if (!userIds.length) return {};
 
       const { data, error } = await sb
         .from('profiles')
         .select('id, name')
-        .in('id', missingIds);
+        .in('id', userIds);
 
       if (error) {
         console.error('Fehler beim Laden der Bewerternamen:', error);
-        return reviewerCache;
+        return {};
       }
 
+      const map = {};
       (data || []).forEach(p => {
-        reviewerCache[p.id] = p.name || 'Unbekannt';
+        map[p.id] = p.name || 'Unbekannt';
       });
-
-      return reviewerCache;
+      return map;
     }
 
     async function loadReviews() {
       const params = new URLSearchParams(window.location.search);
-      const userId = params.get('user_id');
+      const userId = params.get('id');
 
       if (!userId) {
         document.getElementById('review-list').innerHTML = '<div class="empty-state"><strong>Kein Profil gefunden</strong> Es wurde keine Nutzer-ID übergeben.</div>';
@@ -589,8 +566,11 @@
       }
 
       reviewsData = data || [];
-      await loadReviewerNames(reviewsData);
       await renderReviews();
+    }
+
+    function getStars(rating) {
+      return '★'.repeat(rating) + '☆'.repeat(5 - rating);
     }
 
     async function renderReviews() {
@@ -624,37 +604,32 @@
         return;
       }
 
-      list.innerHTML = '';
+      const namesMap = await loadReviewerNames(sorted);
 
+      list.innerHTML = '';
       sorted.forEach(review => {
-        const reviewerName = reviewerCache[review.from_user_id] || 'Unbekannt';
-        const initials = getInitials(reviewerName);
-        const reviewerUrl = review.from_user_id ? `profil.html?user_id=${review.from_user_id}` : '#';
+        const initials = (review.comment || '?').trim().slice(0, 1).toUpperCase();
+        const reviewerName = namesMap[review.from_user_id] || 'Unbekannt';
 
         const item = document.createElement('article');
         item.className = 'review-item';
 
         item.innerHTML = `
-          <div class="avatar">${escapeHtml(initials)}</div>
+          <div class="avatar">${initials}</div>
           <div class="review-content">
-            <div class="review-rating" aria-label="${Number(review.rating) || 0} von 5 Sternen">
+            <div class="review-rating" aria-label="${review.rating || 0} von 5 Sternen">
               ${getStars(Number(review.rating) || 0)}
             </div>
-            ${review.from_user_id ? `
-              <a class="review-author" href="${reviewerUrl}">
-                ${escapeHtml(reviewerName)}
-              </a>
-            ` : `
-              <div class="review-author">${escapeHtml(reviewerName)}</div>
-            `}
-            <p class="review-text"></p>
+            <a class="review-author" href="profil.html?user_id=${review.from_user_id}">
+              ${reviewerName}
+            </a>
+            <p class="review-text">${review.comment || ''}</p>
             <div class="review-meta">
               ${review.created_at ? new Date(review.created_at).toLocaleDateString('de-DE') : ''}
             </div>
           </div>
         `;
 
-        item.querySelector('.review-text').textContent = review.comment || '';
         list.appendChild(item);
       });
     }
