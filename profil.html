@@ -284,36 +284,6 @@
       resize: vertical;
     }
 
-    .upload-box {
-      border: 2px dashed rgba(46,125,50,0.22);
-      border-radius: 18px;
-      background: linear-gradient(180deg, #fbfffb 0%, #f4fbf4 100%);
-      padding: 1.25rem;
-      text-align: center;
-    }
-
-    .upload-box input[type="file"] {
-      width: 100%;
-      border: none;
-      background: transparent;
-      padding: 0.25rem 0;
-    }
-
-    .upload-preview {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-      gap: 0.75rem;
-      margin-top: 1rem;
-    }
-
-    .upload-preview img {
-      width: 100%;
-      height: 120px;
-      object-fit: cover;
-      border-radius: 14px;
-      border: 1px solid rgba(46,125,50,0.08);
-    }
-
     .actions {
       display: flex;
       justify-content: flex-end;
@@ -674,8 +644,8 @@
               <div class="label">Inserate</div>
             </div>
             <div class="stat">
-              <div class="value" id="stat-rating-link" style="cursor:pointer; text-decoration: underline;">–</div>
-              <div class="label">Bewertung</div>
+              <div class="value" id="stat-rating-link" style="cursor:pointer; text-decoration: underline;">0</div>
+              <div class="label">Bewertungen</div>
             </div>
             <div class="stat">
               <div class="value" id="stat-city">–</div>
@@ -910,18 +880,12 @@
 
       statListings.textContent = count || 0;
 
-      const { data: reviews } = await sb
+      const { count: reviewCount } = await sb
         .from('reviews')
-        .select('rating')
+        .select('*', { count: 'exact', head: true })
         .eq('to_user_id', user.id);
 
-      if (reviews && reviews.length > 0) {
-        const avg = reviews.reduce((sum, r) => sum + (Number(r.rating) || 0), 0) / reviews.length;
-        statRatingLink.textContent = `${avg.toFixed(1)}/5`;
-      } else {
-        statRatingLink.textContent = '–';
-      }
-
+      statRatingLink.textContent = `${reviewCount || 0} Bewertung${reviewCount === 1 ? '' : 'en'}`;
       statRatingLink.onclick = () => {
         window.location.href = `bewertungen.html?id=${user.id}`;
       };
