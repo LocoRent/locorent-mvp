@@ -1051,6 +1051,11 @@
       const bio = bioInput.value.trim();
       const newPassword = passwordInput.value.trim();
 
+      if (!name || !city) {
+        alert('Bitte Name und Ort ausfüllen.');
+        return;
+      }
+
       const { error } = await sb.from('profiles').upsert({
         id: user.id,
         name,
