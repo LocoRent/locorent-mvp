@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -58,6 +59,7 @@
       border-radius: 10px;
     }
 
+    /* HEADER */
     header {
       background-color: var(--primary);
       color: var(--white);
@@ -126,6 +128,7 @@
       outline: none;
     }
 
+    /* MAIN */
     main {
       width: 100%;
       max-width: 1320px;
@@ -328,6 +331,7 @@
       transform: translateY(-1px);
     }
 
+    /* FOOTER */
     footer {
       width: 100%;
       box-sizing: border-box;
@@ -611,7 +615,6 @@
       );
 
       count.textContent = `${favorites.length} Favorit${favorites.length === 1 ? '' : 'en'}`;
-
       list.innerHTML = '';
 
       favoriteListings.forEach(({ favorite, listing }) => {
@@ -620,7 +623,9 @@
         const card = document.createElement('article');
         card.className = 'result-card';
 
-        const img = (listing.image_urls && listing.image_urls[0]) ? listing.image_urls[0] : 'https://via.placeholder.com/600x400?text=Locorent';
+        const img = (listing.image_urls && listing.image_urls[0])
+          ? listing.image_urls[0]
+          : 'https://via.placeholder.com/600x400?text=Locorent';
 
         card.innerHTML = `
           <img src="${img}" alt="${listing.title || 'Inserat'}" />
@@ -628,7 +633,6 @@
           <div class="info">
             <p><strong>${listing.price_per_day || 'k. A.'} € / Tag</strong></p>
             <p>${listing.location || ''}</p>
-            <p>${listing.category || ''}</p>
           </div>
           <div class="btn-group">
             <button class="primary" onclick="openListingDetails('${listing.id}')">Details</button>
@@ -689,7 +693,12 @@
       const ok = confirm('Möchtest du diesen Favoriten wirklich entfernen?');
       if (!ok) return;
 
-      const { error } = await sb.from('favorites').delete().eq('user_id', userSession.user.id).eq('listing_id', listingId);
+      const { error } = await sb
+        .from('favorites')
+        .delete()
+        .eq('user_id', userSession.user.id)
+        .eq('listing_id', listingId);
+
       if (error) {
         alert('Fehler beim Entfernen.');
         return;
@@ -703,3 +712,4 @@
   </script>
 </body>
 </html>
+```
