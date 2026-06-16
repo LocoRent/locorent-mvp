@@ -24,9 +24,7 @@
       --font-primary: 'Poppins', sans-serif;
     }
 
-    *, *::before, *::after {
-      box-sizing: border-box;
-    }
+    *, *::before, *::after { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -231,6 +229,7 @@
       display: flex;
       flex-direction: column;
       gap: 0.35rem;
+      position: relative;
     }
 
     .form-group.full {
@@ -478,6 +477,48 @@
       transform: translateY(-1px);
     }
 
+    .password-wrap {
+      position: relative;
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-size: 1.05rem;
+      color: var(--primary-dark);
+      padding: 0.35rem 0.5rem;
+    }
+
+    .suggestions-box {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: calc(100% + 6px);
+      background: #fff;
+      border: 1px solid rgba(46, 125, 50, 0.15);
+      border-radius: 12px;
+      box-shadow: 0 12px 25px rgba(0,0,0,0.08);
+      z-index: 20;
+      max-height: 180px;
+      overflow-y: auto;
+      display: none;
+    }
+
+    .suggestion-item {
+      padding: 0.75rem 1rem;
+      cursor: pointer;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .suggestion-item:hover {
+      background: #e8f5e9;
+    }
+
     footer {
       width: 100%;
       box-sizing: border-box;
@@ -658,8 +699,12 @@
           </div>
 
           <div class="form-group">
-            <label for="city">Ort</label>
-            <input type="text" id="city" placeholder="Dein Ort" />
+            <div class="label-row">
+              <label for="city">Ort</label>
+              <span class="char-limit" id="city-limit">0/80 Zeichen</span>
+            </div>
+            <input type="text" id="city" maxlength="80" placeholder="Dein Ort" />
+            <div id="city-suggestions" class="suggestions-box"></div>
           </div>
 
           <div class="form-group full">
@@ -677,7 +722,10 @@
 
           <div class="form-group">
             <label for="new-password">Neues Passwort</label>
-            <input type="password" id="new-password" maxlength="32" placeholder="Optional" />
+            <div class="password-wrap">
+              <input type="password" id="new-password" maxlength="32" placeholder="Optional" />
+              <button type="button" class="password-toggle" id="password-toggle" aria-label="Passwort anzeigen">👁</button>
+            </div>
             <p class="hint" style="margin:0; font-size:0.9rem; color: var(--text-muted);">
               Mindestens 6 Zeichen, maximal 32 Zeichen, mit Groß-/Kleinbuchstaben, Zahl und Sonderzeichen.
             </p>
@@ -747,14 +795,22 @@
 
     const nameInput = document.getElementById('name');
     const bioInput = document.getElementById('bio');
+    const cityInput = document.getElementById('city');
     const passwordInput = document.getElementById('new-password');
     const nameLimit = document.getElementById('name-limit');
     const bioLimit = document.getElementById('bio-limit');
+    const cityLimit = document.getElementById('city-limit');
+    const citySuggestions = document.getElementById('city-suggestions');
+    const passwordToggle = document.getElementById('password-toggle');
 
     const NAME_MAX = 40;
     const BIO_MAX = 300;
+    const CITY_MAX = 80;
     const PASSWORD_MIN = 6;
     const PASSWORD_MAX = 32;
+
+    let currentPassword = '';
+    let debounceTimer = null;
 
     navToggle.addEventListener('click', () => {
       nav.classList.toggle('show');
@@ -770,10 +826,41 @@
     function updateCharCounters() {
       nameLimit.textContent = `${nameInput.value.length}/${NAME_MAX} Zeichen`;
       bioLimit.textContent = `${bioInput.value.length}/${BIO_MAX} Zeichen`;
+      cityLimit.textContent = `${cityInput.value.length}/${CITY_MAX} Zeichen`;
     }
 
     nameInput.addEventListener('input', updateCharCounters);
     bioInput.addEventListener('input', updateCharCounters);
+    cityInput.addEventListener('input', updateCharCounters);
+
+    passwordToggle.addEventListener('click', () => {
+      const isPassword = passwordInput.type === 'password';
+      passwordInput.type = isPassword ? 'text' : 'password';
+      passwordToggle.textContent = isPassword ? '🙈' : '👁';
+      passwordToggle.setAttribute('aria-label', isPassword ? 'Passwort verbergen' : 'Passwort anzeigen');
+    });
+
+    function validatePassword(password) {
+      if (password.length < PASSWORD_MIN) {
+        return 'Das Passwort muss mindestens 6 Zeichen lang sein.';
+      }
+      if (password.length > PASSWORD_MAX) {
+        return 'Das Passwort darf maximal 32 Zeichen lang sein.';
+      }
+      if (!/[A-Z]/.test(password)) {
+        return 'Das Passwort muss mindestens einen Großbuchstaben enthalten.';
+      }
+      if (!/[a-z]/.test(password)) {
+        return 'Das Passwort muss mindestens einen Kleinbuchstaben enthalten.';
+      }
+      if (!/\d/.test(password)) {
+        return 'Das Passwort muss mindestens eine Zahl enthalten.';
+      }
+      if (!/[!@#$%^&*(),.?":{}|<>\[\]\\\/_'`~+=\-;]/.test(password)) {
+        return 'Das Passwort muss mindestens ein Sonderzeichen enthalten.';
+      }
+      return null;
+    }
 
     function getCategoryLabel(value) {
       const map = {
@@ -815,7 +902,7 @@
       const { data: profile } = await sb.from('profiles').select('*').eq('id', user.id).single();
 
       nameInput.value = profile?.name || '';
-      document.getElementById('city').value = profile?.city || '';
+      cityInput.value = profile?.city || '';
       bioInput.value = profile?.bio || '';
       document.getElementById('email').value = user.email || '';
 
@@ -824,10 +911,7 @@
         ? `<img src="${profile.avatar_url}" alt="Profilbild">`
         : `<span>${initial}</span>`;
 
-      profileSummary.textContent = profile?.bio
-        ? profile.bio
-        : 'Noch keine Beschreibung hinterlegt.';
-
+      profileSummary.textContent = profile?.bio ? profile.bio : 'Noch keine Beschreibung hinterlegt.';
       statCity.textContent = profile?.city || '–';
 
       const { count } = await sb
@@ -909,34 +993,70 @@
       await loadProfile();
     }
 
-    function validatePassword(password) {
-      if (password.length < PASSWORD_MIN) {
-        return 'Das Passwort muss mindestens 6 Zeichen lang sein.';
+    function showCitySuggestions(query) {
+      const cities = [
+        'Frankfurt am Main, Hessen, Deutschland',
+        'Offenbach am Main, Hessen, Deutschland',
+        'Dietzenbach, Hessen, Deutschland',
+        'Darmstadt, Hessen, Deutschland',
+        'Mainz, Rheinland-Pfalz, Deutschland',
+        'Wiesbaden, Hessen, Deutschland',
+        'Hanau, Hessen, Deutschland',
+        'Oberursel, Hessen, Deutschland'
+      ];
+
+      const filtered = cities.filter(city => city.toLowerCase().includes(query.toLowerCase())).slice(0, 5);
+
+      citySuggestions.innerHTML = '';
+
+      if (!filtered.length) {
+        citySuggestions.style.display = 'none';
+        return;
       }
-      if (password.length > PASSWORD_MAX) {
-        return 'Das Passwort darf maximal 32 Zeichen lang sein.';
-      }
-      if (!/[A-Z]/.test(password)) {
-        return 'Das Passwort muss mindestens einen Großbuchstaben enthalten.';
-      }
-      if (!/[a-z]/.test(password)) {
-        return 'Das Passwort muss mindestens einen Kleinbuchstaben enthalten.';
-      }
-      if (!/\d/.test(password)) {
-        return 'Das Passwort muss mindestens eine Zahl enthalten.';
-      }
-      if (!/[!@#$%^&*(),.?":{}|<>\[\]\\\/_'`~+=\-;]/.test(password)) {
-        return 'Das Passwort muss mindestens ein Sonderzeichen enthalten.';
-      }
-      return null;
+
+      filtered.forEach(city => {
+        const item = document.createElement('div');
+        item.className = 'suggestion-item';
+        item.textContent = city;
+        item.onclick = () => {
+          cityInput.value = city.slice(0, CITY_MAX);
+          citySuggestions.style.display = 'none';
+          updateCharCounters();
+        };
+        citySuggestions.appendChild(item);
+      });
+
+      citySuggestions.style.display = 'block';
     }
+
+    cityInput.addEventListener('input', () => {
+      clearTimeout(debounceTimer);
+      const value = cityInput.value.trim();
+
+      if (value.length < 2) {
+        citySuggestions.style.display = 'none';
+        citySuggestions.innerHTML = '';
+        updateCharCounters();
+        return;
+      }
+
+      debounceTimer = setTimeout(() => {
+        showCitySuggestions(value);
+      }, 250);
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!cityInput.parentElement.contains(e.target)) {
+        citySuggestions.style.display = 'none';
+      }
+    });
 
     async function saveProfile() {
       const { data: { user } } = await sb.auth.getUser();
       if (!user) return window.location.href = "login.html";
 
       const name = nameInput.value.trim();
-      const city = document.getElementById('city').value.trim();
+      const city = cityInput.value.trim();
       const bio = bioInput.value.trim();
       const newPassword = passwordInput.value.trim();
 
@@ -956,6 +1076,16 @@
         const passwordError = validatePassword(newPassword);
         if (passwordError) {
           alert(passwordError);
+          return;
+        }
+
+        const { data: authData } = await sb.auth.signInWithPassword({
+          email: user.email,
+          password: newPassword
+        });
+
+        if (authData?.user) {
+          alert('Das neue Passwort darf nicht identisch mit dem alten sein.');
           return;
         }
 
