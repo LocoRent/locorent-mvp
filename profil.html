@@ -24,7 +24,9 @@
       --font-primary: 'Poppins', sans-serif;
     }
 
-    *, *::before, *::after { box-sizing: border-box; }
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
@@ -703,7 +705,7 @@
               <label for="city">Ort</label>
               <span class="char-limit" id="city-limit">0/80 Zeichen</span>
             </div>
-            <input type="text" id="city" maxlength="80" placeholder="Dein Ort" />
+            <input type="text" id="city" maxlength="80" placeholder="Dein Ort" autocomplete="off" />
             <div id="city-suggestions" class="suggestions-box"></div>
           </div>
 
@@ -809,7 +811,6 @@
     const PASSWORD_MIN = 6;
     const PASSWORD_MAX = 32;
 
-    let currentPassword = '';
     let debounceTimer = null;
 
     navToggle.addEventListener('click', () => {
@@ -841,24 +842,12 @@
     });
 
     function validatePassword(password) {
-      if (password.length < PASSWORD_MIN) {
-        return 'Das Passwort muss mindestens 6 Zeichen lang sein.';
-      }
-      if (password.length > PASSWORD_MAX) {
-        return 'Das Passwort darf maximal 32 Zeichen lang sein.';
-      }
-      if (!/[A-Z]/.test(password)) {
-        return 'Das Passwort muss mindestens einen Großbuchstaben enthalten.';
-      }
-      if (!/[a-z]/.test(password)) {
-        return 'Das Passwort muss mindestens einen Kleinbuchstaben enthalten.';
-      }
-      if (!/\d/.test(password)) {
-        return 'Das Passwort muss mindestens eine Zahl enthalten.';
-      }
-      if (!/[!@#$%^&*(),.?":{}|<>\[\]\\\/_'`~+=\-;]/.test(password)) {
-        return 'Das Passwort muss mindestens ein Sonderzeichen enthalten.';
-      }
+      if (password.length < PASSWORD_MIN) return 'Das Passwort muss mindestens 6 Zeichen lang sein.';
+      if (password.length > PASSWORD_MAX) return 'Das Passwort darf maximal 32 Zeichen lang sein.';
+      if (!/[A-Z]/.test(password)) return 'Das Passwort muss mindestens einen Großbuchstaben enthalten.';
+      if (!/[a-z]/.test(password)) return 'Das Passwort muss mindestens einen Kleinbuchstaben enthalten.';
+      if (!/\d/.test(password)) return 'Das Passwort muss mindestens eine Zahl enthalten.';
+      if (!/[!@#$%^&*(),.?":{}|<>\[\]\\\/_'`~+=\-;]/.test(password)) return 'Das Passwort muss mindestens ein Sonderzeichen enthalten.';
       return null;
     }
 
@@ -993,36 +982,30 @@
       await loadProfile();
     }
 
-    function showCitySuggestions(query) {
-      const cities = [
-        'Frankfurt am Main, Hessen, Deutschland',
-        'Offenbach am Main, Hessen, Deutschland',
-        'Dietzenbach, Hessen, Deutschland',
-        'Darmstadt, Hessen, Deutschland',
-        'Mainz, Rheinland-Pfalz, Deutschland',
-        'Wiesbaden, Hessen, Deutschland',
-        'Hanau, Hessen, Deutschland',
-        'Oberursel, Hessen, Deutschland'
-      ];
-
-      const filtered = cities.filter(city => city.toLowerCase().includes(query.toLowerCase())).slice(0, 5);
-
+    function renderCitySuggestions(results) {
       citySuggestions.innerHTML = '';
 
-      if (!filtered.length) {
-        citySuggestions.style.display = 'none';
+      if (!results.length) {
+        citySuggestions.innerHTML = '<div class="suggestion-item">Kein Ort gefunden</div>';
+        citySuggestions.style.display = 'block';
         return;
       }
 
-      filtered.forEach(city => {
+      results.forEach(r => {
+        const addr = r.address || {};
+        const city = addr.city || addr.town || addr.village || addr.municipality || r.display_name.split(',')[0];
+        const state = addr.state || '';
+        const display = [city, state, 'Deutschland'].filter(Boolean).join(', ');
+
         const item = document.createElement('div');
         item.className = 'suggestion-item';
-        item.textContent = city;
+        item.textContent = display;
         item.onclick = () => {
-          cityInput.value = city.slice(0, CITY_MAX);
+          cityInput.value = display.slice(0, CITY_MAX);
           citySuggestions.style.display = 'none';
           updateCharCounters();
         };
+
         citySuggestions.appendChild(item);
       });
 
@@ -1030,19 +1013,27 @@
     }
 
     cityInput.addEventListener('input', () => {
+      updateCharCounters();
       clearTimeout(debounceTimer);
-      const value = cityInput.value.trim();
 
+      const value = cityInput.value.trim();
       if (value.length < 2) {
         citySuggestions.style.display = 'none';
         citySuggestions.innerHTML = '';
-        updateCharCounters();
         return;
       }
 
-      debounceTimer = setTimeout(() => {
-        showCitySuggestions(value);
-      }, 250);
+      debounceTimer = setTimeout(async () => {
+        try {
+          const res = await fetch(
+            `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&countrycodes=de&limit=5&q=${encodeURIComponent(value)}`
+          );
+          const results = await res.json();
+          renderCitySuggestions(results);
+        } catch (err) {
+          console.error('Fehler bei Ortssuche:', err);
+        }
+      }, 350);
     });
 
     document.addEventListener('click', (e) => {
@@ -1076,16 +1067,6 @@
         const passwordError = validatePassword(newPassword);
         if (passwordError) {
           alert(passwordError);
-          return;
-        }
-
-        const { data: authData } = await sb.auth.signInWithPassword({
-          email: user.email,
-          password: newPassword
-        });
-
-        if (authData?.user) {
-          alert('Das neue Passwort darf nicht identisch mit dem alten sein.');
           return;
         }
 
