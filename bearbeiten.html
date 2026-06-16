@@ -181,6 +181,20 @@
       font-size: 0.96rem;
     }
 
+    .label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .char-limit {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
     .field input,
     .field select,
     .field textarea {
@@ -429,8 +443,11 @@
         <h2>Basisdaten</h2>
         <div class="form-grid">
           <div class="field">
-            <label for="title">Titel *</label>
-            <input type="text" id="title" maxlength="50" required />
+            <div class="label-row">
+              <label for="title">Titel *</label>
+              <span class="char-limit" id="title-limit">0/80 Zeichen</span>
+            </div>
+            <input type="text" id="title" maxlength="80" required />
           </div>
 
           <div class="field">
@@ -473,12 +490,18 @@
           </div>
 
           <div class="field">
-            <label for="location">Ort / PLZ *</label>
-            <input type="text" id="location" maxlength="100" required />
+            <div class="label-row">
+              <label for="location">Ort / PLZ *</label>
+              <span class="char-limit" id="location-limit">0/80 Zeichen</span>
+            </div>
+            <input type="text" id="location" maxlength="80" required />
           </div>
 
           <div class="field full-width">
-            <label for="description">Beschreibung *</label>
+            <div class="label-row">
+              <label for="description">Beschreibung *</label>
+              <span class="char-limit" id="description-limit">0/500 Zeichen</span>
+            </div>
             <textarea id="description" maxlength="500" required></textarea>
             <p class="hint">Beschreibe den Artikel möglichst klar und ehrlich. Maximal 500 Zeichen.</p>
           </div>
@@ -546,6 +569,35 @@
     let currentImagePaths = [];
     let newlySelectedFile = null;
     let debounceTimer;
+
+    const titleInput = document.getElementById('title');
+    const descriptionInput = document.getElementById('description');
+    const locationInput = document.getElementById('location');
+    const priceInput = document.getElementById('price_per_day');
+
+    const titleLimit = document.getElementById('title-limit');
+    const descriptionLimit = document.getElementById('description-limit');
+    const locationLimit = document.getElementById('location-limit');
+
+    const TITLE_MAX = 80;
+    const DESCRIPTION_MAX = 500;
+    const LOCATION_MAX = 80;
+
+    function updateCharCounters() {
+      titleLimit.textContent = `${titleInput.value.length}/${TITLE_MAX} Zeichen`;
+      descriptionLimit.textContent = `${descriptionInput.value.length}/${DESCRIPTION_MAX} Zeichen`;
+      locationLimit.textContent = `${locationInput.value.length}/${LOCATION_MAX} Zeichen`;
+    }
+
+    priceInput.addEventListener('input', () => {
+      let value = priceInput.value.replace(/[^\d]/g, '');
+      if (value.length > 6) value = value.slice(0, 6);
+      priceInput.value = value;
+    });
+
+    titleInput.addEventListener('input', updateCharCounters);
+    descriptionInput.addEventListener('input', updateCharCounters);
+    locationInput.addEventListener('input', updateCharCounters);
 
     async function init() {
       try {
@@ -618,6 +670,7 @@
       currentImages = Array.isArray(data.image_urls) ? [...data.image_urls] : [];
       currentImagePaths = Array.isArray(data.image_paths) ? [...data.image_paths] : [];
       renderPreviewGallery();
+      updateCharCounters();
     }
 
     function setupEvents() {
@@ -732,12 +785,18 @@
 
       const title = document.getElementById('title').value.trim();
       const category = document.getElementById('category').value;
-      const pricePerDay = parseFloat(document.getElementById('price_per_day').value);
+      const priceValue = priceInput.value.slice(0, 6);
+      const pricePerDay = parseFloat(priceValue);
       const location = document.getElementById('location').value.trim();
       const description = document.getElementById('description').value.trim();
 
       if (!title || !category || Number.isNaN(pricePerDay) || !location || !description) {
         alert('Bitte fülle alle Pflichtfelder aus.');
+        return;
+      }
+
+      if (!/^\d{1,6}$/.test(priceValue)) {
+        alert('Der Preis pro Tag darf maximal 6 Ziffern haben.');
         return;
       }
 
@@ -853,9 +912,10 @@
               div.onmouseenter = () => div.style.backgroundColor = '#e8f5e9';
               div.onmouseleave = () => div.style.backgroundColor = '#fff';
               div.onclick = () => {
-                input.value = display;
+                input.value = display.slice(0, 80);
                 box.innerHTML = '';
                 box.style.display = 'none';
+                updateCharCounters();
               };
               box.appendChild(div);
             });
