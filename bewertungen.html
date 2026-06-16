@@ -620,7 +620,7 @@
             <div class="review-rating" aria-label="${review.rating || 0} von 5 Sternen">
               ${getStars(Number(review.rating) || 0)}
             </div>
-            <a class="review-author" href="profil.html?id=${review.from_user_id}">
+            <a class="review-author" href="profil.html?user_id=${review.from_user_id}">
               ${reviewerName}
             </a>
             <p class="review-text">${review.comment || ''}</p>
