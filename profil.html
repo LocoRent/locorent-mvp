@@ -237,6 +237,20 @@
       grid-column: 1 / -1;
     }
 
+    .label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .char-limit {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
     .form-group label {
       font-weight: 600;
       color: var(--text-muted);
@@ -636,8 +650,11 @@
         <h3>Profil bearbeiten</h3>
         <div class="form-grid">
           <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" id="name" placeholder="Dein Name" />
+            <div class="label-row">
+              <label for="name">Name</label>
+              <span class="char-limit" id="name-limit">0/40 Zeichen</span>
+            </div>
+            <input type="text" id="name" maxlength="40" placeholder="Dein Name" />
           </div>
 
           <div class="form-group">
@@ -646,8 +663,11 @@
           </div>
 
           <div class="form-group full">
-            <label for="bio">Über mich</label>
-            <textarea id="bio" placeholder="Schreibe etwas über dich..."></textarea>
+            <div class="label-row">
+              <label for="bio">Über mich</label>
+              <span class="char-limit" id="bio-limit">0/300 Zeichen</span>
+            </div>
+            <textarea id="bio" maxlength="300" placeholder="Schreibe etwas über dich..."></textarea>
           </div>
 
           <div class="form-group">
@@ -658,6 +678,9 @@
           <div class="form-group">
             <label for="new-password">Neues Passwort</label>
             <input type="password" id="new-password" placeholder="Optional" />
+            <p class="hint" style="margin:0; font-size:0.9rem; color: var(--text-muted);">
+              Mindestens 6 Zeichen, besser mit Groß-/Kleinbuchstaben, Zahl und Sonderzeichen.
+            </p>
           </div>
         </div>
 
@@ -722,6 +745,14 @@
     const statRating = document.getElementById('stat-rating');
     const statCity = document.getElementById('stat-city');
 
+    const nameInput = document.getElementById('name');
+    const bioInput = document.getElementById('bio');
+    const nameLimit = document.getElementById('name-limit');
+    const bioLimit = document.getElementById('bio-limit');
+
+    const NAME_MAX = 40;
+    const BIO_MAX = 300;
+
     navToggle.addEventListener('click', () => {
       nav.classList.toggle('show');
       navToggle.setAttribute('aria-expanded', nav.classList.contains('show'));
@@ -732,6 +763,14 @@
       await sb.auth.signOut();
       window.location.href = "login.html";
     }
+
+    function updateCharCounters() {
+      nameLimit.textContent = `${nameInput.value.length}/${NAME_MAX} Zeichen`;
+      bioLimit.textContent = `${bioInput.value.length}/${BIO_MAX} Zeichen`;
+    }
+
+    nameInput.addEventListener('input', updateCharCounters);
+    bioInput.addEventListener('input', updateCharCounters);
 
     function getCategoryLabel(value) {
       const map = {
@@ -772,9 +811,9 @@
 
       const { data: profile } = await sb.from('profiles').select('*').eq('id', user.id).single();
 
-      document.getElementById('name').value = profile?.name || '';
+      nameInput.value = profile?.name || '';
       document.getElementById('city').value = profile?.city || '';
-      document.getElementById('bio').value = profile?.bio || '';
+      bioInput.value = profile?.bio || '';
       document.getElementById('email').value = user.email || '';
 
       const initial = (profile?.name || user.email || 'U').charAt(0).toUpperCase();
@@ -795,6 +834,8 @@
 
       statListings.textContent = count || 0;
       statRating.textContent = profile?.rating ? `${profile.rating}/5` : '–';
+
+      updateCharCounters();
     }
 
     async function loadListings() {
@@ -869,9 +910,9 @@
       const { data: { user } } = await sb.auth.getUser();
       if (!user) return window.location.href = "login.html";
 
-      const name = document.getElementById('name').value.trim();
+      const name = nameInput.value.trim();
       const city = document.getElementById('city').value.trim();
-      const bio = document.getElementById('bio').value.trim();
+      const bio = bioInput.value.trim();
       const newPassword = document.getElementById('new-password').value.trim();
 
       const { error } = await sb.from('profiles').upsert({
@@ -887,6 +928,11 @@
       }
 
       if (newPassword) {
+        if (newPassword.length < 6) {
+          alert('Das Passwort muss mindestens 6 Zeichen lang sein.');
+          return;
+        }
+
         const { error: passError } = await sb.auth.updateUser({
           password: newPassword
         });
