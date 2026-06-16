@@ -1,516 +1,544 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Locorent – Nachhaltig mieten in Deutschland</title>
-  <meta name="description" content="Finde und vermiete nachhaltige Mietobjekte in deiner Nähe bei Locorent." />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <style>
-    :root {
-      --primary: #2e7d32;
-      --primary-light: #66bb6a;
-      --primary-dark: #1b5e20;
-      --background: #f1f8e9;
-      --white: #fff;
-      --text-dark: #0f2e13;
-      --text-muted: #466843;
-      --accent: #b9f6ca;
-      --highlight: #a5d6a7;
-      --radius: 18px;
-      --shadow-light: rgba(46, 125, 50, 0.08);
-      --shadow-strong: rgba(46, 125, 50, 0.25);
-      --transition: 0.4s ease;
-      --font-primary: 'Poppins', sans-serif;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Vermieterprofil – Locorent</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root {
+    --primary: #2e7d32;
+    --primary-light: #66bb6a;
+    --primary-dark: #1b5e20;
+    --background: #f1f8e9;
+    --white: #fff;
+    --text-dark: #0f2e13;
+    --text-muted: #466843;
+    --accent: #b9f6ca;
+    --highlight: #a5d6a7;
+    --radius: 18px;
+    --shadow-light: rgba(46, 125, 50, 0.08);
+    --shadow-strong: rgba(46, 125, 50, 0.25);
+    --transition: 0.4s ease;
+    --font-primary: 'Poppins', sans-serif;
+    --max-width: 1200px;
+    --star-color: #fbc02d;
+  }
 
-    *, *::before, *::after {
-      box-sizing: border-box;
-    }
+  *, *::before, *::after {
+    box-sizing: border-box;
+    max-width: 100%;
+    word-wrap: break-word;
+    margin: 0;
+    padding: 0;
+  }
 
-    body {
-      margin: 0;
-      width: 100%;
-      overflow-x: hidden;
-      font-family: var(--font-primary);
-      background: linear-gradient(to bottom, #e8f5e9 0%, #ffffff 100%);
-      color: var(--text-dark);
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      scroll-behavior: smooth;
-    }
+  html, body {
+    width: 100%;
+    font-family: var(--font-primary);
+    background: linear-gradient(to bottom, #e8f5e9 0%, #ffffff 100%);
+    color: var(--text-dark);
+    scroll-behavior: smooth;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
 
-    header {
-      background-color: var(--primary);
-      color: var(--white);
-      padding: 1.5rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-weight: 700;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-      flex-wrap: wrap;
-      width: 100%;
-    }
+  header {
+    background-color: var(--primary);
+    color: var(--white);
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 700;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    flex-wrap: wrap;
+  }
 
-    header h1 {
-      font-size: 1.8rem;
-      cursor: pointer;
-      user-select: none;
-      margin: 0;
-    }
+  header h1 {
+    font-size: 1.9rem;
+    font-weight: 900;
+    cursor: pointer;
+    user-select: none;
+  }
 
+  #nav-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    color: var(--white);
+    cursor: pointer;
+  }
+
+  nav#nav-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  nav#nav-links a {
+    color: var(--white);
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 1rem;
+    position: relative;
+    transition: color 0.3s ease;
+  }
+
+  nav#nav-links a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -4px;
+    width: 0;
+    height: 2px;
+    background-color: var(--accent);
+    transition: width 0.3s ease;
+  }
+
+  nav#nav-links a:hover::after,
+  nav#nav-links a:focus::after {
+    width: 100%;
+  }
+
+  nav#nav-links a:hover,
+  nav#nav-links a:focus {
+    color: var(--accent);
+    outline: none;
+  }
+
+  main {
+    max-width: var(--max-width);
+    width: calc(100% - 2rem);
+    margin: 2rem auto 4rem;
+    background:
+      radial-gradient(circle at top left, rgba(185, 246, 202, 0.35), transparent 28%),
+      linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,255,255,0.95));
+    border-radius: 28px;
+    box-shadow: 0 18px 50px rgba(0,0,0,0.08);
+    padding: 2.5rem;
+    border: 1px solid rgba(46, 125, 50, 0.08);
+    position: relative;
+    overflow: hidden;
+  }
+
+  main::before {
+    content: "";
+    position: absolute;
+    top: -120px;
+    right: -120px;
+    width: 280px;
+    height: 280px;
+    background: radial-gradient(circle, rgba(102,187,106,0.18), transparent 70%);
+    pointer-events: none;
+  }
+
+  main::after {
+    content: "";
+    position: absolute;
+    bottom: -120px;
+    left: -120px;
+    width: 260px;
+    height: 260px;
+    background: radial-gradient(circle, rgba(169, 214, 167, 0.18), transparent 70%);
+    pointer-events: none;
+  }
+
+  #profile-section {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    margin-bottom: 2.5rem;
+    flex-wrap: wrap;
+    padding: 1.5rem;
+    background: rgba(46, 125, 50, 0.04);
+    border-radius: 24px;
+    border: 1px solid rgba(46, 125, 50, 0.08);
+    box-shadow: 0 10px 30px rgba(46, 125, 50, 0.06);
+    position: relative;
+    z-index: 1;
+  }
+
+  #profile-photo {
+    flex-shrink: 0;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: var(--accent) center/cover no-repeat;
+    box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+    font-weight: 700;
+    font-size: 3rem;
+    color: var(--primary-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    border: 4px solid rgba(255,255,255,0.9);
+  }
+
+  #profile-info {
+    flex: 1;
+    min-width: 240px;
+  }
+
+  #profile-info p {
+    font-size: 1.08rem;
+    margin: 0.35rem 0;
+    line-height: 1.6;
+    color: var(--text-dark);
+  }
+
+  #profile-info p strong {
+    color: var(--primary-dark);
+    font-weight: 700;
+  }
+
+  #rating-summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--primary-dark);
+    margin-top: 1rem;
+    padding: 0.8rem 1rem;
+    border-radius: 999px;
+    background: rgba(185, 246, 202, 0.22);
+    border: 1px solid rgba(46, 125, 50, 0.08);
+    user-select: none;
+  }
+
+  .stars {
+    display: flex;
+    gap: 2px;
+  }
+
+  .star {
+    font-size: 1.5rem;
+    color: var(--star-color);
+    filter: drop-shadow(0 1px 1px rgba(0,0,0,0.1));
+    transition: transform 0.2s ease;
+  }
+
+  .star.empty {
+    color: #d8d8d8;
+    filter: none;
+  }
+
+  #reviews-section {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 2.5rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  #reviews-section h2 {
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  #reviews-section h2 > span {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  #all-reviews-link {
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--primary);
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .review-btn {
+    position: static;
+    padding: 0.7rem 1.1rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: var(--white);
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+    box-shadow: 0 10px 20px rgba(46, 125, 50, 0.18);
+  }
+
+  .review-btn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.03);
+    box-shadow: 0 14px 26px rgba(46, 125, 50, 0.24);
+  }
+
+  #reviews-list {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .review-item {
+    background: rgba(255,255,255,0.92);
+    border: 1px solid rgba(46, 125, 50, 0.08);
+    border-radius: 18px;
+    padding: 1.1rem 1.2rem;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .review-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.09);
+  }
+
+  .review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.4rem;
+    flex-wrap: wrap;
+  }
+
+  .reviewer-name {
+    font-weight: 700;
+    color: var(--primary-dark);
+    font-size: 1.05rem;
+  }
+
+  .review-rating .star {
+    font-size: 1.15rem;
+  }
+
+  .review-date {
+    display: block;
+    font-size: 0.92rem;
+    color: var(--text-muted);
+  }
+
+  #listings-section h2 {
+    color: var(--primary);
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .listing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(280px,1fr));
+    gap: 1.5rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .result-card {
+    background: #fff;
+    border: 1px solid rgba(46,125,50,0.08);
+    border-radius: 22px;
+    box-shadow: 0 12px 28px rgba(46,125,50,0.08);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .result-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 40px rgba(46,125,50,0.14);
+  }
+
+  .result-card img {
+    width: 100%;
+    height: 190px;
+    object-fit: cover;
+    background: #eef6ee;
+  }
+
+  .result-card-body {
+    padding: 1.1rem 1.15rem 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    flex: 1;
+  }
+
+  .result-card-body h3 {
+    font-size: 1.25rem;
+    margin: 0;
+    color: var(--primary-dark);
+    line-height: 1.25;
+  }
+
+  .result-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    color: var(--text-dark);
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+
+  .result-meta span {
+    background: #edf7ee;
+    color: var(--primary-dark);
+    padding: 0.45rem 0.7rem;
+    border-radius: 999px;
+    border: 1px solid rgba(46,125,50,0.08);
+  }
+
+  .buttons {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .details-btn {
+    width: 100%;
+    padding: 0.9rem 1.2rem;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: var(--white);
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 1rem;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+    box-shadow: 0 10px 20px rgba(46, 125, 50, 0.18);
+  }
+
+  .details-btn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.03);
+    box-shadow: 0 14px 26px rgba(46, 125, 50, 0.24);
+  }
+
+  footer {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 2rem 2rem 1rem;
+    border-radius: var(--radius);
+    background-color: var(--primary);
+    color: var(--white);
+    box-shadow: 0 8px 32px rgba(46, 125, 50, 0.22);
+    font-size: 0.92rem;
+    text-align: center;
+    margin-top: auto;
+    position: relative;
+  }
+
+  footer > div {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 2rem;
+    text-align: left;
+  }
+
+  footer h4 {
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+    font-size: 1.1rem;
+  }
+
+  footer ul {
+    list-style: none;
+    padding: 0;
+    line-height: 1.8;
+  }
+
+  footer ul li a {
+    color: var(--white);
+    text-decoration: underline;
+    transition: color 0.3s ease;
+  }
+
+  footer ul li a:hover {
+    color: var(--accent);
+  }
+
+  footer small {
+    display: block;
+    margin-top: 2rem;
+    text-align: center;
+    opacity: 0.85;
+  }
+
+  @media (max-width: 720px) {
     #nav-toggle {
-      display: none;
-      background: none;
-      border: none;
-      font-size: 1.8rem;
-      color: var(--white);
-      cursor: pointer;
+      display: block;
     }
 
     nav#nav-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-
-    nav#nav-links a {
-      color: var(--white);
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 1rem;
-      position: relative;
-      transition: color 0.3s ease;
-    }
-
-    nav#nav-links a::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      bottom: -4px;
-      width: 0;
-      height: 2px;
-      background-color: var(--accent);
-      transition: width 0.3s ease;
-    }
-
-    nav#nav-links a:hover::after,
-    nav#nav-links a:focus::after {
       width: 100%;
-    }
-
-    nav#nav-links a:hover,
-    nav#nav-links a:focus {
-      color: var(--accent);
-      outline: none;
-    }
-
-    .hero {
-      width: 100%;
-      margin: 0;
-      padding: 2rem 0 2.5rem;
-      background: linear-gradient(135deg, #ffffff 0%, #f1f8e9 100%);
-      border-bottom: 1px solid rgba(46, 125, 50, 0.08);
-    }
-
-    .hero-inner,
-    .section-inner {
-      max-width: 1600px;
-      margin: 0 auto;
-      padding: 0 2rem;
-    }
-
-    .hero h2 {
-      font-size: clamp(1.6rem, 2vw, 2.4rem);
-      font-weight: 700;
-      margin: 0;
-      color: var(--primary-dark);
-      text-align: left;
-    }
-
-    .hero-subtitle {
-      margin: 0.6rem 0 0;
-      color: var(--text-muted);
-      font-weight: 500;
-      max-width: 720px;
-      text-align: left;
-    }
-
-    form.search-form {
-      display: grid;
-      grid-template-columns: 2fr 1.25fr 1.5fr 0.9fr 0.9fr;
-      gap: 1rem;
-      align-items: end;
-      margin-top: 1.5rem;
-      width: 100%;
-      position: relative;
-    }
-
-    .search-field {
-      display: flex;
       flex-direction: column;
-      gap: 0.35rem;
-    }
-
-    .search-field label {
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      padding-left: 0.1rem;
-    }
-
-    form.search-form input,
-    form.search-form select,
-    form.search-form button {
-      width: 100%;
-      padding: 0.95rem 1rem;
-      border: 1px solid rgba(46, 125, 50, 0.18);
-      border-radius: 14px;
-      font-size: 0.98rem;
-      background: white;
-      box-shadow: 0 3px 10px rgba(46, 125, 50, 0.04);
-      outline: none;
-      transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
-    }
-
-    form.search-form input:focus,
-    form.search-form select:focus {
-      border-color: var(--primary-light);
-      box-shadow: 0 0 0 4px rgba(102, 187, 106, 0.16);
-    }
-
-    form.search-form button {
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-      color: var(--white);
-      font-weight: 700;
-      cursor: pointer;
-      border: none;
-      min-height: 52px;
-    }
-
-    form.search-form button:hover,
-    form.search-form button:focus {
-      transform: translateY(-1px);
-      box-shadow: 0 10px 20px rgba(46, 125, 50, 0.18);
-    }
-
-    .location-wrap {
-      position: relative;
-    }
-
-    #suggestions {
-      position: absolute;
-      top: calc(100% + 6px);
-      left: 0;
-      right: 0;
-      max-height: 180px;
-      overflow-y: auto;
-      background: white;
-      z-index: 20;
-      border: 1px solid rgba(46, 125, 50, 0.15);
-      border-radius: 12px;
-      box-shadow: 0 12px 25px rgba(0,0,0,0.08);
-    }
-
-    #suggestions div {
-      padding: 0.75rem 1rem;
-      cursor: pointer;
-      border-bottom: 1px solid #f0f0f0;
-    }
-
-    #suggestions div:hover {
-      background-color: #e8f5e9;
-    }
-
-    section {
-      width: 100%;
-      background: transparent;
-      margin-top: 2rem;
-    }
-
-    section h2 {
-      font-size: 1.6rem;
-      color: var(--primary-dark);
-      margin: 0 0 1rem;
-    }
-
-    .category-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 1.25rem;
+      display: none;
       margin-top: 1rem;
     }
 
-    .result-card {
-      background: var(--white);
-      border: 1px solid rgba(46,125,50,0.08);
+    nav#nav-links.show {
+      display: flex;
+    }
+
+    nav#nav-links a {
+      margin: 0.4rem 0;
+      padding: 0.5rem 1rem;
+      background-color: rgba(255,255,255,0.1);
+      border-radius: 6px;
+      display: block;
+    }
+
+    main {
+      width: calc(100% - 1rem);
+      padding: 1.4rem 1rem 2rem;
+      margin: 1rem auto 3rem;
       border-radius: 22px;
-      box-shadow: 0 12px 28px rgba(46,125,50,0.08);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
     }
 
-    .result-card:hover,
-    .result-card:focus-within {
-      transform: translateY(-3px);
-      box-shadow: 0 18px 36px rgba(46,125,50,0.14);
-      outline: none;
+    #profile-section {
+      padding: 1.2rem;
+      gap: 1.2rem;
     }
 
-    .result-card img {
-      width: 100%;
-      height: 190px;
-      object-fit: cover;
-      background: #eef6ee;
+    #profile-photo {
+      width: 110px;
+      height: 110px;
+      font-size: 2.3rem;
     }
 
-    .result-card-body {
-      padding: 1rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-      flex: 1;
+    #reviews-section h2,
+    #listings-section h2 {
+      font-size: 1.6rem;
     }
 
-    .result-card-body h3 {
-      margin: 0;
-      font-size: 1.05rem;
-      line-height: 1.35;
-      color: var(--text-dark);
-      height: 2.8em;
-      overflow: hidden;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-    }
-
-    .result-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      align-items: center;
-      color: var(--text-muted);
-      font-size: 0.92rem;
-    }
-
-    .result-card .buttons {
-      margin-top: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-    }
-
-    .result-card button {
-      width: 100%;
-      padding: 0.75rem 0.9rem;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      font-weight: 700;
-      transition: transform 0.2s ease, background-color 0.25s ease, color 0.25s ease;
-    }
-
-    .result-card .details-btn {
-      background: var(--primary);
-      color: var(--white);
-    }
-
-    .result-card .details-btn:hover,
-    .result-card .details-btn:focus {
-      background: var(--primary-dark);
-      transform: translateY(-1px);
-      outline: none;
-    }
-
-    .result-card .fav-btn {
-      background: var(--primary);
-      color: var(--white);
-      border: none;
-    }
-
-    .result-card .fav-btn:hover,
-    .result-card .fav-btn:focus {
-      background: var(--primary-dark);
-      transform: translateY(-1px);
-      outline: none;
-    }
-
-    .result-card .fav-btn:disabled {
-      cursor: not-allowed;
-      opacity: 0.7;
-      background: #f3f3f3;
-      color: #777;
-      border-color: #e1e1e1;
-    }
-
-    .more-link {
-      text-align: right;
-      margin-top: 0.5rem;
-    }
-
-    .btn-more {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.25em;
-      font-weight: 700;
-      color: var(--primary);
-      text-decoration: none;
-      border: 2px solid var(--primary);
-      padding: 0.25em 0.75em;
-      border-radius: 24px;
-      transition: background-color 0.3s ease, color 0.3s ease;
-      font-size: 0.9rem;
-      user-select: none;
-    }
-
-    .btn-more span {
-      display: inline-block;
-      font-size: 1.2rem;
-      transition: transform 0.3s ease;
-    }
-
-    .btn-more:hover,
-    .btn-more:focus {
-      background-color: var(--primary);
-      color: var(--white);
-      text-decoration: none;
-      outline: none;
-    }
-
-    .btn-more:hover span {
-      transform: translateX(5px);
-    }
-
-    footer {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 2rem 2rem 1rem;
-      border-radius: var(--radius);
-      background-color: var(--primary);
-      color: var(--white);
-      box-shadow: 0 8px 32px rgba(46, 125, 50, 0.22);
-      font-size: 0.92rem;
-      user-select: none;
-      text-align: center;
-      margin-top: 2rem;
+    .listing-grid {
+      grid-template-columns: 1fr;
     }
 
     footer > div {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 2rem;
-      text-align: left;
+      flex-direction: column;
+      gap: 1rem;
     }
-
-    footer > div > div {
-      flex: 1;
-      min-width: 200px;
-    }
-
-    footer h4 {
-      margin-bottom: 0.5rem;
-      font-weight: 700;
-      font-size: 1.1rem;
-    }
-
-    footer ul {
-      list-style: none;
-      padding: 0;
-      line-height: 1.8;
-    }
-
-    footer ul li a {
-      color: var(--white);
-      text-decoration: underline;
-      transition: color 0.3s ease;
-    }
-
-    footer ul li a:hover {
-      color: var(--accent);
-    }
-
-    footer small {
-      display: block;
-      margin-top: 2rem;
-      text-align: center;
-      opacity: 0.85;
-    }
-
-    @media (max-width: 1200px) {
-      form.search-form {
-        grid-template-columns: 1.6fr 1fr 1fr 1fr;
-      }
-    }
-
-    @media (max-width: 720px) {
-      #nav-toggle {
-        display: block;
-      }
-
-      nav#nav-links {
-        display: none;
-        flex-direction: column;
-        width: 100%;
-        margin-top: 1rem;
-      }
-
-      nav#nav-links.show {
-        display: flex;
-      }
-
-      nav#nav-links a {
-        margin: 0.4rem 0;
-        padding: 0.5rem 1rem;
-        background-color: rgba(255, 255, 255, 0.1);
-        border-radius: 6px;
-        display: block;
-      }
-
-      .hero {
-        padding: 1.25rem 0 1.5rem;
-      }
-
-      .hero-inner,
-      .section-inner {
-        padding: 0 0.75rem;
-      }
-
-      form.search-form {
-        grid-template-columns: 1fr;
-        gap: 0.85rem;
-        margin-top: 1.25rem;
-      }
-
-      .category-grid {
-        grid-template-columns: 1fr;
-        gap: 0.85rem;
-      }
-
-      .result-card {
-        width: 100%;
-      }
-
-      footer > div {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      footer > div > div {
-        width: 100%;
-      }
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
   <header>
@@ -519,95 +547,38 @@
     <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
   </header>
 
-  <section class="hero" aria-label="Suchbereich">
-    <div class="hero-inner">
-      <h2>Finde das perfekte Mietobjekt</h2>
-      <p class="hero-subtitle">Suche nach Kategorie, Ort oder Radius und entdecke passende Angebote in deiner Nähe.</p>
-      <form class="search-form" onsubmit="event.preventDefault(); search();" role="search" aria-label="Suchformular">
-        <div class="search-field">
-          <label for="search-input">Suchbegriff</label>
-          <input type="text" placeholder="Was suchst du?" id="search-input" aria-label="Suchbegriff eingeben" />
-        </div>
-        <div class="search-field">
-          <label for="category-select">Kategorie</label>
-          <select id="category-select" aria-label="Kategorie auswählen">
-            <option value="">Alle Kategorien</option>
-            <option value="anhaenger-transportmittel">Anhänger & Transportmittel</option>
-            <option value="audio-dj-equipment">Audio & DJ-Equipment</option>
-            <option value="auto-suv">Auto & SUV</option>
-            <option value="basteln-diy">Basteln & DIY</option>
-            <option value="beauty">Beauty</option>
-            <option value="boote-wassersport">Boote & Wassersport</option>
-            <option value="brettspiele-spielzeug">Brettspiele & Spielzeug</option>
-            <option value="camping-wandern">Camping & Wandern</option>
-            <option value="computer-laptops">Computer & Laptops</option>
-            <option value="drohnen-modellbau">Drohnen & Modellbau</option>
-            <option value="event-partyausstattung">Event- & Partyausstattung</option>
-            <option value="fahrrad-ebike">Fahrrad & E-Bike</option>
-            <option value="fitnessgeraete">Fitnessgeräte</option>
-            <option value="foto-film-kameraequipment">Foto-, Film- & Kameraequipment</option>
-            <option value="gaming-unterhaltung">Gaming & Unterhaltung</option>
-            <option value="garten-aussenbereich">Garten & Außenbereich</option>
-            <option value="kursraeume-seminarraum">Kursräume & Seminarraum</option>
-            <option value="medien-kultur">Medien & Kultur</option>
-            <option value="motorrad-roller">Motorrad & Roller</option>
-            <option value="musikinstrumente">Musikinstrumente</option>
-            <option value="mode-accessoires">Mode & Accessoires</option>
-            <option value="smartphones-tablets">Smartphones & Tablets</option>
-            <option value="sport">Sport</option>
-            <option value="tiere">Tiere</option>
-            <option value="werkzeuge-maschinen">Werkzeuge & Maschinen</option>
-            <option value="wohnmobil-camper">Wohnmobil & Camper</option>
-            <option value="sonstiges">Sonstiges</option>
-          </select>
-        </div>
-        <div class="search-field location-wrap">
-          <label for="location-input">Ort</label>
-          <input type="text" placeholder="Ort" id="location-input" autocomplete="off" aria-label="Ort eingeben" />
-          <div id="suggestions" role="listbox" aria-label="Ortsvorschläge"></div>
-        </div>
-        <div class="search-field">
-          <label for="radius-select">Radius</label>
-          <select id="radius-select" aria-label="Suchradius auswählen">
-            <option value="">Ganzer Ort</option>
-            <option value="5">5 km</option>
-            <option value="10">10 km</option>
-            <option value="20">20 km</option>
-            <option value="30">30 km</option>
-            <option value="50">50 km</option>
-            <option value="100">100 km</option>
-            <option value="200">200 km</option>
-          </select>
-        </div>
-        <button type="submit">Suchen</button>
-      </form>
-    </div>
-  </section>
-
-  <section aria-label="Neueste Angebote">
-    <div class="section-inner">
-      <h2>Neueste Angebote</h2>
-      <div id="newest-offers" class="category-grid" aria-live="polite" aria-busy="true"><p>⏳ Lade Angebote…</p></div>
-      <div class="more-link">
-        <a href="angebote_neueste.html" class="btn-more">MEHR <span>→</span></a>
+  <main>
+    <section id="profile-section" aria-label="Profilinformationen des Vermieters">
+      <div id="profile-photo" aria-hidden="true"></div>
+      <div id="profile-info" role="region" aria-live="polite">
+        Lade Profil...
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section aria-label="Beliebte Angebote">
-    <div class="section-inner">
-      <h2>Beliebte Angebote</h2>
-      <div id="popular-offers" class="category-grid" aria-live="polite" aria-busy="true"><p>⏳ Lade Angebote…</p></div>
-      <div class="more-link">
-        <a href="angebote_beliebte.html" class="btn-more">MEHR <span>→</span></a>
+    <section id="reviews-section" aria-label="Bewertungen des Vermieters">
+      <h2>
+        Bewertungen
+        <span>
+          <a href="#" id="all-reviews-link" aria-label="Alle Bewertungen anzeigen">Alle anzeigen →</a>
+          <button class="review-btn" id="review-btn" title="Bewertung abgeben">Bewertung abgeben</button>
+        </span>
+      </h2>
+      <div id="reviews-list" role="list" aria-live="polite">⏳ Lade Bewertungen…</div>
+      <div id="review-button-container"></div>
+    </section>
+
+    <section id="listings-section" aria-label="Inserate des Vermieters">
+      <h2>Inserate dieses Vermieters</h2>
+      <div id="listing-grid" class="listing-grid" role="list">
+        <p>⏳ Lade Inserate…</p>
       </div>
-    </div>
-  </section>
+    </section>
+  </main>
 
   <footer role="contentinfo">
     <div>
-      <div>
-        <h4>Mieten &amp; Vermieten</h4>
+      <section aria-labelledby="footer-rent-title">
+        <h4 id="footer-rent-title">Mieten &amp; Vermieten</h4>
         <ul>
           <li><a href="so-funktionierts.html">So funktioniert's</a></li>
           <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
@@ -615,261 +586,214 @@
           <li><a href="vermieter-tipps.html">Tipps &amp; Tricks für Vermieter</a></li>
           <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
         </ul>
-      </div>
-      <div>
-        <h4>Wissenswertes</h4>
+      </section>
+      <section aria-labelledby="footer-info-title">
+        <h4 id="footer-info-title">Wissenswertes</h4>
         <ul>
           <li><a href="agb.html">AGB &amp; Impressum</a></li>
           <li><a href="datenschutz.html">Datenschutz</a></li>
         </ul>
-      </div>
-      <div>
-        <h4>Über uns</h4>
+      </section>
+      <section aria-labelledby="footer-about-title">
+        <h4 id="footer-about-title">Über uns</h4>
         <ul>
           <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
           <li><a href="social-media.html">Folgen Sie uns</a></li>
-          <li><a href="mission.html">Unsere Mission</a></li>
         </ul>
-      </div>
+      </section>
     </div>
-    <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
+    <div class="copyright" aria-label="Copyright">
+      © 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.
+    </div>
   </footer>
 
   <script>
-    const sb = supabase.createClient(
+  if (!window.supabaseClient) {
+    window.supabaseClient = window.supabase.createClient(
       'https://flnjalgqtkqycsaymmbd.supabase.co',
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
     );
+  }
+  var supabase = window.supabaseClient;
 
-    let userSession = null;
-    let debounceTimer;
-    let selectedAddressData = null;
+  document.getElementById('nav-toggle').addEventListener('click', () => {
+    const nav = document.getElementById('nav-links');
+    nav.classList.toggle('show');
+    document.getElementById('nav-toggle').setAttribute('aria-expanded', nav.classList.contains('show'));
+  });
 
-    async function init() {
-      const { data: { session } } = await sb.auth.getSession();
-      userSession = session;
-      updateNav();
-      await loadNewestOffers();
-      await loadPopularOffers();
+  async function updateNav() {
+    const { data: { session } } = await supabase.auth.getSession();
+    const nav = document.getElementById("nav-links");
+    nav.innerHTML = session?.user ? `
+      <a href="index.html">Start</a>
+      <a href="profil.html">Mein Profil</a>
+      <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+      <a href="favoriten.html">Meine Favoriten</a>
+      <a href="inserate.html">Meine Inserate</a>
+      <a href="#" onclick="logout(event)">Logout</a>
+    ` : `
+      <a href="index.html">Start</a>
+      <a href="login.html">Einloggen</a>
+    `;
+  }
+
+  async function logout(event) {
+    event.preventDefault();
+    await supabase.auth.signOut();
+    window.location.href = "login.html";
+  }
+
+  function getInitials(name) {
+    if (!name) return '';
+    const parts = name.trim().split(' ');
+    if (parts.length === 1) return parts[0][0].toUpperCase();
+    return (parts[0][0] + parts[1][0]).toUpperCase();
+  }
+
+  function createStarIcons(rating) {
+    let fullStars = Math.floor(rating);
+    let halfStar = rating - fullStars >= 0.5;
+    let emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+    let starsHtml = '';
+    for (let i = 0; i < fullStars; i++) starsHtml += '<span class="star" aria-hidden="true">&#9733;</span>';
+    if (halfStar) starsHtml += '<span class="star" aria-hidden="true">&#9733;</span>';
+    for (let i = 0; i < emptyStars; i++) starsHtml += '<span class="star empty" aria-hidden="true">&#9734;</span>';
+    return starsHtml;
+  }
+
+  function formatJoinDate(dateStr) {
+    if (!dateStr) return 'Unbekannt';
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('de-DE', { year: 'numeric', month: 'long', day: 'numeric' });
+  }
+
+  async function loadVermieterProfil() {
+    const params = new URLSearchParams(location.search);
+    const userId = params.get("id");
+    if (!userId) {
+      document.getElementById("profile-info").innerText = "Keine Vermieter-ID übergeben.";
+      return;
     }
 
-    function updateNav() {
-      const nav = document.getElementById('nav-links');
-      nav.innerHTML = userSession?.user ? `
-        <a href="index.html">Start</a>
-        <a href="profil.html">Mein Profil</a>
-        <a href="nachrichten-inbox.html">Nachrichten</a>
-        <a href="favoriten.html">Meine Favoriten</a>
-        <a href="inserate.html">Meine Inserate</a>
-        <a href="#" onclick="logout(event)">Logout</a>
-      ` : `
-        <a href="index.html">Start</a>
-        <a href="login.html">Einloggen</a>
+    const { data: { session } } = await supabase.auth.getSession();
+    const currentUser = session?.user;
+
+    document.getElementById("all-reviews-link").href = `bewertungen.html?id=${userId}`;
+
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles")
+      .select("name, city, bio, avatar_url, created_at")
+      .eq("id", userId)
+      .single();
+
+    const profilePhoto = document.getElementById("profile-photo");
+    if (profile?.avatar_url) {
+      profilePhoto.style.backgroundImage = `url(${profile.avatar_url})`;
+      profilePhoto.textContent = '';
+    } else {
+      profilePhoto.style.backgroundImage = 'none';
+      profilePhoto.textContent = getInitials(profile?.name);
+    }
+
+    document.getElementById("profile-info").innerHTML = profileError || !profile ? `
+      <p>Profil nicht gefunden.</p>
+    ` : `
+      <p><strong>Name:</strong> ${profile.name || 'Unbekannt'}</p>
+      <p><strong>Ort:</strong> ${profile.city || '–'}</p>
+      <p><strong>Über mich:</strong> ${profile.bio || '–'}</p>
+      <p><strong>Beigetreten am:</strong> ${formatJoinDate(profile.created_at)}</p>
+    `;
+
+    const { data: reviews, error: reviewError } = await supabase
+      .from("reviews")
+      .select("rating, comment, from_user_id, created_at, from_user:from_user_id(name, avatar_url)")
+      .eq("to_user_id", userId)
+      .order("created_at", { ascending: false })
+      .limit(2);
+
+    const reviewList = document.getElementById("reviews-list");
+    if (reviewError || !Array.isArray(reviews) || reviews.length === 0) {
+      reviewList.innerHTML = "<p>Noch keine Bewertungen.</p>";
+    } else {
+      const { data: allReviewsData } = await supabase
+        .from("reviews")
+        .select("rating")
+        .eq("to_user_id", userId);
+
+      const allRatings = allReviewsData || [];
+      const average = allRatings.length > 0 ? (allRatings.reduce((sum, r) => sum + r.rating, 0) / allRatings.length).toFixed(1) : "–";
+
+      const summary = `
+        <div id="rating-summary" aria-label="Durchschnittliche Bewertung: ${average} von 5 Sternen">
+          <div class="stars" aria-hidden="true">${createStarIcons(average)}</div>
+          <span>${average} / 5 aus ${allRatings.length} Bewertungen</span>
+        </div>
       `;
+
+      const list = reviews.map(r => `
+        <article class="review-item" tabindex="0" aria-label="Bewertung ${r.rating} von 5 Sternen von ${r.from_user?.name || 'Unbekannt'}">
+          <div class="review-header">
+            <div class="reviewer-name">${r.from_user?.name || 'Unbekannt'}</div>
+            <div class="review-rating" aria-label="Bewertung: ${r.rating} von 5 Sternen">${createStarIcons(r.rating)}</div>
+          </div>
+          <time class="review-date" datetime="${new Date(r.created_at).toISOString()}">Verfasst am ${new Date(r.created_at).toLocaleDateString()}</time>
+        </article>
+      `).join('');
+      reviewList.innerHTML = summary + list;
     }
 
-    async function logout(event) {
-      event.preventDefault();
-      await sb.auth.signOut();
-      window.location.href = "login.html";
+    let hasReviewed = false;
+    if (currentUser) {
+      const { data: existingReview } = await supabase
+        .from("reviews")
+        .select("id")
+        .eq("to_user_id", userId)
+        .eq("from_user_id", currentUser.id)
+        .single();
+      hasReviewed = !!existingReview;
     }
 
-    async function loadOffers(orderBy, containerId) {
-      const container = document.getElementById(containerId);
-      container.setAttribute('aria-busy', 'true');
-      container.innerHTML = '<p>⏳ Lade Angebote…</p>';
-
-      try {
-        const { data, error } = await sb
-          .from('listings')
-          .select('*')
-          .order(orderBy, { ascending: false })
-          .limit(5);
-
-        if (error) throw error;
-        if (!data || data.length === 0) {
-          container.innerHTML = '<p>Keine Angebote gefunden.</p>';
-          container.removeAttribute('aria-busy');
-          return;
-        }
-
-        container.removeAttribute('aria-busy');
-        await renderOffers(data, containerId);
-      } catch (err) {
-        console.error('Fehler beim Laden von Angeboten:', err);
-        container.innerHTML = '<p>Fehler beim Laden der Angebote.</p>';
-        container.removeAttribute('aria-busy');
-      }
+    const reviewBtn = document.getElementById("review-btn");
+    if (currentUser && currentUser.id !== userId && !hasReviewed) {
+      reviewBtn.style.display = "inline-block";
+      reviewBtn.onclick = () => location.href = `bewertung-schreiben.html?id=${userId}`;
+    } else {
+      reviewBtn.style.display = "none";
     }
 
-    async function loadNewestOffers() { await loadOffers('created_at', 'newest-offers'); }
-    async function loadPopularOffers() { await loadOffers('views', 'popular-offers'); }
+    const { data: listings, error: listingError } = await supabase
+      .from("listings")
+      .select("*")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false });
 
-    async function renderOffers(items, containerId) {
-      const container = document.getElementById(containerId);
-      container.innerHTML = '';
-
-      for (const item of items) {
-        const card = document.createElement('div');
-        card.className = 'result-card';
-
-        const isFav = userSession?.user ? await checkIfFavorite(item.id) : false;
-        const imgUrl = item.image_urls?.[0] || 'https://via.placeholder.com/400x200';
-
-        card.innerHTML = `
-          <img src="${imgUrl}" alt="${item.title || 'Bild'}" />
+    const container = document.getElementById("listing-grid");
+    if (listingError || !Array.isArray(listings) || listings.length === 0) {
+      container.innerHTML = "<p>Keine Inserate gefunden.</p>";
+    } else {
+      container.innerHTML = listings.map(item => `
+        <article class="result-card" role="listitem">
+          <img src="${item.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" alt="${item.title || 'Inserat'}" />
           <div class="result-card-body">
-            <h3>${item.title || 'Kein Titel'}</h3>
+            <h3>${item.title || 'Ohne Titel'}</h3>
             <div class="result-meta">
-              <span>${item.location || ''}</span>
+              <span>${item.location || '–'}</span>
             </div>
             <div class="result-meta">
               <strong>${item.price_per_day || 'k. A.'} € / Tag</strong>
             </div>
             <div class="buttons">
-              <button class="details-btn" onclick="window.location.href='mietobjekt.html?id=${item.id}'">Details ansehen</button>
-              <button class="fav-btn">${isFav ? 'Bereits Favorit' : 'Zu Favoriten'}</button>
+              <button class="details-btn" onclick="location.href='mietobjekt.html?id=${item.id}'">Details ansehen</button>
             </div>
           </div>
-        `;
-
-        const favBtn = card.querySelector('.fav-btn');
-        if (userSession?.user) {
-          if (!isFav) {
-            favBtn.onclick = async (e) => {
-              e.preventDefault();
-              const nowFav = await toggleFavorite(item.id);
-              favBtn.innerText = nowFav ? 'Bereits Favorit' : 'Zu Favoriten';
-            };
-          } else {
-            favBtn.disabled = true;
-          }
-        } else {
-          favBtn.disabled = true;
-          favBtn.innerText = "Login erforderlich";
-        }
-
-        container.appendChild(card);
-      }
+        </article>
+      `).join('');
     }
+  }
 
-    async function checkIfFavorite(listingId) {
-      if (!userSession?.user) return false;
-      const { data } = await sb
-        .from('favorites')
-        .select('*')
-        .eq('user_id', userSession.user.id)
-        .eq('listing_id', listingId)
-        .maybeSingle();
-      return !!data;
-    }
-
-    async function toggleFavorite(listingId) {
-      if (!userSession?.user) return false;
-
-      const { data, error: fetchError } = await sb
-        .from('favorites')
-        .select('*')
-        .eq('user_id', userSession.user.id)
-        .eq('listing_id', listingId)
-        .maybeSingle();
-
-      if (fetchError) {
-        console.error('Fehler beim Prüfen des Favoritenstatus:', fetchError);
-        return false;
-      }
-
-      if (data) {
-        const { error: deleteError } = await sb
-          .from('favorites')
-          .delete()
-          .eq('user_id', userSession.user.id)
-          .eq('listing_id', listingId);
-
-        if (deleteError) {
-          console.error('Fehler beim Entfernen aus Favoriten:', deleteError);
-          return true;
-        }
-
-        return false;
-      } else {
-        const { error: insertError } = await sb
-          .from('favorites')
-          .insert({ user_id: userSession.user.id, listing_id: listingId });
-
-        if (insertError) {
-          console.error('Fehler beim Hinzufügen zu Favoriten:', insertError);
-          return false;
-        }
-
-        return true;
-      }
-    }
-
-    function search() {
-      const keyword = document.getElementById("search-input").value.trim();
-      const category = document.getElementById("category-select").value.trim();
-      const location = document.getElementById("location-input").value.trim();
-      const radius = document.getElementById("radius-select").value.trim();
-      const params = new URLSearchParams({ keyword, category, location, radius });
-      window.location.href = `search_results.html?${params.toString()}`;
-    }
-
-    document.getElementById('nav-toggle').addEventListener('click', () => {
-      const nav = document.getElementById('nav-links');
-      nav.classList.toggle('show');
-      document.getElementById('nav-toggle').setAttribute('aria-expanded', nav.classList.contains('show'));
-    });
-
-    const locationInput = document.getElementById('location-input');
-    const suggestionBox = document.getElementById('suggestions');
-
-    locationInput.addEventListener('input', () => {
-      clearTimeout(debounceTimer);
-      const value = locationInput.value.trim();
-      if (value.length < 2) {
-        suggestionBox.innerHTML = '';
-        return;
-      }
-
-      debounceTimer = setTimeout(async () => {
-        try {
-          const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&countrycodes=de&limit=5&q=${encodeURIComponent(value)}`);
-          const results = await res.json();
-          suggestionBox.innerHTML = '';
-
-          results.forEach(r => {
-            const addr = r.address || {};
-            const city = addr.city || addr.town || addr.village || addr.municipality || r.display_name.split(',')[0];
-            const state = addr.state || '';
-            const display = [city, state, "Deutschland"].filter(Boolean).join(', ');
-
-            const div = document.createElement('div');
-            div.textContent = display;
-            div.onclick = () => {
-              locationInput.value = display;
-              selectedAddressData = {
-                city: city,
-                location: display,
-                lat: parseFloat(r.lat),
-                lon: parseFloat(r.lon),
-                postal_code: addr.postcode || ''
-              };
-              suggestionBox.innerHTML = '';
-            };
-            suggestionBox.appendChild(div);
-          });
-
-          if (results.length === 0) {
-            suggestionBox.innerHTML = '<div style="padding:0.5rem;">Kein Ort gefunden</div>';
-          }
-        } catch (err) {
-          console.error("Fehler bei Ortssuche:", err);
-        }
-      }, 400);
-    });
-
-    init();
+  updateNav();
+  loadVermieterProfil();
   </script>
 </body>
 </html>
