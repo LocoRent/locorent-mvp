@@ -677,9 +677,9 @@
 
           <div class="form-group">
             <label for="new-password">Neues Passwort</label>
-            <input type="password" id="new-password" placeholder="Optional" />
+            <input type="password" id="new-password" maxlength="32" placeholder="Optional" />
             <p class="hint" style="margin:0; font-size:0.9rem; color: var(--text-muted);">
-              Mindestens 6 Zeichen, besser mit Groß-/Kleinbuchstaben, Zahl und Sonderzeichen.
+              Mindestens 6 Zeichen, maximal 32 Zeichen, mit Groß-/Kleinbuchstaben, Zahl und Sonderzeichen.
             </p>
           </div>
         </div>
@@ -747,11 +747,14 @@
 
     const nameInput = document.getElementById('name');
     const bioInput = document.getElementById('bio');
+    const passwordInput = document.getElementById('new-password');
     const nameLimit = document.getElementById('name-limit');
     const bioLimit = document.getElementById('bio-limit');
 
     const NAME_MAX = 40;
     const BIO_MAX = 300;
+    const PASSWORD_MIN = 6;
+    const PASSWORD_MAX = 32;
 
     navToggle.addEventListener('click', () => {
       nav.classList.toggle('show');
@@ -906,6 +909,28 @@
       await loadProfile();
     }
 
+    function validatePassword(password) {
+      if (password.length < PASSWORD_MIN) {
+        return 'Das Passwort muss mindestens 6 Zeichen lang sein.';
+      }
+      if (password.length > PASSWORD_MAX) {
+        return 'Das Passwort darf maximal 32 Zeichen lang sein.';
+      }
+      if (!/[A-Z]/.test(password)) {
+        return 'Das Passwort muss mindestens einen Großbuchstaben enthalten.';
+      }
+      if (!/[a-z]/.test(password)) {
+        return 'Das Passwort muss mindestens einen Kleinbuchstaben enthalten.';
+      }
+      if (!/\d/.test(password)) {
+        return 'Das Passwort muss mindestens eine Zahl enthalten.';
+      }
+      if (!/[!@#$%^&*(),.?":{}|<>\[\]\\\/_'`~+=\-;]/.test(password)) {
+        return 'Das Passwort muss mindestens ein Sonderzeichen enthalten.';
+      }
+      return null;
+    }
+
     async function saveProfile() {
       const { data: { user } } = await sb.auth.getUser();
       if (!user) return window.location.href = "login.html";
@@ -913,7 +938,7 @@
       const name = nameInput.value.trim();
       const city = document.getElementById('city').value.trim();
       const bio = bioInput.value.trim();
-      const newPassword = document.getElementById('new-password').value.trim();
+      const newPassword = passwordInput.value.trim();
 
       const { error } = await sb.from('profiles').upsert({
         id: user.id,
@@ -928,8 +953,9 @@
       }
 
       if (newPassword) {
-        if (newPassword.length < 6) {
-          alert('Das Passwort muss mindestens 6 Zeichen lang sein.');
+        const passwordError = validatePassword(newPassword);
+        if (passwordError) {
+          alert(passwordError);
           return;
         }
 
@@ -944,7 +970,7 @@
       }
 
       alert('Profil gespeichert!');
-      document.getElementById('new-password').value = '';
+      passwordInput.value = '';
       await loadProfile();
     }
 
