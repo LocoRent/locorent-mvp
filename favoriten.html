@@ -58,7 +58,6 @@
       border-radius: 10px;
     }
 
-    /* HEADER UNVERÄNDERT */
     header {
       background-color: var(--primary);
       color: var(--white);
@@ -127,7 +126,6 @@
       outline: none;
     }
 
-    /* MAIN */
     main {
       width: 100%;
       max-width: 1320px;
@@ -330,7 +328,6 @@
       transform: translateY(-1px);
     }
 
-    /* FOOTER UNVERÄNDERT */
     footer {
       width: 100%;
       box-sizing: border-box;
@@ -634,7 +631,7 @@
             <p>${listing.category || ''}</p>
           </div>
           <div class="btn-group">
-            <button class="primary" onclick="location.href='anzeige.html?id=${listing.id}'">Details</button>
+            <button class="primary" onclick="openListingDetails('${listing.id}')">Details</button>
             <button class="secondary" onclick="removeFavorite('${favorite.listing_id}')">Entfernen</button>
           </div>
         `;
@@ -643,6 +640,10 @@
       });
 
       renderPagination(favorites.length);
+    }
+
+    function openListingDetails(id) {
+      window.location.href = `mietobjekt.html?id=${id}`;
     }
 
     function renderPagination(totalItems) {
