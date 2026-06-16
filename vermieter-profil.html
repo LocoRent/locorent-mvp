@@ -26,13 +26,7 @@
     --star-color: #fbc02d;
   }
 
-  *, *::before, *::after {
-    box-sizing: border-box;
-    max-width: 100%;
-    word-wrap: break-word;
-    margin: 0;
-    padding: 0;
-  }
+  *, *::before, *::after { box-sizing: border-box; }
 
   html, body {
     width: 100%;
@@ -43,6 +37,7 @@
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    margin: 0;
   }
 
   header {
@@ -61,10 +56,10 @@
   }
 
   header h1 {
-    font-size: 1.9rem;
-    font-weight: 900;
+    font-size: 1.8rem;
     cursor: pointer;
     user-select: none;
+    margin: 0;
   }
 
   #nav-toggle {
@@ -85,7 +80,7 @@
   nav#nav-links a {
     color: var(--white);
     text-decoration: none;
-    font-weight: 800;
+    font-weight: 600;
     font-size: 1rem;
     position: relative;
     transition: color 0.3s ease;
@@ -103,9 +98,7 @@
   }
 
   nav#nav-links a:hover::after,
-  nav#nav-links a:focus::after {
-    width: 100%;
-  }
+  nav#nav-links a:focus::after { width: 100%; }
 
   nav#nav-links a:hover,
   nav#nav-links a:focus {
@@ -114,8 +107,8 @@
   }
 
   main {
+    width: 100%;
     max-width: 1600px;
-    width: calc(100% - 2rem);
     margin: 2rem auto 4rem;
     padding: 0 2rem;
     display: grid;
@@ -460,16 +453,13 @@
 
   @media (max-width: 720px) {
     #nav-toggle { display: block; }
-
     nav#nav-links {
       width: 100%;
       flex-direction: column;
       display: none;
       margin-top: 1rem;
     }
-
     nav#nav-links.show { display: flex; }
-
     nav#nav-links a {
       margin: 0.4rem 0;
       padding: 0.5rem 1rem;
@@ -477,31 +467,25 @@
       border-radius: 6px;
       display: block;
     }
-
     main {
       width: calc(100% - 1rem);
       padding: 0 1rem;
     }
-
     .profile-box {
       padding: 1.2rem;
     }
-
     #profile-photo {
       width: 110px;
       height: 110px;
       font-size: 2.3rem;
     }
-
     #reviews-section h2,
     #listings-section h2 {
       font-size: 1.6rem;
     }
-
     .category-grid {
       grid-template-columns: 1fr;
     }
-
     footer > div {
       flex-direction: column;
       gap: 1rem;
@@ -647,7 +631,6 @@
       if (!userSession?.user) return false;
 
       const isFav = favoriteListingIds.has(listingId);
-
       if (isFav) {
         const { error } = await sb.from('favorites')
           .delete()
@@ -773,7 +756,7 @@
         return;
       }
 
-      container.innerHTML = '';
+      container.innerHTML = "";
       listings.forEach(item => {
         const isFav = userSession?.user ? favoriteListingIds.has(item.id) : false;
         const imgUrl = item.image_urls?.[0] || 'https://via.placeholder.com/400x200';
