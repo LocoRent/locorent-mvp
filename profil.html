@@ -419,7 +419,7 @@
       background: #e8f5e9;
       color: var(--primary-dark);
       font-weight: 600;
-      font-size: 0.82rem;
+      font-size: 0.95rem;
     }
 
     .listing-actions {
@@ -733,6 +733,39 @@
       window.location.href = "login.html";
     }
 
+    function getCategoryLabel(value) {
+      const map = {
+        "anhaenger-transportmittel": "Anhänger & Transportmittel",
+        "audio-dj-equipment": "Audio & DJ-Equipment",
+        "auto-suv": "Auto & SUV",
+        "basteln-diy": "Basteln & DIY",
+        "beauty": "Beauty",
+        "boote-wassersport": "Boote & Wassersport",
+        "brettspiele-spielzeug": "Brettspiele & Spielzeug",
+        "camping-wandern": "Camping & Wandern",
+        "computer-laptops": "Computer & Laptops",
+        "drohnen-modellbau": "Drohnen & Modellbau",
+        "event-partyausstattung": "Event- & Partyausstattung",
+        "fahrrad-ebike": "Fahrrad & E-Bike",
+        "fitnessgeraete": "Fitnessgeräte",
+        "foto-film-kameraequipment": "Foto-, Film- & Kameraequipment",
+        "gaming-unterhaltung": "Gaming & Unterhaltung",
+        "garten-aussenbereich": "Garten & Außenbereich",
+        "kursraeume-seminarraum": "Kursräume & Seminarraum",
+        "medien-kultur": "Medien & Kultur",
+        "motorrad-roller": "Motorrad & Roller",
+        "musikinstrumente": "Musikinstrumente",
+        "mode-accessoires": "Mode & Accessoires",
+        "smartphones-tablets": "Smartphones & Tablets",
+        "sport": "Sport",
+        "tiere": "Tiere",
+        "werkzeuge-maschinen": "Werkzeuge & Maschinen",
+        "wohnmobil-camper": "Wohnmobil & Camper",
+        "sonstiges": "Sonstiges"
+      };
+      return map[value] || value;
+    }
+
     async function loadProfile() {
       const { data: { user } } = await sb.auth.getUser();
       if (!user) return window.location.href = "login.html";
@@ -795,7 +828,7 @@
         card.className = 'listing-card';
 
         const img = item.image_urls?.[0] || 'https://via.placeholder.com/600x400';
-        const categoryLabel = item.category || 'Sonstiges';
+        const categoryLabel = getCategoryLabel(item.category || 'sonstiges');
 
         card.innerHTML = `
           <img src="${img}" alt="${item.title || 'Inserat'}" />
@@ -803,7 +836,6 @@
             <h4>${item.title || 'Kein Titel'}</h4>
             <div class="listing-meta">
               <span class="pill">${categoryLabel}</span>
-              <span>${item.location || ''}</span>
             </div>
             <div class="listing-meta">
               <strong>${item.price_per_day || 'k. A.'} € / Tag</strong>
