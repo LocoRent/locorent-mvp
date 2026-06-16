@@ -158,6 +158,20 @@
       grid-column: 1 / -1;
     }
 
+    .label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .char-limit {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
     .form-group label {
       font-weight: 600;
       color: var(--text-muted);
@@ -498,8 +512,11 @@
       <form id="listing-form">
         <div class="form-grid">
           <div class="form-group full">
-            <label for="title">Titel</label>
-            <input type="text" id="title" placeholder="z. B. Bohrmaschine Bosch Professional" required />
+            <div class="label-row">
+              <label for="title">Titel</label>
+              <span class="char-limit" id="title-limit">0/80 Zeichen</span>
+            </div>
+            <input type="text" id="title" maxlength="80" placeholder="z. B. Bohrmaschine Bosch Professional" required />
           </div>
 
           <div class="form-group">
@@ -537,18 +554,27 @@
           </div>
 
           <div class="form-group">
-            <label for="price_per_day">Preis pro Tag (€)</label>
-            <input type="number" id="price_per_day" min="0" step="0.5" placeholder="z. B. 15" required />
+            <div class="label-row">
+              <label for="price_per_day">Preis pro Tag (€)</label>
+              <span class="char-limit" id="price-limit">max. 6 Zeichen</span>
+            </div>
+            <input type="number" id="price_per_day" min="0" step="0.5" maxlength="6" placeholder="z. B. 15" required />
           </div>
 
           <div class="form-group">
-            <label for="location">Ort</label>
-            <input type="text" id="location" placeholder="z. B. Frankfurt am Main" required autocomplete="off" />
+            <div class="label-row">
+              <label for="location">Ort</label>
+              <span class="char-limit" id="location-limit">0/60 Zeichen</span>
+            </div>
+            <input type="text" id="location" maxlength="60" placeholder="z. B. Frankfurt am Main" required autocomplete="off" />
           </div>
 
           <div class="form-group full">
-            <label for="description">Beschreibung</label>
-            <textarea id="description" placeholder="Beschreibe dein Inserat möglichst genau..." required></textarea>
+            <div class="label-row">
+              <label for="description">Beschreibung</label>
+              <span class="char-limit" id="description-limit">0/500 Zeichen</span>
+            </div>
+            <textarea id="description" maxlength="500" placeholder="Beschreibe dein Inserat möglichst genau..." required></textarea>
           </div>
 
           <div class="form-group full">
@@ -623,6 +649,19 @@
     const listingsContainer = document.getElementById('my-listings');
     const locationInput = document.getElementById('location');
 
+    const titleInput = document.getElementById('title');
+    const descriptionInput = document.getElementById('description');
+    const priceInput = document.getElementById('price_per_day');
+
+    const titleLimit = document.getElementById('title-limit');
+    const descriptionLimit = document.getElementById('description-limit');
+    const locationLimit = document.getElementById('location-limit');
+
+    const TITLE_MAX = 80;
+    const DESCRIPTION_MAX = 500;
+    const LOCATION_MAX = 60;
+    const PRICE_MAX = 999999;
+
     let user = null;
     let selectedFiles = [];
     let debounceTimer;
@@ -686,6 +725,16 @@
       navToggle.setAttribute('aria-expanded', nav.classList.contains('show'));
     });
 
+    function updateCharCounters() {
+      titleLimit.textContent = `${titleInput.value.length}/${TITLE_MAX} Zeichen`;
+      descriptionLimit.textContent = `${descriptionInput.value.length}/${DESCRIPTION_MAX} Zeichen`;
+      locationLimit.textContent = `${locationInput.value.length}/${LOCATION_MAX} Zeichen`;
+    }
+
+    titleInput.addEventListener('input', updateCharCounters);
+    descriptionInput.addEventListener('input', updateCharCounters);
+    locationInput.addEventListener('input', updateCharCounters);
+
     imagesInput.addEventListener('change', (e) => {
       selectedFiles = Array.from(e.target.files || []);
       renderPreview();
@@ -708,6 +757,7 @@
       form.reset();
       selectedFiles = [];
       preview.innerHTML = '';
+      updateCharCounters();
     });
 
     function initLocationSuggestions() {
@@ -738,6 +788,7 @@
         if (value.length < 2) {
           locationSuggestionsBox.innerHTML = '';
           locationSuggestionsBox.style.display = 'none';
+          updateCharCounters();
           return;
         }
 
@@ -770,9 +821,10 @@
               div.addEventListener('mouseleave', () => div.style.backgroundColor = '#fff');
 
               div.onclick = () => {
-                locationInput.value = display;
+                locationInput.value = display.slice(0, LOCATION_MAX);
                 locationSuggestionsBox.innerHTML = '';
                 locationSuggestionsBox.style.display = 'none';
+                updateCharCounters();
               };
 
               locationSuggestionsBox.appendChild(div);
@@ -826,11 +878,11 @@
       e.preventDefault();
       if (!user) return alert('Bitte zuerst einloggen.');
 
-      const title = document.getElementById('title').value.trim();
+      const title = titleInput.value.trim();
       const category = document.getElementById('category').value;
-      const price_per_day = parseFloat(document.getElementById('price_per_day').value);
-      const location = document.getElementById('location').value.trim();
-      const description = document.getElementById('description').value.trim();
+      const price_per_day = parseFloat(priceInput.value);
+      const location = locationInput.value.trim();
+      const description = descriptionInput.value.trim();
 
       if (!title || !category || !price_per_day || !location || !description) {
         alert('Bitte alle Pflichtfelder ausfüllen.');
@@ -860,6 +912,7 @@
       form.reset();
       selectedFiles = [];
       preview.innerHTML = '';
+      updateCharCounters();
       await loadMyListings();
     });
 
@@ -985,6 +1038,7 @@
       user = currentUser;
       updateNav();
       initLocationSuggestions();
+      updateCharCounters();
       await loadMyListings();
     })();
   </script>
