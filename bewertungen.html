@@ -57,7 +57,6 @@
       border-radius: 10px;
     }
 
-    /* HEADER UNVERÄNDERT */
     header {
       background-color: var(--primary);
       color: var(--white);
@@ -126,7 +125,6 @@
       outline: none;
     }
 
-    /* MAIN verbessert */
     main {
       width: 100%;
       max-width: 1100px;
@@ -264,6 +262,15 @@
       letter-spacing: 1px;
     }
 
+    .review-author {
+      display: inline-flex;
+      margin-bottom: 0.45rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
     .review-text {
       margin: 0 0 0.6rem;
       line-height: 1.7;
@@ -315,7 +322,6 @@
       box-shadow: 0 12px 24px rgba(46, 125, 50, 0.16);
     }
 
-    /* FOOTER UNVERÄNDERT */
     footer {
       width: 100%;
       box-sizing: border-box;
@@ -375,21 +381,14 @@
     }
 
     @media (max-width: 720px) {
-      #nav-toggle {
-        display: block;
-      }
-
+      #nav-toggle { display: block; }
       nav#nav-links {
         width: 100%;
         flex-direction: column;
         display: none;
         margin-top: 1rem;
       }
-
-      nav#nav-links.show {
-        display: flex;
-      }
-
+      nav#nav-links.show { display: flex; }
       nav#nav-links a {
         margin: 0.4rem 0;
         padding: 0.5rem 1rem;
@@ -397,29 +396,14 @@
         border-radius: 6px;
         display: block;
       }
-
       footer > div {
         flex-direction: column;
         align-items: flex-start;
       }
-
-      .review-item {
-        padding: 1rem;
-      }
-
-      .avatar {
-        width: 48px;
-        height: 48px;
-      }
-
-      .reviews-toolbar {
-        align-items: stretch;
-      }
-
-      .reviews-toolbar select {
-        width: 100%;
-        min-width: 0;
-      }
+      .review-item { padding: 1rem; }
+      .avatar { width: 48px; height: 48px; }
+      .reviews-toolbar { align-items: stretch; }
+      .reviews-toolbar select { width: 100%; min-width: 0; }
     }
   </style>
 </head>
@@ -503,18 +487,12 @@
     let reviewsData = [];
 
     async function init() {
-      try {
-        const { data, error } = await sb.auth.getSession();
-        if (error) console.error('Auth Fehler:', error);
-
-        userSession = data?.session || null;
-        updateNav();
-        setupNavToggle();
-        await loadReviews();
-        document.getElementById('sort-select').addEventListener('change', renderReviews);
-      } catch (err) {
-        console.error('Init Fehler:', err);
-      }
+      const { data } = await sb.auth.getSession();
+      userSession = data?.session || null;
+      updateNav();
+      setupNavToggle();
+      await loadReviews();
+      document.getElementById('sort-select').addEventListener('change', renderReviews);
     }
 
     function updateNav() {
@@ -534,12 +512,8 @@
 
     async function logout(event) {
       event.preventDefault();
-      try {
-        await sb.auth.signOut();
-        window.location.href = "login.html";
-      } catch (err) {
-        console.error('Logout Fehler:', err);
-      }
+      await sb.auth.signOut();
+      window.location.href = "login.html";
     }
 
     function setupNavToggle() {
@@ -548,6 +522,27 @@
         nav.classList.toggle('show');
         document.getElementById('nav-toggle').setAttribute('aria-expanded', nav.classList.contains('show'));
       });
+    }
+
+    async function loadReviewerNames(reviewRows) {
+      const userIds = [...new Set(reviewRows.map(r => r.from_user_id).filter(Boolean))];
+      if (!userIds.length) return {};
+
+      const { data, error } = await sb
+        .from('profiles')
+        .select('id, name')
+        .in('id', userIds);
+
+      if (error) {
+        console.error('Fehler beim Laden der Bewerternamen:', error);
+        return {};
+      }
+
+      const map = {};
+      (data || []).forEach(p => {
+        map[p.id] = p.name || 'Unbekannt';
+      });
+      return map;
     }
 
     async function loadReviews() {
@@ -571,14 +566,14 @@
       }
 
       reviewsData = data || [];
-      renderReviews();
+      await renderReviews();
     }
 
     function getStars(rating) {
       return '★'.repeat(rating) + '☆'.repeat(5 - rating);
     }
 
-    function renderReviews() {
+    async function renderReviews() {
       const list = document.getElementById('review-list');
       const sortValue = document.getElementById('sort-select').value;
 
@@ -597,7 +592,6 @@
       const avg = sorted.length
         ? (sorted.reduce((sum, r) => sum + (Number(r.rating) || 0), 0) / sorted.length).toFixed(1)
         : '0,0';
-
       document.getElementById('avg-stat').textContent = `Ø ${avg.replace('.', ',')} / 5`;
 
       if (!sorted.length) {
@@ -610,9 +604,12 @@
         return;
       }
 
+      const namesMap = await loadReviewerNames(sorted);
+
       list.innerHTML = '';
       sorted.forEach(review => {
         const initials = (review.comment || '?').trim().slice(0, 1).toUpperCase();
+        const reviewerName = namesMap[review.from_user_id] || 'Unbekannt';
 
         const item = document.createElement('article');
         item.className = 'review-item';
@@ -623,6 +620,9 @@
             <div class="review-rating" aria-label="${review.rating || 0} von 5 Sternen">
               ${getStars(Number(review.rating) || 0)}
             </div>
+            <a class="review-author" href="profil.html?id=${review.from_user_id}">
+              ${reviewerName}
+            </a>
             <p class="review-text">${review.comment || ''}</p>
             <div class="review-meta">
               ${review.created_at ? new Date(review.created_at).toLocaleDateString('de-DE') : ''}
