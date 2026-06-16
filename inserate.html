@@ -24,9 +24,7 @@
       --font-primary: 'Poppins', sans-serif;
     }
 
-    *, *::before, *::after {
-      box-sizing: border-box;
-    }
+    *, *::before, *::after { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -282,7 +280,7 @@
 
     .listing-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       gap: 1.25rem;
     }
 
@@ -341,12 +339,12 @@
     .pill {
       display: inline-flex;
       align-items: center;
-      padding: 0.45rem 0.8rem;
+      padding: 0.5rem 0.9rem;
       border-radius: 999px;
       background: #e8f5e9;
       color: var(--primary-dark);
       font-weight: 700;
-      font-size: 1rem;
+      font-size: 1.05rem;
     }
 
     .listing-actions {
@@ -483,9 +481,7 @@
   <header>
     <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
     <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
-    <nav id="nav-links" role="navigation" aria-label="Hauptnavigation">
-      <!-- Navigation Links werden via JS gesetzt -->
-    </nav>
+    <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
   </header>
 
   <main>
