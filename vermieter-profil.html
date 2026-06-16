@@ -150,7 +150,6 @@
     pointer-events: none;
   }
 
-  /* Profil Header */
   #profile-section {
     display: flex;
     gap: 2rem;
@@ -200,7 +199,6 @@
     font-weight: 700;
   }
 
-  /* Rating Display */
   #rating-summary {
     display: inline-flex;
     align-items: center;
@@ -233,7 +231,6 @@
     filter: none;
   }
 
-  /* Reviews Section */
   #reviews-section {
     display: flex;
     flex-direction: column;
@@ -333,7 +330,6 @@
     color: var(--text-muted);
   }
 
-  /* Listings Section */
   #listings-section h2 {
     color: var(--primary);
     font-weight: 700;
@@ -352,47 +348,58 @@
   }
 
   .listing-card {
-    background: rgba(255,255,255,0.95);
-    padding: 1.15rem;
-    border-radius: 20px;
-    box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+    background: rgba(255,255,255,0.98);
+    border: 1px solid rgba(46,125,50,0.08);
+    border-radius: 22px;
+    box-shadow: 0 12px 28px rgba(46,125,50,0.08);
+    overflow: hidden;
     display: flex;
     flex-direction: column;
-    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-    border: 1px solid rgba(46, 125, 50, 0.08);
-    overflow: hidden;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
   }
 
   .listing-card:hover {
-    box-shadow: 0 16px 38px rgba(0,0,0,0.13);
-    transform: translateY(-6px);
+    transform: translateY(-3px);
+    box-shadow: 0 18px 40px rgba(46,125,50,0.14);
   }
 
   .listing-card img {
     width: 100%;
     height: 190px;
     object-fit: cover;
-    border-radius: 14px;
-    margin-bottom: 1rem;
+    background: #eef6ee;
   }
 
-  .listing-card h3 {
+  .listing-card-body {
+    padding: 1.1rem 1.15rem 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    flex: 1;
+  }
+
+  .listing-card-body h3 {
     font-size: 1.25rem;
-    margin-bottom: 0.55rem;
+    margin: 0;
     color: var(--primary-dark);
     line-height: 1.25;
   }
 
-  .listing-card p {
-    margin: 0.25rem 0;
-    font-weight: 600;
+  .result-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
     color: var(--text-dark);
-    line-height: 1.5;
+    font-weight: 600;
+    font-size: 0.95rem;
   }
 
-  .listing-card p.category {
-    text-transform: capitalize;
-    color: var(--primary);
+  .result-meta span {
+    background: #edf7ee;
+    color: var(--primary-dark);
+    padding: 0.45rem 0.7rem;
+    border-radius: 999px;
+    border: 1px solid rgba(46,125,50,0.08);
   }
 
   .listing-card button {
@@ -415,7 +422,6 @@
     box-shadow: 0 14px 26px rgba(46, 125, 50, 0.24);
   }
 
-  /* Footer */
   footer {
     width: 100%;
     box-sizing: border-box;
@@ -651,6 +657,12 @@
     return starsHtml;
   }
 
+  function formatJoinDate(dateStr) {
+    if (!dateStr) return 'Unbekannt';
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('de-DE', { year: 'numeric', month: 'long', day: 'numeric' });
+  }
+
   async function loadVermieterProfil() {
     const params = new URLSearchParams(location.search);
     const userId = params.get("id");
@@ -666,7 +678,7 @@
 
     const { data: profile, error: profileError } = await supabase
       .from("profiles")
-      .select("name, city, bio, avatar_url")
+      .select("name, city, bio, avatar_url, created_at")
       .eq("id", userId)
       .single();
 
@@ -679,12 +691,15 @@
       profilePhoto.textContent = getInitials(profile?.name);
     }
 
+    const joinDate = formatJoinDate(profile?.created_at);
+
     document.getElementById("profile-info").innerHTML = profileError || !profile ? `
       <p>Profil nicht gefunden.</p>
     ` : `
       <p><strong>Name:</strong> ${profile.name || 'Unbekannt'}</p>
       <p><strong>Ort:</strong> ${profile.city || '–'}</p>
       <p><strong>Über mich:</strong> ${profile.bio || '–'}</p>
+      <p><strong>Beigetreten am:</strong> ${joinDate}</p>
     `;
 
     const { data: reviews, error: reviewError } = await supabase
@@ -757,9 +772,15 @@
       container.innerHTML = listings.map(item => `
         <article class="listing-card" tabindex="0" aria-label="Inserat: ${item.title}, Kategorie: ${item.category}, Preis: ${item.price_per_day} Euro pro Tag">
           <img src="${item.image_urls?.[0] || 'https://via.placeholder.com/400x200'}" alt="${item.title}" />
-          <h3>${item.title}</h3>
-          <p><strong>Preis:</strong> ${item.price_per_day} € / Tag</p>
-          <button aria-label="Details zu ${item.title}" onclick="location.href='mietobjekt.html?id=${item.id}'">Details</button>
+          <div class="listing-card-body">
+            <h3>${item.title}</h3>
+            <div class="result-meta">
+              <span>📦 ${item.category || 'Sonstiges'}</span>
+              <span>📍 ${item.location || '–'}</span>
+              <span>💶 ${item.price_per_day} € / Tag</span>
+            </div>
+            <button aria-label="Details zu ${item.title}" onclick="location.href='mietobjekt.html?id=${item.id}'">Details ansehen</button>
+          </div>
         </article>
       `).join('');
     }
