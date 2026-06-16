@@ -674,7 +674,7 @@
               <div class="label">Inserate</div>
             </div>
             <div class="stat">
-              <div class="value" id="stat-rating">–</div>
+              <div class="value" id="stat-rating-link" style="cursor:pointer; text-decoration: underline;">–</div>
               <div class="label">Bewertung</div>
             </div>
             <div class="stat">
@@ -792,7 +792,7 @@
     const avatarBox = document.getElementById('avatar-box');
     const profileSummary = document.getElementById('profile-summary');
     const statListings = document.getElementById('stat-listings');
-    const statRating = document.getElementById('stat-rating');
+    const statRatingLink = document.getElementById('stat-rating-link');
     const statCity = document.getElementById('stat-city');
 
     const nameInput = document.getElementById('name');
@@ -909,7 +909,22 @@
         .eq('user_id', user.id);
 
       statListings.textContent = count || 0;
-      statRating.textContent = profile?.rating ? `${profile.rating}/5` : '–';
+
+      const { data: reviews } = await sb
+        .from('reviews')
+        .select('rating')
+        .eq('to_user_id', user.id);
+
+      if (reviews && reviews.length > 0) {
+        const avg = reviews.reduce((sum, r) => sum + (Number(r.rating) || 0), 0) / reviews.length;
+        statRatingLink.textContent = `${avg.toFixed(1)}/5`;
+      } else {
+        statRatingLink.textContent = '–';
+      }
+
+      statRatingLink.onclick = () => {
+        window.location.href = `bewertungen.html?id=${user.id}`;
+      };
 
       updateCharCounters();
     }
