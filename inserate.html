@@ -17,10 +17,9 @@
       --text-muted: #466843;
       --accent: #b9f6ca;
       --highlight: #a5d6a7;
-      --radius: 18px;
+      --radius: 16px;
       --shadow-light: rgba(46, 125, 50, 0.08);
-      --shadow-strong: rgba(46, 125, 50, 0.25);
-      --transition: 0.4s ease;
+      --shadow-strong: rgba(46, 125, 50, 0.18);
       --font-primary: 'Poppins', sans-serif;
     }
 
@@ -31,9 +30,8 @@
       width: 100%;
       overflow-x: hidden;
       font-family: var(--font-primary);
-      background: linear-gradient(to bottom, #e8f5e9 0%, #ffffff 100%);
+      background: linear-gradient(to bottom, #f7fbf7 0%, #ffffff 100%);
       color: var(--text-dark);
-      scroll-behavior: smooth;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
@@ -42,7 +40,7 @@
     header {
       background-color: var(--primary);
       color: var(--white);
-      padding: 1.5rem 2rem;
+      padding: 1.2rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -50,7 +48,7 @@
       position: sticky;
       top: 0;
       z-index: 1000;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
       flex-wrap: wrap;
     }
 
@@ -85,22 +83,6 @@
       transition: color 0.3s ease;
     }
 
-    nav#nav-links a::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      bottom: -4px;
-      width: 0;
-      height: 2px;
-      background-color: var(--accent);
-      transition: width 0.3s ease;
-    }
-
-    nav#nav-links a:hover::after,
-    nav#nav-links a:focus::after {
-      width: 100%;
-    }
-
     nav#nav-links a:hover,
     nav#nav-links a:focus {
       color: var(--accent);
@@ -111,33 +93,33 @@
       max-width: 1600px;
       width: 100%;
       margin: 0 auto;
-      padding: 2rem 2rem 4rem;
+      padding: 1.6rem 1.6rem 4rem;
       flex: 1;
     }
 
     .page-top {
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
     }
 
     .page-top h2 {
       margin: 0;
-      font-size: clamp(1.6rem, 2vw, 2.4rem);
+      font-size: clamp(1.6rem, 2vw, 2.2rem);
       color: var(--primary-dark);
     }
 
     .page-top p {
-      margin: 0.5rem 0 0;
+      margin: 0.45rem 0 0;
       color: var(--text-muted);
-      max-width: 800px;
+      max-width: 900px;
     }
 
     .panel {
       background: var(--white);
-      border-radius: 24px;
-      box-shadow: 0 12px 30px rgba(46,125,50,0.10);
+      border-radius: 18px;
+      box-shadow: 0 10px 24px rgba(46,125,50,0.08);
       border: 1px solid rgba(46,125,50,0.08);
-      padding: 1.5rem;
-      margin-bottom: 2rem;
+      padding: 1.25rem;
+      margin-bottom: 1.8rem;
     }
 
     .form-grid {
@@ -166,40 +148,34 @@
     .form-group select,
     .form-group textarea {
       width: 100%;
-      padding: 0.95rem 1rem;
-      border-radius: 14px;
+      padding: 0.92rem 1rem;
+      border-radius: 12px;
       border: 1px solid rgba(46, 125, 50, 0.18);
       background: #fff;
       font-size: 1rem;
       font-family: inherit;
       outline: none;
-      transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
     }
 
     .form-group input:focus,
     .form-group select:focus,
     .form-group textarea:focus {
       border-color: var(--primary-light);
-      box-shadow: 0 0 0 4px rgba(102, 187, 106, 0.16);
+      box-shadow: 0 0 0 4px rgba(102, 187, 106, 0.14);
     }
 
     .form-group textarea {
-      min-height: 160px;
+      min-height: 150px;
       resize: vertical;
     }
 
     .upload-box {
       border: 2px dashed rgba(46,125,50,0.25);
-      border-radius: 18px;
+      border-radius: 16px;
       background: linear-gradient(180deg, #fbfffb 0%, #f4fbf4 100%);
-      padding: 1.25rem;
+      padding: 1.1rem;
       text-align: center;
-      transition: border-color 0.25s ease, background 0.25s ease;
-    }
-
-    .upload-box:hover {
-      border-color: var(--primary-light);
-      background: #f0faf0;
     }
 
     .upload-box input[type="file"] {
@@ -211,16 +187,16 @@
 
     .upload-preview {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-      gap: 0.75rem;
-      margin-top: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 0.7rem;
+      margin-top: 0.9rem;
     }
 
     .upload-preview img {
       width: 100%;
-      height: 120px;
+      height: 110px;
       object-fit: cover;
-      border-radius: 14px;
+      border-radius: 12px;
       border: 1px solid rgba(46,125,50,0.08);
     }
 
@@ -228,14 +204,14 @@
       display: flex;
       justify-content: flex-end;
       gap: 0.75rem;
-      margin-top: 1.25rem;
+      margin-top: 1.1rem;
       flex-wrap: wrap;
     }
 
     .btn {
       border: none;
-      border-radius: 14px;
-      padding: 0.9rem 1.25rem;
+      border-radius: 12px;
+      padding: 0.88rem 1.2rem;
       font-weight: 700;
       cursor: pointer;
       transition: transform 0.2s ease, box-shadow 0.25s ease, background-color 0.25s ease;
@@ -244,12 +220,12 @@
     .btn-primary {
       background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
       color: var(--white);
-      box-shadow: 0 10px 20px rgba(46,125,50,0.14);
+      box-shadow: 0 8px 18px rgba(46,125,50,0.14);
     }
 
     .btn-primary:hover {
       transform: translateY(-1px);
-      box-shadow: 0 14px 24px rgba(46,125,50,0.18);
+      box-shadow: 0 12px 22px rgba(46,125,50,0.18);
     }
 
     .btn-secondary {
@@ -268,63 +244,63 @@
       justify-content: space-between;
       align-items: center;
       gap: 1rem;
-      margin: 2rem 0 1rem;
+      margin: 1.8rem 0 0.9rem;
       flex-wrap: wrap;
     }
 
     .listings-header h3 {
       margin: 0;
-      font-size: 1.35rem;
+      font-size: 1.3rem;
       color: var(--primary-dark);
     }
 
-    .listing-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 1.25rem;
+    .listing-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
     }
 
     .listing-card {
       background: var(--white);
       border: 1px solid rgba(46,125,50,0.08);
-      border-radius: 22px;
-      box-shadow: 0 12px 28px rgba(46,125,50,0.08);
+      border-radius: 18px;
+      box-shadow: 0 8px 20px rgba(46,125,50,0.08);
       overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      display: grid;
+      grid-template-columns: 220px 1fr auto;
+      gap: 1rem;
+      align-items: stretch;
+      transition: transform 0.22s ease, box-shadow 0.22s ease;
     }
 
     .listing-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 18px 36px rgba(46,125,50,0.14);
+      transform: translateY(-2px);
+      box-shadow: 0 14px 28px rgba(46,125,50,0.12);
     }
 
     .listing-card img {
       width: 100%;
-      height: 190px;
+      height: 100%;
+      min-height: 180px;
       object-fit: cover;
       background: #eef6ee;
+      display: block;
     }
 
     .listing-card-body {
-      padding: 1rem;
+      padding: 1rem 0.2rem 1rem 0;
       display: flex;
       flex-direction: column;
-      gap: 0.6rem;
-      flex: 1;
+      gap: 0.55rem;
+      min-width: 0;
     }
 
     .listing-card-body h4 {
       margin: 0;
-      font-size: 1.05rem;
+      font-size: 1.08rem;
       line-height: 1.35;
       color: var(--text-dark);
-      height: 2.8em;
-      overflow: hidden;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
+      font-weight: 700;
     }
 
     .listing-meta {
@@ -339,28 +315,37 @@
     .pill {
       display: inline-flex;
       align-items: center;
-      padding: 0.5rem 0.9rem;
+      padding: 0.45rem 0.8rem;
       border-radius: 999px;
       background: #e8f5e9;
       color: var(--primary-dark);
       font-weight: 700;
-      font-size: 1.05rem;
+      font-size: 1rem;
+    }
+
+    .price-big {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--primary-dark);
     }
 
     .listing-actions {
-      margin-top: auto;
+      padding: 1rem 1rem 1rem 0;
       display: flex;
+      flex-direction: column;
+      justify-content: center;
       gap: 0.6rem;
-      flex-wrap: wrap;
+      min-width: 170px;
     }
 
     .listing-actions button,
     .listing-actions a {
-      flex: 1;
-      min-width: 120px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       text-align: center;
       text-decoration: none;
-      padding: 0.7rem 0.9rem;
+      padding: 0.78rem 1rem;
       border-radius: 12px;
       border: none;
       cursor: pointer;
@@ -447,15 +432,36 @@
       opacity: 0.85;
     }
 
+    @media (max-width: 920px) {
+      .listing-card {
+        grid-template-columns: 180px 1fr;
+      }
+
+      .listing-actions {
+        grid-column: 1 / -1;
+        padding: 0 1rem 1rem 1rem;
+        min-width: 0;
+        flex-direction: row;
+      }
+
+      .listing-actions button,
+      .listing-actions a {
+        flex: 1;
+      }
+    }
+
     @media (max-width: 720px) {
       #nav-toggle { display: block; }
+
       nav#nav-links {
         display: none;
         flex-direction: column;
         width: 100%;
         margin-top: 1rem;
       }
+
       nav#nav-links.show { display: flex; }
+
       nav#nav-links a {
         margin: 0.4rem 0;
         padding: 0.5rem 1rem;
@@ -463,17 +469,41 @@
         border-radius: 6px;
         display: block;
       }
-      main { padding: 1.25rem 0.75rem 3rem; }
+
+      main { padding: 1.15rem 0.75rem 3rem; }
+
       .panel { padding: 1rem; }
+
       .form-grid { grid-template-columns: 1fr; }
+
       .actions { justify-content: stretch; }
+
       .btn { width: 100%; }
-      .listing-grid { grid-template-columns: 1fr; }
+
+      .listing-card {
+        grid-template-columns: 1fr;
+      }
+
+      .listing-card img {
+        min-height: 220px;
+      }
+
+      .listing-card-body {
+        padding: 0 1rem 0.4rem 1rem;
+      }
+
+      .listing-actions {
+        padding: 0 1rem 1rem 1rem;
+      }
+
       footer > div {
         flex-direction: column;
         align-items: flex-start;
       }
-      footer > div > div { width: 100%; }
+
+      footer > div > div {
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -487,7 +517,7 @@
   <main>
     <div class="page-top">
       <h2>Inserate verwalten</h2>
-      <p>Hier kannst du deine Inserate anlegen, bearbeiten und löschen. Alles schön ordentlich — fast wie eine gut sortierte Werkzeugkiste, nur ohne Schrauben im falschen Fach.</p>
+      <p>Deine Inserate im kompakten Marktplatz-Look: Bild, Titel, Kategorie und Preis sofort im Blick.</p>
     </div>
 
     <section class="panel" aria-label="Inserat erstellen">
@@ -568,7 +598,7 @@
       <h3>Deine Inserate</h3>
     </div>
 
-    <section class="listing-grid" id="my-listings">
+    <section class="listing-list" id="my-listings">
       <p>Lade Inserate...</p>
     </section>
   </main>
@@ -621,8 +651,6 @@
 
     let user = null;
     let selectedFiles = [];
-    let debounceTimer;
-    let locationSuggestionsBox;
 
     function getCategoryLabel(value) {
       const map = {
@@ -706,115 +734,19 @@
       preview.innerHTML = '';
     });
 
-    function initLocationSuggestions() {
-      const wrapper = locationInput.parentElement;
-      wrapper.style.position = 'relative';
-
-      locationSuggestionsBox = document.createElement('div');
-      locationSuggestionsBox.id = 'location-suggestions';
-      locationSuggestionsBox.style.position = 'absolute';
-      locationSuggestionsBox.style.top = 'calc(100% + 6px)';
-      locationSuggestionsBox.style.left = '0';
-      locationSuggestionsBox.style.right = '0';
-      locationSuggestionsBox.style.maxHeight = '180px';
-      locationSuggestionsBox.style.overflowY = 'auto';
-      locationSuggestionsBox.style.background = '#fff';
-      locationSuggestionsBox.style.border = '1px solid rgba(46, 125, 50, 0.15)';
-      locationSuggestionsBox.style.borderRadius = '12px';
-      locationSuggestionsBox.style.boxShadow = '0 12px 25px rgba(0,0,0,0.08)';
-      locationSuggestionsBox.style.zIndex = '20';
-      locationSuggestionsBox.style.display = 'none';
-
-      wrapper.appendChild(locationSuggestionsBox);
-
-      locationInput.addEventListener('input', () => {
-        clearTimeout(debounceTimer);
-        const value = locationInput.value.trim();
-
-        if (value.length < 2) {
-          locationSuggestionsBox.innerHTML = '';
-          locationSuggestionsBox.style.display = 'none';
-          return;
-        }
-
-        debounceTimer = setTimeout(async () => {
-          try {
-            const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&countrycodes=de&limit=5&q=${encodeURIComponent(value)}`);
-            const results = await res.json();
-
-            locationSuggestionsBox.innerHTML = '';
-
-            if (!results.length) {
-              locationSuggestionsBox.innerHTML = '<div style="padding:0.75rem 1rem;">Kein Ort gefunden</div>';
-              locationSuggestionsBox.style.display = 'block';
-              return;
-            }
-
-            results.forEach(r => {
-              const addr = r.address || {};
-              const city = addr.city || addr.town || addr.village || addr.municipality || r.display_name.split(',')[0];
-              const state = addr.state || '';
-              const display = [city, state, "Deutschland"].filter(Boolean).join(', ');
-
-              const div = document.createElement('div');
-              div.textContent = display;
-              div.style.padding = '0.75rem 1rem';
-              div.style.cursor = 'pointer';
-              div.style.borderBottom = '1px solid #f0f0f0';
-
-              div.addEventListener('mouseenter', () => div.style.backgroundColor = '#e8f5e9');
-              div.addEventListener('mouseleave', () => div.style.backgroundColor = '#fff');
-
-              div.onclick = () => {
-                locationInput.value = display;
-                locationSuggestionsBox.innerHTML = '';
-                locationSuggestionsBox.style.display = 'none';
-              };
-
-              locationSuggestionsBox.appendChild(div);
-            });
-
-            locationSuggestionsBox.style.display = 'block';
-          } catch (err) {
-            console.error("Fehler bei Ortssuche:", err);
-          }
-        }, 400);
-      });
-
-      document.addEventListener('click', (e) => {
-        if (!wrapper.contains(e.target)) {
-          locationSuggestionsBox.innerHTML = '';
-          locationSuggestionsBox.style.display = 'none';
-        }
-      });
-    }
-
     async function uploadImages(files) {
       const urls = [];
-
       for (const file of files) {
         const safeName = file.name.replace(/\s+/g, '-');
         const filePath = `${user.id}/${Date.now()}-${safeName}`;
-
-        const { error: uploadError } = await sb.storage
-          .from('listing-images')
-          .upload(filePath, file, {
-            cacheControl: '3600',
-            upsert: false
-          });
-
-        if (uploadError) {
-          console.error('Upload-Fehler:', uploadError);
-          continue;
-        }
-
-        const { data } = sb.storage
-          .from('listing-images')
-          .getPublicUrl(filePath);
-
+        const { error: uploadError } = await sb.storage.from('listing-images').upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: false
+        });
+        if (uploadError) continue;
+        const { data } = sb.storage.from('listing-images').getPublicUrl(filePath);
         urls.push(data.publicUrl);
       }
-
       return urls;
     }
 
@@ -877,7 +809,6 @@
         .order('created_at', { ascending: false });
 
       if (error) {
-        console.error(error);
         listingsContainer.innerHTML = '<p>Fehler beim Laden der Inserate.</p>';
         return;
       }
@@ -891,7 +822,6 @@
       data.forEach(item => {
         const card = document.createElement('article');
         card.className = 'listing-card';
-
         const categoryLabel = getCategoryLabel(item.category || 'sonstiges');
 
         card.innerHTML = `
@@ -902,15 +832,14 @@
               <span class="pill">${categoryLabel}</span>
             </div>
             <div class="listing-meta">
-              <strong>${item.price_per_day || 'k. A.'} € / Tag</strong>
-            </div>
-            <div class="listing-actions">
-              <a class="edit-btn" href="bearbeiten.html?id=${item.id}">Bearbeiten</a>
-              <button class="delete-btn" onclick="deleteListing('${item.id}')">Löschen</button>
+              <span class="price-big">${item.price_per_day || 'k. A.'} € / Tag</span>
             </div>
           </div>
+          <div class="listing-actions">
+            <a class="edit-btn" href="bearbeiten.html?id=${item.id}">Bearbeiten</a>
+            <button class="delete-btn" onclick="deleteListing('${item.id}')">Löschen</button>
+          </div>
         `;
-
         listingsContainer.appendChild(card);
       });
     }
@@ -920,51 +849,31 @@
       if (!ok) return;
 
       try {
-        const { data: listing, error: fetchError } = await sb
-          .from('listings')
-          .select('image_urls')
-          .eq('id', id)
-          .maybeSingle();
-
-        if (fetchError) {
-          console.error(fetchError);
-          alert('Fehler beim Laden der Inseratsdaten.');
-          return;
-        }
-
+        const { data: listing } = await sb.from('listings').select('image_urls').eq('id', id).maybeSingle();
         const imageUrls = listing?.image_urls || [];
+
         if (Array.isArray(imageUrls) && imageUrls.length > 0) {
-          const paths = imageUrls
-            .map(url => {
-              try {
-                const u = new URL(url);
-                const parts = u.pathname.split('/');
-                const idx = parts.indexOf('listing-images');
-                if (idx !== -1 && idx + 1 < parts.length) {
-                  return parts.slice(idx + 1).join('/');
-                }
-                return null;
-              } catch {
-                return null;
+          const paths = imageUrls.map(url => {
+            try {
+              const u = new URL(url);
+              const parts = u.pathname.split('/');
+              const idx = parts.indexOf('listing-images');
+              if (idx !== -1 && idx + 1 < parts.length) {
+                return parts.slice(idx + 1).join('/');
               }
-            })
-            .filter(Boolean);
+              return null;
+            } catch {
+              return null;
+            }
+          }).filter(Boolean);
 
           if (paths.length > 0) {
-            const { error: storageError } = await sb.storage
-              .from('listing-images')
-              .remove(paths);
-
-            if (storageError) {
-              console.error('Fehler beim Löschen der Bilder aus Storage:', storageError);
-            }
+            await sb.storage.from('listing-images').remove(paths);
           }
         }
 
         const { error: deleteError } = await sb.from('listings').delete().eq('id', id);
-
         if (deleteError) {
-          console.error(deleteError);
           alert('Fehler beim Löschen des Inserats.');
           return;
         }
@@ -980,7 +889,6 @@
       const { data: { user: currentUser } } = await sb.auth.getUser();
       user = currentUser;
       updateNav();
-      initLocationSuggestions();
       await loadMyListings();
     })();
   </script>
