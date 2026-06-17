@@ -47,7 +47,6 @@
       flex-direction: column;
     }
 
-    /* HEADER UNVERÄNDERT */
     header {
       background-color: var(--primary-color);
       color: var(--white);
@@ -553,7 +552,6 @@
       transform: translateY(-2px);
     }
 
-    /* FOOTER UNVERÄNDERT */
     footer {
       padding: 2rem;
       text-align: center;
@@ -913,14 +911,36 @@
         const img = item.image_urls?.[0] || "https://via.placeholder.com/300x150?text=Kein+Bild";
         const card = document.createElement("div");
         card.className = "gallery-item";
-        card.innerHTML = `
-          <img src="${img}" alt="${item.title}" />
-          <div class="gallery-item-body">
-            <h3>${item.title || 'Kein Titel'}</h3>
-            <p>${item.location || 'Unbekannter Ort'} · ${item.price_per_day || 'k. A.'} € / Tag</p>
-            <a class="gallery-link" href="mietobjekt.html?id=${item.id}">Zum Inserat</a>
-          </div>
-        `;
+
+        const imageEl = document.createElement("img");
+        imageEl.src = img;
+        imageEl.alt = item.title || 'Inserat';
+
+        const body = document.createElement("div");
+        body.className = "gallery-item-body";
+
+        const h3 = document.createElement("h3");
+        h3.textContent = item.title || 'Kein Titel';
+
+        const category = document.createElement("span");
+        category.className = "pill";
+        category.textContent = item.category || 'Sonstiges';
+
+        const p = document.createElement("p");
+        p.textContent = `${item.location || 'Unbekannter Ort'} · ${item.price_per_day || 'k. A.'} € / Tag`;
+
+        const link = document.createElement("a");
+        link.className = "gallery-link";
+        link.href = `mietobjekt.html?id=${encodeURIComponent(item.id)}`;
+        link.textContent = "Zum Inserat";
+
+        body.appendChild(category);
+        body.appendChild(h3);
+        body.appendChild(p);
+        body.appendChild(link);
+
+        card.appendChild(imageEl);
+        card.appendChild(body);
         container.appendChild(card);
       }
     } catch (err) {
