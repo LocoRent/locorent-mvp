@@ -242,15 +242,16 @@
     .new-badge {
       display: inline-flex;
       align-items: center;
-      gap: 0.35rem;
-      padding: 0.3rem 0.65rem;
+      gap: 0.4rem;
+      padding: 0.38rem 0.75rem;
       border-radius: 999px;
-      background: #e8f5e9;
-      color: #2e7d32;
-      font-size: 0.85rem;
+      background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+      color: white;
+      font-size: 0.88rem;
       font-weight: 700;
       white-space: nowrap;
-      border: 1px solid rgba(46, 125, 50, 0.18);
+      border: 1px solid rgba(27, 94, 32, 0.28);
+      box-shadow: 0 8px 18px rgba(46, 125, 50, 0.18);
       line-height: 1;
     }
 
@@ -533,6 +534,26 @@
     return `${Math.floor(diff/86400)} Tg.`;
   }
 
+  async function markChatAsRead(listingId, otherId) {
+    const { data: { user } } = await sb.auth.getUser();
+    if (!user) return;
+
+    const { error } = await sb
+      .from('chat_reads')
+      .upsert({
+        user_id: user.id,
+        listing_id: listingId,
+        other_user_id: otherId,
+        last_read_at: new Date().toISOString()
+      }, {
+        onConflict: 'user_id,listing_id,other_user_id'
+      });
+
+    if (error) {
+      console.error('Fehler beim Markieren als gelesen:', error);
+    }
+  }
+
   async function loadInboxList(page = 1) {
     const { data: { user } } = await sb.auth.getUser();
     if (!user) return window.location.href = "login.html";
@@ -577,21 +598,32 @@
       const title = listingData?.title || 'Inserat gelöscht';
       const image = listingData?.image_urls?.[0] || '';
 
+      const { data: readData } = await sb
+        .from('chat_reads')
+        .select('last_read_at')
+        .eq('user_id', user.id)
+        .eq('listing_id', msg.listing_id)
+        .eq('other_user_id', otherId)
+        .maybeSingle();
+
       const { data: lastMsg } = await sb
         .from('messages')
-        .select('sender_id, created_at, content')
+        .select('sender_id, created_at')
         .eq('listing_id', msg.listing_id)
         .or(`sender_id.eq.${user.id},sender_id.eq.${otherId}`)
         .order('created_at', { ascending: false })
         .limit(1)
         .maybeSingle();
 
-      const isNew = !!lastMsg && lastMsg.sender_id !== user.id;
+      const isNew = !!lastMsg && lastMsg.sender_id !== user.id && (!readData?.last_read_at || new Date(lastMsg.created_at) > new Date(readData.last_read_at));
 
       const item = document.createElement('div');
       item.className = 'chat-item';
       item.tabIndex = 0;
-      item.onclick = () => window.location.href = `nachrichten.html?listing_id=${msg.listing_id}&with=${otherId}`;
+      item.onclick = async () => {
+        await markChatAsRead(msg.listing_id, otherId);
+        window.location.href = `nachrichten.html?listing_id=${msg.listing_id}&with=${otherId}`;
+      };
 
       item.innerHTML = `
         <div class="chat-avatar">${avatar ? `<img src="${avatar}" alt="${name}" />` : `<span>${name.charAt(0)}</span>`}</div>
