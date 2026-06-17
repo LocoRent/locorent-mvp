@@ -612,10 +612,6 @@
     <p>⏳ Lade Ergebnisse…</p>
   </div>
 
-  <div class="more-link">
-    <a href="index.html" class="btn-more">ZURÜCK <span>←</span></a>
-  </div>
-
   <footer role="contentinfo">
     <div>
       <div>
@@ -690,12 +686,26 @@
       return map[value] || value;
     }
 
+    function getPageFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      return parseInt(params.get("page") || "1", 10) || 1;
+    }
+
+    function updateUrlPage(page) {
+      const params = new URLSearchParams(window.location.search);
+      params.set("page", page);
+      const newUrl = `${window.location.pathname}?${params.toString()}`;
+      window.history.replaceState({}, "", newUrl);
+    }
+
     async function init() {
       const { data: { session } } = await sb.auth.getSession();
       userSession = session;
       updateNav();
 
       const params = new URLSearchParams(window.location.search);
+      currentPage = getPageFromUrl();
+
       const filters = {
         title: params.get('title') || '',
         category: params.get('category') || '',
@@ -759,6 +769,8 @@
       if (location) params.set("location", location);
       if (radius) params.set("radius", radius);
       if (sort) params.set("sort", sort);
+
+      params.set("page", "1");
 
       window.location.href = `search_results.html?${params.toString()}`;
     }
@@ -946,6 +958,7 @@
       const to = from + pageSize;
       const paginatedData = filteredData.slice(from, to);
 
+      updateUrlPage(page);
       renderResults(paginatedData, totalCount, page);
     }
 
@@ -974,7 +987,7 @@
               <strong>${item.price_per_day || 'k. A.'} € / Tag</strong>
             </div>
             <div class="buttons">
-              <button class="details-btn" onclick="window.location.href='mietobjekt.html?id=${item.id}'">Details ansehen</button>
+              <button class="details-btn" onclick="window.location.href='mietobjekt.html?id=${item.id}&page=${page}'">Details ansehen</button>
               <button class="fav-btn">${isFavorite ? 'Bereits Favorit' : 'Zu Favoriten'}</button>
             </div>
           </div>
@@ -1002,7 +1015,7 @@
       }
 
       const pagination = document.createElement("div");
-      pagination.style.cssText = "grid-column:1/-1;display:flex;justify-content:center;gap:10px;margin-top:20px;";
+      pagination.style.cssText = "grid-column:1/-1;display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;margin-top:20px;";
       const totalPages = Math.ceil(totalCount / pageSize);
 
       if (page > 1) {
@@ -1015,7 +1028,21 @@
         pagination.appendChild(prevBtn);
       }
 
-      pagination.appendChild(document.createTextNode(`Seite ${page} von ${totalPages}`));
+      const startPage = Math.max(1, page - 2);
+      const endPage = Math.min(totalPages, page + 2);
+
+      for (let i = startPage; i <= endPage; i++) {
+        const pageBtn = document.createElement("button");
+        pageBtn.textContent = i;
+        pageBtn.style.fontWeight = i === page ? "700" : "400";
+        pageBtn.style.background = i === page ? "var(--primary-dark)" : "white";
+        pageBtn.style.color = i === page ? "white" : "var(--text-dark)";
+        pageBtn.onclick = () => {
+          currentPage = i;
+          loadListings(getFilters(), currentPage);
+        };
+        pagination.appendChild(pageBtn);
+      }
 
       if (page < totalPages) {
         const nextBtn = document.createElement("button");
