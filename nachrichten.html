@@ -49,7 +49,7 @@
 
     header h1 {
       font-size: 1.8rem;
-      font-weight: 700; /* fett */
+      font-weight: 700;
       margin: 0;
       cursor: pointer;
     }
@@ -152,6 +152,7 @@
       max-width: 70%;
       font-size: 0.95rem;
       position: relative;
+      word-break: break-word;
     }
 
     .sent .message { background: #c8e6c9; }
@@ -188,6 +189,19 @@
       border-radius: 8px;
       font-weight: bold;
       cursor: pointer;
+    }
+
+    .input-bar button:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
+    .char-counter {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.35rem;
+      margin-left: 1rem;
+      margin-bottom: 0.2rem;
     }
 
     @media (max-width: 600px) {
@@ -227,11 +241,14 @@
 
   <div class="chat-area" id="chat">Lade Nachrichten...</div>
 
+  <div class="char-counter" id="char-counter">0 / 500 Zeichen</div>
+
   <div class="input-bar">
-    <input type="text" id="message-input" placeholder="Nachricht schreiben..." />
-    <button onclick="sendMessage()">Senden</button>
+    <input type="text" id="message-input" placeholder="Nachricht schreiben..." maxlength="500" />
+    <button id="send-btn" onclick="sendMessage()">Senden</button>
   </div>
 </main>
+
 <script>
   const sb = supabase.createClient(
     'https://flnjalgqtkqycsaymmbd.supabase.co',
@@ -334,12 +351,25 @@
 
   async function sendMessage() {
     const input = document.getElementById('message-input');
+    const btn = document.getElementById('send-btn');
     const content = input.value.trim();
+    const charCounter = document.getElementById('char-counter');
+
     if (!content) return;
+    if (content.length < 2) { alert("Bitte mindestens 2 Zeichen eingeben."); return; }
+    if (content.length > 500) { alert("Maximal 500 Zeichen erlaubt."); return; }
     if (currentUser.id === chatWith) { alert("Du kannst dir selbst keine Nachrichten schreiben."); return; }
     if (!userProfile?.name?.trim() || !userProfile?.city?.trim()) { alert("Bitte fülle dein Profil aus (Name und Wohnort)"); return; }
     if (isSending) { alert("Bitte warte kurz"); return; }
-    isSending = true; setTimeout(() => isSending = false, 3000);
+
+    isSending = true;
+    btn.disabled = true;
+    btn.textContent = "Sende...";
+    setTimeout(() => {
+      isSending = false;
+      btn.disabled = false;
+      btn.textContent = "Senden";
+    }, 3000);
 
     const { data } = await sb.from('messages').insert({
       sender_id: currentUser.id,
@@ -350,6 +380,7 @@
 
     if (data) {
       input.value = '';
+      charCounter.textContent = '0 / 500 Zeichen';
       renderMessage(data);
       document.getElementById('chat').scrollTop = document.getElementById('chat').scrollHeight;
     }
@@ -372,6 +403,10 @@
 
   window.addEventListener('beforeunload', () => { if (channel) sb.removeChannel(channel); });
   document.getElementById('message-input').addEventListener('keydown', e => { if (e.key === 'Enter') sendMessage(); });
+  document.getElementById('message-input').addEventListener('input', () => {
+    const input = document.getElementById('message-input');
+    document.getElementById('char-counter').textContent = `${input.value.length} / 500 Zeichen`;
+  });
 
   init();
 </script>
