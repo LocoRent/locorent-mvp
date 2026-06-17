@@ -37,7 +37,6 @@
       overflow-x: hidden;
     }
 
-    /* Header exakt beibehalten */
     header {
       background-color: var(--primary);
       color: var(--white);
@@ -567,6 +566,7 @@
 
     for (const msg of pagedChats) {
       const otherId = msg.sender_id === user.id ? msg.receiver_id : msg.sender_id;
+
       const [{ data: userData }, { data: listingData }] = await Promise.all([
         sb.from('profiles').select('name, avatar_url').eq('id', otherId).single(),
         sb.from('listings').select('title, image_urls').eq('id', msg.listing_id).single()
@@ -577,12 +577,16 @@
       const title = listingData?.title || 'Inserat gelöscht';
       const image = listingData?.image_urls?.[0] || '';
 
-      const latestIncoming = messages.find(m =>
-        m.listing_id === msg.listing_id &&
-        ((m.sender_id === otherId && m.receiver_id === user.id) || (m.sender_id === otherId && m.receiver_id === user.id))
-      );
+      const { data: lastMsg } = await sb
+        .from('messages')
+        .select('sender_id, created_at, content')
+        .eq('listing_id', msg.listing_id)
+        .or(`sender_id.eq.${user.id},sender_id.eq.${otherId}`)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
 
-      const isNew = latestIncoming && latestIncoming.sender_id !== user.id && new Date(latestIncoming.created_at) > new Date(msg.created_at);
+      const isNew = !!lastMsg && lastMsg.sender_id !== user.id;
 
       const item = document.createElement('div');
       item.className = 'chat-item';
