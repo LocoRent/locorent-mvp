@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Locorent – Neueste Angebote</title>
-  <meta name="description" content="Entdecke die neuesten Mietangebote bei Locorent." />
+  <title>Locorent – Nachhaltig mieten in Deutschland</title>
+  <meta name="description" content="Finde und vermiete nachhaltige Mietobjekte in deiner Nähe bei Locorent." />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
@@ -24,20 +24,24 @@
       --transition: 0.4s ease;
       --font-primary: 'Poppins', sans-serif;
     }
+
     *, *::before, *::after {
       box-sizing: border-box;
     }
+
     body {
       margin: 0;
+      width: 100%;
+      overflow-x: hidden;
       font-family: var(--font-primary);
       background: linear-gradient(to bottom, #e8f5e9 0%, #ffffff 100%);
       color: var(--text-dark);
-      scroll-behavior: smooth;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
-      overflow-x: hidden;
+      scroll-behavior: smooth;
     }
+
     header {
       background-color: var(--primary);
       color: var(--white);
@@ -51,13 +55,16 @@
       z-index: 1000;
       box-shadow: 0 10px 20px rgba(0,0,0,0.1);
       flex-wrap: wrap;
+      width: 100%;
     }
+
     header h1 {
       font-size: 1.8rem;
       cursor: pointer;
       user-select: none;
       margin: 0;
     }
+
     #nav-toggle {
       display: none;
       background: none;
@@ -66,11 +73,13 @@
       color: var(--white);
       cursor: pointer;
     }
+
     nav#nav-links {
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
     }
+
     nav#nav-links a {
       color: var(--white);
       text-decoration: none;
@@ -79,6 +88,7 @@
       position: relative;
       transition: color 0.3s ease;
     }
+
     nav#nav-links a::after {
       content: '';
       position: absolute;
@@ -89,10 +99,12 @@
       background-color: var(--accent);
       transition: width 0.3s ease;
     }
+
     nav#nav-links a:hover::after,
     nav#nav-links a:focus::after {
       width: 100%;
     }
+
     nav#nav-links a:hover,
     nav#nav-links a:focus {
       color: var(--accent);
@@ -107,7 +119,8 @@
       border-bottom: 1px solid rgba(46, 125, 50, 0.08);
     }
 
-    .hero-inner {
+    .hero-inner,
+    .section-inner {
       max-width: 1600px;
       margin: 0 auto;
       padding: 0 2rem;
@@ -129,16 +142,96 @@
       text-align: left;
     }
 
+    form.search-form {
+      display: grid;
+      grid-template-columns: 2fr 1.25fr 1.5fr 0.9fr 0.9fr;
+      gap: 1rem;
+      align-items: end;
+      margin-top: 1.5rem;
+      width: 100%;
+      position: relative;
+    }
+
+    .search-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .search-field label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      padding-left: 0.1rem;
+    }
+
+    form.search-form input,
+    form.search-form select,
+    form.search-form button {
+      width: 100%;
+      padding: 0.95rem 1rem;
+      border: 1px solid rgba(46, 125, 50, 0.18);
+      border-radius: 14px;
+      font-size: 0.98rem;
+      background: white;
+      box-shadow: 0 3px 10px rgba(46, 125, 50, 0.04);
+      outline: none;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
+    }
+
+    form.search-form input:focus,
+    form.search-form select:focus {
+      border-color: var(--primary-light);
+      box-shadow: 0 0 0 4px rgba(102, 187, 106, 0.16);
+    }
+
+    form.search-form button {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: var(--white);
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      min-height: 52px;
+    }
+
+    form.search-form button:hover,
+    form.search-form button:focus {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 20px rgba(46, 125, 50, 0.18);
+    }
+
+    .location-wrap {
+      position: relative;
+    }
+
+    #suggestions {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      right: 0;
+      max-height: 180px;
+      overflow-y: auto;
+      background: white;
+      z-index: 20;
+      border: 1px solid rgba(46, 125, 50, 0.15);
+      border-radius: 12px;
+      box-shadow: 0 12px 25px rgba(0,0,0,0.08);
+    }
+
+    #suggestions div {
+      padding: 0.75rem 1rem;
+      cursor: pointer;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    #suggestions div:hover {
+      background-color: #e8f5e9;
+    }
+
     section {
       width: 100%;
       background: transparent;
       margin-top: 2rem;
-    }
-
-    .section-inner {
-      max-width: 1600px;
-      margin: 0 auto;
-      padding: 0 2rem;
     }
 
     section h2 {
@@ -308,11 +401,6 @@
       user-select: none;
       text-align: center;
       margin-top: 2rem;
-      position: relative;
-      left: 50%;
-      right: 50%;
-      margin-left: -50vw;
-      margin-right: -50vw;
     }
 
     footer > div {
@@ -348,10 +436,8 @@
       transition: color 0.3s ease;
     }
 
-    footer ul li a:hover,
-    footer ul li a:focus {
+    footer ul li a:hover {
       color: var(--accent);
-      outline: none;
     }
 
     footer small {
@@ -359,6 +445,12 @@
       margin-top: 2rem;
       text-align: center;
       opacity: 0.85;
+    }
+
+    @media (max-width: 1200px) {
+      form.search-form {
+        grid-template-columns: 1.6fr 1fr 1fr 1fr;
+      }
     }
 
     @media (max-width: 720px) {
@@ -394,6 +486,12 @@
         padding: 0 0.75rem;
       }
 
+      form.search-form {
+        grid-template-columns: 1fr;
+        gap: 0.85rem;
+        margin-top: 1.25rem;
+      }
+
       .category-grid {
         grid-template-columns: 1fr;
         gap: 0.85rem;
@@ -421,20 +519,87 @@
     <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
   </header>
 
-  <section class="hero" aria-label="Neueste Angebote">
+  <section class="hero" aria-label="Suchbereich">
     <div class="hero-inner">
-      <h2>Neueste Angebote</h2>
-      <p class="hero-subtitle">Hier findest du die am kürzlich eingestellten Inserate auf Locorent.</p>
+      <h2>Finde das perfekte Mietobjekt</h2>
+      <p class="hero-subtitle">Suche nach Kategorie, Ort oder Radius und entdecke passende Angebote in deiner Nähe.</p>
+      <form class="search-form" onsubmit="event.preventDefault(); search();" role="search" aria-label="Suchformular">
+        <div class="search-field">
+          <label for="search-input">Suchbegriff</label>
+          <input type="text" placeholder="Was suchst du?" id="search-input" aria-label="Suchbegriff eingeben" />
+        </div>
+        <div class="search-field">
+          <label for="category-select">Kategorie</label>
+          <select id="category-select" aria-label="Kategorie auswählen">
+            <option value="">Alle Kategorien</option>
+            <option value="anhaenger-transportmittel">Anhänger & Transportmittel</option>
+            <option value="audio-dj-equipment">Audio & DJ-Equipment</option>
+            <option value="auto-suv">Auto & SUV</option>
+            <option value="basteln-diy">Basteln & DIY</option>
+            <option value="beauty">Beauty</option>
+            <option value="boote-wassersport">Boote & Wassersport</option>
+            <option value="brettspiele-spielzeug">Brettspiele & Spielzeug</option>
+            <option value="camping-wandern">Camping & Wandern</option>
+            <option value="computer-laptops">Computer & Laptops</option>
+            <option value="drohnen-modellbau">Drohnen & Modellbau</option>
+            <option value="event-partyausstattung">Event- & Partyausstattung</option>
+            <option value="fahrrad-ebike">Fahrrad & E-Bike</option>
+            <option value="fitnessgeraete">Fitnessgeräte</option>
+            <option value="foto-film-kameraequipment">Foto-, Film- & Kameraequipment</option>
+            <option value="gaming-unterhaltung">Gaming & Unterhaltung</option>
+            <option value="garten-aussenbereich">Garten & Außenbereich</option>
+            <option value="kursraeume-seminarraum">Kursräume & Seminarraum</option>
+            <option value="medien-kultur">Medien & Kultur</option>
+            <option value="motorrad-roller">Motorrad & Roller</option>
+            <option value="musikinstrumente">Musikinstrumente</option>
+            <option value="mode-accessoires">Mode & Accessoires</option>
+            <option value="smartphones-tablets">Smartphones & Tablets</option>
+            <option value="sport">Sport</option>
+            <option value="tiere">Tiere</option>
+            <option value="werkzeuge-maschinen">Werkzeuge & Maschinen</option>
+            <option value="wohnmobil-camper">Wohnmobil & Camper</option>
+            <option value="sonstiges">Sonstiges</option>
+          </select>
+        </div>
+        <div class="search-field location-wrap">
+          <label for="location-input">Ort</label>
+          <input type="text" placeholder="Ort" id="location-input" autocomplete="off" aria-label="Ort eingeben" />
+          <div id="suggestions" role="listbox" aria-label="Ortsvorschläge"></div>
+        </div>
+        <div class="search-field">
+          <label for="radius-select">Radius</label>
+          <select id="radius-select" aria-label="Suchradius auswählen">
+            <option value="">Ganzer Ort</option>
+            <option value="5">5 km</option>
+            <option value="10">10 km</option>
+            <option value="20">20 km</option>
+            <option value="30">30 km</option>
+            <option value="50">50 km</option>
+            <option value="100">100 km</option>
+            <option value="200">200 km</option>
+          </select>
+        </div>
+        <button type="submit">Suchen</button>
+      </form>
     </div>
   </section>
 
-  <section aria-label="Angebotsliste">
+  <section aria-label="Neueste Angebote">
     <div class="section-inner">
-      <div id="newest-offers" class="category-grid" aria-live="polite" aria-busy="true">
-        <p>⏳ Lade Angebote…</p>
-      </div>
+      <h2>Neueste Angebote</h2>
+      <div id="newest-offers" class="category-grid" aria-live="polite" aria-busy="true"><p>⏳ Lade Angebote…</p></div>
       <div class="more-link">
-        <a href="index.html" class="btn-more">ZURÜCK <span>←</span></a>
+        <a href="angebote_neueste.html" class="btn-more">MEHR <span>→</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section aria-label="Beliebte Angebote">
+    <div class="section-inner">
+      <h2>Beliebte Angebote</h2>
+      <div id="popular-offers" class="category-grid" aria-live="polite" aria-busy="true"><p>⏳ Lade Angebote…</p></div>
+      <div class="more-link">
+        <a href="angebote_beliebte.html" class="btn-more">MEHR <span>→</span></a>
       </div>
     </div>
   </section>
@@ -477,12 +642,15 @@
     );
 
     let userSession = null;
+    let debounceTimer;
+    let selectedAddressData = null;
 
     async function init() {
       const { data: { session } } = await sb.auth.getSession();
       userSession = session;
       updateNav();
       await loadNewestOffers();
+      await loadPopularOffers();
     }
 
     function updateNav() {
@@ -506,21 +674,122 @@
       window.location.href = "login.html";
     }
 
+    async function loadOffers(orderBy, containerId) {
+      const container = document.getElementById(containerId);
+      container.setAttribute('aria-busy', 'true');
+      container.innerHTML = '<p>⏳ Lade Angebote…</p>';
+
+      try {
+        const { data, error } = await sb
+          .from('listings')
+          .select('*')
+          .order(orderBy, { ascending: false })
+          .limit(5);
+
+        if (error) throw error;
+        if (!data || data.length === 0) {
+          container.innerHTML = '<p>Keine Angebote gefunden.</p>';
+          container.removeAttribute('aria-busy');
+          return;
+        }
+
+        container.removeAttribute('aria-busy');
+        await renderOffers(data, containerId);
+      } catch (err) {
+        console.error('Fehler beim Laden von Angeboten:', err);
+        container.innerHTML = '<p>Fehler beim Laden der Angebote.</p>';
+        container.removeAttribute('aria-busy');
+      }
+    }
+
+    async function loadNewestOffers() { await loadOffers('created_at', 'newest-offers'); }
+    async function loadPopularOffers() { await loadOffers('views', 'popular-offers'); }
+
+    async function renderOffers(items, containerId) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
+
+      for (const item of items) {
+        const card = document.createElement('div');
+        card.className = 'result-card';
+
+        const isFav = userSession?.user ? await checkIfFavorite(item.id) : false;
+        const imgUrl = item.image_urls?.[0] || 'https://via.placeholder.com/400x200';
+
+        const img = document.createElement('img');
+        img.src = imgUrl;
+        img.alt = item.title || 'Bild';
+
+        const body = document.createElement('div');
+        body.className = 'result-card-body';
+
+        const h3 = document.createElement('h3');
+        h3.textContent = item.title || 'Kein Titel';
+
+        const metaLocation = document.createElement('div');
+        metaLocation.className = 'result-meta';
+        const locationSpan = document.createElement('span');
+        locationSpan.textContent = item.location || '';
+        metaLocation.appendChild(locationSpan);
+
+        const metaPrice = document.createElement('div');
+        metaPrice.className = 'result-meta';
+        const priceStrong = document.createElement('strong');
+        priceStrong.textContent = `${item.price_per_day || 'k. A.'} € / Tag`;
+        metaPrice.appendChild(priceStrong);
+
+        const buttons = document.createElement('div');
+        buttons.className = 'buttons';
+
+        const detailsBtn = document.createElement('button');
+        detailsBtn.className = 'details-btn';
+        detailsBtn.textContent = 'Details ansehen';
+        detailsBtn.addEventListener('click', () => {
+          window.location.href = `mietobjekt.html?id=${encodeURIComponent(item.id)}`;
+        });
+
+        const favBtn = document.createElement('button');
+        favBtn.className = 'fav-btn';
+
+        if (userSession?.user) {
+          if (!isFav) {
+            favBtn.textContent = 'Zu Favoriten';
+            favBtn.onclick = async (e) => {
+              e.preventDefault();
+              const nowFav = await toggleFavorite(item.id);
+              favBtn.innerText = nowFav ? 'Bereits Favorit' : 'Zu Favoriten';
+            };
+          } else {
+            favBtn.textContent = 'Bereits Favorit';
+            favBtn.disabled = true;
+          }
+        } else {
+          favBtn.disabled = true;
+          favBtn.innerText = "Login erforderlich";
+        }
+
+        buttons.appendChild(detailsBtn);
+        buttons.appendChild(favBtn);
+
+        body.appendChild(h3);
+        body.appendChild(metaLocation);
+        body.appendChild(metaPrice);
+        body.appendChild(buttons);
+
+        card.appendChild(img);
+        card.appendChild(body);
+        container.appendChild(card);
+      }
+    }
+
     async function checkIfFavorite(listingId) {
       if (!userSession?.user) return false;
-
-      const { data, error } = await sb
+      const { data } = await sb
         .from('favorites')
         .select('*')
         .eq('user_id', userSession.user.id)
         .eq('listing_id', listingId)
         .maybeSingle();
-
-      if (error) {
-        console.error('Fehler beim Prüfen des Favoritenstatus:', error);
-        return false;
-      }
-
       return !!data;
     }
 
@@ -566,83 +835,67 @@
       }
     }
 
-    async function loadNewestOffers() {
-      const container = document.getElementById('newest-offers');
-      container.setAttribute('aria-busy', 'true');
-      container.innerHTML = '<p>⏳ Lade Angebote…</p>';
-
-      try {
-        const { data, error } = await sb
-          .from('listings')
-          .select('*')
-          .order('created_at', { ascending: false })
-          .limit(20);
-
-        if (error) throw error;
-
-        if (!data || data.length === 0) {
-          container.innerHTML = '<p>Keine Angebote gefunden.</p>';
-          container.removeAttribute('aria-busy');
-          return;
-        }
-
-        container.innerHTML = '';
-
-        for (const item of data) {
-          const card = document.createElement('div');
-          card.className = 'result-card';
-
-          const imgUrl = item.image_urls?.[0] || 'https://via.placeholder.com/400x200';
-          const isFav = userSession?.user ? await checkIfFavorite(item.id) : false;
-
-          card.innerHTML = `
-            <img src="${imgUrl}" alt="${item.title || 'Bild'}" />
-            <div class="result-card-body">
-              <h3>${item.title || 'Kein Titel'}</h3>
-              <div class="result-meta">
-                <span>${item.location || ''}</span>
-              </div>
-              <div class="result-meta">
-                <strong>${item.price_per_day || 'k. A.'} € / Tag</strong>
-              </div>
-              <div class="buttons">
-                <button class="details-btn" onclick="window.location.href='mietobjekt.html?id=${item.id}'">Details ansehen</button>
-                <button class="fav-btn">${userSession?.user ? (isFav ? 'Bereits Favorit' : 'Zu Favoriten') : 'Login erforderlich'}</button>
-              </div>
-            </div>
-          `;
-
-          const favBtn = card.querySelector('.fav-btn');
-
-          if (userSession?.user) {
-            if (isFav) {
-              favBtn.disabled = true;
-            } else {
-              favBtn.onclick = async (e) => {
-                e.preventDefault();
-                const nowFav = await toggleFavorite(item.id);
-                favBtn.innerText = nowFav ? 'Bereits Favorit' : 'Zu Favoriten';
-                if (nowFav) favBtn.disabled = true;
-              };
-            }
-          } else {
-            favBtn.disabled = true;
-          }
-
-          container.appendChild(card);
-        }
-
-        container.removeAttribute('aria-busy');
-      } catch (err) {
-        container.innerHTML = '<p>Fehler beim Laden der neuesten Angebote.</p>';
-        console.error('Fehler bei loadNewestOffers:', err);
-      }
+    function search() {
+      const keyword = document.getElementById("search-input").value.trim();
+      const category = document.getElementById("category-select").value.trim();
+      const location = document.getElementById("location-input").value.trim();
+      const radius = document.getElementById("radius-select").value.trim();
+      const params = new URLSearchParams({ keyword, category, location, radius });
+      window.location.href = `search_results.html?${params.toString()}`;
     }
 
     document.getElementById('nav-toggle').addEventListener('click', () => {
       const nav = document.getElementById('nav-links');
       nav.classList.toggle('show');
       document.getElementById('nav-toggle').setAttribute('aria-expanded', nav.classList.contains('show'));
+    });
+
+    const locationInput = document.getElementById('location-input');
+    const suggestionBox = document.getElementById('suggestions');
+
+    locationInput.addEventListener('input', () => {
+      clearTimeout(debounceTimer);
+      const value = locationInput.value.trim();
+      if (value.length < 2) {
+        suggestionBox.innerHTML = '';
+        return;
+      }
+
+      debounceTimer = setTimeout(async () => {
+        try {
+          const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&countrycodes=de&limit=5&q=${encodeURIComponent(value)}`);
+          const results = await res.json();
+          suggestionBox.innerHTML = '';
+
+          results.forEach(r => {
+            const addr = r.address || {};
+            const city = addr.city || addr.town || addr.village || addr.municipality || r.display_name.split(',')[0];
+            const state = addr.state || '';
+            const display = [city, state, "Deutschland"].filter(Boolean).join(', ');
+
+            const div = document.createElement('div');
+            div.textContent = display;
+            div.onclick = () => {
+              locationInput.value = display;
+              selectedAddressData = {
+                city: city,
+                location: display,
+                lat: parseFloat(r.lat),
+                lon: parseFloat(r.lon),
+                postal_code: addr.postcode || ''
+              };
+              suggestionBox.innerHTML = '';
+            };
+            suggestionBox.appendChild(div);
+          });
+
+          if (results.length === 0) {
+            suggestionBox.innerHTML = '<div style="padding:0.5rem;">Kein Ort gefunden</div>';
+          }
+        } catch (err) {
+          console.error("Fehler bei Ortssuche:", err);
+        }
+      }, 400);
     });
 
     init();
