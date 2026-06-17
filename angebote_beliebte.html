@@ -601,40 +601,69 @@
           const imgUrl = item.image_urls?.[0] || 'https://via.placeholder.com/400x200';
           const isFav = userSession?.user ? await checkIfFavorite(item.id) : false;
 
-          card.innerHTML = `
-            <img src="${imgUrl}" alt="${item.title || 'Bild'}" />
-            <div class="result-card-body">
-              <h3>${item.title || 'Kein Titel'}</h3>
-              <div class="result-meta">
-                <span>${item.location || ''}</span>
-              </div>
-              <div class="result-meta">
-                <strong>${item.price_per_day || 'k. A.'} € / Tag</strong>
-              </div>
-              <div class="buttons">
-                <button class="details-btn" onclick="window.location.href='mietobjekt.html?id=${item.id}'">Details ansehen</button>
-                <button class="fav-btn">${userSession?.user ? (isFav ? 'Bereits Favorit' : 'Zu Favoriten') : 'Login erforderlich'}</button>
-              </div>
-            </div>
-          `;
+          const img = document.createElement('img');
+          img.src = imgUrl;
+          img.alt = item.title || 'Bild';
 
-          const favBtn = card.querySelector('.fav-btn');
+          const body = document.createElement('div');
+          body.className = 'result-card-body';
+
+          const h3 = document.createElement('h3');
+          h3.textContent = item.title || 'Kein Titel';
+
+          const metaLocation = document.createElement('div');
+          metaLocation.className = 'result-meta';
+          const locationSpan = document.createElement('span');
+          locationSpan.textContent = item.location || '';
+          metaLocation.appendChild(locationSpan);
+
+          const metaPrice = document.createElement('div');
+          metaPrice.className = 'result-meta';
+          const priceStrong = document.createElement('strong');
+          priceStrong.textContent = `${item.price_per_day || 'k. A.'} € / Tag`;
+          metaPrice.appendChild(priceStrong);
+
+          const buttons = document.createElement('div');
+          buttons.className = 'buttons';
+
+          const detailsBtn = document.createElement('button');
+          detailsBtn.className = 'details-btn';
+          detailsBtn.textContent = 'Details ansehen';
+          detailsBtn.addEventListener('click', () => {
+            window.location.href = `mietobjekt.html?id=${encodeURIComponent(item.id)}`;
+          });
+
+          const favBtn = document.createElement('button');
+          favBtn.className = 'fav-btn';
 
           if (userSession?.user) {
             if (isFav) {
+              favBtn.textContent = 'Bereits Favorit';
               favBtn.disabled = true;
             } else {
-              favBtn.onclick = async (e) => {
+              favBtn.textContent = 'Zu Favoriten';
+              favBtn.addEventListener('click', async (e) => {
                 e.preventDefault();
                 const nowFav = await toggleFavorite(item.id);
                 favBtn.innerText = nowFav ? 'Bereits Favorit' : 'Zu Favoriten';
                 if (nowFav) favBtn.disabled = true;
-              };
+              });
             }
           } else {
+            favBtn.textContent = 'Login erforderlich';
             favBtn.disabled = true;
           }
 
+          buttons.appendChild(detailsBtn);
+          buttons.appendChild(favBtn);
+
+          body.appendChild(h3);
+          body.appendChild(metaLocation);
+          body.appendChild(metaPrice);
+          body.appendChild(buttons);
+
+          card.appendChild(img);
+          card.appendChild(body);
           container.appendChild(card);
         }
 
