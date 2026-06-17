@@ -353,18 +353,6 @@
       flex: 1;
     }
 
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      width: fit-content;
-      padding: 0.3rem 0.7rem;
-      border-radius: 999px;
-      background: #e8f5e9;
-      color: var(--dark-color);
-      font-size: 0.8rem;
-      font-weight: 700;
-    }
-
     .gallery-item h3 {
       font-size: 1.1rem;
       color: var(--gray-dark);
@@ -389,6 +377,128 @@
       border-radius: 14px;
       font-weight: 700;
       box-shadow: 0 10px 20px rgba(46,125,50,0.18);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .stat {
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(245,250,245,0.96));
+      border-radius: 22px;
+      padding: 1.3rem 1rem;
+      text-align: center;
+      border: 1px solid rgba(46, 125, 50, 0.08);
+      box-shadow: 0 10px 24px rgba(0,0,0,0.06);
+    }
+
+    .stat h3 {
+      font-size: 2.1rem;
+      color: var(--primary-color);
+      margin-bottom: 0.2rem;
+      line-height: 1;
+    }
+
+    .stat p {
+      color: #5a6f59;
+      font-size: 0.96rem;
+    }
+
+    .faq {
+      max-width: 860px;
+      margin: 0 auto;
+      display: grid;
+      gap: 0.9rem;
+    }
+
+    .faq-item {
+      background: rgba(255,255,255,0.96);
+      border: 1px solid rgba(46,125,50,0.08);
+      border-radius: 18px;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.05);
+      overflow: hidden;
+    }
+
+    .faq-question {
+      width: 100%;
+      padding: 1rem 1rem;
+      font-size: 1rem;
+      font-weight: 700;
+      text-align: left;
+      background: none;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      color: var(--gray-dark);
+      position: relative;
+      padding-right: 2.5rem;
+    }
+
+    .faq-question::after {
+      content: "›";
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%) rotate(0deg);
+      transition: transform 0.3s;
+      color: var(--primary-color);
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+
+    .faq-item.open .faq-question::after {
+      transform: translateY(-50%) rotate(90deg);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, padding 0.4s ease;
+      background-color: #f9fdf9;
+      padding: 0 1rem;
+    }
+
+    .faq-item.open .faq-answer {
+      max-height: 400px;
+      padding: 0 1rem 1rem;
+    }
+
+    .faq-answer p {
+      color: #566b55;
+      line-height: 1.7;
+    }
+
+    .trust-box {
+      background: linear-gradient(135deg, rgba(46,125,50,0.08), rgba(185,246,202,0.2));
+      border: 1px solid rgba(46, 125, 50, 0.08);
+      border-radius: 24px;
+      padding: 1.4rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.06);
+    }
+
+    .trust-item {
+      background: rgba(255,255,255,0.92);
+      border-radius: 18px;
+      padding: 1rem;
+      border: 1px solid rgba(46, 125, 50, 0.08);
+    }
+
+    .trust-item strong {
+      display: block;
+      color: var(--dark-color);
+      margin-bottom: 0.35rem;
+    }
+
+    .trust-item span {
+      color: #5a6f59;
+      line-height: 1.6;
+      font-size: 0.95rem;
     }
 
     .bottom-cta {
@@ -424,6 +534,10 @@
       font-weight: 700;
       min-width: 200px;
       box-shadow: 0 10px 20px rgba(0,0,0,0.12);
+    }
+
+    .bottom-cta a:hover {
+      transform: translateY(-2px);
     }
 
     footer {
@@ -617,6 +731,68 @@
     </div>
   </section>
 
+  <section class="section">
+    <h2>Locorent in Zahlen</h2>
+    <p class="section-lead">Ein paar schnelle Fakten, die zeigen, wie aktiv die Plattform ist.</p>
+    <div class="stats">
+      <div id="stats-mieter" class="stat"><h3>–</h3><p>aktive Mieter:innen</p></div>
+      <div id="stats-inserate" class="stat"><h3>–</h3><p>verfügbare Artikel</p></div>
+      <div class="stat"><h3>0 €</h3><p>Fixkosten für Vermieter:innen</p></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Das Wichtigste auf einen Blick</h2>
+    <p class="section-lead">Hier sind die Antworten auf die Fragen, die fast immer zuerst kommen.</p>
+    <div class="faq">
+      <div class="faq-item">
+        <button class="faq-question">Welche Kosten entstehen für mich?</button>
+        <div class="faq-answer">
+          <p>Locorent ist für Vermieter:innen komplett kostenlos. Es gibt keine Anmeldegebühren, keine Fixkosten und keine weiteren Zahlungen – du kannst völlig sorgenfrei vermieten.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">Wie funktioniert die Absprache zur Übergabe?</button>
+        <div class="faq-answer">
+          <p>Du kannst über den integrierten Locorent-Chat direkt mit Mieter:innen kommunizieren und individuell einen Abholzeitpunkt sowie -ort vereinbaren.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">Wie sind meine Artikel geschützt?</button>
+        <div class="faq-answer">
+          <p>Aktuell liegt die Verantwortung für Kaution oder Absicherung bei den Nutzenden. Eine integrierte Versicherungslösung ist bereits in Planung.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">Was kann ich für die Vermietung verlangen?</button>
+        <div class="faq-answer">
+          <p>Den Mietpreis bestimmst du selbst. Orientiere dich gern an ähnlichen Inseraten in deiner Umgebung – du kannst Preise jederzeit anpassen.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">Welche Vorteile habe ich als Anbieter?</button>
+        <div class="faq-answer">
+          <p>Du profitierst von nachhaltigem Einkommen, erreichst neue Kund:innen aus deiner Region und nutzt ein wachsendes Netzwerk mit fairen Bedingungen.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="trust-box">
+    <div class="trust-item">
+      <strong>Behalte die Kontrolle</strong>
+      <span>Du entscheidest selbst, was du anbietest, wann es verfügbar ist und mit wem du sprichst.</span>
+    </div>
+    <div class="trust-item">
+      <strong>Transparenz zählt</strong>
+      <span>Klare Angaben und ehrliche Beschreibungen sorgen für weniger Rückfragen und bessere Bewertungen.</span>
+    </div>
+    <div class="trust-item">
+      <strong>Nachhaltig gedacht</strong>
+      <span>Gemeinsam verlängern wir die Lebensdauer von Dingen und vermeiden unnötigen Neukauf.</span>
+    </div>
+  </section>
+
   <section class="bottom-cta">
     <h2>Bereit, loszulegen?</h2>
     <p>Mach aus ungenutzten Dingen ein echtes Angebot und bring dein erstes Inserat online.</p>
@@ -672,6 +848,7 @@
       userSession = data?.session || null;
       updateNav();
       loadCommunityListings();
+      loadPlatformStats();
     } catch (err) {
       console.error('Init Fehler:', err);
     }
@@ -754,6 +931,35 @@
       container.innerHTML = "<p>Fehler beim Laden der Inserate.</p>";
     }
   }
+
+  async function loadPlatformStats() {
+    try {
+      const mieterRes = await sb
+        .from('profiles')
+        .select('id', { count: 'exact', head: true });
+
+      const listingsRes = await sb
+        .from('listings')
+        .select('id', { count: 'exact', head: true });
+
+      if (mieterRes?.count >= 0) {
+        document.querySelector("#stats-mieter h3").textContent = `${mieterRes.count}+`;
+      }
+
+      if (listingsRes?.count >= 0) {
+        document.querySelector("#stats-inserate h3").textContent = `${listingsRes.count}+`;
+      }
+    } catch (err) {
+      console.error('Stats Fehler:', err);
+    }
+  }
+
+  document.querySelectorAll('.faq-question').forEach(button => {
+    button.addEventListener('click', () => {
+      const item = button.parentElement;
+      item.classList.toggle('open');
+    });
+  });
 
   document.getElementById("nav-toggle").addEventListener("click", () => {
     const nav = document.getElementById("nav-links");
