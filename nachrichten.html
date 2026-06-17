@@ -90,7 +90,7 @@
       gap: 1rem;
       cursor: pointer;
       text-decoration: none;
-      color: var(--text-dark); /* keine lila/blau */
+      color: var(--text-dark);
     }
 
     .listing-info img, .user-info img {
@@ -108,7 +108,7 @@
     .listing-info .title {
       font-weight: 600;
       font-size: 1rem;
-      color: var(--text-dark); /* normalfarbe */
+      color: var(--text-dark);
     }
 
     .listing-info small, .user-info small {
@@ -233,7 +233,6 @@
   </div>
 </main>
 <script>
-  // Supabase v2 Client
   const sb = supabase.createClient(
     'https://flnjalgqtkqycsaymmbd.supabase.co',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
@@ -244,6 +243,26 @@
   const chatWith = urlParams.get('with');
 
   let currentUser = null, partnerName="", partnerAvatar="", channel=null, userProfile=null, isSending=false;
+
+  async function markChatAsRead() {
+    const { data: { user } } = await sb.auth.getUser();
+    if (!user) return;
+
+    const { error } = await sb
+      .from('chat_reads')
+      .upsert({
+        user_id: user.id,
+        listing_id: listingId,
+        other_user_id: chatWith,
+        last_read_at: new Date().toISOString()
+      }, {
+        onConflict: 'user_id,listing_id,other_user_id'
+      });
+
+    if (error) {
+      console.error('Fehler beim Markieren als gelesen:', error);
+    }
+  }
 
   async function init() {
     const { data: { user } } = await sb.auth.getUser();
@@ -271,6 +290,8 @@
     document.getElementById('partner-link').addEventListener('click', () => {
       window.location.href = `vermieter-profil.html?id=${chatWith}`;
     });
+
+    await markChatAsRead();
 
     loadMessages();
     setupRealtime();
