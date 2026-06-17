@@ -226,11 +226,11 @@
 
     .category-grid {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 1.25rem;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 1rem;
       margin: 2rem auto;
       padding: 0 2rem;
-      max-width: 1600px;
+      max-width: 1800px;
       box-sizing: border-box;
     }
 
@@ -340,44 +340,35 @@
       border-color: #e1e1e1;
     }
 
-    .more-link {
-      max-width: 1600px;
-      margin: 0.5rem auto 0;
-      padding: 0 2rem;
-      text-align: right;
-    }
-
-    .btn-more {
-      display: inline-flex;
+    .pagination {
+      grid-column: 1 / -1;
+      display: flex;
+      justify-content: center;
       align-items: center;
-      gap: 0.25em;
-      font-weight: 700;
-      color: var(--primary);
-      text-decoration: none;
-      border: 2px solid var(--primary);
-      padding: 0.25em 0.75em;
-      border-radius: 24px;
-      transition: background-color 0.3s ease, color 0.3s ease;
-      font-size: 0.9rem;
-      user-select: none;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 20px;
     }
 
-    .btn-more span {
-      display: inline-block;
-      font-size: 1.2rem;
-      transition: transform 0.3s ease;
+    .pagination button {
+      padding: 0.6rem 0.9rem;
+      border: 1px solid rgba(46, 125, 50, 0.18);
+      border-radius: 12px;
+      background: white;
+      color: var(--text-dark);
+      cursor: pointer;
+      font-weight: 600;
+      min-width: 44px;
     }
 
-    .btn-more:hover,
-    .btn-more:focus {
-      background-color: var(--primary);
-      color: var(--white);
-      text-decoration: none;
-      outline: none;
+    .pagination button.active {
+      background: var(--primary-dark);
+      color: white;
+      border-color: var(--primary-dark);
     }
 
-    .btn-more:hover span {
-      transform: translateX(5px);
+    .pagination button:hover {
+      background: #e8f5e9;
     }
 
     footer {
@@ -438,11 +429,23 @@
       opacity: 0.85;
     }
 
+    @media (max-width: 1400px) {
+      .category-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+
     @media (max-width: 1200px) {
       .search-row {
         grid-template-columns: 1.6fr 1fr 1fr 1fr;
       }
 
+      .category-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 900px) {
       .category-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
@@ -494,10 +497,6 @@
 
       .result-card {
         width: 100%;
-      }
-
-      .more-link {
-        padding: 0 0.75rem;
       }
 
       footer > div {
@@ -971,6 +970,8 @@
         return;
       }
 
+      const currentQuery = new URLSearchParams(window.location.search).toString();
+
       for (const item of items) {
         const card = document.createElement("div");
         card.className = "result-card";
@@ -987,7 +988,7 @@
               <strong>${item.price_per_day || 'k. A.'} € / Tag</strong>
             </div>
             <div class="buttons">
-              <button class="details-btn" onclick="window.location.href='mietobjekt.html?id=${item.id}&page=${page}'">Details ansehen</button>
+              <button class="details-btn" onclick="window.location.href='mietobjekt.html?id=${item.id}&${currentQuery}'">Details ansehen</button>
               <button class="fav-btn">${isFavorite ? 'Bereits Favorit' : 'Zu Favoriten'}</button>
             </div>
           </div>
@@ -1015,7 +1016,7 @@
       }
 
       const pagination = document.createElement("div");
-      pagination.style.cssText = "grid-column:1/-1;display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;margin-top:20px;";
+      pagination.className = "pagination";
       const totalPages = Math.ceil(totalCount / pageSize);
 
       if (page > 1) {
@@ -1034,9 +1035,7 @@
       for (let i = startPage; i <= endPage; i++) {
         const pageBtn = document.createElement("button");
         pageBtn.textContent = i;
-        pageBtn.style.fontWeight = i === page ? "700" : "400";
-        pageBtn.style.background = i === page ? "var(--primary-dark)" : "white";
-        pageBtn.style.color = i === page ? "white" : "var(--text-dark)";
+        if (i === page) pageBtn.classList.add("active");
         pageBtn.onclick = () => {
           currentPage = i;
           loadListings(getFilters(), currentPage);
