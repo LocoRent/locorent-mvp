@@ -928,6 +928,7 @@
 
     async function loadMyListings() {
       listingsContainer.innerHTML = '<p>Lade Inserate...</p>';
+
       const { data: { user: currentUser } } = await sb.auth.getUser();
       user = currentUser;
       updateNav();
@@ -955,29 +956,63 @@
       }
 
       listingsContainer.innerHTML = '';
+
       data.forEach(item => {
         const card = document.createElement('article');
         card.className = 'listing-card';
 
+        const imageUrl = item.image_urls?.[0] || 'https://via.placeholder.com/600x400';
+        const title = item.title || 'Kein Titel';
         const categoryLabel = getCategoryLabel(item.category || 'sonstiges');
+        const price = item.price_per_day ?? 'k. A.';
 
-        card.innerHTML = `
-          <img src="${item.image_urls?.[0] || 'https://via.placeholder.com/600x400'}" alt="${item.title || 'Inserat'}" />
-          <div class="listing-card-body">
-            <h4>${item.title || 'Kein Titel'}</h4>
-            <div class="listing-meta">
-              <span class="pill">${categoryLabel}</span>
-            </div>
-            <div class="listing-meta">
-              <strong>${item.price_per_day || 'k. A.'} € / Tag</strong>
-            </div>
-            <div class="listing-actions">
-              <a class="edit-btn" href="bearbeiten.html?id=${item.id}">Bearbeiten</a>
-              <button class="delete-btn" onclick="deleteListing('${item.id}')">Löschen</button>
-            </div>
-          </div>
-        `;
+        const img = document.createElement('img');
+        img.src = imageUrl;
+        img.alt = title;
+        card.appendChild(img);
 
+        const body = document.createElement('div');
+        body.className = 'listing-card-body';
+
+        const h4 = document.createElement('h4');
+        h4.textContent = title;
+        body.appendChild(h4);
+
+        const metaCategory = document.createElement('div');
+        metaCategory.className = 'listing-meta';
+
+        const pill = document.createElement('span');
+        pill.className = 'pill';
+        pill.textContent = categoryLabel;
+        metaCategory.appendChild(pill);
+        body.appendChild(metaCategory);
+
+        const metaPrice = document.createElement('div');
+        metaPrice.className = 'listing-meta';
+
+        const strong = document.createElement('strong');
+        strong.textContent = `${price} € / Tag`;
+        metaPrice.appendChild(strong);
+        body.appendChild(metaPrice);
+
+        const actions = document.createElement('div');
+        actions.className = 'listing-actions';
+
+        const editLink = document.createElement('a');
+        editLink.className = 'edit-btn';
+        editLink.href = `bearbeiten.html?id=${encodeURIComponent(item.id)}`;
+        editLink.textContent = 'Bearbeiten';
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'delete-btn';
+        deleteBtn.textContent = 'Löschen';
+        deleteBtn.addEventListener('click', () => deleteListing(item.id));
+
+        actions.appendChild(editLink);
+        actions.appendChild(deleteBtn);
+        body.appendChild(actions);
+
+        card.appendChild(body);
         listingsContainer.appendChild(card);
       });
     }
@@ -1036,7 +1071,7 @@
           return;
         }
 
-        loadMyListings();
+        await loadMyListings();
       } catch (err) {
         console.error(err);
         alert('Fehler beim Löschen.');
