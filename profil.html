@@ -923,26 +923,55 @@
         const card = document.createElement('article');
         card.className = 'listing-card';
 
-        const img = item.image_urls?.[0] || 'https://via.placeholder.com/600x400';
+        const imgUrl = item.image_urls?.[0] || 'https://via.placeholder.com/600x400';
         const categoryLabel = getCategoryLabel(item.category || 'sonstiges');
 
-        card.innerHTML = `
-          <img src="${img}" alt="${item.title || 'Inserat'}" />
-          <div class="listing-card-body">
-            <h4>${item.title || 'Kein Titel'}</h4>
-            <div class="listing-meta">
-              <span class="pill">${categoryLabel}</span>
-            </div>
-            <div class="listing-meta">
-              <strong>${item.price_per_day || 'k. A.'} € / Tag</strong>
-            </div>
-            <div class="listing-actions">
-              <a class="edit-btn" href="bearbeiten.html?id=${item.id}">Bearbeiten</a>
-              <button class="delete-btn" onclick="deleteListing('${item.id}')">Löschen</button>
-            </div>
-          </div>
-        `;
+        const img = document.createElement('img');
+        img.src = imgUrl;
+        img.alt = item.title || 'Inserat';
 
+        const body = document.createElement('div');
+        body.className = 'listing-card-body';
+
+        const h4 = document.createElement('h4');
+        h4.textContent = item.title || 'Kein Titel';
+
+        const metaCategory = document.createElement('div');
+        metaCategory.className = 'listing-meta';
+        const pill = document.createElement('span');
+        pill.className = 'pill';
+        pill.textContent = categoryLabel;
+        metaCategory.appendChild(pill);
+
+        const metaPrice = document.createElement('div');
+        metaPrice.className = 'listing-meta';
+        const strong = document.createElement('strong');
+        strong.textContent = `${item.price_per_day || 'k. A.'} € / Tag`;
+        metaPrice.appendChild(strong);
+
+        const actions = document.createElement('div');
+        actions.className = 'listing-actions';
+
+        const editLink = document.createElement('a');
+        editLink.className = 'edit-btn';
+        editLink.href = `bearbeiten.html?id=${encodeURIComponent(item.id)}`;
+        editLink.textContent = 'Bearbeiten';
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'delete-btn';
+        deleteBtn.textContent = 'Löschen';
+        deleteBtn.addEventListener('click', () => deleteListing(item.id));
+
+        actions.appendChild(editLink);
+        actions.appendChild(deleteBtn);
+
+        body.appendChild(h4);
+        body.appendChild(metaCategory);
+        body.appendChild(metaPrice);
+        body.appendChild(actions);
+
+        card.appendChild(img);
+        card.appendChild(body);
         container.appendChild(card);
       });
     }
