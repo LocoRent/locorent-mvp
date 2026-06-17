@@ -240,6 +240,21 @@
       font-weight: 600;
     }
 
+    .new-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.3rem 0.65rem;
+      border-radius: 999px;
+      background: #e8f5e9;
+      color: #2e7d32;
+      font-size: 0.85rem;
+      font-weight: 700;
+      white-space: nowrap;
+      border: 1px solid rgba(46, 125, 50, 0.18);
+      line-height: 1;
+    }
+
     .delete-chat-btn {
       background: rgba(229,57,53,0.08);
       border: 1px solid rgba(229,57,53,0.12);
@@ -562,6 +577,13 @@
       const title = listingData?.title || 'Inserat gelöscht';
       const image = listingData?.image_urls?.[0] || '';
 
+      const latestIncoming = messages.find(m =>
+        m.listing_id === msg.listing_id &&
+        ((m.sender_id === otherId && m.receiver_id === user.id) || (m.sender_id === otherId && m.receiver_id === user.id))
+      );
+
+      const isNew = latestIncoming && latestIncoming.sender_id !== user.id && new Date(latestIncoming.created_at) > new Date(msg.created_at);
+
       const item = document.createElement('div');
       item.className = 'chat-item';
       item.tabIndex = 0;
@@ -576,6 +598,7 @@
           <div class="chat-preview">💬 ${msg.content.slice(0,80)}${msg.content.length > 80 ? '…' : ''}</div>
         </div>
         <div class="chat-right">
+          ${isNew ? '<div class="new-badge">● Neu</div>' : ''}
           <div class="chat-time">${timeAgo(msg.created_at)}</div>
           <button class="delete-chat-btn" onclick="deleteChat('${msg.listing_id}', '${otherId}', event)">✕</button>
         </div>
