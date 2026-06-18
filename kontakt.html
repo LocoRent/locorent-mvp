@@ -109,43 +109,99 @@
     }
 
     .container {
-      max-width: 800px;
+      max-width: 900px;
       margin: 3rem auto;
       padding: 3rem 2rem;
-      background: var(--white);
-      border-radius: var(--radius);
-      box-shadow: 0 12px 30px var(--shadow-light);
+      background: rgba(255, 255, 255, 0.92);
+      border-radius: 24px;
+      box-shadow: 0 15px 40px rgba(46, 125, 50, 0.12);
       text-align: center;
       line-height: 1.8;
+      backdrop-filter: blur(8px);
+    }
+
+    .contact-hero {
+      margin-bottom: 2rem;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      padding: 0.4rem 0.9rem;
+      border-radius: 999px;
+      background: var(--accent);
+      color: var(--primary-dark);
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.04em;
+      margin-bottom: 1rem;
     }
 
     h2 {
       color: var(--primary-dark);
       font-size: 2.2rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.2rem;
     }
 
     .kontakt-text {
       font-size: 1.15rem;
       color: var(--text-muted);
-      margin-bottom: 2.5rem;
+      margin-bottom: 0;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+      margin-top: 2rem;
+    }
+
+    .contact-card {
+      background: #ffffff;
+      border: 1px solid rgba(46, 125, 50, 0.08);
+      border-radius: 20px;
+      padding: 1.5rem;
+      box-shadow: 0 6px 18px rgba(46, 125, 50, 0.06);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .contact-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 26px rgba(46, 125, 50, 0.12);
+    }
+
+    .contact-icon {
+      font-size: 2rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .contact-card h3 {
+      margin: 0.5rem 0 0.75rem;
+      color: var(--primary-dark);
+    }
+
+    .contact-card p {
+      color: var(--text-muted);
+      margin: 0 0 1rem;
     }
 
     .email-box {
       display: inline-block;
-      background: var(--highlight);
-      color: var(--primary-dark);
-      padding: 1rem 2rem;
-      border-radius: var(--radius);
-      font-weight: 600;
-      font-size: 1.1rem;
-      box-shadow: 0 4px 12px var(--shadow-light);
-      transition: all 0.3s ease;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: white;
+      padding: 0.9rem 1.4rem;
+      border-radius: 999px;
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 8px 18px rgba(46, 125, 50, 0.18);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
     }
 
     .email-box:hover {
-      background: var(--primary-light);
-      color: var(--white);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(46, 125, 50, 0.25);
     }
 
     footer {
@@ -230,6 +286,15 @@
         display: block;
       }
 
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .container {
+        padding: 2rem 1.2rem;
+        margin: 1.5rem 1rem;
+      }
+
       footer > div {
         flex-direction: column;
         align-items: flex-start;
@@ -258,14 +323,36 @@
 </header>
 
 <main class="container" role="main" tabindex="0">
-  <h2>Kontaktiere uns</h2>
-  <p class="kontakt-text">
-    Du hast Fragen, Feedback oder möchtest einfach nur Hallo sagen?<br>
-    Schreib uns gerne direkt per E-Mail.<br><br>
-    Wir melden uns in der Regel innerhalb von 24 Stunden bei dir.
-  </p>
+  <section class="contact-hero">
+    <p class="eyebrow">Kontakt</p>
+    <h2>Kontaktiere uns</h2>
+    <p class="kontakt-text">
+      Du hast Fragen, Feedback oder möchtest einfach nur Hallo sagen?<br>
+      Schreib uns gerne direkt per E-Mail.<br><br>
+      Wir melden uns in der Regel innerhalb von 24 Stunden bei dir.
+    </p>
+  </section>
 
-  <a href="mailto:info@locorent.de" class="email-box">📧 info@locorent.de</a>
+  <section class="contact-grid">
+    <article class="contact-card">
+      <div class="contact-icon">📧</div>
+      <h3>E-Mail Support</h3>
+      <p>Schreib uns jederzeit an:</p>
+      <a href="mailto:info@locorent.de" class="email-box">info@locorent.de</a>
+    </article>
+
+    <article class="contact-card">
+      <div class="contact-icon">⏱️</div>
+      <h3>Antwortzeit</h3>
+      <p>Wir melden uns in der Regel innerhalb von 24 Stunden.</p>
+    </article>
+
+    <article class="contact-card">
+      <div class="contact-icon">🤝</div>
+      <h3>Support</h3>
+      <p>Bei Fragen zu Buchung, Vermietung oder Problemen helfen wir dir gerne weiter.</p>
+    </article>
+  </section>
 </main>
 
 <footer role="contentinfo">
@@ -298,8 +385,8 @@
   </div>
   <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
 </footer>
+
 <script>
-  // Supabase Client – eindeutiger Name (kein Konflikt mit anderen Seiten)
   const supa = window.supabase.createClient(
     'https://flnjalgqtkqycsaymmbd.supabase.co',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
@@ -333,9 +420,7 @@
     const nav = document.getElementById("nav-links");
     nav.classList.toggle("show");
     const expanded = nav.classList.contains("show");
-    document
-      .getElementById("nav-toggle")
-      .setAttribute("aria-expanded", expanded);
+    document.getElementById("nav-toggle").setAttribute("aria-expanded", expanded);
   });
 
   updateNav();
