@@ -836,11 +836,18 @@
     }
 
     function search() {
-      const keyword = document.getElementById("search-input").value.trim();
+      const title = document.getElementById("search-input").value.trim();
       const category = document.getElementById("category-select").value.trim();
       const location = document.getElementById("location-input").value.trim();
       const radius = document.getElementById("radius-select").value.trim();
-      const params = new URLSearchParams({ keyword, category, location, radius });
+
+      const params = new URLSearchParams();
+
+      if (title) params.set("title", title);
+      if (category) params.set("category", category);
+      if (location) params.set("location", location);
+      if (radius) params.set("radius", radius);
+
       window.location.href = `search_results.html?${params.toString()}`;
     }
 
