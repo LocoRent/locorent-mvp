@@ -522,9 +522,7 @@
     const nav = document.getElementById("nav-links");
     nav.classList.toggle("show");
     const expanded = nav.classList.contains("show");
-    document
-      .getElementById("nav-toggle")
-      .setAttribute("aria-expanded", expanded);
+    document.getElementById("nav-toggle").setAttribute("aria-expanded", expanded);
   });
 
   document.querySelector('.toggle-password').addEventListener('click', () => {
