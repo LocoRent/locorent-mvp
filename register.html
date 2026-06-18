@@ -199,7 +199,7 @@
       padding-right: 3rem;
     }
 
-    .toggle-password {
+    .password-toggle {
       position: absolute;
       right: 0.7rem;
       background: none;
@@ -425,7 +425,7 @@
         <label for="password">Passwort</label>
         <div class="password-wrapper">
           <input type="password" id="password" placeholder="••••••••" required autocomplete="new-password" />
-          <button type="button" class="toggle-password" aria-label="Passwort anzeigen">👁️</button>
+          <button type="button" class="password-toggle" aria-label="Passwort anzeigen">👁️</button>
         </div>
         <div class="password-hint">
           Dein Passwort muss 6–32 Zeichen lang sein und mindestens einen Großbuchstaben, einen Kleinbuchstaben, eine Zahl und ein Sonderzeichen enthalten.
@@ -436,7 +436,7 @@
         <label for="passwordConfirm">Passwort bestätigen</label>
         <div class="password-wrapper">
           <input type="password" id="passwordConfirm" placeholder="••••••••" required autocomplete="new-password" />
-          <button type="button" class="toggle-password-confirm" aria-label="Passwort bestätigen anzeigen">👁️</button>
+          <button type="button" class="password-toggle" aria-label="Passwort anzeigen">👁️</button>
         </div>
       </div>
 
@@ -498,7 +498,6 @@
     try {
       const { data, error } = await sb.auth.getSession();
       if (error) console.error('Auth Fehler:', error);
-
       userSession = data?.session || null;
       updateNav();
     } catch (err) {
@@ -535,6 +534,25 @@
   const form = document.getElementById('register-form');
   const messageDiv = document.getElementById('message');
 
+  function validatePassword(password) {
+    if (password.length < 6 || password.length > 32) {
+      return 'Das Passwort muss 6–32 Zeichen lang sein.';
+    }
+    if (!/[A-Z]/.test(password)) {
+      return 'Das Passwort muss mindestens einen Großbuchstaben enthalten.';
+    }
+    if (!/[a-z]/.test(password)) {
+      return 'Das Passwort muss mindestens einen Kleinbuchstaben enthalten.';
+    }
+    if (!/[0-9]/.test(password)) {
+      return 'Das Passwort muss mindestens eine Zahl enthalten.';
+    }
+    if (!/[^\w\s]/.test(password)) {
+      return 'Das Passwort muss mindestens ein Sonderzeichen enthalten.';
+    }
+    return null;
+  }
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     messageDiv.textContent = '';
@@ -550,32 +568,9 @@
       return;
     }
 
-    if (password.length < 6 || password.length > 32) {
-      messageDiv.textContent = '❌ Das Passwort muss 6–32 Zeichen lang sein.';
-      messageDiv.classList.add('error');
-      return;
-    }
-
-    if (!/[A-Z]/.test(password)) {
-      messageDiv.textContent = '❌ Das Passwort muss mindestens einen Großbuchstaben enthalten.';
-      messageDiv.classList.add('error');
-      return;
-    }
-
-    if (!/[a-z]/.test(password)) {
-      messageDiv.textContent = '❌ Das Passwort muss mindestens einen Kleinbuchstaben enthalten.';
-      messageDiv.classList.add('error');
-      return;
-    }
-
-    if (!/[0-9]/.test(password)) {
-      messageDiv.textContent = '❌ Das Passwort muss mindestens eine Zahl enthalten.';
-      messageDiv.classList.add('error');
-      return;
-    }
-
-    if (!/[^\w\s]/.test(password)) {
-      messageDiv.textContent = '❌ Das Passwort muss mindestens ein Sonderzeichen enthalten.';
+    const passwordError = validatePassword(password);
+    if (passwordError) {
+      messageDiv.textContent = '❌ ' + passwordError;
       messageDiv.classList.add('error');
       return;
     }
@@ -601,22 +596,16 @@
     }
   });
 
-  function togglePassword() {
-    const pwField = document.getElementById('password');
-    const btn = document.querySelector('.toggle-password');
-    pwField.type = pwField.type === 'password' ? 'text' : 'password';
-    btn.textContent = pwField.type === 'password' ? '👁️' : '🙈';
-  }
-
-  function togglePasswordConfirm() {
-    const pwField = document.getElementById('passwordConfirm');
-    const btn = document.querySelector('.toggle-password-confirm');
-    pwField.type = pwField.type === 'password' ? 'text' : 'password';
-    btn.textContent = pwField.type === 'password' ? '👁️' : '🙈';
-  }
-
-  document.querySelector('.toggle-password').addEventListener('click', togglePassword);
-  document.querySelector('.toggle-password-confirm').addEventListener('click', togglePasswordConfirm);
+  document.querySelectorAll('.password-toggle').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const wrapper = btn.closest('.password-wrapper');
+      const input = wrapper.querySelector('input');
+      const isPassword = input.type === 'password';
+      input.type = isPassword ? 'text' : 'password';
+      btn.textContent = isPassword ? '🙈' : '👁️';
+      btn.setAttribute('aria-label', isPassword ? 'Passwort verbergen' : 'Passwort anzeigen');
+    });
+  });
 
   document.getElementById('nav-toggle').addEventListener('click', () => {
     const nav = document.getElementById('nav-links');
