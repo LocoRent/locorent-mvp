@@ -204,6 +204,50 @@
       box-shadow: 0 10px 24px rgba(46, 125, 50, 0.25);
     }
 
+    .help-center {
+      margin-top: 3rem;
+      text-align: left;
+    }
+
+    .help-intro {
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .faq-list {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .faq-item {
+      background: #fff;
+      border-radius: 16px;
+      padding: 1rem 1.2rem;
+      box-shadow: 0 6px 18px rgba(46, 125, 50, 0.06);
+      border: 1px solid rgba(46, 125, 50, 0.08);
+    }
+
+    .faq-item summary {
+      cursor: pointer;
+      font-weight: 700;
+      color: var(--primary-dark);
+      list-style: none;
+    }
+
+    .faq-item summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .faq-item p {
+      margin-top: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    .faq-item[open] {
+      border-color: rgba(46, 125, 50, 0.2);
+    }
+
     footer {
       width: 100%;
       padding: 2rem 2rem 1rem;
@@ -352,6 +396,153 @@
       <h3>Support</h3>
       <p>Bei Fragen zu Buchung, Vermietung oder Problemen helfen wir dir gerne weiter.</p>
     </article>
+  </section>
+
+  <section class="help-center">
+    <p class="eyebrow">Hilfe-Center</p>
+    <h2>Häufige Fragen</h2>
+    <p class="help-intro">Hier findest du schnelle Antworten auf die wichtigsten Fragen.</p>
+
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary>Wie funktioniert das Mieten bei Locorent?</summary>
+        <p>
+          Locorent verbindet Menschen, die Dinge suchen, mit Menschen, die Dinge vermieten möchten.
+          Du suchst ein passendes Angebot, kontaktierst den Anbieter und vereinbarst die Details direkt über die Plattform.
+        </p>
+      </details>
+
+      <details class="faq-item">
+        <summary>Wie finde ich passende Angebote?</summary>
+        <p>
+          Du kannst Angebote über Kategorien, Suchbegriffe und Filter finden. So findest du schnell genau das, was du benötigst.
+        </p>
+      </details>
+
+      <details class="faq-item">
+        <summary>Wie läuft die Buchung ab?</summary>
+        <p>
+          Nachdem du ein passendes Objekt gefunden hast, kannst du den Anbieter kontaktieren und die Buchung abstimmen.
+          Alle weiteren Details werden zwischen Mieter und Vermieter geklärt.
+        </p>
+      </details>
+
+      <details class="faq-item">
+        <summary>Kann ich eine Buchung stornieren?</summary>
+        <p>
+          Eine Stornierung hängt von der Absprache mit dem jeweiligen Anbieter ab. Wenn es Probleme gibt, kannst du dich jederzeit an den Support wenden.
+        </p>
+      </details>
+
+      <details class="faq-item">
+        <summary>Wie kann ich ein Objekt vermieten?</summary>
+        <p>
+          Registriere dich bei Locorent, erstelle ein Inserat mit Beschreibung, Bildern und Preis und veröffentliche dein Angebot.
+          Danach können interessierte Nutzer dich kontaktieren.
+        </p>
+      </details>
+
+      <details class="faq-item">
+        <summary>Wie erstelle ich ein Inserat?</summary>
+        <p>
+          Bevor du ein Inserat erstellen kannst, musst du zuerst dein Profil unter <strong>„Mein Profil“</strong> vollständig ausfüllen.
+          Danach gehst du auf <strong>„Meine Inserate“</strong> und kannst dort ein neues Inserat anlegen.
+          Anschließend füllst du die wichtigsten Angaben wie Titel, Beschreibung, Kategorie, Preis und Bilder aus.
+        </p>
+      </details>
+
+      <details class="faq-item">
+        <summary>Wie bekomme ich mehr Anfragen?</summary>
+        <p>
+          Achte auf eine klare Beschreibung, gute Fotos, faire Preise und vollständige Angaben.
+          Je besser dein Inserat ist, desto eher melden sich interessierte Nutzer.
+        </p>
+      </details>
+
+      <details class="faq-item">
+        <summary>Wie bearbeite ich mein Inserat?</summary>
+        <p>
+          Gehe in den Bereich <strong>„Meine Inserate“</strong> und wähle das gewünschte Angebot aus.
+          Dort kannst du die Angaben jederzeit anpassen.
+        </p>
+      </details>
+
+      <details class="faq-item">
+        <summary>Wie registriere ich mich bei Locorent?</summary>
+        <p>
+          Klicke auf <strong>„Registrieren“</strong>, gib deine Daten ein und bestätige deine Anmeldung.
+          Danach kannst du dein Profil einrichten und die Plattform vollständig nutzen.
+        </p>
+      </details>
+
+      <details class="faq-item">
+        <summary>Wie setze ich mein Passwort zurück?</summary>
+        <p>
+          Nutze die Funktion <strong>„Passwort vergessen“</strong> auf der Login-Seite.
+          Anschließend erhältst du eine E-Mail mit weiteren Schritten.
+        </p>
+      </details>
+
+      <details class="faq-item">
+        <summary>Wie sicher ist Locorent?</summary>
+        <p>
+          Wir legen großen Wert auf Datenschutz und einen sicheren Umgang mit Nutzerdaten.
+          Deine Informationen werden vertraulich behandelt und nur im Rahmen der Plattform genutzt.
+        </p>
+      </details>
+
+      <details class="faq-item">
+        <summary>Wie werden Daten geschützt?</summary>
+        <p>
+          Deine Daten werden nach aktuellen Sicherheitsstandards verarbeitet und nicht ohne Grund an Dritte weitergegeben.
+        </p>
+      </details>
+
+      <details class="faq-item">
+        <summary>Was tun bei verdächtigen Nachrichten?</summary>
+        <p>
+          Wenn dir eine Nachricht verdächtig vorkommt, antworte nicht sofort und melde sie direkt an den Support.
+        </p>
+      </details>
+
+      <details class="faq-item">
+        <summary>Wie melde ich ein Problem?</summary>
+        <p>
+          Sende uns eine Nachricht mit einer kurzen Beschreibung, dem betroffenen Inserat und möglichst einem Screenshot.
+          So können wir den Fall schneller prüfen.
+        </p>
+      </details>
+
+      <details class="faq-item">
+        <summary>Was mache ich bei Problemen mit einer Buchung?</summary>
+        <p>
+          Bei Problemen kannst du uns jederzeit über die Kontaktseite schreiben.
+          Beschreibe das Problem so genau wie möglich, damit wir dir schnell helfen können.
+        </p>
+      </details>
+
+      <details class="faq-item">
+        <summary>Wie kontaktiere ich den Support?</summary>
+        <p>
+          Du erreichst uns am einfachsten über die Kontaktseite per E-Mail.
+          Dort kannst du dein Anliegen direkt schildern.
+        </p>
+      </details>
+
+      <details class="faq-item">
+        <summary>Wie schnell antwortet ihr?</summary>
+        <p>
+          Wir antworten in der Regel innerhalb von 24 Stunden auf Anfragen.
+        </p>
+      </details>
+
+      <details class="faq-item">
+        <summary>Was passiert, wenn ein Inserat nicht korrekt ist?</summary>
+        <p>
+          Wenn dir ein Inserat auffällt, das unvollständig, falsch oder verdächtig wirkt, kannst du es an den Support melden.
+        </p>
+      </details>
+    </div>
   </section>
 </main>
 
