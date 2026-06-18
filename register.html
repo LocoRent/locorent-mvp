@@ -115,7 +115,7 @@
 
     .container {
       width: 100%;
-      max-width: 480px;
+      max-width: 520px;
       background: rgba(255, 255, 255, 0.94);
       border-radius: 28px;
       padding: 2.5rem 2rem;
@@ -220,6 +220,30 @@
       border: 1px solid rgba(46, 125, 50, 0.08);
     }
 
+    .password-rules {
+      list-style: none;
+      padding: 0;
+      margin: 0.8rem 0 0;
+      display: grid;
+      gap: 0.5rem;
+    }
+
+    .password-rules li {
+      padding: 0.65rem 0.8rem;
+      border-radius: 12px;
+      background: #fff;
+      border: 1px solid rgba(46, 125, 50, 0.08);
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .password-rules li.valid {
+      background: #e8f5e9;
+      color: var(--primary-dark);
+      border-color: rgba(46, 125, 50, 0.18);
+    }
+
     .register-btn {
       margin-top: 0.4rem;
       width: 100%;
@@ -231,12 +255,19 @@
       font-weight: 700;
       font-size: 1rem;
       cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.25s ease;
+      transition: transform 0.2s ease, box-shadow 0.25s ease, opacity 0.2s ease;
     }
 
     .register-btn:hover {
       transform: translateY(-1px);
       box-shadow: 0 10px 20px rgba(46, 125, 50, 0.18);
+    }
+
+    .register-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
     }
 
     .login-links {
@@ -267,6 +298,10 @@
       border-radius: 8px;
       font-weight: 600;
       text-align: center;
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .message.error {
@@ -430,6 +465,13 @@
         <div class="password-hint">
           Dein Passwort muss 6–32 Zeichen lang sein und mindestens einen Großbuchstaben, einen Kleinbuchstaben, eine Zahl und ein Sonderzeichen enthalten.
         </div>
+        <ul class="password-rules" id="password-rules">
+          <li id="rule-length">❌ 6–32 Zeichen</li>
+          <li id="rule-uppercase">❌ 1 Großbuchstabe</li>
+          <li id="rule-lowercase">❌ 1 Kleinbuchstabe</li>
+          <li id="rule-number">❌ 1 Zahl</li>
+          <li id="rule-special">❌ 1 Sonderzeichen</li>
+        </ul>
       </div>
 
       <div class="input-group">
@@ -440,7 +482,7 @@
         </div>
       </div>
 
-      <button type="submit" class="register-btn">Registrieren</button>
+      <button type="submit" class="register-btn" id="register-btn">Registrieren</button>
       <div id="message" class="message"></div>
     </form>
 
@@ -533,25 +575,37 @@
 
   const form = document.getElementById('register-form');
   const messageDiv = document.getElementById('message');
+  const registerBtn = document.getElementById('register-btn');
 
   function validatePassword(password) {
-    if (password.length < 6 || password.length > 32) {
-      return 'Das Passwort muss 6–32 Zeichen lang sein.';
-    }
-    if (!/[A-Z]/.test(password)) {
-      return 'Das Passwort muss mindestens einen Großbuchstaben enthalten.';
-    }
-    if (!/[a-z]/.test(password)) {
-      return 'Das Passwort muss mindestens einen Kleinbuchstaben enthalten.';
-    }
-    if (!/[0-9]/.test(password)) {
-      return 'Das Passwort muss mindestens eine Zahl enthalten.';
-    }
-    if (!/[^\w\s]/.test(password)) {
-      return 'Das Passwort muss mindestens ein Sonderzeichen enthalten.';
-    }
-    return null;
+    const rules = {
+      length: password.length >= 6 && password.length <= 32,
+      uppercase: /[A-Z]/.test(password),
+      lowercase: /[a-z]/.test(password),
+      number: /[0-9]/.test(password),
+      special: /[^\w\s]/.test(password),
+    };
+
+    document.getElementById('rule-length').textContent = `${rules.length ? '✅' : '❌'} 6–32 Zeichen`;
+    document.getElementById('rule-uppercase').textContent = `${rules.uppercase ? '✅' : '❌'} 1 Großbuchstabe`;
+    document.getElementById('rule-lowercase').textContent = `${rules.lowercase ? '✅' : '❌'} 1 Kleinbuchstabe`;
+    document.getElementById('rule-number').textContent = `${rules.number ? '✅' : '❌'} 1 Zahl`;
+    document.getElementById('rule-special').textContent = `${rules.special ? '✅' : '❌'} 1 Sonderzeichen`;
+
+    return Object.values(rules).every(Boolean);
   }
+
+  const passwordInput = document.getElementById('password');
+  const passwordConfirmInput = document.getElementById('passwordConfirm');
+
+  function updatePasswordState() {
+    const valid = validatePassword(passwordInput.value);
+    const confirmMatch = passwordConfirmInput.value.length === 0 || passwordInput.value === passwordConfirmInput.value;
+    registerBtn.disabled = !(valid && confirmMatch && passwordInput.value.length > 0 && passwordConfirmInput.value.length > 0);
+  }
+
+  passwordInput.addEventListener('input', updatePasswordState);
+  passwordConfirmInput.addEventListener('input', updatePasswordState);
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -559,8 +613,8 @@
     messageDiv.className = 'message';
 
     const email = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value;
-    const passwordConfirm = document.getElementById('passwordConfirm').value;
+    const password = passwordInput.value;
+    const passwordConfirm = passwordConfirmInput.value;
 
     if (password !== passwordConfirm) {
       messageDiv.textContent = '❌ Passwörter stimmen nicht überein.';
@@ -568,9 +622,9 @@
       return;
     }
 
-    const passwordError = validatePassword(password);
-    if (passwordError) {
-      messageDiv.textContent = '❌ ' + passwordError;
+    const passwordOk = validatePassword(password);
+    if (!passwordOk) {
+      messageDiv.textContent = '❌ Bitte erfülle alle Passwortregeln.';
       messageDiv.classList.add('error');
       return;
     }
@@ -613,6 +667,7 @@
     document.getElementById('nav-toggle').setAttribute('aria-expanded', nav.classList.contains('show'));
   });
 
+  updatePasswordState();
   init();
 </script>
 
