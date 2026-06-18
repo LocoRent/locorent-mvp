@@ -96,9 +96,7 @@
     }
 
     nav#nav-links a:hover::after,
-    nav#nav-links a:focus::after {
-      width: 100%;
-    }
+    nav#nav-links a:focus::after { width: 100%; }
 
     nav#nav-links a:hover,
     nav#nav-links a:focus {
@@ -107,18 +105,17 @@
     }
 
     .container {
-      max-width: 1000px;
+      max-width: 1100px;
       margin: 3rem auto;
       padding: 3rem 2rem;
       background: rgba(255, 255, 255, 0.92);
       border-radius: 24px;
       box-shadow: 0 15px 40px rgba(46, 125, 50, 0.12);
-      text-align: center;
-      line-height: 1.8;
       backdrop-filter: blur(8px);
     }
 
     .contact-hero {
+      text-align: center;
       margin-bottom: 2rem;
     }
 
@@ -137,16 +134,15 @@
     h2 {
       color: var(--primary-dark);
       font-size: 2.2rem;
-      margin-bottom: 1.2rem;
+      margin: 0 0 1rem;
     }
 
     .kontakt-text {
-      font-size: 1.15rem;
+      font-size: 1.1rem;
       color: var(--text-muted);
-      margin-bottom: 0;
-      max-width: 700px;
-      margin-left: auto;
-      margin-right: auto;
+      margin: 0 auto;
+      max-width: 720px;
+      line-height: 1.8;
     }
 
     .contact-grid {
@@ -163,6 +159,7 @@
       padding: 1.5rem;
       box-shadow: 0 6px 18px rgba(46, 125, 50, 0.06);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
+      text-align: center;
     }
 
     .contact-card:hover {
@@ -183,6 +180,7 @@
     .contact-card p {
       color: var(--text-muted);
       margin: 0 0 1rem;
+      line-height: 1.7;
     }
 
     .email-box {
@@ -204,12 +202,18 @@
 
     .help-center {
       margin-top: 3rem;
-      text-align: left;
+    }
+
+    .help-head {
+      text-align: center;
+      margin-bottom: 1.6rem;
     }
 
     .help-intro {
       color: var(--text-muted);
-      margin-bottom: 1.5rem;
+      margin: 0.25rem auto 0;
+      max-width: 700px;
+      line-height: 1.7;
     }
 
     .faq-nav {
@@ -240,7 +244,6 @@
 
     .faq-section {
       margin-top: 2rem;
-      padding-top: 0.5rem;
     }
 
     .faq-category {
@@ -281,8 +284,26 @@
       line-height: 1.7;
     }
 
-    .faq-item[open] {
-      border-color: rgba(46, 125, 50, 0.2);
+    .faq-item[open] { border-color: rgba(46, 125, 50, 0.2); }
+
+    .support-cta {
+      margin-top: 3rem;
+      text-align: center;
+      background: linear-gradient(135deg, rgba(46, 125, 50, 0.08), rgba(185, 246, 202, 0.2));
+      border: 1px solid rgba(46, 125, 50, 0.08);
+      border-radius: 22px;
+      padding: 1.8rem 1.4rem;
+    }
+
+    .support-cta h3 {
+      margin: 0 0 0.6rem;
+      color: var(--primary-dark);
+    }
+
+    .support-cta p {
+      margin: 0 0 1.2rem;
+      color: var(--text-muted);
+      line-height: 1.7;
     }
 
     footer {
@@ -344,13 +365,8 @@
     }
 
     @media (max-width: 900px) {
-      .faq-nav {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .contact-grid {
-        grid-template-columns: 1fr;
-      }
+      .faq-nav { grid-template-columns: repeat(2, 1fr); }
+      .contact-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 720px) {
@@ -373,9 +389,7 @@
         display: block;
       }
 
-      .faq-nav {
-        grid-template-columns: 1fr;
-      }
+      .faq-nav { grid-template-columns: 1fr; }
 
       .container {
         padding: 2rem 1.2rem;
@@ -387,9 +401,7 @@
         align-items: flex-start;
       }
 
-      footer > div > div {
-        width: 100%;
-      }
+      footer > div > div { width: 100%; }
 
       h2 { font-size: 1.6rem; }
 
@@ -438,9 +450,11 @@
   </section>
 
   <section class="help-center">
-    <p class="eyebrow">Hilfe-Center</p>
-    <h2>Häufige Fragen</h2>
-    <p class="help-intro">Hier findest du schnelle Antworten auf die wichtigsten Fragen.</p>
+    <div class="help-head">
+      <p class="eyebrow">Hilfe-Center</p>
+      <h2>Häufige Fragen</h2>
+      <p class="help-intro">Hier findest du schnelle Antworten auf die wichtigsten Fragen.</p>
+    </div>
 
     <div class="faq-nav">
       <a href="#mieten">Mieten</a>
@@ -564,6 +578,12 @@
           </details>
         </div>
       </div>
+    </div>
+
+    <div class="support-cta">
+      <h3>Frage nicht gefunden?</h3>
+      <p>Dann schreib uns einfach direkt per E-Mail. Wir helfen dir gerne weiter.</p>
+      <a href="mailto:info@locorent.de" class="email-box">Support per E-Mail</a>
     </div>
   </section>
 </main>
