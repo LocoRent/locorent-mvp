@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Passwort zurücksetzen – Locorent</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  <title>AGB & Impressum – Locorent</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --primary: #2e7d32;
@@ -15,23 +16,30 @@
       --text-dark: #0f2e13;
       --text-muted: #466843;
       --accent: #b9f6ca;
+      --highlight: #a5d6a7;
       --radius: 18px;
-      --font-primary: 'Poppins', sans-serif;
       --shadow-light: rgba(46, 125, 50, 0.08);
+      --shadow-strong: rgba(46, 125, 50, 0.25);
+      --transition: 0.4s ease;
+      --font-primary: 'Poppins', sans-serif;
     }
 
     *, *::before, *::after {
       box-sizing: border-box;
+      max-width: 100%;
+      word-wrap: break-word;
     }
 
     html, body {
       margin: 0;
       padding: 0;
       width: 100%;
+      max-width: 100vw;
       overflow-x: hidden;
       font-family: var(--font-primary);
       background: linear-gradient(to bottom, #e8f5e9 0%, #ffffff 100%);
       color: var(--text-dark);
+      scroll-behavior: smooth;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
@@ -104,192 +112,61 @@
       color: var(--accent);
       outline: none;
     }
-
-    main {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 3rem 1rem;
-    }
-
     .container {
+      max-width: 1080px;
       width: 100%;
-      max-width: 520px;
-      background: rgba(255, 255, 255, 0.94);
-      border-radius: 30px;
-      padding: 2.5rem 2rem;
-      box-shadow: 0 18px 50px rgba(46, 125, 50, 0.12);
-      text-align: center;
-      backdrop-filter: blur(8px);
-      position: relative;
-      overflow: hidden;
+      margin: 2rem auto 4rem auto;
+      padding: 1rem 1rem;
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: 0 12px 30px var(--shadow-light);
     }
 
-    .container::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at top left, rgba(102, 187, 106, 0.10), transparent 35%),
-                  radial-gradient(circle at bottom right, rgba(185, 246, 202, 0.18), transparent 30%);
-      pointer-events: none;
-    }
-
-    .register-hero {
-      margin-bottom: 1.8rem;
-      position: relative;
-      z-index: 1;
-    }
-
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      padding: 0.45rem 0.9rem;
-      border-radius: 999px;
-      background: rgba(185, 246, 202, 0.35);
+    h2 {
       color: var(--primary-dark);
       font-weight: 700;
-      font-size: 0.82rem;
-      letter-spacing: 0.03em;
+      font-size: 2rem;
       margin-bottom: 1rem;
-      border: 1px solid rgba(46, 125, 50, 0.10);
+      margin-top: 0;
     }
 
-    .container h2 {
-      margin: 0 0 0.75rem;
-      color: var(--primary-dark);
-      font-size: 2.1rem;
-      line-height: 1.1;
-    }
-
-    .register-text {
-      margin: 0 auto;
-      color: var(--text-muted);
-      line-height: 1.7;
-      font-size: 1rem;
-      max-width: 360px;
-    }
-
-    .register-form {
-      display: flex;
-      flex-direction: column;
-      gap: 1.15rem;
-      text-align: left;
-      position: relative;
-      z-index: 1;
-    }
-
-    .input-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.45rem;
-    }
-
-    .input-group label {
-      font-weight: 700;
-      color: var(--text-muted);
-      font-size: 0.92rem;
-    }
-
-    .input-group input {
-      width: 100%;
-      padding: 1rem 1rem;
-      border-radius: 16px;
-      border: 1px solid rgba(46, 125, 50, 0.16);
-      background: rgba(255, 255, 255, 0.95);
-      font-size: 1rem;
-      outline: none;
-      transition: transform 0.2s ease, border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
-    }
-
-    .input-group input::placeholder {
-      color: #9aa8a0;
-    }
-
-    .input-group input:focus {
-      border-color: var(--primary-light);
-      background: #fff;
-      box-shadow: 0 0 0 4px rgba(102, 187, 106, 0.16);
-      transform: translateY(-1px);
-    }
-
-    .register-btn {
-      margin-top: 0.4rem;
-      width: 100%;
-      padding: 1rem 1rem;
-      border: none;
-      border-radius: 16px;
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-      color: white;
-      font-weight: 800;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.25s ease, opacity 0.2s ease;
-    }
-
-    .register-btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 12px 24px rgba(46, 125, 50, 0.18);
-    }
-
-    .register-btn:disabled {
-      opacity: 0.55;
-      cursor: not-allowed;
-      box-shadow: none;
-      transform: none;
-    }
-
-    .login-links {
-      margin-top: 1rem;
-      text-align: center;
-      position: relative;
-      z-index: 1;
-    }
-
-    .login-link {
+    h3 {
+      margin-top: 2rem;
       color: var(--primary);
-      font-weight: 700;
-      text-decoration: none;
-      font-size: 0.92rem;
+      font-weight: 600;
+      font-size: 1.3rem;
     }
 
-    .login-link:hover {
+    p, ul {
+      color: var(--text-muted);
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    ul {
+      padding-left: 1.2rem;
+    }
+
+    a {
+      color: var(--primary);
       text-decoration: underline;
     }
 
-    .trust-note {
-      margin-top: 1rem;
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      position: relative;
-      z-index: 1;
+    a:hover, a:focus {
+      color: var(--accent);
+      outline: none;
     }
 
-    .message {
-      margin-top: 1rem;
-      padding: 0.85rem 1rem;
-      border-radius: 12px;
-      font-weight: 600;
-      text-align: center;
-      min-height: 48px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      z-index: 1;
-    }
-
-    .message.error {
-      background: #ffebee;
-      color: #c62828;
-      border: 1px solid #ef5350;
-    }
-
-    .message.success {
-      background: #e8f5e9;
+    .badge {
+      display: inline-block;
+      background-color: var(--accent);
       color: var(--primary-dark);
-      border: 1px solid var(--primary);
+      font-weight: 600;
+      padding: 0.3rem 0.7rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
+      user-select: none;
     }
 
     footer {
@@ -301,6 +178,8 @@
       color: var(--white);
       box-shadow: 0 8px 32px rgba(46, 125, 50, 0.22);
       font-size: 0.92rem;
+      user-select: none;
+      text-align: center;
       margin-top: auto;
       position: relative;
       left: 50%;
@@ -377,22 +256,6 @@
         display: block;
       }
 
-      main {
-        padding: 1.5rem 1rem;
-      }
-
-      .container {
-        padding: 2rem 1.2rem;
-      }
-
-      .container h2 {
-        font-size: 1.7rem;
-      }
-
-      .register-text {
-        font-size: 0.98rem;
-      }
-
       footer > div {
         flex-direction: column;
         align-items: flex-start;
@@ -405,81 +268,103 @@
   </style>
 </head>
 <body>
+  <header>
+    <h1 tabindex="0" role="banner" aria-label="Locorent Startseite" onclick="location.href='index.html'">Locorent</h1>
+    <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
+    <nav id="nav-links" role="navigation" aria-label="Hauptnavigation"></nav>
+  </header>
+  <main class="container" role="main">
+    <div class="badge">Stand: 2025</div>
+    <h2>Allgemeine Geschäftsbedingungen (AGB)</h2>
 
-<header>
-  <h1 onclick="location.href='index.html'" tabindex="0">Locorent</h1>
-  <button id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-links">☰</button>
-  <nav id="nav-links">
-    <a href="index.html">Startseite</a>
-    <a href="login.html">Einloggen</a>
-    <a href="register.html">Registrieren</a>
-  </nav>
-</header>
+    <h3>1. Geltungsbereich</h3>
+    <p>Diese AGB gelten für die Nutzung der Plattform <strong>Locorent</strong> unter <a href="https://www.locorent.de">www.locorent.de</a>. Locorent stellt die Infrastruktur bereit, um Gegenstände zwischen privaten Nutzer:innen zu vermieten. Verträge kommen nur zwischen den Parteien zustande.</p>
 
-<main>
-  <div class="container">
-    <div class="register-hero">
-      <p class="eyebrow">Passwort zurücksetzen</p>
-      <h2>Neues Passwort anfordern</h2>
-      <p class="register-text">
-        Gib deine E-Mail-Adresse ein, um einen Link zum Zurücksetzen deines Passworts zu erhalten.
-      </p>
-    </div>
+    <h3>2. Registrierung</h3>
+    <p>Eine Registrierung ist notwendig. Die Daten müssen korrekt sein. Das Konto ist nicht übertragbar.</p>
 
-    <form id="reset-form" class="register-form">
-      <div class="input-group">
-        <label for="email">E-Mail</label>
-        <input type="email" id="email" placeholder="deine@email.de" required autocomplete="email" />
+    <h3>3. Leistungen</h3>
+    <p>Locorent bietet die Plattform – nicht die Artikel. Wir haften nicht für Richtigkeit, Qualität oder Zustand der Mietobjekte.</p>
+
+    <h3>4. Zustandekommen von Verträgen</h3>
+    <p>Ein Mietvertrag entsteht erst, wenn der/die Vermieter:in eine Anfrage aktiv annimmt.</p>
+
+    <h3>5. Pflichten der Nutzer:innen</h3>
+    <ul>
+      <li>Keine illegalen Inhalte oder Objekte</li>
+      <li>Keine Rechte Dritter verletzen</li>
+      <li>Keine Falschangaben, betrügerisches Verhalten oder automatisierte Nutzung der Plattform (z. B. Bots, Scraper)</li>
+      <li>Nutzer:innen dürfen keine urheberrechtlich geschützten Inhalte Dritter verwenden oder hochladen, es sei denn, sie besitzen die entsprechenden Rechte.</li>
+    </ul>
+
+    <h3>6. Haftung</h3>
+    <p>Die Haftung für einfache Fahrlässigkeit ist ausgeschlossen, soweit keine Kardinalpflichten betroffen sind. Für Schäden zwischen Nutzer:innen ist Locorent weder Vermittler noch Vertragspartner und übernimmt keine Haftung.</p>
+
+    <h3>7. Kündigung</h3>
+    <p>Jede:r kann sein/ihr Konto jederzeit löschen. Bei Missbrauch behalten wir uns die Sperrung vor.</p>
+
+    <h3>8. Datenschutz</h3>
+    <p>Infos findest du in der <a href="datenschutz.html">Datenschutzerklärung</a>.</p>
+
+    <h3>9. Rechtliches</h3>
+    <p>Es gilt deutsches Recht. Gerichtsstand ist der Wohnsitz des Betreibers, soweit gesetzlich zulässig. Sollte eine Klausel dieser AGB unwirksam sein, bleibt die Wirksamkeit der übrigen Bestimmungen unberührt.</p>
+
+    <div class="badge" style="margin-top:3rem;">Impressum</div>
+    <h2>Angaben gemäß § 5 TMG</h2>
+
+    <p><strong>Betreiber der Website:</strong><br>
+    Pascal Merten<br>
+    Am Steelchen 15<br>
+    41517 Grevenbroich<br>
+    Deutschland</p>
+
+    <p><strong>Kontakt:</strong><br>
+    E-Mail: <a href="mailto:info@locorent.de">info@locorent.de</a></p>
+
+    <p><strong>Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV:</strong><br>
+    Pascal Merten, Anschrift wie oben.</p>
+
+    <h3>Haftungsausschluss</h3>
+    <p>Locorent ist ein rein privates Projekt ohne Gewinnerzielungsabsicht. Es wird keine Haftung für Inhalte Dritter übernommen.</p>
+
+    <h3>Urheberrecht</h3>
+    <p>Alle Inhalte sind urheberrechtlich geschützt. Vervielfältigung oder Weiterverbreitung nur mit ausdrücklicher Genehmigung.</p>
+  </main>
+
+  <footer role="contentinfo">
+    <div>
+      <div>
+        <h4>Mieten &amp; Vermieten</h4>
+        <ul>
+          <li><a href="so-funktionierts.html">So funktioniert's</a></li>
+          <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
+          <li><a href="kategorien.html">Beliebte Kategorien</a></li>
+          <li><a href="vermieter-tipps.html">Tipps & Tricks für Vermieter</a></li>
+          <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
+        </ul>
       </div>
-
-      <button type="submit" class="register-btn" id="reset-btn">Zurücksetzen</button>
-      <div id="message" class="message"></div>
-    </form>
-
-    <div class="login-links">
-      <a href="login.html" class="login-link">Zurück zum Einloggen</a>
+      <div>
+        <h4>Wissenswertes</h4>
+        <ul>
+          <li><a href="agb.html">AGB & Impressum</a></li>
+          <li><a href="datenschutz.html">Datenschutz</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Über uns</h4>
+        <ul>
+          <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
+          <li><a href="social-media.html">Folgen Sie uns</a></li>
+          <li><a href="mission.html">Unsere Mission</a></li>
+        </ul>
+      </div>
     </div>
-
-    <div class="trust-note">
-      🔒 Sicherer Passwort-Reset für dein Locorent-Konto
-    </div>
-  </div>
-</main>
-
-<footer>
-  <div>
-    <div>
-      <h4>Mieten &amp; Vermieten</h4>
-      <ul>
-        <li><a href="so-funktionierts.html">So funktioniert's</a></li>
-        <li><a href="vermieter-werden.html">Werde zum Vermieter</a></li>
-        <li><a href="kategorien.html">Beliebte Kategorien</a></li>
-        <li><a href="vermieter-tipps.html">Tipps &amp; Tricks für Vermieter</a></li>
-        <li><a href="hilfe-faq.html">Hilfe und FAQ</a></li>
-      </ul>
-    </div>
-    <div>
-      <h4>Wissenswertes</h4>
-      <ul>
-        <li><a href="agb.html">AGB &amp; Impressum</a></li>
-        <li><a href="datenschutz.html">Datenschutz</a></li>
-      </ul>
-    </div>
-    <div>
-      <h4>Über uns</h4>
-      <ul>
-        <li><a href="kontakt.html">Kontaktieren Sie uns</a></li>
-        <li><a href="social-media.html">Folgen Sie uns</a></li>
-        <li><a href="mission.html">Unsere Mission</a></li>
-      </ul>
-    </div>
-  </div>
-  <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
-</footer>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.38.4/dist/umd/supabase.js"></script>
+    <small>© 2025 Locorent – Mieten statt kaufen. Gemeinsam nachhaltig.</small>
+  </footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  const sb = window.supabase.createClient(
+  // Supabase v2 Client
+  const sb = supabase.createClient(
     'https://flnjalgqtkqycsaymmbd.supabase.co',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmphbGdxdGtxeWNzYXltbWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTkwOTAsImV4cCI6MjA2NDQzNTA5MH0.pPDeWCrjDrOGeHVJy5YmMQFYUGl7nvAyx3uxhQYNH_Q'
   );
@@ -488,8 +373,10 @@
 
   async function init() {
     try {
+      // v2: getSession über sb.auth
       const { data, error } = await sb.auth.getSession();
       if (error) console.error('Auth Fehler:', error);
+
       userSession = data?.session || null;
       updateNav();
     } catch (err) {
@@ -502,14 +389,13 @@
     nav.innerHTML = userSession?.user ? `
       <a href="index.html">Start</a>
       <a href="profil.html">Mein Profil</a>
-      <a href="nachrichten-inbox.html">📨 Nachrichten</a>
+      <a href="nachrichten-inbox.html">Nachrichten</a>
       <a href="favoriten.html">Meine Favoriten</a>
       <a href="inserate.html">Meine Inserate</a>
       <a href="#" onclick="logout(event)">Logout</a>
     ` : `
       <a href="index.html">Start</a>
       <a href="login.html">Einloggen</a>
-      <a href="register.html">Registrieren</a>
     `;
   }
 
@@ -523,43 +409,7 @@
     }
   }
 
-  const form = document.getElementById('reset-form');
-  const messageDiv = document.getElementById('message');
-  const resetBtn = document.getElementById('reset-btn');
-  const emailInput = document.getElementById('email');
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    messageDiv.textContent = '';
-    messageDiv.className = 'message';
-
-    const email = emailInput.value.trim();
-
-    if (!email) {
-      messageDiv.textContent = '❌ Bitte gib eine E-Mail-Adresse ein.';
-      messageDiv.classList.add('error');
-      return;
-    }
-
-    try {
-      const { error } = await sb.auth.resetPasswordForEmail(email, {
-        redirectTo: window.location.origin + '/update-password.html'
-      });
-
-      if (error) {
-        messageDiv.textContent = '❌ ' + error.message;
-        messageDiv.classList.add('error');
-      } else {
-        messageDiv.textContent = '✅ Wenn die E-Mail existiert, wurde ein Reset-Link gesendet.';
-        messageDiv.classList.add('success');
-        form.reset();
-      }
-    } catch (err) {
-      messageDiv.textContent = '❌ Unerwarteter Fehler: ' + err.message;
-      messageDiv.classList.add('error');
-    }
-  });
-
+  // Mobile Menü
   document.getElementById('nav-toggle').addEventListener('click', () => {
     const nav = document.getElementById('nav-links');
     nav.classList.toggle('show');
